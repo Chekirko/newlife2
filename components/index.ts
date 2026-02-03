@@ -103,6 +103,13 @@ export {
   type ServiceItem,
 } from './sections/Services'
 
+// Section Components - Ministries (custom church component)
+export {
+  Ministries,
+  type MinistriesProps,
+  type MinistryItem,
+} from './sections/Ministries'
+
 // Section Components - Team (5 variants)
 export {
   TeamGrid,

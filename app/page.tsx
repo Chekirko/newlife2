@@ -5,9 +5,6 @@ import {
   type HeroSlide,
   // About variants
   AboutWithStats,
-  // Services
-  ServicesCards,
-  type ServiceItem,
   // Blog
   BlogCarousel,
   type BlogPostData,
@@ -20,7 +17,9 @@ import {
   // ActionBox
   ActionBoxFullWidth,
 } from '@/components'
-import { AboutWithDecorations } from '@/components/sections/AboutWithDecorations'
+import { PastorGreeting } from '@/components/sections/PastorGreeting'
+import { OurVision } from '@/components/sections/OurVision'
+import { Ministries, type MinistryItem } from '@/components/sections/Ministries'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
@@ -41,9 +40,20 @@ export default function HomePage() {
         showDots={true}
       />
 
-      {/* PASTOR WELCOME - AboutWithDecorations з Larexa demo style */}
-      <AboutWithDecorations
-        preTitle="Про нас"
+      {/* OUR VISION - Before Pastor Greeting */}
+      <OurVision
+        preTitle="Хто ми"
+        title="Люди, які знаходять Щастя і  дарують Його іншим"
+        subtitle="Церква «Нове Життя» — це спільнота людей, які вірять у силу Божої любові та прагнуть ділитися нею з кожним."
+        visionHighlight="Наша місія —"
+        visionText="Допомагати кожній людині пізнати Бога як джерело істинного Щастя, відновлювати сім'ї та служити громаді через практичну любов, змінюючи атмосферу в Україні."
+        image1="/images/vision1.jpg"
+        image2="/images/vision2.jpg"
+      />
+
+      {/* PASTOR WELCOME - PastorGreeting з Larexa demo style */}
+      <PastorGreeting
+        preTitle="Вітання пастора"
         title="Ласкаво просимо до нашої церковної родини"
         subtitle="Наша дружня команда завжди готова допомогти вам зрозуміти ваші духовні потреби та підтримати на шляху віри."
         description="Дорогі друзі! Я вірю, що ваш візит на наш сайт — не випадковість. Бог має чудовий план для вашого життя, і ми хочемо допомогти вам відкрити його."
@@ -55,14 +65,14 @@ export default function HomePage() {
         image="/images/pastor-welcome.jpg"
       />
 
-      {/* WHAT WE DO - ServicesCards з Larexa */}
-      <ServicesCards
-        preTitle="Наші служіння"
-        title="Що ми робимо"
-        description="У нас є служіння для кожного віку та інтересу. Знайдіть своє місце в нашій спільноті."
-        items={ministryItems}
+      {/* WHAT YOU'LL FIND - Що ви знайдете в церкві */}
+      <Ministries
+        preTitle="Що ви знайдете"
+        title="Більше, ніж просто церква"
+        description="Церква — це місце, де кожен може знайти спільноту, підтримку та духовне зростання."
+        items={whatYouFindItems}
         columns={3}
-        className="py-16 lg:py-24 bg-gray-100"
+        className="bg-gray-100"
       />
 
       {/* SERVICE SCHEDULE - HeroGradientImage з Larexa (як CTA) */}
@@ -183,50 +193,44 @@ const heroSlides: HeroSlide[] = [
 ]
 
 // ============================================
-// DATA - Ministry Items (Services)
+// DATA - What You'll Find Items
 // ============================================
-const ministryItems: ServiceItem[] = [
+const whatYouFindItems: MinistryItem[] = [
   {
-    icon: 'fas fa-child',
-    title: 'Дитяче служіння',
-    description: 'Програми для дітей від 3 до 12 років з біблійними уроками та творчістю.',
-    link: '/ministries/children',
-    linkText: 'Дізнатися більше'
-  },
-  {
-    icon: 'fas fa-users',
-    title: 'Молодіжне служіння',
-    description: 'Спільнота для молоді з worship, навчанням та активностями.',
-    link: '/ministries/youth',
-    linkText: 'Дізнатися більше'
-  },
-  {
-    icon: 'fas fa-female',
-    title: 'Жіноче служіння',
-    description: 'Підтримка, спілкування та духовний розвиток для жінок.',
-    link: '/ministries/women',
-    linkText: 'Дізнатися більше'
-  },
-  {
-    icon: 'fas fa-male',
-    title: 'Чоловіче служіння',
-    description: 'Братство, наставництво та спільні проєкти для чоловіків.',
-    link: '/ministries/men',
-    linkText: 'Дізнатися більше'
+    icon: 'fas fa-book-bible',
+    title: 'Проповідь Слова Божого',
+    description: 'Зрозуміле викладання Біблії, яке допомагає застосувати біблійні принципи у повсякденному житті та дає відповіді на важливі питання.',
+    image: '/images/action1.jpg',
   },
   {
     icon: 'fas fa-music',
-    title: 'Музичне служіння',
-    description: 'Прославлення через музику та творчість у церкві.',
-    link: '/ministries/worship',
-    linkText: 'Дізнатися більше'
+    title: 'Прославлення',
+    description: 'Жива музика, щирі пісні та атмосфера Божої присутності, де ви можете вільно висловити свою любов до Бога.',
+    image: '/images/action2.jpg',
+  },
+  {
+    icon: 'fas fa-heart',
+    title: 'Дружня спільнота',
+    description: 'Теплі стосунки, щира дружба та люди, які стануть для вас справжньою сім’єю у вірі.',
+    image: '/images/action3.jpg',
   },
   {
     icon: 'fas fa-hands-helping',
-    title: 'Соціальне служіння',
-    description: 'Допомога нужденним та служіння в громаді міста.',
-    link: '/ministries/outreach',
-    linkText: 'Дізнатися більше'
+    title: 'Практична допомога',
+    description: 'Підтримка у складних життєвих ситуаціях: душпастирська опіка, матеріальна допомога та молитвенна підтримка.',
+    image: '/images/action4.jpg',
+  },
+  {
+    icon: 'fas fa-child',
+    title: 'Робота з молоддю та дітьми',
+    description: 'Цікаві програми для молоді та дітей, де вони можуть розвиватися, дружити та пізнавати Бога.',
+    image: '/images/action5.jpg',
+  },
+  {
+    icon: 'fas fa-door-open',
+    title: 'Атмосфера прийняття',
+    description: 'Місце, де вас приймуть такими, якими ви є, без осуду. Божа любов для кожного.',
+    image: '/images/action6.jpg',
   },
 ]
 
