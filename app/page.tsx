@@ -20,6 +20,7 @@ import {
 import { PastorGreeting } from '@/components/sections/PastorGreeting'
 import { OurVision } from '@/components/sections/OurVision'
 import { Ministries, type MinistryItem } from '@/components/sections/Ministries'
+import { EventsSlider, type EventItem } from '@/components/sections/EventsSlider'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
@@ -38,6 +39,15 @@ export default function HomePage() {
         autoplaySpeed={6000}
         showArrows={true}
         showDots={true}
+      />
+
+      {/* EVENTS - EventsSlider (під Hero) */}
+      <EventsSlider
+        preTitle="Не пропустіть"
+        title="Найближчі події"
+        description="Анонси подій та заходів нашої церкви"
+        events={eventsData}
+        className="bg-gray-100"
       />
 
       {/* OUR VISION - Before Pastor Greeting */}
@@ -100,14 +110,7 @@ export default function HomePage() {
         className="py-16 lg:py-24"
       />
 
-      {/* ANNOUNCEMENTS / EVENTS - BlogCarousel з Larexa */}
-      <BlogCarousel
-        preTitle="Не пропустіть"
-        title="Найближчі події"
-        description="Анонси подій та заходів нашої церкви"
-        posts={eventPosts}
-        className="py-16 lg:py-24 bg-gray-100"
-      />
+
 
       {/* NEWS - BlogCarousel з Larexa */}
       <BlogCarousel
@@ -245,24 +248,44 @@ const churchStats = [
 ]
 
 // ============================================
-// DATA - Event Posts (Announcements)
+// DATA - Events (for EventsSlider)
 // ============================================
-const eventPosts: BlogPostData[] = [
+const eventsData: EventItem[] = [
   {
     id: '1',
     title: 'Великодній концерт',
-    tag: 'Подія',
+    image: '/images/event1.jpg',
     date: '20 квітня 2026',
-    excerpt: 'Святковий концерт до Великодня з участю церковного хору та запрошених гостей.',
+    tag: 'Подія',
+    description: 'Святковий концерт до Великодня з участю церковного хору та запрошених гостей.',
     href: '/events/easter-concert'
   },
   {
     id: '2',
     title: 'Молодіжна конференція',
-    tag: 'Конференція',
+    image: '/images/event2.jpg',
     date: '15-17 травня 2026',
-    excerpt: 'Три дні натхнення, навчання та спілкування для молоді з усієї України.',
+    tag: 'Конференція',
+    description: 'Три дні натхнення, навчання та спілкування для молоді з усієї України.',
     href: '/events/youth-conference'
+  },
+  {
+    id: '3',
+    title: 'Сімейний пікнік',
+    image: '/images/event3.jpg',
+    date: '1 червня 2026',
+    tag: 'Родина',
+    description: 'Спільний відпочинок на природі для всієї родини з іграми та смачною їжею.',
+    href: '/events/family-picnic'
+  },
+  {
+    id: '4',
+    title: 'Біблійна школа',
+    image: '/images/event4.jpg',
+    date: 'Щосуботи о 16:00',
+    tag: 'Навчання',
+    description: 'Курс "Основи віри" для тих, хто хоче глибше пізнати Слово Боже.',
+    href: '/events/bible-school'
   },
 ]
 
