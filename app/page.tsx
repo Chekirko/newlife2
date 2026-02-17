@@ -5,9 +5,6 @@ import {
   type HeroSlide,
   // About variants
   AboutWithStats,
-  // Blog
-  BlogCarousel,
-  type BlogPostData,
   // Testimonials
   TestimonialsGrid,
   type TestimonialData,
@@ -21,6 +18,7 @@ import { PastorGreeting } from '@/components/sections/PastorGreeting'
 import { OurVision } from '@/components/sections/OurVision'
 import { Ministries, type MinistryItem } from '@/components/sections/Ministries'
 import { EventsSlider, type EventItem } from '@/components/sections/EventsSlider'
+import { NewsSlider, type NewsItem } from '@/components/sections/NewsSlider'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
@@ -98,6 +96,15 @@ export default function HomePage() {
         className="py-12"
       />
 
+      {/* NEWS - NewsSlider (після розкладу богослужінь) */}
+      <NewsSlider
+        preTitle="Останні новини"
+        title="Що нового в церкві"
+        description="Новини та оновлення з життя нашої спільноти"
+        news={newsData}
+        className="bg-gray-50"
+      />
+
       {/* ABOUT WITH STATS - AboutWithStats з Larexa */}
       <AboutWithStats
         preTitle="Про нашу церкву"
@@ -107,17 +114,6 @@ export default function HomePage() {
         stats={churchStats}
         buttonText="Дізнатися більше"
         buttonHref="/about"
-        className="py-16 lg:py-24"
-      />
-
-
-
-      {/* NEWS - BlogCarousel з Larexa */}
-      <BlogCarousel
-        preTitle="Останні новини"
-        title="Що нового в церкві"
-        description="Новини та оновлення з життя нашої спільноти"
-        posts={newsPosts}
         className="py-16 lg:py-24"
       />
 
@@ -290,32 +286,68 @@ const eventsData: EventItem[] = [
 ]
 
 // ============================================
-// DATA - News Posts
+// DATA - News (for NewsSlider)
 // ============================================
-const newsPosts: BlogPostData[] = [
+const newsData: NewsItem[] = [
   {
     id: '1',
-    title: 'Підсумки місіонерської поїздки',
-    tag: 'Місія',
+    title: 'Підсумки місіонерської поїздки до Молдови',
     date: '28 січня 2026',
-    excerpt: 'Наша команда повернулася з місіонерської поїздки до Молдови.',
+    mainCategory: 'Місія',
+    categories: ['Служіння', 'Звіти'],
+    text: 'Наша команда повернулася з місіонерської поїздки до Молдови. Ми відвідали три села, провели дитячі програми, роздавали гуманітарну допомогу та ділилися Євангелієм. Дякуємо всім, хто підтримав цю поїздку молитвами та пожертвами.',
+    image: '/images/news1.jpg',
     href: '/news/mission-trip'
   },
   {
     id: '2',
-    title: 'Новий курс біблійної школи',
-    tag: 'Навчання',
+    title: 'Новий курс біблійної школи стартує у лютому',
     date: '25 січня 2026',
-    excerpt: 'Запрошуємо на новий курс "Основи віри" для тих, хто хоче глибше пізнати Слово Боже.',
+    mainCategory: 'Навчання',
+    categories: ['Біблійна школа'],
+    text: 'Запрошуємо на новий курс для тих, хто хоче глибше пізнати Слово Боже. Курс розрахований на 12 тижнів і охоплює основи християнської віри, вивчення Старого та Нового Заповітів.',
+    image: '/images/news2.jpg',
     href: '/news/bible-school'
   },
   {
     id: '3',
-    title: 'Різдвяні благодійні заходи',
-    tag: 'Служіння',
+    title: 'Різдвяні благодійні заходи: результати',
     date: '20 січня 2026',
-    excerpt: 'Дякуємо всім, хто долучився до різдвяних благодійних заходів.',
+    mainCategory: 'Служіння',
+    categories: ['Благодійність'],
+    text: 'Дякуємо всім, хто долучився до різдвяних благодійних заходів. Разом ми зібрали понад 500 подарунків для дітей з малозабезпечених родин та передали продуктові набори для людей похилого віку.',
+    image: '/images/news3.jpg',
     href: '/news/christmas-charity'
+  },
+  {
+    id: '4',
+    title: 'Молодіжне зібрання: нові формати спілкування',
+    date: '15 січня 2026',
+    mainCategory: 'Молодь',
+    categories: ['Спілкування'],
+    text: 'Наша молодіжна група впроваджує нові формати зустрічей. Тепер кожну другу п\'ятницю ми проводимо тематичні вечори з дискусіями, настільними іграми та спільною вечерею.',
+    image: '/images/news4.jpg',
+    href: '/news/youth-meetings'
+  },
+  {
+    id: '5',
+    title: 'Хор церкви виступив на міському фестивалі',
+    date: '10 січня 2026',
+    mainCategory: 'Культура',
+    categories: ['Хор', 'Події'],
+    text: 'Церковний хор взяв участь у міському різдвяному фестивалі та виконав програму з колядок та духовних пісень. Виступ зібрав понад 300 глядачів і став справжнім свідченням Божої любові.',
+    image: '/images/news5.jpg',
+    href: '/news/choir-festival'
+  },
+  {
+    id: '6',
+    title: 'Волонтерський проєкт: допомога переселенцям',
+    date: '5 січня 2026',
+    mainCategory: 'Волонтерство',
+    categories: ['Допомога', 'Служіння'],
+    text: 'Волонтери нашої церкви продовжують допомагати родинам переселенців. За останній місяць ми забезпечили житлом дві родини та допомогли з працевлаштуванням п\'яти людям.',
+    image: '/images/news6.jpg',
+    href: '/news/volunteer-project'
   },
 ]
 
