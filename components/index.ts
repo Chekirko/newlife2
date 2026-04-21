@@ -8,7 +8,7 @@ export { Testimonial, type TestimonialProps, type TestimonialVariant } from './u
 export { SocialIcons, type SocialIconsProps, type SocialIconsVariant, type SocialPlatform } from './ui/SocialIcons'
 export { ProcessStep, ProcessSteps, type ProcessStepProps, type ProcessStepVariant } from './ui/ProcessStep'
 export { BlogPost, BlogPostItem, type BlogPostProps, type BlogPostVariant } from './ui/BlogPost'
-export { PortfolioCard, PortfolioGrid, PortfolioFilter, type PortfolioCardProps, type PortfolioGridProps } from './ui/PortfolioCard'
+export { MinistryCard, MinistryCardGrid, type MinistryCardProps, type MinistryCardGridProps } from './ui/MinistryCard'
 
 // Layout Components
 export { Container, Row, Col, type ContainerProps, type RowProps, type ColProps } from './layout/Container'
@@ -234,19 +234,11 @@ export {
   type ProcessStepData,
 } from './sections/Process'
 
-// Section Components - Portfolio (4 variants)
+// Section Components - Ministry Grid
 export {
-  PortfolioSection,
-  PortfolioMasonry,
-  PortfolioFullWidth,
-  CompanyPortfolio,
-  Portfolio,
-  type PortfolioSectionProps,
-  type PortfolioMasonryProps,
-  type PortfolioFullWidthProps,
-  type CompanyPortfolioProps,
-  type PortfolioItem,
-} from './sections/Portfolio'
+  MinistryGridSection,
+  type MinistryGridSectionProps,
+} from './sections/MinistryGrid'
 
 // Section Components - Other
 export { Section, SectionTitle, type SectionProps, type SectionTitleProps } from './sections/Section'

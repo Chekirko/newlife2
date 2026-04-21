@@ -64,7 +64,8 @@ export default function RootLayout({
         className={`${roboto.variable} ${poppins.variable} ${playfair.variable} antialiased`}
       >
         <ChurchHeader />
-        <main>
+        {/* pt-[92px] = top bar (44px) + main nav (~48px) — pushes content below fixed header */}
+        <main className="pt-[92px]">
           {children}
         </main>
         <ChurchFooter />

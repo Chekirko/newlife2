@@ -13,16 +13,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Головна', href: '/' },
   { label: 'Про нас', href: '/about' },
-  { 
-    label: 'Служіння', 
-    href: '/ministries',
-    children: [
-      { label: 'Дитяче служіння', href: '/ministries/children' },
-      { label: 'Молодіжне служіння', href: '/ministries/youth' },
-      { label: 'Жіноче служіння', href: '/ministries/women' },
-      { label: 'Чоловіче служіння', href: '/ministries/men' },
-    ]
-  },
+  { label: 'Служіння', href: '/ministries' },
   { label: 'Новини', href: '/news' },
   { label: 'Медіа', href: '/media' },
   { label: 'Контакти', href: '/contact' },
@@ -102,14 +93,13 @@ export default function ChurchHeader() {
         </div>
       </div>
 
-      {/* Main Header */}
+      {/* Main Header — always white, opaque */}
       <header 
-        className="fixed left-0 right-0 z-[1000]"
+        className="fixed left-0 right-0 z-[1000] bg-white"
         style={{ 
           top: isSticky ? 0 : TOP_BAR_HEIGHT,
-          backgroundColor: isSticky ? 'white' : 'transparent',
-          boxShadow: isSticky ? '0 2px 20px rgba(0,0,0,0.1)' : 'none',
-          transition: 'top 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease'
+          boxShadow: '0 2px 20px rgba(0,0,0,0.08)',
+          transition: 'top 0.3s ease'
         }}
       >
         <div className="container-larexa py-3">
@@ -118,22 +108,12 @@ export default function ChurchHeader() {
             <Link href="/" className="navbar-brand flex items-center gap-3">
               <div 
                 className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ 
-                  backgroundColor: isSticky ? 'var(--color-primary)' : 'rgba(255,255,255,0.2)',
-                  backdropFilter: isSticky ? 'none' : 'blur(4px)',
-                  transition: 'background-color 0.3s ease'
-                }}
+                style={{ backgroundColor: 'var(--color-primary)' }}
               >
                 <span className="text-white font-bold text-lg">НЖ</span>
               </div>
               <div className="hidden sm:block">
-                <span 
-                  className="font-heading font-bold text-lg block leading-tight"
-                  style={{ 
-                    color: isSticky ? '#343a40' : 'white',
-                    transition: 'color 0.3s ease'
-                  }}
-                >
+                <span className="font-heading font-bold text-lg block leading-tight text-gray-800">
                   Нове Життя
                 </span>
               </div>
@@ -145,15 +125,11 @@ export default function ChurchHeader() {
                 {navItems.map((item, idx) => (
                   <li key={idx} className="nav-item relative group">
                     {item.children ? (
-                      <DropdownMenu item={item} isSticky={isSticky} />
+                      <DropdownMenu item={item} />
                     ) : (
                       <Link 
                         href={item.href}
-                        className="nav-link px-4 py-2 block font-medium text-[15px]"
-                        style={{ 
-                          color: isSticky ? '#495057' : 'rgba(255,255,255,0.9)',
-                          transition: 'color 0.3s ease'
-                        }}
+                        className="nav-link px-4 py-2 block font-medium text-[15px] text-gray-700 hover:text-primary transition-colors"
                       >
                         {item.label}
                       </Link>
@@ -174,25 +150,22 @@ export default function ChurchHeader() {
               aria-label="Toggle menu"
             >
               <span 
-                className="block w-6 h-0.5 mb-1.5"
+                className="block w-6 h-0.5 mb-1.5 bg-gray-800"
                 style={{ 
-                  backgroundColor: isSticky ? '#343a40' : 'white',
                   transform: isMobileMenuOpen ? 'rotate(45deg) translateY(8px)' : 'none',
                   transition: 'all 0.3s ease'
                 }}
               />
               <span 
-                className="block w-6 h-0.5 mb-1.5"
+                className="block w-6 h-0.5 mb-1.5 bg-gray-800"
                 style={{ 
-                  backgroundColor: isSticky ? '#343a40' : 'white',
                   opacity: isMobileMenuOpen ? 0 : 1,
                   transition: 'all 0.3s ease'
                 }}
               />
               <span 
-                className="block w-6 h-0.5"
+                className="block w-6 h-0.5 bg-gray-800"
                 style={{ 
-                  backgroundColor: isSticky ? '#343a40' : 'white',
                   transform: isMobileMenuOpen ? 'rotate(-45deg) translateY(-8px)' : 'none',
                   transition: 'all 0.3s ease'
                 }}
@@ -245,15 +218,11 @@ export default function ChurchHeader() {
 }
 
 // Desktop Dropdown Menu
-function DropdownMenu({ item, isSticky }: { item: NavItem; isSticky: boolean }) {
+function DropdownMenu({ item }: { item: NavItem }) {
   return (
     <div className="dropdown relative group">
       <button 
-        className="nav-link px-4 py-2 flex items-center gap-1 font-medium text-[15px]"
-        style={{ 
-          color: isSticky ? '#495057' : 'rgba(255,255,255,0.9)',
-          transition: 'color 0.3s ease'
-        }}
+        className="nav-link px-4 py-2 flex items-center gap-1 font-medium text-[15px] text-gray-700 hover:text-primary transition-colors"
       >
         {item.label}
         <svg className="w-3 h-3 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
