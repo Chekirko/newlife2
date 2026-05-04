@@ -13,7 +13,7 @@ const PREDEFINED = [
 ]
 
 export function CategoryInput(props: StringInputProps) {
-  const { onChange, value } = props
+  const { onChange, value, id } = props
 
   const handleChange = useCallback(
     (newValue: string) => {
@@ -24,6 +24,7 @@ export function CategoryInput(props: StringInputProps) {
 
   return (
     <Autocomplete
+      id={id || 'category-input'}
       fontSize={2}
       options={PREDEFINED.map((val) => ({ value: val }))}
       value={value || ''}
