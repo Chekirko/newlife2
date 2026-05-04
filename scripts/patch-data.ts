@@ -1,4 +1,4 @@
-import { createClient } from '@sanity/client'
+import { createClient } from 'next-sanity'
 import { loadEnvConfig } from '@next/env'
 
 const projectDir = process.cwd()

@@ -1,4 +1,4 @@
-import { createClient } from '@sanity/client'
+import { createClient } from 'next-sanity'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
