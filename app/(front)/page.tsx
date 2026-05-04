@@ -17,16 +17,57 @@ import {
 import { PastorGreeting } from '@/components/sections/PastorGreeting'
 import { OurVision } from '@/components/sections/OurVision'
 import { Ministries, type MinistryItem } from '@/components/sections/Ministries'
-import { EventsSlider, type EventItem } from '@/components/sections/EventsSlider'
+import { EventsSlider } from '@/components/sections/EventsSlider'
 import { NewsSlider } from '@/components/sections/NewsSlider'
-import { newsData } from '@/data/newsData'
+import { client } from '@/sanity/lib/client'
+import { NEWS_QUERY, EVENTS_QUERY } from '@/sanity/lib/queries'
+import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
+import { urlFor } from '@/sanity/lib/image'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
 // Using actual Larexa components
 // ============================================
 
-export default function HomePage() {
+/** Format Sanity datetime to readable Ukrainian date */
+function formatDate(isoDate: string): string {
+  const months = [
+    'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
+    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'
+  ]
+  const d = new Date(isoDate)
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
+}
+
+export default async function HomePage() {
+  // Fetch news and events from Sanity
+  const [newsRaw, eventsRaw] = await Promise.all([
+    client.fetch<SanityNews[]>(NEWS_QUERY),
+    client.fetch<SanityEvent[]>(EVENTS_QUERY),
+  ])
+
+  // Transform Sanity data for components
+  const newsData = newsRaw.map((n) => ({
+    _id: n._id,
+    title: n.title,
+    slug: n.slug,
+    date: formatDate(n.publishedAt),
+    mainCategory: n.mainCategory,
+    categories: n.categories,
+    text: n.text,
+    image: n.image ? urlFor(n.image).width(600).height(400).url() : '/images/placeholder.jpg',
+  }))
+
+  const eventsData = eventsRaw.map((e) => ({
+    _id: e._id,
+    title: e.title,
+    slug: e.slug,
+    image: e.image ? urlFor(e.image).width(600).height(400).url() : '/images/placeholder.jpg',
+    date: e.date,
+    tag: e.tag,
+    description: e.description,
+  }))
+
   return (
     <>
       {/* HERO SECTION - HeroSlider з Larexa */}
@@ -41,13 +82,15 @@ export default function HomePage() {
       />
 
       {/* EVENTS - EventsSlider (під Hero) */}
-      <EventsSlider
-        preTitle="Не пропустіть"
-        title="Найближчі події"
-        description="Анонси подій та заходів нашої церкви"
-        events={eventsData}
-        className="bg-gray-100"
-      />
+      {eventsData.length > 0 && (
+        <EventsSlider
+          preTitle="Не пропустіть"
+          title="Найближчі події"
+          description="Анонси подій та заходів нашої церкви"
+          events={eventsData}
+          className="bg-gray-100"
+        />
+      )}
 
       {/* OUR VISION - Before Pastor Greeting */}
       <OurVision
@@ -98,13 +141,15 @@ export default function HomePage() {
       />
 
       {/* NEWS - NewsSlider (після розкладу богослужінь) */}
-      <NewsSlider
-        preTitle="Останні новини"
-        title="Що нового в церкві"
-        description="Новини та оновлення з життя нашої спільноти"
-        news={newsData}
-        className="bg-gray-50"
-      />
+      {newsData.length > 0 && (
+        <NewsSlider
+          preTitle="Останні новини"
+          title="Що нового в церкві"
+          description="Новини та оновлення з життя нашої спільноти"
+          news={newsData}
+          className="bg-gray-50"
+        />
+      )}
 
       {/* ABOUT WITH STATS - AboutWithStats з Larexa */}
       <AboutWithStats
@@ -155,7 +200,7 @@ export default function HomePage() {
 }
 
 // ============================================
-// DATA - Hero Slides
+// DATA - Hero Slides (static — not from CMS)
 // ============================================
 const heroSlides: HeroSlide[] = [
   {
@@ -193,7 +238,7 @@ const heroSlides: HeroSlide[] = [
 ]
 
 // ============================================
-// DATA - What You'll Find Items
+// DATA - What You'll Find Items (static — UI content)
 // ============================================
 const whatYouFindItems: MinistryItem[] = [
   {
@@ -211,7 +256,7 @@ const whatYouFindItems: MinistryItem[] = [
   {
     icon: 'fas fa-heart',
     title: 'Дружня спільнота',
-    description: 'Теплі стосунки, щира дружба та люди, які стануть для вас справжньою сім’єю у вірі.',
+    description: 'Теплі стосунки, щира дружба та люди, які стануть для вас справжньою сім\'єю у вірі.',
     image: '/images/action3.jpg',
   },
   {
@@ -235,7 +280,7 @@ const whatYouFindItems: MinistryItem[] = [
 ]
 
 // ============================================
-// DATA - Church Stats
+// DATA - Church Stats (static)
 // ============================================
 const churchStats = [
   { value: '19+', label: 'Років служіння' },
@@ -245,50 +290,7 @@ const churchStats = [
 ]
 
 // ============================================
-// DATA - Events (for EventsSlider)
-// ============================================
-const eventsData: EventItem[] = [
-  {
-    id: '1',
-    title: 'Великодній концерт',
-    image: '/images/event1.jpg',
-    date: '20 квітня 2026',
-    tag: 'Подія',
-    description: 'Святковий концерт до Великодня з участю церковного хору та запрошених гостей.',
-    href: '/events/easter-concert'
-  },
-  {
-    id: '2',
-    title: 'Молодіжна конференція',
-    image: '/images/event2.jpg',
-    date: '15-17 травня 2026',
-    tag: 'Конференція',
-    description: 'Три дні натхнення, навчання та спілкування для молоді з усієї України.',
-    href: '/events/youth-conference'
-  },
-  {
-    id: '3',
-    title: 'Сімейний пікнік',
-    image: '/images/event3.jpg',
-    date: '1 червня 2026',
-    tag: 'Родина',
-    description: 'Спільний відпочинок на природі для всієї родини з іграми та смачною їжею.',
-    href: '/events/family-picnic'
-  },
-  {
-    id: '4',
-    title: 'Біблійна школа',
-    image: '/images/event4.jpg',
-    date: 'Щосуботи о 16:00',
-    tag: 'Навчання',
-    description: 'Курс "Основи віри" для тих, хто хоче глибше пізнати Слово Боже.',
-    href: '/events/bible-school'
-  },
-]
-
-
-// ============================================
-// DATA - Testimonials
+// DATA - Testimonials (static)
 // ============================================
 const testimonials: TestimonialData[] = [
   {
@@ -308,7 +310,7 @@ const testimonials: TestimonialData[] = [
 ]
 
 // ============================================
-// DATA - FAQ Items
+// DATA - FAQ Items (static)
 // ============================================
 const faqItems: FAQItem[] = [
   {

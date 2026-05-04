@@ -12,13 +12,13 @@ import { clsx } from 'clsx'
 // =========================================
 
 export interface EventItem {
-  id: string
+  _id: string
   title: string
   image: string
   date: string
   description: string
-  href: string
-  tag?: string
+  slug: string
+  tag?: string | null
 }
 
 export interface EventsSliderProps {
@@ -142,7 +142,7 @@ export const EventsSlider = ({
                 </h3>
                 <p className="text-gray-600 mb-6 text-lg">{event.description}</p>
                 <Link
-                  href={event.href}
+                  href={`/events/${event.slug}`}
                   className="inline-flex items-center justify-center px-6 py-3 bg-grad text-white font-medium rounded-lg hover:opacity-90 transition-opacity w-fit"
                 >
                   Детальніше
@@ -204,7 +204,7 @@ export const EventsSlider = ({
             >
               {events.map((event) => (
                 <div
-                  key={event.id}
+                  key={event._id}
                   className="w-full md:w-1/2 flex-shrink-0 px-3 lg:px-4"
                 >
                   <div className="bg-white rounded-xl shadow-md overflow-hidden h-full hover:shadow-xl transition-shadow">
@@ -235,7 +235,7 @@ export const EventsSlider = ({
                         {event.description}
                       </p>
                       <Link
-                        href={event.href}
+                        href={`/events/${event.slug}`}
                         className="inline-flex items-center text-primary font-medium text-sm hover:underline"
                       >
                         Детальніше

@@ -1,6 +1,8 @@
-import { NewsItem } from '@/components/sections/NewsSlider'
-
-export const newsData: NewsItem[] = [
+/**
+ * @deprecated This mock data is replaced by Sanity CMS.
+ * Please use client.fetch(NEWS_QUERY) instead.
+ */
+export const newsData = [
   {
     id: '1',
     title: 'Підсумки місіонерської поїздки до Молдови',

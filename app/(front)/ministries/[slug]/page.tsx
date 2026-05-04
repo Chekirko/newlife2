@@ -5,14 +5,22 @@ import type { Metadata } from 'next'
 
 import { NewsSlider } from '@/components/sections/NewsSlider'
 import { PhotoGalleryGrid } from '@/components/sections/PhotoGalleryGrid'
-import { ministriesData } from '@/data/ministriesData'
-import { newsData } from '@/data/newsData'
+import { client } from '@/sanity/lib/client'
+import { urlFor } from '@/sanity/lib/image'
+import {
+  MINISTRY_BY_SLUG_QUERY,
+  MINISTRY_SLUGS_QUERY,
+  OTHER_MINISTRIES_QUERY,
+  NEWS_QUERY,
+} from '@/sanity/lib/queries'
+import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/lib/types'
 
 // ============================================
 // Static params for all ministry slugs
 // ============================================
-export function generateStaticParams() {
-  return ministriesData.map((m) => ({ slug: m.slug }))
+export async function generateStaticParams() {
+  const slugs = await client.fetch<{ slug: string }[]>(MINISTRY_SLUGS_QUERY)
+  return slugs.map((s) => ({ slug: s.slug }))
 }
 
 // ============================================
@@ -20,7 +28,7 @@ export function generateStaticParams() {
 // ============================================
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const ministry = ministriesData.find((m) => m.slug === slug)
+  const ministry = await client.fetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug })
   if (!ministry) return { title: 'Служіння не знайдено' }
 
   return {
@@ -29,15 +37,46 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
+/** Format Sanity datetime to readable Ukrainian date */
+function formatDate(isoDate: string): string {
+  const months = [
+    'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
+    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'
+  ]
+  const d = new Date(isoDate)
+  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
+}
+
 // ============================================
 // PAGE (Server Component)
 // ============================================
 export default async function MinistryDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const ministry = ministriesData.find((m) => m.slug === slug)
+
+  const [ministry, otherMinistries, newsRaw] = await Promise.all([
+    client.fetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug }),
+    client.fetch<SanityMinistryLink[]>(OTHER_MINISTRIES_QUERY, { slug }),
+    client.fetch<SanityNews[]>(NEWS_QUERY),
+  ])
+
   if (!ministry) notFound()
 
-  const otherMinistries = ministriesData.filter((m) => m.slug !== slug)
+  // Transform news for NewsSlider
+  const newsData = newsRaw.map((n) => ({
+    _id: n._id,
+    title: n.title,
+    slug: n.slug,
+    date: formatDate(n.publishedAt),
+    mainCategory: n.mainCategory,
+    categories: n.categories,
+    text: n.text,
+    image: n.image ? urlFor(n.image).width(600).height(400).url() : '/images/placeholder.jpg',
+  }))
+
+  // Transform gallery images
+  const galleryImages = ministry.gallery
+    ? ministry.gallery.map((img) => urlFor(img).width(800).height(600).url())
+    : []
 
   return (
     <>
@@ -93,7 +132,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                 </h5>
                 <ul className="space-y-1">
                   {otherMinistries.map((m) => (
-                    <li key={m.id}>
+                    <li key={m._id}>
                       <Link
                         href={`/ministries/${m.slug}`}
                         className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-sm font-medium"
@@ -128,7 +167,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               {/* Ministry Image */}
               <div className="relative rounded-xl overflow-hidden mb-8" style={{ aspectRatio: '16 / 9' }}>
                 <Image
-                  src={typeof ministry.image === 'string' ? ministry.image : ministry.image}
+                  src={urlFor(ministry.image).width(1200).height(675).url()}
                   alt={ministry.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 75vw"
@@ -148,43 +187,53 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               </div>
 
               {/* Bible Quote */}
-              {ministry.bibleQuote && (
+              {ministry.bibleQuoteText && (
                 <blockquote className="relative my-10 py-6 px-8 rounded-xl bg-gray-50 border-l-4 border-primary">
                   <svg className="absolute top-4 right-4 w-10 h-10 text-primary/20" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983z" />
                   </svg>
                   <p className="text-lg lg:text-xl italic text-gray-700 mb-3 leading-relaxed">
-                    &ldquo;{ministry.bibleQuote.text}&rdquo;
+                    &ldquo;{ministry.bibleQuoteText}&rdquo;
                   </p>
-                  <cite className="text-primary font-semibold text-sm not-italic">
-                    — {ministry.bibleQuote.reference}
-                  </cite>
+                  {ministry.bibleQuoteReference && (
+                    <cite className="text-primary font-semibold text-sm not-italic">
+                      — {ministry.bibleQuoteReference}
+                    </cite>
+                  )}
                 </blockquote>
               )}
 
               {/* Leader Info */}
-              <div className="flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8">
-                <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative">
-                  <Image
-                    src={typeof ministry.leaderPhoto === 'string' ? ministry.leaderPhoto : ministry.leaderPhoto}
-                    alt={ministry.leaderName}
-                    fill
-                    sizes="80px"
-                    className="object-cover"
-                  />
+              {ministry.leaderName && (
+                <div className="flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8">
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative">
+                    {ministry.leaderPhoto ? (
+                      <Image
+                        src={urlFor(ministry.leaderPhoto).width(160).height(160).url()}
+                        alt={ministry.leaderName}
+                        fill
+                        sizes="80px"
+                        className="object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-2xl font-bold">
+                        {ministry.leaderName.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
+                    <h4 className="text-lg font-bold text-gray-800 m-0">
+                      {ministry.leaderName}
+                    </h4>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
-                  <h4 className="text-lg font-bold text-gray-800 m-0">
-                    {ministry.leaderName}
-                  </h4>
-                </div>
-              </div>
+              )}
 
               {/* Photo Gallery */}
-              {ministry.gallery && ministry.gallery.length > 0 && (
+              {galleryImages.length > 0 && (
                 <PhotoGalleryGrid
-                  images={ministry.gallery}
+                  images={galleryImages}
                   title="Фотогалерея"
                   className="mt-10"
                 />
@@ -196,13 +245,15 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
       </section>
 
       {/* News Slider */}
-      <NewsSlider
-        preTitle="Останні новини"
-        title="Новини служіння"
-        description={`Останні новини та оновлення, пов'язані зі служінням «${ministry.title}»`}
-        news={newsData}
-        className="bg-gray-50"
-      />
+      {newsData.length > 0 && (
+        <NewsSlider
+          preTitle="Останні новини"
+          title="Новини служіння"
+          description={`Останні новини та оновлення, пов'язані зі служінням «${ministry.title}»`}
+          news={newsData}
+          className="bg-gray-50"
+        />
+      )}
     </>
   )
 }

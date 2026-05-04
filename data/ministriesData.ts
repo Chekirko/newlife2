@@ -1,5 +1,7 @@
-import { Ministry } from '@/types/ministryTypes'
-
+/**
+ * @deprecated This mock data is replaced by Sanity CMS.
+ * Please use client.fetch(MINISTRIES_QUERY) instead.
+ */
 // Shared gallery images for all ministries (using existing images)
 const sharedGallery = [
   '/images/ministries/m1.jpg',
@@ -11,7 +13,7 @@ const sharedGallery = [
   '/images/ministries/m7.jpg',
 ]
 
-export const ministriesData: Ministry[] = [
+export const ministriesData = [
   {
     id: '1',
     slug: 'children',

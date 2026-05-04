@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Roboto, Playfair_Display } from "next/font/google";
 import "./globals.css";
-import ChurchHeader from "@/components/ChurchHeader";
-import ChurchFooter from "@/components/ChurchFooter";
 
 const roboto = Roboto({
   variable: "--font-roboto",
@@ -63,12 +61,7 @@ export default function RootLayout({
       <body
         className={`${roboto.variable} ${poppins.variable} ${playfair.variable} antialiased`}
       >
-        <ChurchHeader />
-        {/* pt-[92px] = top bar (44px) + main nav (~48px) — pushes content below fixed header */}
-        <main className="pt-[92px]">
-          {children}
-        </main>
-        <ChurchFooter />
+        {children}
       </body>
     </html>
   );

@@ -12,15 +12,14 @@ import { clsx } from 'clsx'
 // =========================================
 
 export interface NewsItem {
-  id: string
+  _id: string
   title: string
   date: string
   mainCategory: string
-  categories?: string[]
+  categories?: string[] | null
   text: string
   image: string
-  photos?: string[]
-  href: string
+  slug: string
 }
 
 export interface NewsSliderProps {
@@ -137,11 +136,11 @@ export const NewsSlider = ({
             >
               {news.map((item) => (
                 <div
-                  key={item.id}
+                  key={item._id}
                   className="flex-shrink-0 px-2 lg:px-3"
                   style={{ width: `${slidePercent}%` }}
                 >
-                  <Link href={item.href} className="block group">
+                  <Link href={`/news/${item.slug}`} className="block group">
                     <div className="bg-white rounded-xl shadow-md overflow-hidden h-full hover:shadow-xl transition-shadow duration-300">
                       {/* Image */}
                       <div className="relative h-48 lg:h-52 overflow-hidden">

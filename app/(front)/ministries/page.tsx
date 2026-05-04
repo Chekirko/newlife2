@@ -1,6 +1,8 @@
 import { HeroSlider, type HeroSlide } from '@/components'
 import { MinistryGridSection } from '@/components/sections/MinistryGrid'
-import { ministriesData } from '@/data/ministriesData'
+import { client } from '@/sanity/lib/client'
+import { MINISTRIES_QUERY } from '@/sanity/lib/queries'
+import type { SanityMinistryCard } from '@/sanity/lib/types'
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -17,7 +19,9 @@ const heroSlide: HeroSlide[] = [
   },
 ]
 
-export default function MinistriesPage() {
+export default async function MinistriesPage() {
+  const ministries = await client.fetch<SanityMinistryCard[]>(MINISTRIES_QUERY)
+
   return (
     <>
       {/* Hero — identical to homepage HeroSlider but single slide */}
@@ -35,7 +39,7 @@ export default function MinistriesPage() {
         preTitle="Напрями діяльності"
         title="Чим ми займаємося"
         description="У нашій церкві є різноманітні служіння для кожного віку та інтересу. Оберіть те, що вам до душі."
-        items={ministriesData}
+        items={ministries}
         columns={3}
         className="py-16 lg:py-24"
       />

@@ -1,7 +1,7 @@
 'use client'
 
 import { clsx } from 'clsx'
-import Image, { StaticImageData } from 'next/image'
+import Image from 'next/image'
 import Link from 'next/link'
 
 // =====================
@@ -11,7 +11,8 @@ import Link from 'next/link'
 export interface MinistryCardProps {
   title: string
   shortDescription?: string
-  image: string | StaticImageData
+  /** Image URL — either a Sanity CDN URL (from urlFor()) or a static path */
+  image: string
   href?: string
   className?: string
 }

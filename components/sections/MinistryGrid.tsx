@@ -2,7 +2,8 @@
 
 import { clsx } from 'clsx'
 import { MinistryCard, MinistryCardGrid } from '@/components/ui/MinistryCard'
-import type { Ministry } from '@/types/ministryTypes'
+import type { SanityMinistryCard } from '@/sanity/lib/types'
+import { urlFor } from '@/sanity/lib/image'
 
 // =========================================
 // MINISTRY GRID SECTION
@@ -12,7 +13,7 @@ export interface MinistryGridSectionProps {
   preTitle?: string
   title?: string
   description?: string
-  items: Ministry[]
+  items: SanityMinistryCard[]
   columns?: 2 | 3 | 4
   className?: string
 }
@@ -41,10 +42,10 @@ export const MinistryGridSection = ({
         <MinistryCardGrid columns={columns}>
           {items.map((item) => (
             <MinistryCard
-              key={item.id}
+              key={item._id}
               title={item.title}
               shortDescription={item.shortDescription}
-              image={item.image}
+              image={urlFor(item.image).width(600).height(450).url()}
               href={`/ministries/${item.slug}`}
             />
           ))}
