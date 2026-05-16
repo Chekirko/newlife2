@@ -3,16 +3,16 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
-import { NewsSlider } from '@/components/sections/NewsSlider'
-import { PhotoGalleryGrid } from '@/components/sections/PhotoGalleryGrid'
+import { NewsSlider, PageHero } from '@/components'
+import { PhotoGalleryGrid } from './components/PhotoGalleryGrid'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import {
   MINISTRY_BY_SLUG_QUERY,
   MINISTRY_SLUGS_QUERY,
   OTHER_MINISTRIES_QUERY,
-  NEWS_QUERY,
-} from '@/sanity/lib/queries'
+} from './queries'
+import { NEWS_QUERY } from '@/sanity/lib/queries'
 import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/lib/types'
 
 // ============================================
@@ -37,15 +37,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   }
 }
 
-/** Format Sanity datetime to readable Ukrainian date */
-function formatDate(isoDate: string): string {
-  const months = [
-    'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
-    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'
-  ]
-  const d = new Date(isoDate)
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
-}
+import { formatDate } from '@/lib/utils'
 
 // ============================================
 // PAGE (Server Component)
@@ -80,44 +72,14 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
 
   return (
     <>
-      {/* Hero — fixed shared image, frosted-glass text box */}
-      <section
-        className="relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden"
-        style={{
-          backgroundImage: 'url(/images/ministries-hero.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/55" />
-
-        {/* Frosted glass card — compact, centered in visible space */}
-        <div
-          className="relative z-10 text-center mx-6 sm:mx-0 w-full sm:w-auto sm:min-w-[360px] lg:min-w-[480px] px-6 py-4 lg:px-10 lg:py-6 rounded-2xl"
-          style={{
-            background: 'linear-gradient(135deg, rgba(151,199,78,0.15) 0%, rgba(42,185,165,0.15) 100%)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.22)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
-          }}
-        >
-          <h1 className="text-white font-bold text-xl sm:text-2xl lg:text-4xl mb-2 leading-tight">
-            {ministry.title}
-          </h1>
-          {/* Breadcrumbs */}
-          <nav>
-            <ol className="flex items-center justify-center gap-1.5 text-white/75 text-xs sm:text-sm">
-              <li><Link href="/" className="hover:text-white transition-colors">Головна</Link></li>
-              <li className="text-white/40">/</li>
-              <li><Link href="/ministries" className="hover:text-white transition-colors">Служіння</Link></li>
-              <li className="text-white/40">/</li>
-              <li className="text-white/55">{ministry.title}</li>
-            </ol>
-          </nav>
-        </div>
-      </section>
+      <PageHero
+        title={ministry.title}
+        breadcrumbs={[
+          { label: 'Головна', href: '/' },
+          { label: 'Служіння', href: '/ministries' },
+          { label: ministry.title },
+        ]}
+      />
 
       {/* Main Content + Sidebar */}
       <section className="py-12 lg:py-20">

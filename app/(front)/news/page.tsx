@@ -7,7 +7,7 @@ import {
   NEWS_COUNT_QUERY,
   NEWS_RECENT_QUERY,
   NEWS_CATEGORIES_QUERY,
-} from '@/sanity/lib/queries'
+} from './queries'
 import type { SanityNews } from '@/sanity/lib/types'
 import { NewsCard } from './components/NewsCard'
 import { NewsPagination } from './components/NewsPagination'
@@ -31,15 +31,7 @@ const heroSlide: HeroSlide[] = [
   },
 ]
 
-/** Format Sanity datetime to readable Ukrainian date */
-function formatDate(isoDate: string): string {
-  const months = [
-    'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
-    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня',
-  ]
-  const d = new Date(isoDate)
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
-}
+import { formatDate } from '@/lib/utils'
 
 // Sidebar recent post shape (after urlFor transform)
 interface RecentPostTransformed {
@@ -140,7 +132,7 @@ export default async function NewsPage({
                     text={n.text}
                     imageUrl={
                       n.image
-                        ? urlFor(n.image).width(800).height(450).url()
+                      ? urlFor(n.image).width(1200).height(675).url()
                         : '/images/placeholder.jpg'
                     }
                   />

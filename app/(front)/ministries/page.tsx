@@ -1,7 +1,7 @@
 import { HeroSlider, type HeroSlide } from '@/components'
-import { MinistryGridSection } from '@/components/sections/MinistryGrid'
+import { MinistryGridSection } from './components/MinistryGrid'
 import { client } from '@/sanity/lib/client'
-import { MINISTRIES_QUERY } from '@/sanity/lib/queries'
+import { MINISTRIES_QUERY } from './queries'
 import type { SanityMinistryCard } from '@/sanity/lib/types'
 import type { Metadata } from 'next'
 

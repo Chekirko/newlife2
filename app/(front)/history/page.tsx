@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { PageHero } from '@/components'
 
 export const metadata: Metadata = {
   title: 'Історія | Церква «Нове Життя»',
@@ -54,44 +55,14 @@ const timelineEvents = [
 export default function HistoryPage() {
   return (
     <>
-      {/* Hero — fixed shared image, frosted-glass text box */}
-      <section
-        className="relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden"
-        style={{
-          backgroundImage: 'url(/images/ministries-hero.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        {/* Dark overlay */}
-        <div className="absolute inset-0 bg-black/55" />
-
-        {/* Frosted glass card — compact, centered in visible space */}
-        <div
-          className="relative z-10 text-center mx-6 sm:mx-0 w-full sm:w-auto sm:min-w-[360px] lg:min-w-[480px] px-6 py-4 lg:px-10 lg:py-6 rounded-2xl"
-          style={{
-            background: 'linear-gradient(135deg, rgba(151,199,78,0.15) 0%, rgba(42,185,165,0.15) 100%)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            border: '1px solid rgba(255,255,255,0.22)',
-            boxShadow: '0 4px 24px rgba(0,0,0,0.3)',
-          }}
-        >
-          <h1 className="text-white font-bold text-xl sm:text-2xl lg:text-4xl mb-2 leading-tight">
-            Історія
-          </h1>
-          {/* Breadcrumbs */}
-          <nav>
-            <ol className="flex items-center justify-center gap-1.5 text-white/75 text-xs sm:text-sm">
-              <li><Link href="/" className="hover:text-white transition-colors">Головна</Link></li>
-              <li className="text-white/40">/</li>
-              <li className="text-white/75 cursor-default">Про нас</li>
-              <li className="text-white/40">/</li>
-              <li className="text-white/55">Історія</li>
-            </ol>
-          </nav>
-        </div>
-      </section>
+      <PageHero
+        title="Історія"
+        breadcrumbs={[
+          { label: 'Головна', href: '/' },
+          { label: 'Про нас' },
+          { label: 'Історія' },
+        ]}
+      />
 
       {/* Timeline Section */}
       <section className="py-16 lg:py-24 bg-gray-50">

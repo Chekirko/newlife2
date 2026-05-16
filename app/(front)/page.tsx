@@ -1,26 +1,23 @@
 import {
-  // Hero variants
   HeroSlider,
   HeroGradientImage,
   type HeroSlide,
-  // About variants
-  AboutWithStats,
-  // Testimonials
-  TestimonialsGrid,
-  type TestimonialData,
-  // FAQ
-  FAQSplit,
-  type FAQItem,
-  // ActionBox
-  ActionBoxFullWidth,
+  NewsSlider,
 } from '@/components'
-import { PastorGreeting } from '@/components/sections/PastorGreeting'
-import { OurVision } from '@/components/sections/OurVision'
-import { Ministries, type MinistryItem } from '@/components/sections/Ministries'
-import { EventsSlider } from '@/components/sections/EventsSlider'
-import { NewsSlider } from '@/components/sections/NewsSlider'
+import dynamic from 'next/dynamic'
+import { AboutWithStats } from './components/AboutWithStats'
+const TestimonialsGrid = dynamic(() => import('./components/TestimonialsGrid').then(m => m.TestimonialsGrid))
+import { type TestimonialData } from './components/TestimonialsGrid'
+const FAQSplit = dynamic(() => import('./components/FAQSplit').then(m => m.FAQSplit))
+import { type FAQItem } from './components/FAQSplit'
+const ActionBoxFullWidth = dynamic(() => import('./components/ActionBoxFullWidth').then(m => m.ActionBoxFullWidth))
+import { PastorGreeting } from './components/PastorGreeting'
+import { OurVision } from './components/OurVision'
+import { Ministries, type MinistryItem } from './components/Ministries'
+import { EventsSlider } from './components/EventsSlider'
 import { client } from '@/sanity/lib/client'
-import { NEWS_QUERY, EVENTS_QUERY } from '@/sanity/lib/queries'
+import { NEWS_QUERY } from '@/sanity/lib/queries'
+import { EVENTS_QUERY } from './queries'
 import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
 import { urlFor } from '@/sanity/lib/image'
 
@@ -29,15 +26,7 @@ import { urlFor } from '@/sanity/lib/image'
 // Using actual Larexa components
 // ============================================
 
-/** Format Sanity datetime to readable Ukrainian date */
-function formatDate(isoDate: string): string {
-  const months = [
-    'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
-    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'
-  ]
-  const d = new Date(isoDate)
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
-}
+import { formatDate } from '@/lib/utils'
 
 export default async function HomePage() {
   // Fetch news and events from Sanity

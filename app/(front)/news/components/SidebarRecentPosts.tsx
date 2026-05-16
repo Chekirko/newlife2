@@ -13,14 +13,7 @@ interface SidebarRecentPostsProps {
   posts: RecentPost[]
 }
 
-function formatDate(isoDate: string): string {
-  const months = [
-    'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
-    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня'
-  ]
-  const d = new Date(isoDate)
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
-}
+import { formatDate } from '@/lib/utils'
 
 export function SidebarRecentPosts({ posts }: SidebarRecentPostsProps) {
   if (posts.length === 0) return null

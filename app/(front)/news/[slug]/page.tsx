@@ -20,15 +20,7 @@ const NEWS_BY_SLUG_QUERY = defineQuery(`
   }
 `)
 
-/** Format Sanity datetime to readable Ukrainian date */
-function formatDate(isoDate: string): string {
-  const months = [
-    'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
-    'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня',
-  ]
-  const d = new Date(isoDate)
-  return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`
-}
+import { formatDate } from '@/lib/utils'
 
 export async function generateMetadata({
   params,
