@@ -17,6 +17,6 @@ export default defineCliConfig({
     // Output generated types here
     generates: './sanity/lib/sanity.types.ts',
     // Overload client.fetch() to return typed results
-    overloadClientMethods: true,
+    overloadClientMethods: false,
   },
 })
