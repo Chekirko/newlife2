@@ -28,8 +28,8 @@ Update this file after every meaningful implementation change.
 - **Encoding fixes**: Resolved Cyrillic corruption from PowerShell BOM issues
 - **News image quality**: Increased from 800×450 to 1200×675
 - **Six-File Context System**: Adapted and deployed
-
 - **Contact page**: 3-column layout (Info, Map, Form), PageHero, client-side validation
+- **Hero Unification**: Replaced `HeroSlider` with `PageHero` on `/news` and `/ministries`.
 
 ## In Progress
 

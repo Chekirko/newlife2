@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { HeroSlider, type HeroSlide } from '@/components'
+import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import {
@@ -22,14 +22,7 @@ export const metadata: Metadata = {
 
 const ITEMS_PER_PAGE = 6
 
-const heroSlide: HeroSlide[] = [
-  {
-    id: '1',
-    backgroundImage: '/images/ministries-hero.jpg',
-    title: 'Новини',
-    align: 'center',
-  },
-]
+
 
 import { formatDate } from '@/lib/utils'
 
@@ -88,13 +81,13 @@ export default async function NewsPage({
   return (
     <>
       {/* Hero */}
-      <HeroSlider
-        slides={heroSlide}
-        height="h-[500px] lg:h-[750px]"
-        overlayDark={4}
-        autoplay={false}
-        showArrows={false}
-        showDots={false}
+      <PageHero
+        title="Новини"
+        backgroundImage="/images/ministries-hero.jpg"
+        breadcrumbs={[
+          { label: 'Головна', href: '/' },
+          { label: 'Новини' },
+        ]}
       />
 
       {/* Content + Sidebar */}

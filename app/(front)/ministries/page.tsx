@@ -1,4 +1,4 @@
-import { HeroSlider, type HeroSlide } from '@/components'
+import { PageHero } from '@/components'
 import { MinistryGridSection } from './components/MinistryGrid'
 import { client } from '@/sanity/lib/client'
 import { MINISTRIES_QUERY } from './queries'
@@ -10,28 +10,19 @@ export const metadata: Metadata = {
   description: 'Наші служіння — дитяче, молодіжне, жіноче, чоловіче, музичне, благодійність та інші напрями церковної діяльності.',
 }
 
-const heroSlide: HeroSlide[] = [
-  {
-    id: '1',
-    backgroundImage: '/images/ministries-hero.jpg',
-    title: 'Наші служіння',
-    align: 'center',
-  },
-]
-
 export default async function MinistriesPage() {
   const ministries = await client.fetch<SanityMinistryCard[]>(MINISTRIES_QUERY)
 
   return (
     <>
-      {/* Hero — identical to homepage HeroSlider but single slide */}
-      <HeroSlider
-        slides={heroSlide}
-        height="h-[500px] lg:h-[750px]"
-        overlayDark={4}
-        autoplay={false}
-        showArrows={false}
-        showDots={false}
+      {/* Hero */}
+      <PageHero
+        title="Наші служіння"
+        backgroundImage="/images/ministries-hero.jpg"
+        breadcrumbs={[
+          { label: 'Головна', href: '/' },
+          { label: 'Служіння' },
+        ]}
       />
 
       {/* Ministry Grid */}

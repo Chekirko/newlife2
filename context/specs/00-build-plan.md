@@ -17,7 +17,8 @@ Ordered list of planned feature units for the project.
 | # | Unit | Description | Dependencies |
 |---|------|-------------|--------------|
 | 01 | Contact Page | Сторінка контактів з картою, розкладом, формою | Google Maps API key |
-| 02 | Team Page | Сторінка команди (пастор, лідери) | Sanity schema: teamMember |
+| 02 | Hero Unification | Уніфікація заголовних блоків (PageHero) на Новинах та Служіннях | None |
+| 03 | Team Page | Сторінка команди (пастор, лідери) | Sanity schema: teamMember |
 | 03 | Media/Streams Page | Онлайн-трансляції, відеозаписи | YouTube API integration |
 | 04 | About Page | Детальна сторінка «Про нас» | Content from Sanity |
 | 05 | Gallery Audit | Унікальні фото для кожного служіння | Sanity content update |
