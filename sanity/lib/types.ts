@@ -54,3 +54,20 @@ export interface SanityEvent {
   description: string
   image: SanityImageSource
 }
+
+/** Team member — list view (cards) */
+export interface SanityTeamMemberCard {
+  _id: string
+  name: string
+  slug: string
+  category: ('ordained' | 'responsible')[]
+  title: string | null
+  responsibility: string | null
+  photo: SanityImageSource
+  order: number
+}
+
+/** Team member — full detail page */
+export interface SanityTeamMember extends SanityTeamMemberCard {
+  bio: string | null
+}

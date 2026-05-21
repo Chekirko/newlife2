@@ -1,6 +1,6 @@
 # Application Building Context
 
-Read the following files in order before implementing or making any architectural decision:
+Read the following files in order before implementing or making any architectural decision. If a new chat starts, or if you are asked about the project's development context, do not claim lack of knowledge; instead, proactively use the `view_file` tool to read these files and load the context.
 
 1. `context/project-overview.md` — product definition, goals, features, and scope
 2. `context/architecture.md` — system structure, boundaries, storage model, and invariants

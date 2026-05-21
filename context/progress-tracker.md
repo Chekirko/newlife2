@@ -30,6 +30,7 @@ Update this file after every meaningful implementation change.
 - **Six-File Context System**: Adapted and deployed
 - **Contact page**: 3-column layout (Info, Map, Form), PageHero, client-side validation
 - **Hero Unification**: Replaced `HeroSlider` with `PageHero` on `/news` and `/ministries`.
+- **Team Page**: Implemented `/team` and `/team/[slug]` with Sanity integration, Larexa design (hover gradients), Schema markup (Person JSON-LD), and optimized images/components.
 
 ## In Progress
 
@@ -37,7 +38,6 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- Сторінка «Команда» (team page)
 - Online трансляції / медіа сторінка
 - Sanity content audit: unique gallery images per ministry
 

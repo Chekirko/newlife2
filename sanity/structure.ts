@@ -17,4 +17,8 @@ export const structure: StructureResolver = (S) =>
         .title('Події')
         .schemaType('event')
         .child(S.documentTypeList('event').title('Події')),
+      S.listItem()
+        .title('Служителі')
+        .schemaType('teamMember')
+        .child(S.documentTypeList('teamMember').title('Служителі')),
     ])

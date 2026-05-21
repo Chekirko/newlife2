@@ -47,12 +47,16 @@
 ### Історія (`/history`)
 - Timeline церкви з фото, відео, акордеонами
 
+### Команда (`/team`)
+- Список служителів (рукопокладені та відповідальні)
+- Деталі служителя (`/team/[slug]`) з біографією
+
 ## Scope
 
 ### In Scope
 - Публічний фронтенд (SSG/SSR)
 - Sanity Studio (вбудований на /studio)
-- CMS-моделі: ministry, news, event
+- CMS-моделі: ministry, news, event, teamMember
 - SEO-метадані для кожної сторінки
 - Адаптивний дизайн (mobile → desktop)
 - Автоматична генерація типів (Sanity TypeGen)
