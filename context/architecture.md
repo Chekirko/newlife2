@@ -19,6 +19,7 @@
 - `app/(front)/news/components/` — Компоненти ТІЛЬКИ для сторінок новин
 - `app/(front)/ministries/components/` — Компоненти ТІЛЬКИ для списку служінь
 - `app/(front)/ministries/[slug]/components/` — Компоненти для деталей служіння
+- `app/(front)/team/components/` — Компоненти для сторінки команди (TeamSection, HonorarySection, TeamPhotoBanner, TeamMemberCard)
 - `app/(front)/**/queries.ts` — GROQ-запити, локальні для кожної сторінки
 - `app/studio/` — Sanity Studio (не модифікувати вручну)
 - `components/` — Спільні компоненти (Header, Footer, HeroSlider, NewsSlider, PageHero)

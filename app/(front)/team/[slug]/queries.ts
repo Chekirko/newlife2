@@ -9,6 +9,7 @@ export const TEAM_MEMBER_BY_SLUG_QUERY = defineQuery(`
     category,
     title,
     responsibility,
+    candidateTitle,
     bio,
     photo,
     order

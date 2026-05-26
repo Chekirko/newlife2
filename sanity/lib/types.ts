@@ -64,9 +64,10 @@ export interface SanityTeamMemberCard {
   _id: string
   name: string
   slug: string
-  category: ('ordained' | 'responsible')[]
+  category: ('ordained' | 'responsible' | 'candidate' | 'honorary')[]
   title: string | null
   responsibility: string | null
+  candidateTitle: string | null
   photo: SanityImageSource
   order: number
 }

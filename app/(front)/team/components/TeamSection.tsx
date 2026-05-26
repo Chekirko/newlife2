@@ -6,13 +6,14 @@ interface TeamSectionProps {
   preTitle: string
   title: string
   members: SanityTeamMemberCard[]
-  subtitleField: 'title' | 'responsibility'
+  subtitleField: 'title' | 'responsibility' | 'candidateTitle'
+  bgClass?: string
 }
 
-export function TeamSection({ preTitle, title, members, subtitleField }: TeamSectionProps) {
+export function TeamSection({ preTitle, title, members, subtitleField, bgClass = '' }: TeamSectionProps) {
   const isEmpty = members.length === 0
   return (
-    <section className="py-12 lg:py-20">
+    <section className={`py-12 lg:py-20 ${bgClass}`}>
       <div className="container-larexa">
         {/* Section heading */}
         <div className="text-center mb-12">

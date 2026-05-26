@@ -32,6 +32,7 @@ Update this file after every meaningful implementation change.
 - **Hero Unification**: Replaced `HeroSlider` with `PageHero` on `/news` and `/ministries`.
 - **Team Page**: Implemented `/team` and `/team/[slug]` with Sanity integration, Larexa design (hover gradients), Schema markup (Person JSON-LD), and optimized images/components.
 - **Ministry Leader Refactoring**: Replaced inline `leaderName`/`leaderPhoto` fields in the `ministry` schema with a `reference` to `teamMember`. Updated page queries to dereference `leader->`, made the leader block a clickable link to `/team/[slug]` with Larexa-style hover transitions, hid the leader section if unassigned, added BreadcrumbList JSON-LD for SEO, and migrated existing ministries via a script.
+- **Team Page Restructuring**: Extended `teamMember` schema with `candidate` and `honorary` categories plus `candidateTitle` field. Restructured `/team` page into 5 sections: HonorarySection (circular photos, ring hover), Ordained (standard cards, excluding honorary members via GROQ query `!("honorary" in category)` to avoid duplication), TeamPhotoBanner (full-width parallax banner on desktop, standard mobile fallback), Candidates (conditional), Responsible. Added dynamic zebra-striping backgrounds (`bg-gray-50`/`bg-white`) across content sections based on a dynamic renderer index, maintaining visual consistency regardless of which sections are empty. Added BreadcrumbList JSON-LD. Updated `/team/[slug]` with candidateTitle badge.
 
 ## In Progress
 
@@ -55,9 +56,11 @@ Update this file after every meaningful implementation change.
 - **Encoding safety**: Never use PowerShell for Cyrillic file output — use editor tools only
 - **No overloadClientMethods**: Disabled in TypeGen config due to `@sanity/client` not being direct dependency
 - **Ministry Leader Reference**: Relinked the leader fields in `ministry` schema as a dynamic reference to the `teamMember` model to guarantee a single source of truth for church leaders.
+- **Team Member Categories**: `teamMember.category` is an array of `ordained | responsible | candidate | honorary`. One person can belong to multiple categories simultaneously. `candidateTitle` is a separate field from `title` (Сан).
 
 ## Session Notes
 
 - Latest session (2026-05-17): Implemented TypeGen, query architecture, lazy-loading, Six-File Context System
 - Vercel build was failing due to `overloadClientMethods: true` — fixed by setting to `false`
+- Session (2026-05-26): Extended teamMember categories, restructured /team page with 5 sections, added HonorarySection + TeamPhotoBanner components
 - `prebuild` script runs `sanity schema extract && sanity typegen generate` before each build

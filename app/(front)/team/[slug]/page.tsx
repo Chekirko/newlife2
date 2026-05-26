@@ -40,6 +40,7 @@ export default async function TeamMemberPage({
   const photoUrl = urlFor(member.photo).width(800).height(1000).url()
   const roles: string[] = []
   if (member.title) roles.push(member.title)
+  if (member.candidateTitle) roles.push(member.candidateTitle)
   if (member.responsibility) roles.push(member.responsibility)
 
   return (
@@ -100,6 +101,11 @@ export default async function TeamMemberPage({
                 {member.title && (
                   <span className="bg-grad text-white text-sm font-semibold px-4 py-1.5 rounded-full">
                     {member.title}
+                  </span>
+                )}
+                {member.candidateTitle && (
+                  <span className="bg-amber-100 text-amber-800 text-sm font-semibold px-4 py-1.5 rounded-full">
+                    {member.candidateTitle}
                   </span>
                 )}
                 {member.responsibility && (
