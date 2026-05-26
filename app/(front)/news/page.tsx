@@ -15,6 +15,8 @@ import { SidebarRecentPosts } from './components/SidebarRecentPosts'
 import { SidebarCategories } from './components/SidebarCategories'
 import Link from 'next/link'
 
+export const revalidate = 60 // Revalidate page every 60 seconds
+
 export const metadata: Metadata = {
   title: 'Новини | Церква «Нове Життя»',
   description: 'Останні новини та оновлення церкви «Нове Життя» у Бориславі.',

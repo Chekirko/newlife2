@@ -15,6 +15,8 @@ export const metadata: Metadata = {
   description: 'Наші служителі — пастори, диякони та відповідальні за різні напрями церковного служіння.',
 }
 
+export const revalidate = 60 // Revalidate page every 60 seconds
+
 export default async function TeamPage() {
   // Parallel fetching (senior-frontend skill: Promise.all pattern)
   const [honorary, ordained, candidates, responsible] = await Promise.all([

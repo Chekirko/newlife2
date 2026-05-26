@@ -17,6 +17,8 @@ import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/li
 
 // ============================================
 // Static params for all ministry slugs
+export const revalidate = 60 // Revalidate page every 60 seconds
+
 // ============================================
 export async function generateStaticParams() {
   const slugs = await client.fetch<{ slug: string }[]>(MINISTRY_SLUGS_QUERY)

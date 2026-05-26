@@ -6,7 +6,7 @@ Read context files lazily to save tokens. If a new chat starts or you receive a 
 
 ## Rules
 
-- **CRITICAL (Agent Skills)**: Automatically apply these engineering skills seamlessly without prompting: `karpathy-coder` (for deep React/Next.js logic), `schema-markup` (for SEO), `grill-me` (for architecture checks), and `context7` (MCP for docs). Read `skills_analysis_for_newlife2.md` only if you need a deeper list of available tools.
+- **CRITICAL (Agent Skills)**: At the start of any new session or feature, PROACTIVELY read `skills_analysis_for_newlife2.md` to align on active engineering skills (`schema-markup` for SEO, `a11y-audit` for accessibility, `performance-profiler` for page speed). Always ensure implemented code meets the standards of these skills.
 - **CRITICAL (Six-File Context System)**: You MUST automatically adhere to the Six-File Context model. At the end of EVERY completed task, you MUST autonomously update `context/progress-tracker.md` with the new state. If your implementation alters any architecture or UI conventions, update the corresponding context file(s) before concluding your turn.
 - Always use `defineQuery()` from `next-sanity` for GROQ queries.
 - Always run `npm run build` before considering any unit complete.

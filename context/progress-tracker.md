@@ -57,6 +57,7 @@ Update this file after every meaningful implementation change.
 - **No overloadClientMethods**: Disabled in TypeGen config due to `@sanity/client` not being direct dependency
 - **Ministry Leader Reference**: Relinked the leader fields in `ministry` schema as a dynamic reference to the `teamMember` model to guarantee a single source of truth for church leaders.
 - **Team Member Categories**: `teamMember.category` is an array of `ordained | responsible | candidate | honorary`. One person can belong to multiple categories simultaneously. `candidateTitle` is a separate field from `title` (Сан).
+- **Incremental Static Regeneration (ISR)**: Configured all CMS-driven pages (`/`, `/team`, `/team/[slug]`, `/ministries`, `/ministries/[slug]`, `/news`, `/news/[slug]`) to use Next.js ISR with a `revalidate = 60` interval. Set `useCdn: false` in the Sanity client to bypass Edge CDN caches during background revalidations, ensuring users see published CMS changes within 60 seconds without needing full Vercel rebuilds.
 
 ## Session Notes
 

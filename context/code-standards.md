@@ -25,6 +25,7 @@
 - Shared queries (used on 2+ pages) stay in `sanity/lib/queries.ts`
 - Use `generateStaticParams()` for dynamic SSG routes
 - Use `generateMetadata()` for dynamic SEO
+- Configure all dynamic, CMS-connected pages with `export const revalidate = 60` to enforce Incremental Static Regeneration (ISR)
 
 ## Styling
 
@@ -42,6 +43,7 @@
 - Static data (hero slides, testimonials, FAQ items) lives as constants in page files
 - Images from Sanity use `urlFor()` from `@/sanity/lib/image`
 - Static images live in `public/images/`
+- The Sanity Client must be configured with `useCdn: false` in `client.ts` to allow background Next.js revalidation fetches to immediately bypass CDN cache and retrieve live, fresh data.
 
 ## File Organization
 

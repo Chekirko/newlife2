@@ -7,6 +7,8 @@ import { urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
 
+export const revalidate = 60 // Revalidate page every 60 seconds
+
 // SSG (senior-frontend skill: generateStaticParams pattern)
 export async function generateStaticParams() {
   const slugs = await client.fetch<{ slug: string }[]>(TEAM_MEMBER_SLUGS_QUERY)

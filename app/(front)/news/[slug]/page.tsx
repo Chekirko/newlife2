@@ -7,6 +7,8 @@ import { urlFor } from '@/sanity/lib/image'
 import type { SanityNews } from '@/sanity/lib/types'
 import { defineQuery } from 'next-sanity'
 
+export const revalidate = 60 // Revalidate page every 60 seconds
+
 const NEWS_BY_SLUG_QUERY = defineQuery(`
   *[_type == "news" && slug.current == $slug][0] {
     _id,

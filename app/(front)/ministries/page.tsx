@@ -7,8 +7,9 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Служіння | Церква «Нове Життя»',
-  description: 'Наші служіння — дитяче, молодіжне, жіноче, чоловіче, музичне, благодійність та інші напрями церковної діяльності.',
 }
+
+export const revalidate = 60 // Revalidate page every 60 seconds
 
 export default async function MinistriesPage() {
   const ministries = await client.fetch<SanityMinistryCard[]>(MINISTRIES_QUERY)

@@ -28,6 +28,8 @@ import { urlFor } from '@/sanity/lib/image'
 
 import { formatDate } from '@/lib/utils'
 
+export const revalidate = 60 // Revalidate page every 60 seconds
+
 export default async function HomePage() {
   // Fetch news and events from Sanity
   const [newsRaw, eventsRaw] = await Promise.all([
