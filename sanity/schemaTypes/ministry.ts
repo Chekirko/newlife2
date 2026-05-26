@@ -42,15 +42,11 @@ export const ministryType = defineType({
       validation: (rule) => rule.required().error('Зображення обовʼязкове'),
     }),
     defineField({
-      name: 'leaderName',
-      title: 'Імʼя відповідального',
-      type: 'string',
-    }),
-    defineField({
-      name: 'leaderPhoto',
-      title: 'Фото відповідального',
-      type: 'image',
-      options: { hotspot: true },
+      name: 'leader',
+      title: 'Відповідальний за служіння',
+      type: 'reference',
+      to: [{ type: 'teamMember' }],
+      description: 'Оберіть служителя з наявних або залиште порожнім, якщо відповідального немає',
     }),
     defineField({
       name: 'gallery',
@@ -96,6 +92,14 @@ export const ministryType = defineType({
       title: 'title',
       subtitle: 'shortDescription',
       media: 'image',
+      leaderName: 'leader.name',
+    },
+    prepare({ title, subtitle, media, leaderName }) {
+      return {
+        title,
+        subtitle: leaderName ? `${subtitle ?? ''} · ${leaderName}` : subtitle,
+        media,
+      }
     },
   },
 })

@@ -1,18 +1,13 @@
 # Application Building Context
 
-Read the following files in order before implementing or making any architectural decision. If a new chat starts, or if you are asked about the project's development context, do not claim lack of knowledge; instead, proactively use the `view_file` tool to read these files and load the context.
-
-1. `context/project-overview.md` — product definition, goals, features, and scope
-2. `context/architecture.md` — system structure, boundaries, storage model, and invariants
-3. `context/ui-context.md` — theme, colors, typography, and component conventions
-4. `context/code-standards.md` — implementation rules and conventions
-5. `context/ai-workflow-rules.md` — development workflow, scoping rules, and delivery approach
-6. `context/progress-tracker.md` — current phase, completed work, open questions, and next steps
+Read context files lazily to save tokens. If a new chat starts or you receive a new task:
+1. PROACTIVELY read ONLY `context/progress-tracker.md` to understand the current phase and next steps.
+2. Read the other files (`architecture.md`, `ui-context.md`, `code-standards.md`, `project-overview.md`) ONLY IF your task specifically touches those domains (e.g., UI changes, new database schemas, etc.).
 
 ## Rules
 
-- Update `context/progress-tracker.md` after each meaningful implementation change.
-- If implementation changes the architecture, scope, or standards documented in the context files, update the relevant file before continuing.
+- **CRITICAL (Agent Skills)**: Automatically apply these engineering skills seamlessly without prompting: `karpathy-coder` (for deep React/Next.js logic), `schema-markup` (for SEO), `grill-me` (for architecture checks), and `context7` (MCP for docs). Read `skills_analysis_for_newlife2.md` only if you need a deeper list of available tools.
+- **CRITICAL (Six-File Context System)**: You MUST automatically adhere to the Six-File Context model. At the end of EVERY completed task, you MUST autonomously update `context/progress-tracker.md` with the new state. If your implementation alters any architecture or UI conventions, update the corresponding context file(s) before concluding your turn.
 - Always use `defineQuery()` from `next-sanity` for GROQ queries.
 - Always run `npm run build` before considering any unit complete.
 - Never use PowerShell pipes for files containing Cyrillic text.

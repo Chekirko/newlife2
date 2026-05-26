@@ -18,8 +18,12 @@ export interface SanityMinistryCard {
 /** Ministry — full detail page */
 export interface SanityMinistry extends SanityMinistryCard {
   fullDescription: string
-  leaderName: string | null
-  leaderPhoto: SanityImageSource | null
+  leader: {
+    _id: string
+    name: string
+    slug: string
+    photo: SanityImageSource
+  } | null
   gallery: SanityImageSource[] | null
   bibleQuoteText: string | null
   bibleQuoteReference: string | null

@@ -52,3 +52,4 @@
 6. `npm run build` ПОВИНЕН проходити перед кожним push/deploy
 7. Sanity TypeGen (`npm run typegen`) запускається при зміні GROQ-запитів або Sanity-схем
 8. CSS-кольори використовують ТІЛЬКИ токени з `globals.css` (`--color-primary`, `--gradient-start/end`) — жодних raw hex
+9. Відповідальні особи та лідери служінь зв'язуються як references до `teamMember` замість збереження inline-тексту та фото

@@ -31,6 +31,7 @@ Update this file after every meaningful implementation change.
 - **Contact page**: 3-column layout (Info, Map, Form), PageHero, client-side validation
 - **Hero Unification**: Replaced `HeroSlider` with `PageHero` on `/news` and `/ministries`.
 - **Team Page**: Implemented `/team` and `/team/[slug]` with Sanity integration, Larexa design (hover gradients), Schema markup (Person JSON-LD), and optimized images/components.
+- **Ministry Leader Refactoring**: Replaced inline `leaderName`/`leaderPhoto` fields in the `ministry` schema with a `reference` to `teamMember`. Updated page queries to dereference `leader->`, made the leader block a clickable link to `/team/[slug]` with Larexa-style hover transitions, hid the leader section if unassigned, added BreadcrumbList JSON-LD for SEO, and migrated existing ministries via a script.
 
 ## In Progress
 
@@ -53,6 +54,7 @@ Update this file after every meaningful implementation change.
 - **PageHero shared component**: Frosted-glass hero pattern extracted to avoid duplication
 - **Encoding safety**: Never use PowerShell for Cyrillic file output — use editor tools only
 - **No overloadClientMethods**: Disabled in TypeGen config due to `@sanity/client` not being direct dependency
+- **Ministry Leader Reference**: Relinked the leader fields in `ministry` schema as a dynamic reference to the `teamMember` model to guarantee a single source of truth for church leaders.
 
 ## Session Notes
 

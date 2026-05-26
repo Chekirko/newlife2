@@ -13,8 +13,12 @@ export const MINISTRY_BY_SLUG_QUERY = defineQuery(`
     shortDescription,
     fullDescription,
     image,
-    leaderName,
-    leaderPhoto,
+    leader->{
+      _id,
+      name,
+      "slug": slug.current,
+      photo
+    },
     gallery,
     bibleQuoteText,
     bibleQuoteReference,

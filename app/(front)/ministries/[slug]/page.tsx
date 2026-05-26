@@ -81,6 +81,22 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
         ]}
       />
 
+      {/* BreadcrumbList JSON-LD (schema-markup skill) */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Головна', item: 'https://newlife.church' },
+              { '@type': 'ListItem', position: 2, name: 'Служіння', item: 'https://newlife.church/ministries' },
+              { '@type': 'ListItem', position: 3, name: ministry.title, item: `https://newlife.church/ministries/${ministry.slug}` },
+            ],
+          }),
+        }}
+      />
+
       {/* Main Content + Sidebar */}
       <section className="py-12 lg:py-20">
         <div className="container-larexa">
@@ -165,31 +181,28 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                 </blockquote>
               )}
 
-              {/* Leader Info */}
-              {ministry.leaderName && (
-                <div className="flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8">
-                  <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative">
-                    {ministry.leaderPhoto ? (
-                      <Image
-                        src={urlFor(ministry.leaderPhoto).width(160).height(160).url()}
-                        alt={ministry.leaderName}
-                        fill
-                        sizes="80px"
-                        className="object-cover"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-2xl font-bold">
-                        {ministry.leaderName.charAt(0)}
-                      </div>
-                    )}
+              {/* Leader Info — clickable link to /team/[slug] */}
+              {ministry.leader && (
+                <Link
+                  href={`/team/${ministry.leader.slug}`}
+                  className="flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8 group hover:bg-gray-100 transition-colors no-underline"
+                >
+                  <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
+                    <Image
+                      src={urlFor(ministry.leader.photo).width(160).height(160).url()}
+                      alt={ministry.leader.name}
+                      fill
+                      sizes="80px"
+                      className="object-cover"
+                    />
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
-                    <h4 className="text-lg font-bold text-gray-800 m-0">
-                      {ministry.leaderName}
+                    <h4 className="text-lg font-bold text-gray-800 m-0 group-hover:text-primary transition-colors">
+                      {ministry.leader.name}
                     </h4>
                   </div>
-                </div>
+                </Link>
               )}
 
               {/* Photo Gallery */}
