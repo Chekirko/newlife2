@@ -46,6 +46,7 @@ export const ministryType = defineType({
       title: 'Відповідальний за служіння',
       type: 'reference',
       to: [{ type: 'teamMember' }],
+      weak: true,
       description: 'Оберіть служителя з наявних або залиште порожнім, якщо відповідального немає',
     }),
     defineField({

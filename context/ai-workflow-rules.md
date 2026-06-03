@@ -60,7 +60,7 @@ Update the relevant context file whenever implementation changes:
 5. No TypeScript errors in the modified files
 6. No console errors in the browser
 7. Responsive layout verified at mobile and desktop widths
-8. Verified that active engineering skills from `skills_analysis_for_newlife2.md` (e.g. schema markup, a11y, performance) were fully respected and applied.
+8. Verified that relevant skills from the **Skill Registry** in `AGENTS.md` were loaded and applied (e.g., schema-markup JSON-LD for new pages, a11y patterns for new UI components, performance checks for image/bundle changes).
 
 ## Encoding Safety
 

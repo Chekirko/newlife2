@@ -58,6 +58,14 @@
 - `lib/` — General utilities
 - `context/` — AI context files (this system)
 
+## Sanity References
+
+- Усі `reference`-поля в Sanity-схемах ЗАВЖДИ визначаються з `weak: true` — це дозволяє видаляти referenced-документи без блокування
+- При рендері referenced-даних (через GROQ `->`) ЗАВЖДИ перевіряти на `null`: `{data.refField && <Component />}` або `{data.refField?.name && (...)}`
+- TypeScript типи для reference-полів ЗАВЖДИ моделюються як `| null`
+- Якщо referenced-документ видалений — UI gracefully ховає відповідний блок, а не показує помилку або порожні дані
+- При створенні нової Sanity-схеми з reference-полем — обов'язково написати відповідний null-guard у компоненті ДО деплою
+
 ## Naming Conventions
 
 - Components: PascalCase (`EventsSlider.tsx`)

@@ -99,34 +99,24 @@
 
 ---
 
-## 5. Інструкція з інтеграції та використання
+## 5. Інструкція з локального використання
 
-Оскільки репозиторій скілів сумісний з **Antigravity**, ви можете легко встановити необхідні скіли.
+Тепер усі відібрані скіли зберігаються безпосередньо в репозиторії проєкту в директорії `.agents/skills/`. Це дозволяє використовувати їх автономно.
 
-### Крок 1: Конвертація та імпорт
-Ви можете запустити скрипт встановлення безпосередньо з папки скілів для автоматичного копіювання у глобальну директорію Antigravity:
-
-```powershell
-# У папці c:\CodeData\sanity\claude-skills-main
-./scripts/install.sh --tool antigravity
-```
-*Це автоматично згенерує та скопіює скіли у вашу системну папку інструменту `C:\Users\Dell\.gemini\antigravity\skills\`.*
-
-### Крок 2: Локальне використання (CLI-скрипти)
 Кожен із цих скілів містить готові скрипти на Python (без сторонніх залежностей, використовують лише stdlib), які ви можете запускати локально:
 
 1.  **Для аудиту доступності (a11y)**:
     ```powershell
-    python c:\CodeData\sanity\claude-skills-main\engineering-team\a11y-audit\skills\a11y-audit\scripts\a11y_scanner.py c:\CodeData\sanity\newlife2
+    python .agents\skills\a11y-audit\skills\a11y-audit\scripts\a11y_scanner.py .
     ```
 2.  **Для перевірки контрастності кольорів**:
     ```powershell
-    python c:\CodeData\sanity\claude-skills-main\engineering-team\a11y-audit\skills\a11y-audit\scripts\contrast_checker.py --file c:\CodeData\sanity\newlife2\app\globals.css
+    python .agents\skills\a11y-audit\skills\a11y-audit\scripts\contrast_checker.py --file app\globals.css
     ```
 3.  **Для перевірки структурованої розмітки**:
     Допомагає генерувати або валідувати JSON-LD перед додаванням коду в Next.js:
     ```powershell
-    python c:\CodeData\sanity\claude-skills-main\marketing-skill\skills\schema-markup\scripts\schema_validator.py c:\CodeData\sanity\newlife2\public\schema.json
+    python .agents\skills\schema-markup\scripts\schema_validator.py public\schema.json
     ```
 
 ---

@@ -34,6 +34,8 @@ Update this file after every meaningful implementation change.
 - **Ministry Leader Refactoring**: Replaced inline `leaderName`/`leaderPhoto` fields in the `ministry` schema with a `reference` to `teamMember`. Updated page queries to dereference `leader->`, made the leader block a clickable link to `/team/[slug]` with Larexa-style hover transitions, hid the leader section if unassigned, added BreadcrumbList JSON-LD for SEO, and migrated existing ministries via a script.
 - **Team Page Restructuring**: Extended `teamMember` schema with `candidate` and `honorary` categories plus `candidateTitle` field. Restructured `/team` page into 5 sections: HonorarySection (circular photos, ring hover), Ordained (standard cards, excluding honorary members via GROQ query `!("honorary" in category)` to avoid duplication), TeamPhotoBanner (full-width parallax banner on desktop, standard mobile fallback), Candidates (conditional), Responsible. Added dynamic zebra-striping backgrounds (`bg-gray-50`/`bg-white`) across content sections based on a dynamic renderer index, maintaining visual consistency regardless of which sections are empty. Added BreadcrumbList JSON-LD. Updated `/team/[slug]` with candidateTitle badge.
 
+- **Weak References**: Переведено ministry.leader на weak: true, створено міграцію існуючих даних, зафіксовано правило weak: true для всіх майбутніх reference-полів у code-standards, architecture, AGENTS.md
+
 ## In Progress
 
 - None currently.
@@ -56,6 +58,7 @@ Update this file after every meaningful implementation change.
 - **Encoding safety**: Never use PowerShell for Cyrillic file output — use editor tools only
 - **No overloadClientMethods**: Disabled in TypeGen config due to `@sanity/client` not being direct dependency
 - **Ministry Leader Reference**: Relinked the leader fields in `ministry` schema as a dynamic reference to the `teamMember` model to guarantee a single source of truth for church leaders.
+- **Weak References Policy**: Усі `reference`-поля в Sanity-схемах ЗАВЖДИ `weak: true` — дозволяє видаляти referenced-документи, фронтенд обов'язково перевіряє null перед рендером. Зафіксовано в code-standards.md, architecture.md (інваріант #10), AGENTS.md (CRITICAL rule).
 - **Team Member Categories**: `teamMember.category` is an array of `ordained | responsible | candidate | honorary`. One person can belong to multiple categories simultaneously. `candidateTitle` is a separate field from `title` (Сан).
 - **Incremental Static Regeneration (ISR)**: Configured all CMS-driven pages (`/`, `/team`, `/team/[slug]`, `/ministries`, `/ministries/[slug]`, `/news`, `/news/[slug]`) to use Next.js ISR with a `revalidate = 60` interval. Set `useCdn: false` in the Sanity client to bypass Edge CDN caches during background revalidations, ensuring users see published CMS changes within 60 seconds without needing full Vercel rebuilds.
 
@@ -65,3 +68,4 @@ Update this file after every meaningful implementation change.
 - Vercel build was failing due to `overloadClientMethods: true` — fixed by setting to `false`
 - Session (2026-05-26): Extended teamMember categories, restructured /team page with 5 sections, added HonorarySection + TeamPhotoBanner components
 - `prebuild` script runs `sanity schema extract && sanity typegen generate` before each build
+- Session (2026-06-03): Converted ministry.leader to weak reference, created migration script, added preventive weak-reference rules to code-standards, architecture, AGENTS.md

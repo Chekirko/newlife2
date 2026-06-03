@@ -59,4 +59,5 @@
 6. `npm run build` ПОВИНЕН проходити перед кожним push/deploy
 7. Sanity TypeGen (`npm run typegen`) запускається при зміні GROQ-запитів або Sanity-схем
 8. CSS-кольори використовують ТІЛЬКИ токени з `globals.css` (`--color-primary`, `--gradient-start/end`) — жодних raw hex
-9. Відповідальні особи та лідери служінь зв'язуються як references до `teamMember` замість збереження inline-тексту та фото
+9. Відповідальні особи та лідери служінь зв'язуються як **weak references** до `teamMember` — дозволяє видаляти служителів без блокування, фронтенд gracefully ховає блок лідера при null
+10. Усі `reference`-поля в Sanity-схемах ЗАВЖДИ використовують `weak: true` — фронтенд-компоненти ОБОВ'ЯЗКОВО перевіряють `null` перед рендером referenced-даних
