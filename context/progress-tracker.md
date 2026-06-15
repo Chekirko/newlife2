@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Phase 0, Unit 0.3: `app/robots.ts` + `app/sitemap.ts` (dynamic from Sanity). NOTE: while site is unfinished, robots should `disallow` indexing (open it at launch). See **Improvement Roadmap** below.
+- Phase 0, Unit 0.4: `Organization` + `Church`/`LocalBusiness` + `WebSite` JSON-LD on homepage. See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -23,10 +23,14 @@ Agreed product decisions:
 - Priority new pages: **/about, /media, /give**.
 - News body → **Portable Text** (one rich-text field, per-paragraph formatting) — Phase 1.8.
 
+### ⚠️ Launch checklist (do BEFORE going live — site is pre-launch)
+- **RE-ENABLE INDEXING** — the site is currently closed to search engines (`app/robots.ts` = `Disallow: /`) and placeholder pages are `noindex`. At launch (only when the USER explicitly says the site is finished and ready) flip `robots.ts` to allow crawling and drop `noindex` from pages that became real. NEVER open indexing without the user's explicit go-ahead.
+- Set `NEXT_PUBLIC_SITE_URL` to the real custom domain in Vercel (currently auto-derives from the Vercel URL).
+
 ### Phase 0 — Foundation (in progress)
 - ✅ 0.1 `SITE_URL` env constant (`lib/site.ts`) + `metadataBase` in root layout; de-hardcoded `https://newlife.church` from team/ministry JSON-LD. `SITE_URL` auto-detects Vercel production URL (`VERCEL_PROJECT_PRODUCTION_URL`) so canonical/OG URLs are correct before a custom domain exists. (done 2026-06-15, build ✓)
 - ✅ 0.2 Placeholder pages `/about`, `/media`, `/privacy` (shared `PlaceholderPage`, `robots:{index:false}`); branded 404 (`NotFoundView` + `app/not-found.tsx` with chrome + `app/(front)/not-found.tsx`) and `app/(front)/error.tsx`; footer ministry links made dynamic from Sanity (no more hardcoded slug 404s); removed dead `/sitemap` footer link; added `/about` (Про церкву) to the header «Про нас» dropdown. (done 2026-06-15, build ✓)
-- 0.3 `app/robots.ts` + `app/sitemap.ts` (dynamic from Sanity: news/ministries/team/events slugs).
+- ✅ 0.3 `app/robots.ts` (`Disallow: /` pre-launch) + `app/sitemap.ts` (dynamic from Sanity: news/ministries/team slugs; ISR revalidate=60; excludes noindex placeholders). (done 2026-06-15, build ✓)
 - 0.4 `Organization` + `Church`/`LocalBusiness` + `WebSite` JSON-LD on homepage (address, geo, phone, openingHours, sameAs).
 
 ### Phase 1 — Content model + homepage→CMS (split per type/section)

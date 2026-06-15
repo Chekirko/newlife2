@@ -66,6 +66,16 @@
 - Якщо referenced-документ видалений — UI gracefully ховає відповідний блок, а не показує помилку або порожні дані
 - При створенні нової Sanity-схеми з reference-полем — обов'язково написати відповідний null-guard у компоненті ДО деплою
 
+## SEO & New Pages
+
+Whenever a new public page or a new Sanity content type with a public detail route is added, keep the SEO surface in sync (this is part of the unit's Definition of Done — see `ai-workflow-rules.md`):
+
+- **Sitemap is the source of truth for indexable URLs.** Add new static routes to `STATIC_ROUTES` in `app/sitemap.ts`. For a new Sanity document type with public detail pages, add a branch to `SITEMAP_QUERY` (mirroring the news/ministries/team pattern) and map it into the dynamic entries.
+- **Placeholders are excluded.** Unfinished pages use `export const metadata = { robots: { index: false } }` and are NOT listed in the sitemap until real. Remove the `noindex` and add them to the sitemap in the same change that makes them real.
+- **Dynamic CMS content is automatic.** Existing types already covered by `SITEMAP_QUERY` (news, ministry, teamMember) need no manual sitemap edits per item.
+- **Site-wide `robots.ts`** is `Disallow: /` while pre-launch; per-page `noindex` controls indexing once the site is opened at launch. Do not open site-wide indexing without explicit user go-ahead (see progress-tracker → Launch checklist).
+- **Add JSON-LD** appropriate to the new page type (load the `schema-markup` skill): Article/NewsArticle, Event, Person, BreadcrumbList, etc. Absolute URLs come from `SITE_URL` (`lib/site.ts`).
+
 ## Naming Conventions
 
 - Components: PascalCase (`EventsSlider.tsx`)

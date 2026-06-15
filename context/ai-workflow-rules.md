@@ -61,6 +61,7 @@ Update the relevant context file whenever implementation changes:
 6. No console errors in the browser
 7. Responsive layout verified at mobile and desktop widths
 8. Verified that relevant skills from the **Skill Registry** in `AGENTS.md` were loaded and applied (e.g., schema-markup JSON-LD for new pages, a11y patterns for new UI components, performance checks for image/bundle changes).
+9. **SEO surface kept in sync**: if the unit added a public page or a new Sanity content type, `app/sitemap.ts` was updated (new static route in `STATIC_ROUTES`, or a new branch in the GROQ query for a new type) and `noindex` was removed once the page is real. A new indexable page is NOT "done" until it is in the sitemap — or deliberately excluded with a noted reason (e.g. still a `noindex` placeholder). See `code-standards.md` → SEO & New Pages.
 
 ## Encoding Safety
 
