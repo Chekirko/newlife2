@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins, Roboto, Playfair_Display } from "next/font/google";
+import { SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -25,6 +26,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: "Церква «Нове Життя» | Євангельська церква в Бориславі",
   description: "Ласкаво просимо до церкви «Нове Життя»! Ми — спільнота віруючих людей, які прагнуть жити за Божим Словом та ділитися любов'ю Христа.",
   keywords: ["церква", "євангельська церква", "Борислав", "Нове Життя", "богослужіння"],

@@ -4,11 +4,46 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- Architecture stabilization complete. Ready for new features.
+- Improvement roadmap agreed (2026-06-15) after deep audit. Executing **Phase 0 — Foundation**.
 
 ## Current Goal
 
-- Implement next planned page/feature (see specs/)
+- Phase 0, Unit 0.2: stub pages (/about, /media, /privacy) + not-found.tsx + error.tsx; fix footer ministry-slug links. See **Improvement Roadmap** below.
+
+## Improvement Roadmap (agreed 2026-06-15)
+
+Deep audit completed. Agreed working rules for this roadmap:
+- Update this tracker after EVERY completed unit (not in advance). Sync other context files when their domain changes (architecture/UI/standards).
+- ASK the user for design direction BEFORE building any new page (user provides references / recommendations).
+- After EVERY completed unit: show the user what was done (summary + key files/changes). Commit + push to `origin` (Chekirko/newlife2) ONLY after the user approves.
+- Load the matching `.agents/skills/*/SKILL.md` per unit (schema-markup, seo-audit, a11y-audit, performance-profiler, security-guidance, senior-frontend/fullstack, karpathy-coder).
+
+Agreed product decisions:
+- Homepage static content → **fully migrated to Sanity CMS**.
+- Priority new pages: **/about, /media, /give**.
+- News body → **Portable Text** (one rich-text field, per-paragraph formatting) — Phase 1.8.
+
+### Phase 0 — Foundation (in progress)
+- ✅ 0.1 `SITE_URL` env constant (`lib/site.ts`) + `metadataBase` in root layout; de-hardcoded `https://newlife.church` from team/ministry JSON-LD. (done 2026-06-15, build ✓)
+- 0.2 Stub pages to kill 404s: `/about`, `/media`, `/privacy` + custom `not-found.tsx` + `error.tsx`; fix or make dynamic the hardcoded footer ministry-slug links.
+- 0.3 `app/robots.ts` + `app/sitemap.ts` (dynamic from Sanity: news/ministries/team/events slugs).
+- 0.4 `Organization` + `Church`/`LocalBusiness` + `WebSite` JSON-LD on homepage (address, geo, phone, openingHours, sameAs).
+
+### Phase 1 — Content model + homepage→CMS (split per type/section)
+- 1.1 `siteSettings` singleton (contacts, schedule, socials, OG defaults) → header/footer/home; feeds 0.4 JSON-LD.
+- 1.2 hero slides → CMS · 1.3 service schedule → CMS (structured, feeds openingHours)
+- 1.4 testimonials → CMS · 1.5 FAQ → CMS (+FAQPage JSON-LD) · 1.6 "what you'll find" + stats → CMS
+- 1.7 `event`: real date/place fields → `/events` + `/events/[slug]` + Event JSON-LD
+- 1.8 `news`: Portable Text body + NewsArticle JSON-LD (+ migrate existing `text`)
+
+### Phase 2 — Accessibility + UI/UX
+- WCAG AA contrast fix (gray-500/600, white-on-gradient buttons), focus-visible, keyboard-accessible dropdown, skip-link, aria-current; hero/PageHero → `next/image`; Font Awesome self-host/replace.
+
+### Phase 3 — New pages (ASK design first)
+- `/about`, `/media` (YouTube archive + live), `/give` (requisites) + homepage sections (latest sermon, Telegram, plan-your-visit).
+
+### Phase 4 — Integrations
+- Real contact form (server action + zod + honeypot/rate-limit), security headers, optional Sanity webhook on-demand revalidation, CI.
 
 ## Completed
 
@@ -42,12 +77,14 @@ Update this file after every meaningful implementation change.
 
 ## Next Up
 
-- Online трансляції / медіа сторінка
+- See **Improvement Roadmap** above. Active: Phase 0, Unit 0.1.
 - Sanity content audit: unique gallery images per ministry
 
 ## Open Questions
 
-- Які саме сторінки планує замовник наступними?
+- Дизайн нових сторінок (/about, /media, /give) — узгодити з замовником ПЕРЕД версткою (Phase 3).
+- Footer: захардкоджені slug служінь (`/ministries/children` тощо) — прибрати чи зробити динамічними з Sanity (Unit 0.2)?
+- Пріоритет Portable Text (1.8): лишити у Фазі 1 чи підняти одразу після Фази 0?
 
 ## Architecture Decisions
 
@@ -69,3 +106,4 @@ Update this file after every meaningful implementation change.
 - Session (2026-05-26): Extended teamMember categories, restructured /team page with 5 sections, added HonorarySection + TeamPhotoBanner components
 - `prebuild` script runs `sanity schema extract && sanity typegen generate` before each build
 - Session (2026-06-03): Converted ministry.leader to weak reference, created migration script, added preventive weak-reference rules to code-standards, architecture, AGENTS.md
+- Session (2026-06-15): Deep project audit. Found broken nav links (/about, /media, /privacy, /sitemap → 404), missing sitemap/robots, missing Organization/LocalBusiness/Event/NewsArticle JSON-LD, WCAG AA contrast failures (gray-500/600, white-on-gradient buttons), fake contact form, hardcoded homepage content + duplicated contact/schedule data. Agreed phased Improvement Roadmap; user chose: start Phase 0, migrate homepage fully to CMS, priority pages /about /media /give, Portable Text for news.

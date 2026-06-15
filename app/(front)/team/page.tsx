@@ -9,6 +9,7 @@ import {
 } from './queries'
 import { TeamSection, HonorarySection, TeamPhotoBanner } from './components'
 import type { SanityTeamMemberCard } from '@/sanity/lib/types'
+import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
   title: 'Команда | Церква «Нове Життя»',
@@ -53,8 +54,8 @@ export default async function TeamPage() {
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Головна', item: 'https://newlife.church' },
-              { '@type': 'ListItem', position: 2, name: 'Команда', item: 'https://newlife.church/team' },
+              { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Команда', item: `${SITE_URL}/team` },
             ],
           }),
         }}

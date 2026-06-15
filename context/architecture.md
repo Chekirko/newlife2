@@ -61,3 +61,4 @@
 8. CSS-кольори використовують ТІЛЬКИ токени з `globals.css` (`--color-primary`, `--gradient-start/end`) — жодних raw hex
 9. Відповідальні особи та лідери служінь зв'язуються як **weak references** до `teamMember` — дозволяє видаляти служителів без блокування, фронтенд gracefully ховає блок лідера при null
 10. Усі `reference`-поля в Sanity-схемах ЗАВЖДИ використовують `weak: true` — фронтенд-компоненти ОБОВ'ЯЗКОВО перевіряють `null` перед рендером referenced-даних
+11. Абсолютні URL (metadataBase, sitemap, JSON-LD `item`/`url`) ЗАВЖДИ походять із `lib/site.ts` → `SITE_URL` (env `NEXT_PUBLIC_SITE_URL`, дефолт `https://newlife.church`) — ЖОДНОГО захардкодженого домену в коді

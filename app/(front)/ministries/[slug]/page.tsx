@@ -13,6 +13,7 @@ import {
   OTHER_MINISTRIES_QUERY,
 } from './queries'
 import { NEWS_QUERY } from '@/sanity/lib/queries'
+import { SITE_URL } from '@/lib/site'
 import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/lib/types'
 
 // ============================================
@@ -91,9 +92,9 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Головна', item: 'https://newlife.church' },
-              { '@type': 'ListItem', position: 2, name: 'Служіння', item: 'https://newlife.church/ministries' },
-              { '@type': 'ListItem', position: 3, name: ministry.title, item: `https://newlife.church/ministries/${ministry.slug}` },
+              { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
+              { '@type': 'ListItem', position: 2, name: 'Служіння', item: `${SITE_URL}/ministries` },
+              { '@type': 'ListItem', position: 3, name: ministry.title, item: `${SITE_URL}/ministries/${ministry.slug}` },
             ],
           }),
         }}
