@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { defineQuery } from 'next-sanity'
 import { client } from '@/sanity/lib/client'
-import { CHURCH } from '@/lib/church'
+import type { SiteSettings } from '@/lib/site-settings'
 
 const quickLinks = [
   { label: 'Про нас', href: '/about' },
@@ -22,9 +22,10 @@ const FOOTER_MINISTRIES_QUERY = defineQuery(`
 
 type FooterMinistry = { _id: string; title: string; slug: string | null }
 
-export default async function ChurchFooter() {
+export default async function ChurchFooter({ settings }: { settings: SiteSettings }) {
   const currentYear = new Date().getFullYear()
   const ministries = await client.fetch<FooterMinistry[]>(FOOTER_MINISTRIES_QUERY)
+  const { address, phone, phoneDisplay, email, social, services } = settings
 
   return (
     <footer className="footer">
@@ -49,17 +50,22 @@ export default async function ChurchFooter() {
               Ми — спільнота віруючих людей, які прагнуть жити за Божим Словом 
               та ділитися любов'ю Христа з кожним.
             </p>
-            <div className="social-icons si-colored-bg">
+            <div className="social-icons">
               <ul className="flex gap-2">
-                <li className="social-icons-item social-facebook">
-                  <a href={CHURCH.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="social-icons-link rounded-full"><i className="fab fa-facebook-f"></i></a>
-                </li>
-                <li className="social-icons-item social-instagram">
-                  <a href={CHURCH.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="social-icons-link rounded-full"><i className="fab fa-instagram"></i></a>
-                </li>
-                <li className="social-icons-item social-youtube">
-                  <a href={CHURCH.social.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="social-icons-link rounded-full"><i className="fab fa-youtube"></i></a>
-                </li>
+                {social.map((s) => (
+                  <li key={s.platform + s.url} className="social-icons-item">
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={s.label}
+                      style={{ backgroundColor: s.color }}
+                      className="social-icons-link rounded-full text-white"
+                    >
+                      <i className={s.icon}></i>
+                    </a>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
@@ -112,30 +118,35 @@ export default async function ChurchFooter() {
               <li className="flex items-start gap-3">
                 <i className="fas fa-map-marker-alt text-primary mt-1"></i>
                 <span>
-                  {CHURCH.address.street},<br />
-                  {CHURCH.address.city}, {CHURCH.address.postalCode}
+                  {address.street},<br />
+                  {address.city}, {address.postalCode}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <i className="fas fa-phone text-primary"></i>
-                <a href={`tel:${CHURCH.phone}`} className="hover:text-white">
-                  {CHURCH.phoneDisplay}
+                <a href={`tel:${phone}`} className="hover:text-white">
+                  {phoneDisplay}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <i className="fas fa-envelope text-primary"></i>
-                <a href={`mailto:${CHURCH.email}`} className="hover:text-white">
-                  {CHURCH.email}
+                <a href={`mailto:${email}`} className="hover:text-white">
+                  {email}
                 </a>
               </li>
-              <li className="flex items-start gap-3">
-                <i className="far fa-clock text-primary mt-1"></i>
-                <span>
-                  Неділя: 11:00<br />
-                  Вівторок, П&apos;ятниця: 19:00<br />
-                  Субота (молодь): 19:00
-                </span>
-              </li>
+              {services.length > 0 && (
+                <li className="flex items-start gap-3">
+                  <i className="far fa-clock text-primary mt-1"></i>
+                  <span>
+                    {services.map((s, idx) => (
+                      <span key={idx}>
+                        {s.day}: {s.time}
+                        {idx < services.length - 1 && <br />}
+                      </span>
+                    ))}
+                  </span>
+                </li>
+              )}
             </ul>
           </div>
         </div>

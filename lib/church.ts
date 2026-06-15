@@ -1,10 +1,11 @@
 // =========================================
-// CHURCH — single source of truth for the church's real-world data
+// CHURCH — typed FALLBACK defaults for the church's real-world data
 // (name, address, contacts, service times, socials, geo).
 //
-// Interim home for this data. In Phase 1.1 it moves to a Sanity
-// `siteSettings` singleton so the church can edit it without a developer;
-// JSON-LD and UI will then read from there instead. Keep the shape stable.
+// As of Phase 1.1 the editable source of truth is the Sanity `siteSettings`
+// singleton. The UI and JSON-LD read it through `getSiteSettings()`
+// (`lib/site-settings.ts`), which falls back to these values for any field
+// left empty in the CMS. This file also defines the data SHAPE — keep it stable.
 // =========================================
 
 export const CHURCH = {
@@ -36,11 +37,12 @@ export const CHURCH = {
   /** Exact pin from Google Maps (church POI). */
   geo: { lat: 49.291239, lng: 23.428751 },
 
-  social: {
-    facebook: 'https://www.facebook.com/profile.php?id=61588218983350',
-    instagram: 'https://www.instagram.com/newlife_borislav/',
-    youtube: 'https://www.youtube.com/channel/UCZGAN3BWwW3wm7bOUV_dFjw',
-  },
+  /** Social links — array so new platforms can be added in /studio (see lib/social.ts). */
+  social: [
+    { platform: 'facebook', url: 'https://www.facebook.com/profile.php?id=61588218983350' },
+    { platform: 'instagram', url: 'https://www.instagram.com/newlife_borislav/' },
+    { platform: 'youtube', url: 'https://www.youtube.com/channel/UCZGAN3BWwW3wm7bOUV_dFjw' },
+  ],
 
   /** Service times (start only — used for display and openingHours later). */
   services: [
@@ -50,10 +52,3 @@ export const CHURCH = {
     { label: 'Молодіжне служіння', day: 'Субота', time: '19:00' },
   ],
 } as const
-
-/** All social profile URLs as a flat list (for JSON-LD `sameAs`). */
-export const CHURCH_SAME_AS: string[] = [
-  CHURCH.social.facebook,
-  CHURCH.social.instagram,
-  CHURCH.social.youtube,
-]

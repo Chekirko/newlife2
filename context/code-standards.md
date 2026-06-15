@@ -66,6 +66,14 @@
 - Якщо referenced-документ видалений — UI gracefully ховає відповідний блок, а не показує помилку або порожні дані
 - При створенні нової Sanity-схеми з reference-полем — обов'язково написати відповідний null-guard у компоненті ДО деплою
 
+## Sanity Singletons & Site-wide Settings
+
+- **Singleton pattern**: a document type that must have exactly ONE instance (e.g. `siteSettings`) is enforced in two places — (1) `sanity/structure.ts` pins a single fixed list item via `S.document().schemaType('x').documentId('x')` (the `documentId` equals the type name), and (2) `sanity.config.ts` strips `create`/`delete`/`duplicate`/`unpublish` from `document.actions` for that type (see `SINGLETON_TYPES` set). To add a new singleton, register it in both places.
+- **Seed singletons with a fixed `_id`** equal to the type name via `createOrReplace` (idempotent). Pattern: `scripts/seed-site-settings.ts` (dry-run by default, `--write` to commit; needs `SANITY_API_WRITE_TOKEN`).
+- **Server-fetch → client props**: a Client Component (`'use client'`) cannot fetch from Sanity. Fetch the data in the nearest Server Component (the layout/page) and pass it down as props. `app/(front)/layout.tsx` fetches `getSiteSettings()` once and passes `settings` to both `ChurchHeader` (client) and `ChurchFooter` (server) — never fetch the same singleton twice in one render.
+- **`getSiteSettings()` fallback-merge**: `lib/site-settings.ts` reads the `siteSettings` singleton and merges it OVER the `lib/church.ts` defaults — any field left empty in the CMS falls back to `church.ts`, so the UI/JSON-LD never break. `church.ts` is the typed fallback AND the canonical data SHAPE; keep them in sync when adding settings fields.
+- **Extensible "pick + render" lists (social links pattern)**: for a CMS list whose items each need an icon/color/label (e.g. socials), model it as a Sanity **array** of `{ platform, url, label? }` where `platform` is a `string` with `options.list`. Keep the platform→icon/color/label mapping in ONE code registry (`lib/social.ts`: `SOCIAL_PLATFORMS`, `SOCIAL_PLATFORM_OPTIONS`, `resolveSocialLink()`), imported by BOTH the schema (to build the dropdown) and the frontend (to render). A manager adds/reorders any registered platform with zero code; a novel one uses the `other` fallback (generic icon + custom label). `getSiteSettings()` resolves the raw array into render-ready items and derives `sameAs` from their URLs — never hardcode per-platform `<a>` blocks in components.
+
 ## SEO & New Pages
 
 Whenever a new public page or a new Sanity content type with a public detail route is added, keep the SEO surface in sync (this is part of the unit's Definition of Done — see `ai-workflow-rules.md`):

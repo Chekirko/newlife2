@@ -5,6 +5,18 @@ export const structure: StructureResolver = (S) =>
   S.list()
     .title('Контент')
     .items([
+      // Singleton — site-wide settings (one fixed document, no create/delete)
+      S.listItem()
+        .title('Налаштування сайту')
+        .id('siteSettings')
+        .icon(() => '⚙️')
+        .child(
+          S.document()
+            .schemaType('siteSettings')
+            .documentId('siteSettings')
+            .title('Налаштування сайту'),
+        ),
+      S.divider(),
       S.listItem()
         .title('Служіння')
         .schemaType('ministry')

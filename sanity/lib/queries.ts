@@ -20,3 +20,24 @@ export const NEWS_QUERY = defineQuery(`
     image
   }
 `)
+
+/** Site-wide settings singleton (church NAP, schedule, socials, OG defaults)
+ *  Used on: layout (header + footer), homepage (JSON-LD), contact page
+ *  Read through `getSiteSettings()` in `lib/site-settings.ts`, which falls
+ *  back to `lib/church.ts` for any empty field.
+ */
+export const SITE_SETTINGS_QUERY = defineQuery(`
+  *[_type == "siteSettings"][0]{
+    name,
+    legalName,
+    city,
+    email,
+    phone,
+    phoneDisplay,
+    address,
+    geo,
+    social[]{ platform, url, label },
+    services,
+    defaultDescription
+  }
+`)

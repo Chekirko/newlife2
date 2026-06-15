@@ -57,7 +57,7 @@
 ### In Scope
 - Публічний фронтенд (SSG/SSR)
 - Sanity Studio (вбудований на /studio)
-- CMS-моделі: ministry, news, event, teamMember
+- CMS-моделі: siteSettings (singleton — контакти/розклад/соцмережі/SEO), ministry, news, event, teamMember
 - SEO-метадані для кожної сторінки
 - Адаптивний дизайн (mobile → desktop)
 - Автоматична генерація типів (Sanity TypeGen)

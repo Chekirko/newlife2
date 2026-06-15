@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- **Phase 0 COMPLETE.** Next: Phase 1.1 — Sanity `siteSettings` singleton (migrate `lib/church.ts` data into CMS). See **Improvement Roadmap** below.
+- **Phase 1.1 COMPLETE** (siteSettings singleton). Next: **Phase 1.2 — hero slides → CMS**. See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -35,7 +35,8 @@ Agreed product decisions:
 - ✅ 0.5 Wired `lib/church.ts` real data into contact page + header (top bar) + footer (replaced placeholder phone/email/address/schedule/socials). FIXED contact-page Google Map → coords-based embed (`maps.google.com?q=lat,lng&output=embed`) centered on exact pin. Removed dead Telegram footer icon (no link). External social links got `target=_blank rel=noopener aria-label`. (done 2026-06-15, build ✓)
 
 ### Phase 1 — Content model + homepage→CMS (split per type/section)
-- 1.1 `siteSettings` singleton (contacts, schedule, socials, OG defaults) → header/footer/home; feeds 0.4 JSON-LD.
+- ✅ 1.1 `siteSettings` singleton (contacts, schedule, socials, OG defaults). Schema + singleton (structure.ts fixed item + sanity.config.ts document.actions strip create/delete/duplicate) + `geopoint`. Seed script `scripts/seed-site-settings.ts` (`pnpm seed:site --write`, _id=`siteSettings`). `getSiteSettings()` (`lib/site-settings.ts`) merges CMS over `church.ts` fallback. Wired into layout→header/footer (server-fetch→client props), homepage Church/WebSite JSON-LD, contact page. `church.ts` kept as typed fallback+shape (dead `CHURCH_SAME_AS` removed). (done 2026-06-15, build ✓, runtime verified)
+  - ✅ 1.1b Соцмережі зроблено розширюваними: `social` тепер **масив** `{platform,url,label}` (а не фіксований об'єкт facebook/instagram/youtube). Менеджер додає/сортує/прибирає соцмережі у /studio через дропдаун платформ + «Інша» (без розробника). Реєстр платформ (іконка/колір/назва) — `lib/social.ts` (`SOCIAL_PLATFORMS`/`resolveSocialLink`), імпортується і схемою (дропдаун), і фронтом (рендер). Header/footer рендерять масив динамічно (інлайн brand-колір), `sameAs` — з URL масиву. Re-seed виконано. (done 2026-06-15, build ✓, runtime verified)
 - 1.2 hero slides → CMS · 1.3 service schedule → CMS (structured, feeds openingHours)
 - 1.4 testimonials → CMS · 1.5 FAQ → CMS (+FAQPage JSON-LD) · 1.6 "what you'll find" + stats → CMS
 - 1.7 `event`: real date/place fields → `/events` + `/events/[slug]` + Event JSON-LD
@@ -76,14 +77,17 @@ Agreed product decisions:
 
 - **Weak References**: Переведено ministry.leader на weak: true, створено міграцію існуючих даних, зафіксовано правило weak: true для всіх майбутніх reference-полів у code-standards, architecture, AGENTS.md
 
+- **Site Settings Singleton (Phase 1.1)**: Створено Sanity-singleton `siteSettings` (NAP, розклад, соцмережі, гео `geopoint`, OG-дефолти) — редагується у /studio без розробника. Singleton enforced через `structure.ts` (один фіксований пункт) + `sanity.config.ts` (document.actions прибирає create/delete/duplicate/unpublish). Seed-скрипт `seed-site-settings.ts` заповнив документ із `church.ts`. `getSiteSettings()` зливає CMS поверх `church.ts`-fallback. Споживачі переведені на Sanity: layout фетчить і передає `settings` у header (client)/footer, homepage JSON-LD, contact. `church.ts` лишився типізованим fallback + джерелом форми даних. Соцмережі — розширюваний масив (платформи з реєстру `lib/social.ts` + варіант «Інша»), менеджер додає нові без розробника.
+
 ## In Progress
 
 - None currently.
 
 ## Next Up
 
-- See **Improvement Roadmap** above. Active: Phase 0, Unit 0.1.
+- See **Improvement Roadmap** above. Active: **Phase 1.2 — hero slides → CMS**.
 - Sanity content audit: unique gallery images per ministry
+- ⚠️ Build/typegen note: `sanity schema extract` requires Sanity CLI auth. Locally set `SANITY_AUTH_TOKEN` (e.g. from `SANITY_API_WRITE_TOKEN`) before `pnpm build`/`pnpm typegen`, else `CorsOriginError`. Vercel has its own auth.
 
 ## Open Questions
 
@@ -93,7 +97,7 @@ Agreed product decisions:
 - **TODO Лого**: є векторний EPS (`нове життя вектор.eps`), але конвертації в середовищі немає (gs/inkscape/imagemagick відсутні). Потрібен SVG або прозорий PNG від замовника (або встановити Inkscape) → вставити в хедер/футер замість тимчасового кружечка «НЖ». Додати logo в Organization JSON-LD після появи.
 - **Координати**: ✅ уточнено точним піном — 49.291239, 23.428751 (Unit 0.5 використає для мапи).
 - **openingHours**: додати в JSON-LD `openingHoursSpecification`, коли буде тривалість служінь (час завершення).
-- **Email-адреси**: на сайті є `prayer@newlife.church` / `info@newlife.church` (тестові) — замінити на реальний `zerkvahrista@gmail.com` (Unit 0.5).
+- **Email-адреси**: ✅ вирішено — реальний `zerkvahrista@gmail.com` тепер у singleton `siteSettings` (з fallback у `church.ts`), редагується у /studio.
 
 ## Architecture Decisions
 

@@ -21,7 +21,7 @@ import { EVENTS_QUERY } from './queries'
 import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
 import { urlFor } from '@/sanity/lib/image'
 import { SITE_URL } from '@/lib/site'
-import { CHURCH, CHURCH_SAME_AS } from '@/lib/church'
+import { getSiteSettings } from '@/lib/site-settings'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
@@ -33,10 +33,11 @@ import { formatDate } from '@/lib/utils'
 export const revalidate = 60 // Revalidate page every 60 seconds
 
 export default async function HomePage() {
-  // Fetch news and events from Sanity
-  const [newsRaw, eventsRaw] = await Promise.all([
+  // Fetch news, events and site settings from Sanity
+  const [newsRaw, eventsRaw, settings] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
     client.fetch<SanityEvent[]>(EVENTS_QUERY),
+    getSiteSettings(),
   ])
 
   // Transform Sanity data for components
@@ -67,31 +68,31 @@ export default async function HomePage() {
       {
         '@type': 'Church',
         '@id': `${SITE_URL}/#church`,
-        name: CHURCH.name,
-        legalName: CHURCH.legalName,
+        name: settings.name,
+        legalName: settings.legalName,
         url: SITE_URL,
-        email: CHURCH.email,
-        telephone: CHURCH.phone,
+        email: settings.email,
+        telephone: settings.phone,
         address: {
           '@type': 'PostalAddress',
-          streetAddress: CHURCH.address.street,
-          addressLocality: CHURCH.address.city,
-          addressRegion: CHURCH.address.region,
-          postalCode: CHURCH.address.postalCode,
-          addressCountry: CHURCH.address.country,
+          streetAddress: settings.address.street,
+          addressLocality: settings.address.city,
+          addressRegion: settings.address.region,
+          postalCode: settings.address.postalCode,
+          addressCountry: settings.address.country,
         },
         geo: {
           '@type': 'GeoCoordinates',
-          latitude: CHURCH.geo.lat,
-          longitude: CHURCH.geo.lng,
+          latitude: settings.geo.lat,
+          longitude: settings.geo.lng,
         },
-        sameAs: CHURCH_SAME_AS,
+        sameAs: settings.sameAs,
       },
       {
         '@type': 'WebSite',
         '@id': `${SITE_URL}/#website`,
         url: SITE_URL,
-        name: CHURCH.name,
+        name: settings.name,
         inLanguage: 'uk',
       },
     ],

@@ -29,8 +29,8 @@
 - `components/ui/` — Базові UI-компоненти (MinistryCard)
 - `sanity/lib/` — Sanity client, image helper, спільні запити, згенеровані типи
 - `sanity/lib/queries.ts` — ТІЛЬКИ спільні GROQ-запити (використовуються 2+ сторінками)
-- `sanity/schemaTypes/` — Sanity-схеми документів (ministry, news, event)
-- `lib/` — Загальні утиліти: `utils.ts` (formatDate), `site.ts` (`SITE_URL`), `church.ts` (реальні дані церкви — назва, адреса, контакти, розклад, соцмережі, гео; ЄДИНЕ джерело для JSON-LD та UI до міграції в Sanity `siteSettings` у Phase 1.1)
+- `sanity/schemaTypes/` — Sanity-схеми документів (siteSettings, ministry, news, event, teamMember). `siteSettings` — **singleton** (один документ): редагується контент-менеджером у /studio, тримає NAP, розклад, соцмережі (масив `{platform,url,label}` — додаються/сортуються без розробника, платформи з реєстру `lib/social.ts`), OG-дефолти
+- `lib/` — Загальні утиліти: `utils.ts` (formatDate), `site.ts` (`SITE_URL`), `church.ts` (типізований FALLBACK + форма даних церкви), `site-settings.ts` (`getSiteSettings()` — читає Sanity-singleton `siteSettings` і зливає поверх дефолтів `church.ts`; ЄДИНА точка доступу до даних церкви для UI та JSON-LD), `social.ts` (реєстр соцмереж: платформа → іконка/колір/назва; ЄДИНЕ джерело для дропдауна у схемі та рендеру в header/footer)
 - `public/images/` — Статичні зображення (hero-фони, іконки)
 
 ## Storage Model
@@ -63,4 +63,5 @@
 8. CSS-кольори використовують ТІЛЬКИ токени з `globals.css` (`--color-primary`, `--gradient-start/end`) — жодних raw hex
 9. Відповідальні особи та лідери служінь зв'язуються як **weak references** до `teamMember` — дозволяє видаляти служителів без блокування, фронтенд gracefully ховає блок лідера при null
 10. Усі `reference`-поля в Sanity-схемах ЗАВЖДИ використовують `weak: true` — фронтенд-компоненти ОБОВ'ЯЗКОВО перевіряють `null` перед рендером referenced-даних
-11. Абсолютні URL (metadataBase, sitemap, JSON-LD `item`/`url`) ЗАВЖДИ походять із `lib/site.ts` → `SITE_URL` — ЖОДНОГО захардкодженого домену в коді. Порядок визначення: `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` (авто-домен Vercel, само-оновлюється на власний домен після під'єднання) → дефолт `https://newlife.church` (лише для локального/не-Vercel білда). `SITE_URL` читається ТІЛЬКИ в Server Components
+11. Дані церкви (NAP, розклад, соцмережі, гео) для UI та JSON-LD ЗАВЖДИ читаються через `getSiteSettings()` (`lib/site-settings.ts`) — Sanity-singleton `siteSettings` із fallback на `lib/church.ts`. Client Components не фетчать самі: layout/сторінка (Server Component) фетчить і передає `settings` пропсами (напр. `ChurchHeader`). Singleton-інваріант: рівно один документ `siteSettings` (enforced у `structure.ts` + `sanity.config.ts` document.actions)
+12. Абсолютні URL (metadataBase, sitemap, JSON-LD `item`/`url`) ЗАВЖДИ походять із `lib/site.ts` → `SITE_URL` — ЖОДНОГО захардкодженого домену в коді. Порядок визначення: `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` (авто-домен Vercel, само-оновлюється на власний домен після під'єднання) → дефолт `https://newlife.church` (лише для локального/не-Vercel білда). `SITE_URL` читається ТІЛЬКИ в Server Components

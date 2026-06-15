@@ -3,7 +3,7 @@ import { PageHero } from '@/components'
 import { ContactInfoCard } from './components/ContactInfoCard'
 import { ContactForm } from './components/ContactForm'
 import { MapEmbed } from './components/MapEmbed'
-import { CHURCH } from '@/lib/church'
+import { getSiteSettings } from '@/lib/site-settings'
 
 export const metadata: Metadata = {
   title: 'Контакти | Церква «Нове Життя»',
@@ -37,10 +37,13 @@ const ClockIcon = () => (
   </svg>
 )
 
-// Google Maps embed centered on the church's exact pin (no API key needed).
-const GOOGLE_MAPS_EMBED = `https://maps.google.com/maps?q=${CHURCH.geo.lat},${CHURCH.geo.lng}&z=17&hl=uk&output=embed`
+export default async function ContactPage() {
+  const settings = await getSiteSettings()
+  const { address, email, phone, phoneDisplay, geo, services } = settings
 
-export default function ContactPage() {
+  // Google Maps embed centered on the church's exact pin (no API key needed).
+  const googleMapsEmbed = `https://maps.google.com/maps?q=${geo.lat},${geo.lng}&z=17&hl=uk&output=embed`
+
   return (
     <>
       <PageHero
@@ -83,30 +86,35 @@ export default function ContactPage() {
 
                 <div className="relative z-10">
                   <ContactInfoCard icon={<MapIcon />} title="Адреса">
-                    <p>{CHURCH.address.street},<br />{CHURCH.address.city},<br />{CHURCH.address.region}</p>
+                    <p>{address.street},<br />{address.city},<br />{address.region}</p>
                   </ContactInfoCard>
 
                   <ContactInfoCard icon={<EmailIcon />} title="E-mail">
-                    <a href={`mailto:${CHURCH.email}`} className="hover:text-white transition-colors">
-                      {CHURCH.email}
+                    <a href={`mailto:${email}`} className="hover:text-white transition-colors">
+                      {email}
                     </a>
                   </ContactInfoCard>
 
                   <ContactInfoCard icon={<PhoneIcon />} title="Телефон">
                     <p>
-                      <a href={`tel:${CHURCH.phone}`} className="hover:text-white transition-colors">
-                        {CHURCH.phoneDisplay}
+                      <a href={`tel:${phone}`} className="hover:text-white transition-colors">
+                        {phoneDisplay}
                       </a>
                     </p>
                   </ContactInfoCard>
 
-                  <ContactInfoCard icon={<ClockIcon />} title="Розклад">
-                    <p>
-                      Неділя: 11:00<br />
-                      Вівторок, П&apos;ятниця: 19:00<br />
-                      Субота (молодь): 19:00
-                    </p>
-                  </ContactInfoCard>
+                  {services.length > 0 && (
+                    <ContactInfoCard icon={<ClockIcon />} title="Розклад">
+                      <p>
+                        {services.map((s, idx) => (
+                          <span key={idx}>
+                            {s.day}: {s.time}
+                            {idx < services.length - 1 && <br />}
+                          </span>
+                        ))}
+                      </p>
+                    </ContactInfoCard>
+                  )}
                 </div>
               </div>
             </div>
@@ -114,7 +122,7 @@ export default function ContactPage() {
             {/* Google Map */}
             <div className="md:col-span-3">
               <MapEmbed
-                src={GOOGLE_MAPS_EMBED}
+                src={googleMapsEmbed}
                 className="h-full min-h-[400px] md:min-h-0"
               />
             </div>
@@ -137,8 +145,8 @@ export default function ContactPage() {
               <h5 className="font-heading font-semibold text-gray-800 mb-2">Молитовна підтримка</h5>
               <p className="text-gray-500 text-sm">
                 Якщо вам потрібна молитва, напишіть на{' '}
-                <a href={`mailto:${CHURCH.email}`} className="text-primary hover:underline">
-                  {CHURCH.email}
+                <a href={`mailto:${email}`} className="text-primary hover:underline">
+                  {email}
                 </a>
               </p>
             </div>
@@ -146,8 +154,8 @@ export default function ContactPage() {
               <h5 className="font-heading font-semibold text-gray-800 mb-2">Загальні питання</h5>
               <p className="text-gray-500 text-sm">
                 Для загальних запитань або пропозицій{' '}
-                <a href={`mailto:${CHURCH.email}`} className="text-primary hover:underline">
-                  {CHURCH.email}
+                <a href={`mailto:${email}`} className="text-primary hover:underline">
+                  {email}
                 </a>
               </p>
             </div>
