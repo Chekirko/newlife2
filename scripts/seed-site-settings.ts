@@ -62,6 +62,7 @@ const doc = {
     label: s.label,
     day: s.day,
     time: s.time,
+    endTime: s.endTime,
   })),
 }
 

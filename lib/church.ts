@@ -44,11 +44,11 @@ export const CHURCH = {
     { platform: 'youtube', url: 'https://www.youtube.com/channel/UCZGAN3BWwW3wm7bOUV_dFjw' },
   ],
 
-  /** Service times (start only — used for display and openingHours later). */
+  /** Service times — start + end (end feeds openingHours JSON-LD; editable in CMS). */
   services: [
-    { label: 'Недільне богослужіння', day: 'Неділя', time: '11:00' },
-    { label: 'Вечір молитви', day: 'Вівторок', time: '19:00' },
-    { label: 'Вечір молитви', day: "П'ятниця", time: '19:00' },
-    { label: 'Молодіжне служіння', day: 'Субота', time: '19:00' },
+    { label: 'Недільне богослужіння', day: 'Неділя', time: '11:00', endTime: '13:00' },
+    { label: 'Вечір молитви', day: 'Вівторок', time: '19:00', endTime: '20:30' },
+    { label: 'Вечір молитви', day: "П'ятниця", time: '19:00', endTime: '20:30' },
+    { label: 'Молодіжне служіння', day: 'Субота', time: '19:00', endTime: '20:30' },
   ],
 } as const

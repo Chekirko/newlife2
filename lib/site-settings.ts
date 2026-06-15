@@ -34,10 +34,23 @@ export interface SiteSettings {
   }
   geo: { lat: number; lng: number }
   social: SocialLink[]
-  services: { label: string; day: string; time: string }[]
+  services: { label: string; day: string; time: string; endTime: string }[]
+  /** schema.org openingHoursSpecification entries (only services with both start & end). */
+  openingHours: { dayOfWeek: string; opens: string; closes: string }[]
   defaultDescription: string | null
   /** Flat list of social URLs for JSON-LD `sameAs` (empty ones dropped). */
   sameAs: string[]
+}
+
+/** Ukrainian weekday → schema.org English day (for openingHoursSpecification). */
+const UA_DAY_TO_SCHEMA: Record<string, string> = {
+  Неділя: 'Sunday',
+  Понеділок: 'Monday',
+  Вівторок: 'Tuesday',
+  Середа: 'Wednesday',
+  Четвер: 'Thursday',
+  "П'ятниця": 'Friday',
+  Субота: 'Saturday',
 }
 
 /** Use the CMS value when present and non-empty, otherwise the church.ts default. */
@@ -66,8 +79,17 @@ export async function getSiteSettings(): Promise<SiteSettings> {
           label: s.label ?? '',
           day: s.day ?? '',
           time: s.time ?? '',
+          endTime: s.endTime ?? '',
         }))
       : CHURCH.services.map((s) => ({ ...s }))
+
+  // openingHoursSpecification: only services with a known day AND both start/end times.
+  const openingHours = services.flatMap((s) => {
+    const dayOfWeek = UA_DAY_TO_SCHEMA[s.day]
+    return dayOfWeek && s.time && s.endTime
+      ? [{ dayOfWeek, opens: s.time, closes: s.endTime }]
+      : []
+  })
 
   return {
     name: pick(data?.name, CHURCH.name),
@@ -91,6 +113,7 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         : { ...CHURCH.geo },
     social,
     services,
+    openingHours,
     defaultDescription: data?.defaultDescription ?? null,
     sameAs: social.map((s) => s.url).filter(Boolean),
   }

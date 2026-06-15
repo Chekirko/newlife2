@@ -88,6 +88,14 @@ export default async function HomePage() {
           longitude: settings.geo.lng,
         },
         sameAs: settings.sameAs,
+        ...(settings.openingHours.length > 0 && {
+          openingHoursSpecification: settings.openingHours.map((h) => ({
+            '@type': 'OpeningHoursSpecification',
+            dayOfWeek: h.dayOfWeek,
+            opens: h.opens,
+            closes: h.closes,
+          })),
+        }),
       },
       {
         '@type': 'WebSite',
@@ -98,6 +106,11 @@ export default async function HomePage() {
       },
     ],
   }
+
+  // Service schedule line for the CTA — built from CMS data (single source of truth).
+  const scheduleSummary = settings.services
+    .map((s) => `${s.day} ${s.time}${s.endTime ? `–${s.endTime}` : ''} — ${s.label}`)
+    .join(' | ')
 
   return (
     <>
@@ -166,7 +179,7 @@ export default async function HomePage() {
       <HeroGradientImage
         preTitle="Приєднуйтесь до нас"
         title="Розклад богослужінь"
-        subtitle="Неділя: 10:00 — Головне богослужіння | Середа: 18:00 — Молитовне зібрання | П'ятниця: 19:00 — Молодіжне зібрання"
+        subtitle={scheduleSummary}
         primaryButtonText="Запланувати візит"
         primaryButtonHref="/contact"
         secondaryButtonText="Як нас знайти"

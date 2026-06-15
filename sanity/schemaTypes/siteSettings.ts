@@ -171,13 +171,20 @@ export const siteSettingsType = defineType({
               type: 'string',
               description: 'Наприклад: 11:00',
             }),
+            defineField({
+              name: 'endTime',
+              title: 'Час завершення',
+              type: 'string',
+              description: 'Для розкладу та schema (необов’язково) — наприклад: 13:00',
+            }),
           ],
           preview: {
-            select: { title: 'label', day: 'day', time: 'time' },
-            prepare({ title, day, time }) {
+            select: { title: 'label', day: 'day', time: 'time', endTime: 'endTime' },
+            prepare({ title, day, time, endTime }) {
+              const range = [time, endTime].filter(Boolean).join('–')
               return {
                 title: title || 'Служіння',
-                subtitle: [day, time].filter(Boolean).join(' · ') || undefined,
+                subtitle: [day, range].filter(Boolean).join(' · ') || undefined,
               }
             },
           },

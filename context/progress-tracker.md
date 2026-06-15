@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- **Phase 1.2 COMPLETE** (homepage singleton — hero slides → CMS). Next: **Phase 1.3 — service schedule → CMS (structured, feeds openingHours)**. See **Improvement Roadmap** below.
+- **Phase 1.3 COMPLETE** (service schedule structured + feeds openingHours JSON-LD). Next: **Phase 1.4 — testimonials → CMS**. See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -38,7 +38,7 @@ Agreed product decisions:
 - ✅ 1.1 `siteSettings` singleton (contacts, schedule, socials, OG defaults). Schema + singleton (structure.ts fixed item + sanity.config.ts document.actions strip create/delete/duplicate) + `geopoint`. Seed script `scripts/seed-site-settings.ts` (`pnpm seed:site --write`, _id=`siteSettings`). `getSiteSettings()` (`lib/site-settings.ts`) merges CMS over `church.ts` fallback. Wired into layout→header/footer (server-fetch→client props), homepage Church/WebSite JSON-LD, contact page. `church.ts` kept as typed fallback+shape (dead `CHURCH_SAME_AS` removed). (done 2026-06-15, build ✓, runtime verified)
   - ✅ 1.1b Соцмережі зроблено розширюваними: `social` тепер **масив** `{platform,url,label}` (а не фіксований об'єкт facebook/instagram/youtube). Менеджер додає/сортує/прибирає соцмережі у /studio через дропдаун платформ + «Інша» (без розробника). Реєстр платформ (іконка/колір/назва) — `lib/social.ts` (`SOCIAL_PLATFORMS`/`resolveSocialLink`), імпортується і схемою (дропдаун), і фронтом (рендер). Header/footer рендерять масив динамічно (інлайн brand-колір), `sameAs` — з URL масиву. Re-seed виконано. (done 2026-06-15, build ✓, runtime verified)
 - ✅ 1.2 hero slides → CMS. Новий singleton `homepage` (schema + structure.ts fixed item + sanity.config.ts SINGLETON_TYPES). Масив `heroSlides` (image+hotspot, pre/title/subtitle, 2 кнопки, align). Seed `scripts/seed-homepage.ts` (`pnpm seed:homepage --write` — аплоадить 3 hero-зображення з /public, _id=`homepage`). `getHomepage()` (`lib/homepage.ts`) резолвить hero-зображення через `urlFor(1920×1080)`, fallback на чисті дефолти `lib/hero-slides-data.ts`. page.tsx фетчить у `Promise.all`, передає у `HeroSlider`; статичний const видалено. (done 2026-06-15, build ✓, prerender verified — hero = 3 Sanity CDN URLs з hotspot-кропом)
-- 1.3 service schedule → CMS (structured, feeds openingHours)
+- ✅ 1.3 service schedule structured + feeds openingHours. Додано поле `endTime` у `siteSettings.services` (час завершення, необов'язкове). `getSiteSettings()` віддає похідний масив `openingHours` (тільки служіння з днем+початком+кінцем; UA-день → schema-англ. через `UA_DAY_TO_SCHEMA`). Homepage Church JSON-LD отримав `openingHoursSpecification` (4 записи, 24h). ВИПРАВЛЕНО баг: CTA «Розклад богослужінь» більше не захардкоджений хибними даними — будується з `settings.services`. (done 2026-06-15, build ✓, prerender verified — JSON-LD + CTA = реальний розклад)
 - 1.4 testimonials → CMS · 1.5 FAQ → CMS (+FAQPage JSON-LD) · 1.6 "what you'll find" + stats → CMS
 - 1.7 `event`: real date/place fields → `/events` + `/events/[slug]` + Event JSON-LD
 - 1.8 `news`: Portable Text body + NewsArticle JSON-LD (+ migrate existing `text`)
@@ -80,7 +80,9 @@ Agreed product decisions:
 
 - **Site Settings Singleton (Phase 1.1)**: Створено Sanity-singleton `siteSettings` (NAP, розклад, соцмережі, гео `geopoint`, OG-дефолти) — редагується у /studio без розробника. Singleton enforced через `structure.ts` (один фіксований пункт) + `sanity.config.ts` (document.actions прибирає create/delete/duplicate/unpublish). Seed-скрипт `seed-site-settings.ts` заповнив документ із `church.ts`. `getSiteSettings()` зливає CMS поверх `church.ts`-fallback. Споживачі переведені на Sanity: layout фетчить і передає `settings` у header (client)/footer, homepage JSON-LD, contact. `church.ts` лишився типізованим fallback + джерелом форми даних. Соцмережі — розширюваний масив (платформи з реєстру `lib/social.ts` + варіант «Інша»), менеджер додає нові без розробника.
 
-- **Homepage Singleton — Hero (Phase 1.2)**: Створено Sanity-singleton `homepage` (той самий патерн enforce: structure.ts + sanity.config.ts SINGLETON_TYPES). Поле `heroSlides` — масив слайдів (зображення+hotspot, pre/title/subtitle, дві кнопки, align), редагується/сортується у /studio. Seed `seed-homepage.ts` аплоадить 3 hero-зображення з `/public` (reuse `uploadImage` з `migrate.ts`). `getHomepage()` (`lib/homepage.ts`) резолвить зображення через `urlFor()`, fallback на чисті дефолти `lib/hero-slides-data.ts` (без Sanity-залежностей — щоб seed-скрипт міг імпортувати). page.tsx фетчить у `Promise.all`, статичний const `heroSlides` видалено.
+- **Homepage Singleton — Hero (Phase 1.2)**: Створено Sanity-singleton `homepage` (той самий патерн enforce: structure.ts + sanity.config.ts SINGLETON_TYPES). Поле `heroSlides` — масив слайдів (зображення+hotspot, pre/title/subtitle, дві кнопки, align), редагується/сортується у /studio. Seed `seed-homepage.ts` аплоадить 3 hero-зображення з `/public` (reuse `uploadImage` з `migrate.ts`). `getHomepage()` (`lib/homepage.ts`) резолвить зображення через `urlFor()`, fallback на чисті дефолти `lib/hero-slides-data.ts` (без Sanity-залежностей — щоб seed-скрипт міг імпортувати). page.tsx фетчить у `Promise.all`, статичний const `heroSlides` видалено. + UI-фікси Hero: inactive-слайди `pointer-events-none` (кнопки клікабельні), прибрано проп `overlayDark`, додано градієнтний scrim + text-shadow + видима друга кнопка (`btn-outline-white`) для легібельності тексту на фото.
+
+- **Service Schedule structured + openingHours (Phase 1.3)**: До `siteSettings.services` додано необов'язкове поле `endTime` (час завершення). `getSiteSettings()` тепер віддає похідний масив `openingHours` (`{dayOfWeek, opens, closes}`) — лише служіння, де є день+початок+кінець; UA-день мапиться на schema.org-англ. через локальну `UA_DAY_TO_SCHEMA` (без окремого реєстру — навмисний scope-cut за Karpathy). Homepage Church JSON-LD отримав `openingHoursSpecification` (Church → Place підтримує). ВИПРАВЛЕНО давній баг: CTA «Розклад богослужінь» на головній був захардкоджений НЕправильним розкладом (Неділя 10:00/Середа 18:00) — тепер `subtitle` будується з `settings.services`. church.ts (fallback/shape) + seed оновлено, re-seed виконано.
 
 ## In Progress
 
@@ -88,7 +90,7 @@ Agreed product decisions:
 
 ## Next Up
 
-- See **Improvement Roadmap** above. Active: **Phase 1.3 — service schedule → CMS (structured, feeds openingHours)**.
+- See **Improvement Roadmap** above. Active: **Phase 1.4 — testimonials → CMS**.
 - Sanity content audit: unique gallery images per ministry
 - ⚠️ Build/typegen note: `sanity schema extract` requires Sanity CLI auth. Locally set `SANITY_AUTH_TOKEN` (e.g. from `SANITY_API_WRITE_TOKEN`) before `pnpm build`/`pnpm typegen`, else `CorsOriginError`. Vercel has its own auth.
 
@@ -99,7 +101,7 @@ Agreed product decisions:
 - Пріоритет Portable Text (1.8): лишити у Фазі 1 чи підняти одразу після Фази 0?
 - **TODO Лого**: є векторний EPS (`нове життя вектор.eps`), але конвертації в середовищі немає (gs/inkscape/imagemagick відсутні). Потрібен SVG або прозорий PNG від замовника (або встановити Inkscape) → вставити в хедер/футер замість тимчасового кружечка «НЖ». Додати logo в Organization JSON-LD після появи.
 - **Координати**: ✅ уточнено точним піном — 49.291239, 23.428751 (Unit 0.5 використає для мапи).
-- **openingHours**: додати в JSON-LD `openingHoursSpecification`, коли буде тривалість служінь (час завершення).
+- **openingHours**: ✅ ВИРІШЕНО (Phase 1.3) — `openingHoursSpecification` у homepage Church JSON-LD. Час завершення = стандартна тривалість (Неділя 11:00–13:00; реш­та 19:00–20:30), редагується у /studio через поле `endTime`.
 - **Per-page hero images → CMS** (follow-up з Phase 1.2): головна має унікальний hero-слайдер (`homepage` singleton), а решта сторінок використовують інший hero (`PageHero`, без слайдера) — кожній сторінці потрібне СВОЄ редаговане фонове зображення. Окремий юніт: реалізувати, коли відповідні сторінки добудовуються (Phase 3) або як виділений 1.x. НЕ робити разом із 1.2.
 - **Email-адреси**: ✅ вирішено — реальний `zerkvahrista@gmail.com` тепер у singleton `siteSettings` (з fallback у `church.ts`), редагується у /studio.
 
