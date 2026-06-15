@@ -26,7 +26,7 @@ Load the actual skill files **on-demand** based on what your task involves. Path
 |--------|-------------|----------------------|----------------------------|
 | **SEO / Schema Markup** | Adding JSON-LD, new page type, structured data, rich snippets | `./.agents/skills/schema-markup/SKILL.md` | `implementation-patterns.md` — JSON-LD templates; `schema-types-guide.md` — per-type field reference |
 | **SEO Audit** | Meta tags, H1-H6 review, page ranking, sitemap, content SEO | `./.agents/skills/seo-audit/SKILL.md` | `seo-audit-reference.md` — full audit framework; `cwv-thresholds.md`; `eeat-framework.md` |
-| **Accessibility (a11y)** | New UI component, form, interactive element, contrast, keyboard nav | `./.agents/skills/a11y-audit/skills/a11y-audit/SKILL.md` | `framework-a11y-patterns.md` — React/Next.js fix patterns; `wcag-quick-ref.md` — WCAG 2.2 criteria; `aria-patterns.md`; `color-contrast-guide.md` |
+| **Accessibility (a11y)** | New UI component, form, interactive element, contrast, keyboard nav | `./.agents/skills/a11y-audit/SKILL.md` | `framework-a11y-patterns.md` — React/Next.js fix patterns; `wcag-quick-ref.md` — WCAG 2.2 criteria; `aria-patterns.md`; `color-contrast-guide.md` |
 | **Performance** | Lighthouse score, bundle size, load time, image optimization, lazy-loading | `./.agents/skills/performance-profiler/SKILL.md` | `profiling-recipes.md` — Node.js/bundle/DB recipes |
 
 ### Engineering & Code Quality
@@ -35,20 +35,20 @@ Load the actual skill files **on-demand** based on what your task involves. Path
 |--------|-------------|----------------------|----------------------------|
 | **Frontend (React/Next.js)** | Any new page/route, new component with client-side state or animations, `next/dynamic` usage, RSC↔client boundary decisions, Tailwind layout issues | `./.agents/skills/senior-frontend/SKILL.md` | `frontend_best_practices.md`; `nextjs_optimization_guide.md`; `react_patterns.md` |
 | **Fullstack Architecture** | New Sanity schema type, adding API routes, major data flow changes, adding a new integration | `./.agents/skills/senior-fullstack/SKILL.md` | `architecture_patterns.md`; `development_workflows.md`; `tech_stack_guide.md` |
-| **Clean Coding (Karpathy)** | Any change touching 3+ files, refactoring existing code, code review request, extracting shared logic | `./.agents/skills/karpathy-coder/skills/karpathy-coder/SKILL.md` | `karpathy-principles.md`; `anti-patterns.md`; `enforcement-patterns.md` |
-| **Security** | Contact form changes, `.env` / token modifications, any user input handling, adding external scripts/embeds | `./.agents/skills/security-guidance/skills/security-guidance/SKILL.md` | `pretooluse_hook_canon.md` — 12 anti-pattern detectors |
+| **Clean Coding (Karpathy)** | Any change touching 3+ files, refactoring existing code, code review request, extracting shared logic | `./.agents/skills/karpathy-coder/SKILL.md` | `karpathy-principles.md`; `anti-patterns.md`; `enforcement-patterns.md` |
+| **Security** | Contact form changes, `.env` / token modifications, any user input handling, adding external scripts/embeds | `./.agents/skills/security-guidance/SKILL.md` | `pretooluse_hook_canon.md` — 12 anti-pattern detectors |
 | **Chaos Engineering** | Testing system limits, error boundaries, failure modes, checking system stability | `./.agents/skills/chaos-engineering/SKILL.md` | _(standalone, no references)_ |
 
 ### Architecture & Process
 
 | Domain | When to Load | SKILL.md (read first) | References (read on-demand) |
 |--------|-------------|----------------------|----------------------------|
-| **Design Interview (grill-me)** | User asks to plan/scope a feature, requirements have multiple valid approaches, user uses `/grill-me` command | `./.agents/skills/grill-me/skills/grill-me/SKILL.md` | `forcing_question_patterns.md`; `when_to_stop_grilling.md` |
-| **Docs-Anchored Review** | Updating `context/*.md` files, verifying implementation plan against existing architecture decisions | `./.agents/skills/grill-with-docs/skills/grill-with-docs/SKILL.md` | `adr_practice.md`; `context_md_as_artifact.md`; `ubiquitous_language.md` |
-| **Session Handoff** | User says «завершуємо», long session ending, preparing context for next session | `./.agents/skills/handoff/skills/handoff/SKILL.md` | `handoff_structure.md`; `next_session_skill_matching.md`; `deduplication_discipline.md` |
-| **Code Tour** | User asks «поясни код», «як це працює», onboarding a new contributor | `./.agents/skills/code-tour/skills/code-tour/SKILL.md` | _(standalone, no references)_ |
+| **Design Interview (grill-me)** | User asks to plan/scope a feature, requirements have multiple valid approaches, user uses `/grill-me` command | `./.agents/skills/grill-me/SKILL.md` | `forcing_question_patterns.md`; `when_to_stop_grilling.md` |
+| **Docs-Anchored Review** | Updating `context/*.md` files, verifying implementation plan against existing architecture decisions | `./.agents/skills/grill-with-docs/SKILL.md` | `adr_practice.md`; `context_md_as_artifact.md`; `ubiquitous_language.md` |
+| **Session Handoff** | User says «завершуємо», long session ending, preparing context for next session | `./.agents/skills/handoff/SKILL.md` | `handoff_structure.md`; `next_session_skill_matching.md`; `deduplication_discipline.md` |
+| **Code Tour** | User asks «поясни код», «як це працює», onboarding a new contributor | `./.agents/skills/code-tour/SKILL.md` | _(standalone, no references)_ |
 | **Codebase Onboarding** | User asks to generate project docs, README update, preparing project for handoff to another developer | `./.agents/skills/codebase-onboarding/SKILL.md` | `onboarding-template.md`; `output-format-templates.md` |
-| **AutoResearch Agent** | Deep analysis of a problem, finding architectural patterns before coding begins | `./.agents/skills/autoresearch-agent/skills/autoresearch-agent/SKILL.md` | _(standalone, no references)_ |
+| **AutoResearch Agent** | Deep analysis of a problem, finding architectural patterns before coding begins | `./.agents/skills/autoresearch-agent/SKILL.md` | _(standalone, no references)_ |
 
 ### DevOps & Content
 
