@@ -4,7 +4,8 @@ import { newsType } from './news'
 import { eventType } from './event'
 import { teamMemberType } from './teamMember'
 import { siteSettingsType } from './siteSettings'
+import { homepageType } from './homepage'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [siteSettingsType, ministryType, newsType, eventType, teamMemberType],
+  types: [siteSettingsType, homepageType, ministryType, newsType, eventType, teamMemberType],
 }

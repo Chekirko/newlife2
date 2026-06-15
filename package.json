@@ -9,6 +9,7 @@
     "lint": "eslint",
     "migrate": "tsx scripts/migrate.ts",
     "seed:site": "tsx scripts/seed-site-settings.ts",
+    "seed:homepage": "tsx scripts/seed-homepage.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"
   },

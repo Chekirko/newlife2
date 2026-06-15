@@ -41,3 +41,23 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     defaultDescription
   }
 `)
+
+/** Homepage singleton (editable homepage content; hero slider for now)
+ *  Used on: homepage. Read through `getHomepage()` in `lib/homepage.ts`,
+ *  which falls back to `lib/homepage.ts` defaults when the array is empty.
+ */
+export const HOMEPAGE_QUERY = defineQuery(`
+  *[_type == "homepage"][0]{
+    heroSlides[]{
+      preTitle,
+      title,
+      subtitle,
+      buttonText,
+      buttonHref,
+      secondaryButtonText,
+      secondaryButtonHref,
+      align,
+      image
+    }
+  }
+`)

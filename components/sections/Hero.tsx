@@ -25,7 +25,6 @@ export interface HeroSlide {
 export interface HeroSliderProps {
   slides: HeroSlide[]
   height?: string
-  overlayDark?: 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
   autoplay?: boolean
   autoplaySpeed?: number
   showArrows?: boolean
@@ -36,7 +35,6 @@ export interface HeroSliderProps {
 export const HeroSlider = ({
   slides,
   height = 'h-[400px] lg:h-[700px]',
-  overlayDark = 2,
   autoplay = true,
   autoplaySpeed = 5000,
   showArrows = true,
@@ -70,41 +68,53 @@ export const HeroSlider = ({
             key={slide.id}
             className={clsx(
               height,
-              `bg-overlay-dark-${overlayDark}`,
               'bg-cover bg-center transition-opacity duration-500',
-              idx === currentSlide ? 'opacity-100 relative' : 'opacity-0 absolute inset-0'
+              idx === currentSlide
+                ? 'opacity-100 relative'
+                : 'opacity-0 absolute inset-0 pointer-events-none'
             )}
             style={{
-              backgroundImage: typeof slide.backgroundImage === 'string' 
-                ? `url(${slide.backgroundImage})` 
+              backgroundImage: typeof slide.backgroundImage === 'string'
+                ? `url(${slide.backgroundImage})`
                 : `url(${slide.backgroundImage.src})`
             }}
           >
-            <div className="container-larexa h-full flex items-center">
+            {/* Gradient scrim — keeps the photo visible while guaranteeing text contrast */}
+            <div
+              className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/30 pointer-events-none"
+              aria-hidden="true"
+            />
+            <div className="container-larexa h-full flex items-center relative z-[2]">
               <div className={clsx(
                 'w-full lg:w-2/3 xl:w-1/2',
                 slide.align === 'center' && 'mx-auto text-center',
                 slide.align === 'right' && 'ml-auto text-right'
               )}>
                 {slide.preTitle && (
-                  <h3 className="text-white font-alt italic text-xl lg:text-2xl mb-2">
+                  <h3 className="text-white font-alt italic text-xl lg:text-2xl mb-2 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]">
                     {slide.preTitle}
                   </h3>
                 )}
-                <h2 className="text-white font-bold text-3xl lg:text-5xl xl:text-6xl mb-4">
+                <h2 className="text-white font-bold text-3xl lg:text-5xl xl:text-6xl mb-4 [text-shadow:0_2px_16px_rgba(0,0,0,0.5)]">
                   {slide.title}
                 </h2>
                 {slide.subtitle && (
-                  <p className="text-white text-lg lg:text-xl mb-6">{slide.subtitle}</p>
+                  <p className="text-white text-lg lg:text-xl mb-6 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]">
+                    {slide.subtitle}
+                  </p>
                 )}
-                <div>
+                <div className={clsx(
+                  'flex flex-wrap items-center gap-4',
+                  slide.align === 'center' && 'justify-center',
+                  slide.align === 'right' && 'justify-end'
+                )}>
                   {slide.buttonText && (
                     <a href={slide.buttonHref || '#'} className="btn btn-grad">
                       {slide.buttonText}
                     </a>
                   )}
                   {slide.secondaryButtonText && (
-                    <a href={slide.secondaryButtonHref || '#'} className="btn btn-link text-white ml-4">
+                    <a href={slide.secondaryButtonHref || '#'} className="btn btn-outline-white">
                       {slide.secondaryButtonText}
                     </a>
                   )}

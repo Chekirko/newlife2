@@ -1,7 +1,6 @@
 import {
   HeroSlider,
   HeroGradientImage,
-  type HeroSlide,
   NewsSlider,
 } from '@/components'
 import dynamic from 'next/dynamic'
@@ -22,6 +21,7 @@ import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
 import { urlFor } from '@/sanity/lib/image'
 import { SITE_URL } from '@/lib/site'
 import { getSiteSettings } from '@/lib/site-settings'
+import { getHomepage } from '@/lib/homepage'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
@@ -33,11 +33,12 @@ import { formatDate } from '@/lib/utils'
 export const revalidate = 60 // Revalidate page every 60 seconds
 
 export default async function HomePage() {
-  // Fetch news, events and site settings from Sanity
-  const [newsRaw, eventsRaw, settings] = await Promise.all([
+  // Fetch news, events, site settings and homepage content from Sanity
+  const [newsRaw, eventsRaw, settings, homepage] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
     client.fetch<SanityEvent[]>(EVENTS_QUERY),
     getSiteSettings(),
+    getHomepage(),
   ])
 
   // Transform Sanity data for components
@@ -105,11 +106,10 @@ export default async function HomePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(churchJsonLd) }}
       />
 
-      {/* HERO SECTION - HeroSlider з Larexa */}
+      {/* HERO SECTION - HeroSlider з Larexa (slides from Sanity homepage singleton) */}
       <HeroSlider
-        slides={heroSlides}
+        slides={homepage.heroSlides}
         height="h-[500px] lg:h-[750px]"
-        overlayDark={4}
         autoplay={true}
         autoplaySpeed={6000}
         showArrows={true}
@@ -233,44 +233,6 @@ export default async function HomePage() {
     </>
   )
 }
-
-// ============================================
-// DATA - Hero Slides (static — not from CMS)
-// ============================================
-const heroSlides: HeroSlide[] = [
-  {
-    id: '1',
-    backgroundImage: '/images/hero-church-1.jpg',
-    preTitle: 'Ласкаво просимо',
-    title: 'Знайди надію, знайди дім',
-    subtitle: 'Церква «Нове Життя» — це місце, де кожен може зустріти Бога, знайти спільноту та розкрити своє призначення.',
-    buttonText: 'Дізнатися більше',
-    buttonHref: '/about',
-    secondaryButtonText: 'Запланувати візит',
-    secondaryButtonHref: '/contact',
-    align: 'center'
-  },
-  {
-    id: '2',
-    backgroundImage: '/images/hero-church-2.jpg',
-    preTitle: 'Кожної неділі о 10:00',
-    title: 'Приєднуйтесь до богослужіння',
-    subtitle: 'Прославлення, проповідь Слова та спільнота — чекаємо на вас!',
-    buttonText: 'Як нас знайти',
-    buttonHref: '/contact',
-    align: 'center'
-  },
-  {
-    id: '3',
-    backgroundImage: '/images/hero-church-3.jpg',
-    preTitle: 'Молодіжне служіння',
-    title: 'Знайди своє місце',
-    subtitle: 'Щоп\'ятниці о 19:00 — worship, спілкування та навчання для молоді.',
-    buttonText: 'Молодіжне служіння',
-    buttonHref: '/ministries/youth',
-    align: 'center'
-  },
-]
 
 // ============================================
 // DATA - What You'll Find Items (static — UI content)

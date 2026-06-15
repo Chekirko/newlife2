@@ -16,6 +16,16 @@ export const structure: StructureResolver = (S) =>
             .documentId('siteSettings')
             .title('Налаштування сайту'),
         ),
+      S.listItem()
+        .title('Головна сторінка')
+        .id('homepage')
+        .icon(() => '🏠')
+        .child(
+          S.document()
+            .schemaType('homepage')
+            .documentId('homepage')
+            .title('Головна сторінка'),
+        ),
       S.divider(),
       S.listItem()
         .title('Служіння')
