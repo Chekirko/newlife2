@@ -65,6 +65,10 @@ export const HOMEPAGE_QUERY = defineQuery(`
       position,
       rating,
       avatar
+    },
+    faq[]{
+      question,
+      answer
     }
   }
 `)

@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- **Phase 1.4 COMPLETE** (testimonials → CMS). Next: **Phase 1.5 — FAQ → CMS (+FAQPage JSON-LD)**. See **Improvement Roadmap** below.
+- **Phase 1.5 COMPLETE** (FAQ → CMS + FAQPage JSON-LD). Next: **Phase 1.6 — "what you'll find" + stats → CMS**. See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -40,7 +40,8 @@ Agreed product decisions:
 - ✅ 1.2 hero slides → CMS. Новий singleton `homepage` (schema + structure.ts fixed item + sanity.config.ts SINGLETON_TYPES). Масив `heroSlides` (image+hotspot, pre/title/subtitle, 2 кнопки, align). Seed `scripts/seed-homepage.ts` (`pnpm seed:homepage --write` — аплоадить 3 hero-зображення з /public, _id=`homepage`). `getHomepage()` (`lib/homepage.ts`) резолвить hero-зображення через `urlFor(1920×1080)`, fallback на чисті дефолти `lib/hero-slides-data.ts`. page.tsx фетчить у `Promise.all`, передає у `HeroSlider`; статичний const видалено. (done 2026-06-15, build ✓, prerender verified — hero = 3 Sanity CDN URLs з hotspot-кропом)
 - ✅ 1.3 service schedule structured + feeds openingHours. Додано поле `endTime` у `siteSettings.services` (час завершення, необов'язкове). `getSiteSettings()` віддає похідний масив `openingHours` (тільки служіння з днем+початком+кінцем; UA-день → schema-англ. через `UA_DAY_TO_SCHEMA`). Homepage Church JSON-LD отримав `openingHoursSpecification` (4 записи, 24h). ВИПРАВЛЕНО баг: CTA «Розклад богослужінь» більше не захардкоджений хибними даними — будується з `settings.services`. (done 2026-06-15, build ✓, prerender verified — JSON-LD + CTA = реальний розклад)
 - ✅ 1.4 testimonials → CMS. Додано групу `testimonials` до singleton `homepage` (масив: quote/name/position/rating + опц. `avatar` image). `getHomepage()` повертає `testimonials` (map → `TestimonialData`, avatar через `urlFor` якщо є), fallback `lib/testimonials-data.ts`. Seed `seed-testimonials.ts` — **patch** (не createOrReplace), щоб не зачепити hero-слайди. page.tsx передає `homepage.testimonials`, статичний const видалено. Заголовок секції лишився захардкоджений (UI-chrome, поза scope 1.4). (done 2026-06-15, build ✓, prerender verified)
-- 1.5 FAQ → CMS (+FAQPage JSON-LD) · 1.6 "what you'll find" + stats → CMS
+- ✅ 1.5 FAQ → CMS (+FAQPage JSON-LD). Додано групу `faq` до singleton `homepage` (масив question/answer). `getHomepage()` повертає `faq`, fallback `lib/faq-data.ts`. page.tsx передає `homepage.faq` у `FAQSplit` + другий `<script>` FAQPage JSON-LD (mainEntity з тих самих даних). Seed `seed-faq.ts` — patch. Заголовок секції лишився захардкоджений (UI-chrome). (done 2026-06-16, build ✓, prerender verified — 5 Q&A в акордеоні + 5 у JSON-LD)
+- 1.6 "what you'll find" + stats → CMS
 - 1.7 `event`: real date/place fields → `/events` + `/events/[slug]` + Event JSON-LD
 - 1.8 `news`: Portable Text body + NewsArticle JSON-LD (+ migrate existing `text`)
 
@@ -83,6 +84,8 @@ Agreed product decisions:
 
 - **Homepage Singleton — Hero (Phase 1.2)**: Створено Sanity-singleton `homepage` (той самий патерн enforce: structure.ts + sanity.config.ts SINGLETON_TYPES). Поле `heroSlides` — масив слайдів (зображення+hotspot, pre/title/subtitle, дві кнопки, align), редагується/сортується у /studio. Seed `seed-homepage.ts` аплоадить 3 hero-зображення з `/public` (reuse `uploadImage` з `migrate.ts`). `getHomepage()` (`lib/homepage.ts`) резолвить зображення через `urlFor()`, fallback на чисті дефолти `lib/hero-slides-data.ts` (без Sanity-залежностей — щоб seed-скрипт міг імпортувати). page.tsx фетчить у `Promise.all`, статичний const `heroSlides` видалено. + UI-фікси Hero: inactive-слайди `pointer-events-none` (кнопки клікабельні), прибрано проп `overlayDark`, додано градієнтний scrim + text-shadow + видима друга кнопка (`btn-outline-white`) для легібельності тексту на фото.
 
+- **FAQ → CMS + FAQPage JSON-LD (Phase 1.5)**: До singleton `homepage` додано групу/поле `faq` (масив question/answer). `getHomepage()` тепер віддає ще й `faq` (CMS → `FAQItem`), fallback на `lib/faq-data.ts` (5 наявних Q&A). page.tsx передає `homepage.faq` у `FAQSplit` і будує **FAQPage JSON-LD** з тих самих даних — другий `<script application/ld+json>` поруч із Church/WebSite (єдине джерело). Seed `seed-faq.ts` — **patch** поля `faq` (не createOrReplace, щоб зберегти hero+testimonials). Статичний const `faqItems` + import `FAQItem` видалено. Заголовок/контактний сайдбар секції лишилися захардкодженими (UI-chrome). Примітка: Google з 2023 показує FAQ rich results лише для gov/health, але розмітка корисна для AI-пошуку/structured data.
+
 - **Testimonials → CMS (Phase 1.4)**: До singleton `homepage` додано групу/поле `testimonials` (масив: текст відгуку, ім'я, підпис, рейтинг 1–5, опційне фото `avatar`). `getHomepage()` тепер віддає і `heroSlides`, і `testimonials` (CMS → `TestimonialData`, avatar резолвиться через `urlFor` лише за наявності), fallback на чисті дефолти `lib/testimonials-data.ts` (як `hero-slides-data.ts`). Seed `seed-testimonials.ts` робить **patch** поля `testimonials` (не `createOrReplace`) — щоб НЕ перезаписати hero-зображення, які користувач поміняв у /studio. page.tsx передає `homepage.testimonials`, статичний const видалено. Заголовок секції («Що кажуть наші члени») лишився захардкодженим — UI-chrome поза scope.
 
 - **Service Schedule structured + openingHours (Phase 1.3)**: До `siteSettings.services` додано необов'язкове поле `endTime` (час завершення). `getSiteSettings()` тепер віддає похідний масив `openingHours` (`{dayOfWeek, opens, closes}`) — лише служіння, де є день+початок+кінець; UA-день мапиться на schema.org-англ. через локальну `UA_DAY_TO_SCHEMA` (без окремого реєстру — навмисний scope-cut за Karpathy). Homepage Church JSON-LD отримав `openingHoursSpecification` (Church → Place підтримує). ВИПРАВЛЕНО давній баг: CTA «Розклад богослужінь» на головній був захардкоджений НЕправильним розкладом (Неділя 10:00/Середа 18:00) — тепер `subtitle` будується з `settings.services`. church.ts (fallback/shape) + seed оновлено, re-seed виконано.
@@ -93,7 +96,7 @@ Agreed product decisions:
 
 ## Next Up
 
-- See **Improvement Roadmap** above. Active: **Phase 1.5 — FAQ → CMS (+FAQPage JSON-LD)**.
+- See **Improvement Roadmap** above. Active: **Phase 1.6 — "what you'll find" + stats → CMS**.
 - Sanity content audit: unique gallery images per ministry
 - ⚠️ Build/typegen note: `sanity schema extract` requires Sanity CLI auth. Locally set `SANITY_AUTH_TOKEN` (e.g. from `SANITY_API_WRITE_TOKEN`) before `pnpm build`/`pnpm typegen`, else `CorsOriginError`. Vercel has its own auth.
 

@@ -16,8 +16,10 @@ import { HOMEPAGE_QUERY } from '@/sanity/lib/queries'
 import type { HOMEPAGE_QUERYResult } from '@/sanity/lib/sanity.types'
 import type { HeroSlide } from '@/components/sections/Hero'
 import type { TestimonialData } from '@/app/(front)/components/TestimonialsGrid'
+import type { FAQItem } from '@/app/(front)/components/FAQSplit'
 import { HERO_SLIDES_FALLBACK } from '@/lib/hero-slides-data'
 import { TESTIMONIALS_FALLBACK } from '@/lib/testimonials-data'
+import { FAQ_FALLBACK } from '@/lib/faq-data'
 
 export { HERO_SLIDES_FALLBACK }
 
@@ -29,6 +31,7 @@ function opt(value: string | null | undefined): string | undefined {
 export async function getHomepage(): Promise<{
   heroSlides: HeroSlide[]
   testimonials: TestimonialData[]
+  faq: FAQItem[]
 }> {
   const data = await client.fetch<HOMEPAGE_QUERYResult>(
     HOMEPAGE_QUERY,
@@ -62,8 +65,17 @@ export async function getHomepage(): Promise<{
       avatar: t.avatar ? urlFor(t.avatar).width(100).height(100).url() : undefined,
     }))
 
+  const cmsFaq = (data?.faq ?? [])
+    .filter((f) => f.question && f.answer)
+    .map((f, i): FAQItem => ({
+      id: String(i),
+      question: f.question!,
+      answer: f.answer!,
+    }))
+
   return {
     heroSlides: cmsSlides.length > 0 ? cmsSlides : HERO_SLIDES_FALLBACK,
     testimonials: cmsTestimonials.length > 0 ? cmsTestimonials : TESTIMONIALS_FALLBACK,
+    faq: cmsFaq.length > 0 ? cmsFaq : FAQ_FALLBACK,
   }
 }

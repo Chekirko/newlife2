@@ -7,7 +7,6 @@ import dynamic from 'next/dynamic'
 import { AboutWithStats } from './components/AboutWithStats'
 const TestimonialsGrid = dynamic(() => import('./components/TestimonialsGrid').then(m => m.TestimonialsGrid))
 const FAQSplit = dynamic(() => import('./components/FAQSplit').then(m => m.FAQSplit))
-import { type FAQItem } from './components/FAQSplit'
 const ActionBoxFullWidth = dynamic(() => import('./components/ActionBoxFullWidth').then(m => m.ActionBoxFullWidth))
 import { PastorGreeting } from './components/PastorGreeting'
 import { OurVision } from './components/OurVision'
@@ -111,11 +110,26 @@ export default async function HomePage() {
     .map((s) => `${s.day} ${s.time}${s.endTime ? `–${s.endTime}` : ''} — ${s.label}`)
     .join(' | ')
 
+  // FAQPage JSON-LD — built from the same homepage FAQ data shown on the page.
+  const faqJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: homepage.faq.map((item) => ({
+      '@type': 'Question',
+      name: item.question,
+      acceptedAnswer: { '@type': 'Answer', text: item.answer },
+    })),
+  }
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(churchJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
       {/* HERO SECTION - HeroSlider з Larexa (slides from Sanity homepage singleton) */}
@@ -223,7 +237,7 @@ export default async function HomePage() {
       <FAQSplit
         title="Часті запитання"
         description="Ми розуміємо, що перший візит до нової церкви може викликати питання. Ось відповіді на найпоширеніші з них."
-        items={faqItems}
+        items={homepage.faq}
         contactTitle="Залишились питання?"
         contactDescription="Не знайшли відповідь? Зв'яжіться з нами, і ми з радістю допоможемо!"
         contactButtonText="Зв'язатися"
@@ -298,33 +312,3 @@ const churchStats = [
   { value: '50+', label: 'Волонтерів' },
 ]
 
-// ============================================
-// DATA - FAQ Items (static)
-// ============================================
-const faqItems: FAQItem[] = [
-  {
-    id: '1',
-    question: 'Який дрес-код у церкві?',
-    answer: 'У нас немає суворого дрес-коду. Одягайтеся так, як вам комфортно. Більшість людей приходять у повсякденному одязі.'
-  },
-  {
-    id: '2',
-    question: 'Де залишити дітей під час богослужіння?',
-    answer: 'У нас є дитяче служіння для різних вікових груп, яке проходить одночасно з дорослим богослужінням. Волонтери зустрінуть вас біля входу.'
-  },
-  {
-    id: '3',
-    question: 'Чи є парковка біля церкви?',
-    answer: 'Так, у нас є безкоштовна парковка біля будівлі церкви. Волонтери допоможуть вам знайти місце для паркування.'
-  },
-  {
-    id: '4',
-    question: 'Скільки триває богослужіння?',
-    answer: 'Недільне богослужіння зазвичай триває близько 1,5 години і включає час прославлення, проповідь та спільну молитву.'
-  },
-  {
-    id: '5',
-    question: 'Чи потрібно бути членом церкви?',
-    answer: 'Ні, членство не є обов\'язковим для відвідування. Ми раді всім гостям!'
-  },
-]

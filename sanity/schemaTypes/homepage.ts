@@ -21,6 +21,7 @@ export const homepageType = defineType({
   groups: [
     { name: 'hero', title: 'Hero-слайдер', default: true },
     { name: 'testimonials', title: 'Свідчення' },
+    { name: 'faq', title: 'Часті запитання' },
   ],
   fields: [
     defineField({
@@ -149,6 +150,42 @@ export const homepageType = defineType({
                 title: title || 'Свідчення',
                 subtitle: subtitle || undefined,
                 media,
+              }
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'faq',
+      title: 'Часті запитання',
+      type: 'array',
+      group: 'faq',
+      description: 'Запитання та відповіді. Додавайте, прибирайте та змінюйте порядок перетягуванням.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'question',
+              title: 'Запитання',
+              type: 'string',
+              validation: (rule) => rule.required().error("Запитання обов'язкове"),
+            }),
+            defineField({
+              name: 'answer',
+              title: 'Відповідь',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required().error("Відповідь обов'язкова"),
+            }),
+          ],
+          preview: {
+            select: { title: 'question', subtitle: 'answer' },
+            prepare({ title, subtitle }) {
+              return {
+                title: title || 'Запитання',
+                subtitle: subtitle || undefined,
               }
             },
           },
