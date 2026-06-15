@@ -18,7 +18,10 @@ export const homepageType = defineType({
   title: 'Головна сторінка',
   type: 'document',
   icon: () => '🏠',
-  groups: [{ name: 'hero', title: 'Hero-слайдер', default: true }],
+  groups: [
+    { name: 'hero', title: 'Hero-слайдер', default: true },
+    { name: 'testimonials', title: 'Свідчення' },
+  ],
   fields: [
     defineField({
       name: 'heroSlides',
@@ -88,6 +91,62 @@ export const homepageType = defineType({
             prepare({ title, subtitle, media }) {
               return {
                 title: title || 'Слайд',
+                subtitle: subtitle || undefined,
+                media,
+              }
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'testimonials',
+      title: 'Свідчення',
+      type: 'array',
+      group: 'testimonials',
+      description: 'Відгуки членів церкви. Додавайте, прибирайте та змінюйте порядок перетягуванням.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'quote',
+              title: 'Текст відгуку',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required().error("Текст відгуку обов'язковий"),
+            }),
+            defineField({
+              name: 'name',
+              title: "Ім'я",
+              type: 'string',
+              validation: (rule) => rule.required().error("Ім'я обов'язкове"),
+            }),
+            defineField({
+              name: 'position',
+              title: 'Підпис',
+              type: 'string',
+              description: 'Наприклад: Член церкви 5 років',
+            }),
+            defineField({
+              name: 'rating',
+              title: 'Рейтинг (1–5 зірок)',
+              type: 'number',
+              validation: (rule) => rule.min(1).max(5).integer(),
+            }),
+            defineField({
+              name: 'avatar',
+              title: 'Фото',
+              type: 'image',
+              options: { hotspot: true },
+              description: 'Необов’язкове фото члена церкви',
+            }),
+          ],
+          preview: {
+            select: { title: 'name', subtitle: 'quote', media: 'avatar' },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || 'Свідчення',
                 subtitle: subtitle || undefined,
                 media,
               }

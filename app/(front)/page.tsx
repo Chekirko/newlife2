@@ -6,7 +6,6 @@ import {
 import dynamic from 'next/dynamic'
 import { AboutWithStats } from './components/AboutWithStats'
 const TestimonialsGrid = dynamic(() => import('./components/TestimonialsGrid').then(m => m.TestimonialsGrid))
-import { type TestimonialData } from './components/TestimonialsGrid'
 const FAQSplit = dynamic(() => import('./components/FAQSplit').then(m => m.FAQSplit))
 import { type FAQItem } from './components/FAQSplit'
 const ActionBoxFullWidth = dynamic(() => import('./components/ActionBoxFullWidth').then(m => m.ActionBoxFullWidth))
@@ -215,7 +214,7 @@ export default async function HomePage() {
       <TestimonialsGrid
         preTitle="Свідчення"
         title="Що кажуть наші члени"
-        testimonials={testimonials}
+        testimonials={homepage.testimonials}
         columns={2}
         className="py-16 lg:py-24 bg-gray-100"
       />
@@ -297,26 +296,6 @@ const churchStats = [
   { value: '350+', label: 'Членів церкви' },
   { value: '6', label: 'Служінь' },
   { value: '50+', label: 'Волонтерів' },
-]
-
-// ============================================
-// DATA - Testimonials (static)
-// ============================================
-const testimonials: TestimonialData[] = [
-  {
-    id: '1',
-    name: 'Марія К.',
-    position: 'Член церкви 5 років',
-    quote: 'Церква «Нове Життя» стала для мене справжнім домом. Тут я знайшла підтримку, друзів і, найголовніше, глибші стосунки з Богом.',
-    rating: 5
-  },
-  {
-    id: '2',
-    name: 'Олександр П.',
-    position: 'Член церкви 3 роки',
-    quote: 'Коли я вперше прийшов до церкви, я шукав відповіді на важливі питання. Тут я знайшов не лише відповіді, але й справжню сім\'ю у Христі.',
-    rating: 5
-  },
 ]
 
 // ============================================

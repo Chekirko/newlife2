@@ -58,6 +58,13 @@ export const HOMEPAGE_QUERY = defineQuery(`
       secondaryButtonHref,
       align,
       image
+    },
+    testimonials[]{
+      quote,
+      name,
+      position,
+      rating,
+      avatar
     }
   }
 `)

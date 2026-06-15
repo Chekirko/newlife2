@@ -10,6 +10,7 @@
     "migrate": "tsx scripts/migrate.ts",
     "seed:site": "tsx scripts/seed-site-settings.ts",
     "seed:homepage": "tsx scripts/seed-homepage.ts",
+    "seed:testimonials": "tsx scripts/seed-testimonials.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"
   },
