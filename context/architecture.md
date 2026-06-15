@@ -30,7 +30,7 @@
 - `sanity/lib/` — Sanity client, image helper, спільні запити, згенеровані типи
 - `sanity/lib/queries.ts` — ТІЛЬКИ спільні GROQ-запити (використовуються 2+ сторінками)
 - `sanity/schemaTypes/` — Sanity-схеми документів (ministry, news, event)
-- `lib/` — Загальні утиліти (formatDate та ін.)
+- `lib/` — Загальні утиліти: `utils.ts` (formatDate), `site.ts` (`SITE_URL`), `church.ts` (реальні дані церкви — назва, адреса, контакти, розклад, соцмережі, гео; ЄДИНЕ джерело для JSON-LD та UI до міграції в Sanity `siteSettings` у Phase 1.1)
 - `public/images/` — Статичні зображення (hero-фони, іконки)
 
 ## Storage Model

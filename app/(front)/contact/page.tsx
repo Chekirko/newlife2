@@ -3,6 +3,7 @@ import { PageHero } from '@/components'
 import { ContactInfoCard } from './components/ContactInfoCard'
 import { ContactForm } from './components/ContactForm'
 import { MapEmbed } from './components/MapEmbed'
+import { CHURCH } from '@/lib/church'
 
 export const metadata: Metadata = {
   title: 'Контакти | Церква «Нове Життя»',
@@ -36,8 +37,8 @@ const ClockIcon = () => (
   </svg>
 )
 
-// Google Maps embed URL for Boryslav
-const GOOGLE_MAPS_EMBED = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2597.5!2d23.43!3d49.29!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zNDnCsDE3JzI0LjAiTiAyM8KwMjUnNDguMCJF!5e0!3m2!1suk!2sua'
+// Google Maps embed centered on the church's exact pin (no API key needed).
+const GOOGLE_MAPS_EMBED = `https://maps.google.com/maps?q=${CHURCH.geo.lat},${CHURCH.geo.lng}&z=17&hl=uk&output=embed`
 
 export default function ContactPage() {
   return (
@@ -82,28 +83,28 @@ export default function ContactPage() {
 
                 <div className="relative z-10">
                   <ContactInfoCard icon={<MapIcon />} title="Адреса">
-                    <p>м. Борислав,<br />Львівська область,<br />Україна</p>
+                    <p>{CHURCH.address.street},<br />{CHURCH.address.city},<br />{CHURCH.address.region}</p>
                   </ContactInfoCard>
 
                   <ContactInfoCard icon={<EmailIcon />} title="E-mail">
-                    <a href="mailto:info@newlife.church" className="hover:text-white transition-colors">
-                      info@newlife.church
+                    <a href={`mailto:${CHURCH.email}`} className="hover:text-white transition-colors">
+                      {CHURCH.email}
                     </a>
                   </ContactInfoCard>
 
                   <ContactInfoCard icon={<PhoneIcon />} title="Телефон">
                     <p>
-                      <a href="tel:+380501234567" className="hover:text-white transition-colors">
-                        +38 (050) 123-45-67
+                      <a href={`tel:${CHURCH.phone}`} className="hover:text-white transition-colors">
+                        {CHURCH.phoneDisplay}
                       </a>
                     </p>
                   </ContactInfoCard>
 
                   <ContactInfoCard icon={<ClockIcon />} title="Розклад">
                     <p>
-                      Неділя: 10:00<br />
-                      Середа: 18:00<br />
-                      П&apos;ятниця: 18:00
+                      Неділя: 11:00<br />
+                      Вівторок, П&apos;ятниця: 19:00<br />
+                      Субота (молодь): 19:00
                     </p>
                   </ContactInfoCard>
                 </div>
@@ -136,8 +137,8 @@ export default function ContactPage() {
               <h5 className="font-heading font-semibold text-gray-800 mb-2">Молитовна підтримка</h5>
               <p className="text-gray-500 text-sm">
                 Якщо вам потрібна молитва, напишіть на{' '}
-                <a href="mailto:prayer@newlife.church" className="text-primary hover:underline">
-                  prayer@newlife.church
+                <a href={`mailto:${CHURCH.email}`} className="text-primary hover:underline">
+                  {CHURCH.email}
                 </a>
               </p>
             </div>
@@ -145,8 +146,8 @@ export default function ContactPage() {
               <h5 className="font-heading font-semibold text-gray-800 mb-2">Загальні питання</h5>
               <p className="text-gray-500 text-sm">
                 Для загальних запитань або пропозицій{' '}
-                <a href="mailto:info@newlife.church" className="text-primary hover:underline">
-                  info@newlife.church
+                <a href={`mailto:${CHURCH.email}`} className="text-primary hover:underline">
+                  {CHURCH.email}
                 </a>
               </p>
             </div>

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { defineQuery } from 'next-sanity'
 import { client } from '@/sanity/lib/client'
+import { CHURCH } from '@/lib/church'
 
 const quickLinks = [
   { label: 'Про нас', href: '/about' },
@@ -51,16 +52,13 @@ export default async function ChurchFooter() {
             <div className="social-icons si-colored-bg">
               <ul className="flex gap-2">
                 <li className="social-icons-item social-facebook">
-                  <a href="#" className="social-icons-link rounded-full"><i className="fab fa-facebook-f"></i></a>
+                  <a href={CHURCH.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="social-icons-link rounded-full"><i className="fab fa-facebook-f"></i></a>
                 </li>
                 <li className="social-icons-item social-instagram">
-                  <a href="#" className="social-icons-link rounded-full"><i className="fab fa-instagram"></i></a>
+                  <a href={CHURCH.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="social-icons-link rounded-full"><i className="fab fa-instagram"></i></a>
                 </li>
                 <li className="social-icons-item social-youtube">
-                  <a href="#" className="social-icons-link rounded-full"><i className="fab fa-youtube"></i></a>
-                </li>
-                <li className="social-icons-item social-telegram">
-                  <a href="#" className="social-icons-link rounded-full bg-[#0088cc]"><i className="fab fa-telegram-plane"></i></a>
+                  <a href={CHURCH.social.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="social-icons-link rounded-full"><i className="fab fa-youtube"></i></a>
                 </li>
               </ul>
             </div>
@@ -114,27 +112,28 @@ export default async function ChurchFooter() {
               <li className="flex items-start gap-3">
                 <i className="fas fa-map-marker-alt text-primary mt-1"></i>
                 <span>
-                  м. Борислав,<br />
-                  вул. Шевченка 45
+                  {CHURCH.address.street},<br />
+                  {CHURCH.address.city}, {CHURCH.address.postalCode}
                 </span>
               </li>
               <li className="flex items-center gap-3">
                 <i className="fas fa-phone text-primary"></i>
-                <a href="tel:+380501234567" className="hover:text-white">
-                  +38 (050) 123-45-67
+                <a href={`tel:${CHURCH.phone}`} className="hover:text-white">
+                  {CHURCH.phoneDisplay}
                 </a>
               </li>
               <li className="flex items-center gap-3">
                 <i className="fas fa-envelope text-primary"></i>
-                <a href="mailto:info@newlife.church" className="hover:text-white">
-                  info@newlife.church
+                <a href={`mailto:${CHURCH.email}`} className="hover:text-white">
+                  {CHURCH.email}
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <i className="far fa-clock text-primary mt-1"></i>
                 <span>
-                  Неділя: 10:00 — 12:00<br />
-                  Середа: 18:00 — 19:30
+                  Неділя: 11:00<br />
+                  Вівторок, П&apos;ятниця: 19:00<br />
+                  Субота (молодь): 19:00
                 </span>
               </li>
             </ul>

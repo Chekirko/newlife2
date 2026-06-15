@@ -20,6 +20,8 @@ import { NEWS_QUERY } from '@/sanity/lib/queries'
 import { EVENTS_QUERY } from './queries'
 import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
 import { urlFor } from '@/sanity/lib/image'
+import { SITE_URL } from '@/lib/site'
+import { CHURCH, CHURCH_SAME_AS } from '@/lib/church'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
@@ -59,8 +61,49 @@ export default async function HomePage() {
     description: e.description,
   }))
 
+  const churchJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Church',
+        '@id': `${SITE_URL}/#church`,
+        name: CHURCH.name,
+        legalName: CHURCH.legalName,
+        url: SITE_URL,
+        email: CHURCH.email,
+        telephone: CHURCH.phone,
+        address: {
+          '@type': 'PostalAddress',
+          streetAddress: CHURCH.address.street,
+          addressLocality: CHURCH.address.city,
+          addressRegion: CHURCH.address.region,
+          postalCode: CHURCH.address.postalCode,
+          addressCountry: CHURCH.address.country,
+        },
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: CHURCH.geo.lat,
+          longitude: CHURCH.geo.lng,
+        },
+        sameAs: CHURCH_SAME_AS,
+      },
+      {
+        '@type': 'WebSite',
+        '@id': `${SITE_URL}/#website`,
+        url: SITE_URL,
+        name: CHURCH.name,
+        inLanguage: 'uk',
+      },
+    ],
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(churchJsonLd) }}
+      />
+
       {/* HERO SECTION - HeroSlider з Larexa */}
       <HeroSlider
         slides={heroSlides}

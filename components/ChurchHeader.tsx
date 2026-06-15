@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { clsx } from 'clsx'
+import { CHURCH } from '@/lib/church'
 
 interface NavItem {
   label: string
@@ -71,11 +72,11 @@ export default function ChurchHeader() {
             <div className="hidden md:flex items-center gap-6 text-gray-600">
               <span className="flex items-center gap-2">
                 <i className="fas fa-phone text-primary"></i>
-                <a href="tel:+380501234567" className="hover:text-primary">+38 (050) 123-45-67</a>
+                <a href={`tel:${CHURCH.phone}`} className="hover:text-primary">{CHURCH.phoneDisplay}</a>
               </span>
               <span className="flex items-center gap-2">
                 <i className="fas fa-envelope text-primary"></i>
-                <a href="mailto:info@newlife.church" className="hover:text-primary">info@newlife.church</a>
+                <a href={`mailto:${CHURCH.email}`} className="hover:text-primary">{CHURCH.email}</a>
               </span>
             </div>
             
@@ -83,16 +84,16 @@ export default function ChurchHeader() {
             <div className="flex items-center gap-4 ml-auto">
               <span className="hidden sm:inline text-gray-600">
                 <i className="far fa-clock text-primary mr-1"></i>
-                Неділя: 10:00
+                Неділя: 11:00
               </span>
               <div className="flex gap-2">
-                <a href="#" className="w-7 h-7 rounded-full bg-[#3b5998] flex items-center justify-center text-white text-xs hover:opacity-80">
+                <a href={CHURCH.social.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-7 h-7 rounded-full bg-[#3b5998] flex items-center justify-center text-white text-xs hover:opacity-80">
                   <i className="fab fa-facebook-f"></i>
                 </a>
-                <a href="#" className="w-7 h-7 rounded-full bg-[#e4405f] flex items-center justify-center text-white text-xs hover:opacity-80">
+                <a href={CHURCH.social.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-7 h-7 rounded-full bg-[#e4405f] flex items-center justify-center text-white text-xs hover:opacity-80">
                   <i className="fab fa-instagram"></i>
                 </a>
-                <a href="#" className="w-7 h-7 rounded-full bg-[#ff0000] flex items-center justify-center text-white text-xs hover:opacity-80">
+                <a href={CHURCH.social.youtube} target="_blank" rel="noopener noreferrer" aria-label="YouTube" className="w-7 h-7 rounded-full bg-[#ff0000] flex items-center justify-center text-white text-xs hover:opacity-80">
                   <i className="fab fa-youtube"></i>
                 </a>
               </div>

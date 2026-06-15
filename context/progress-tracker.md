@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Phase 0, Unit 0.4: `Organization` + `Church`/`LocalBusiness` + `WebSite` JSON-LD on homepage. See **Improvement Roadmap** below.
+- **Phase 0 COMPLETE.** Next: Phase 1.1 — Sanity `siteSettings` singleton (migrate `lib/church.ts` data into CMS). See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -31,7 +31,8 @@ Agreed product decisions:
 - ✅ 0.1 `SITE_URL` env constant (`lib/site.ts`) + `metadataBase` in root layout; de-hardcoded `https://newlife.church` from team/ministry JSON-LD. `SITE_URL` auto-detects Vercel production URL (`VERCEL_PROJECT_PRODUCTION_URL`) so canonical/OG URLs are correct before a custom domain exists. (done 2026-06-15, build ✓)
 - ✅ 0.2 Placeholder pages `/about`, `/media`, `/privacy` (shared `PlaceholderPage`, `robots:{index:false}`); branded 404 (`NotFoundView` + `app/not-found.tsx` with chrome + `app/(front)/not-found.tsx`) and `app/(front)/error.tsx`; footer ministry links made dynamic from Sanity (no more hardcoded slug 404s); removed dead `/sitemap` footer link; added `/about` (Про церкву) to the header «Про нас» dropdown. (done 2026-06-15, build ✓)
 - ✅ 0.3 `app/robots.ts` (`Disallow: /` pre-launch) + `app/sitemap.ts` (dynamic from Sanity: news/ministries/team slugs; ISR revalidate=60; excludes noindex placeholders). (done 2026-06-15, build ✓)
-- 0.4 `Organization` + `Church`/`LocalBusiness` + `WebSite` JSON-LD on homepage (address, geo, phone, openingHours, sameAs).
+- ✅ 0.4 `lib/church.ts` (real church data: name, address, phone, email, services, socials, geo) + `Church` + `WebSite` JSON-LD on homepage (address, geo, phone, email, sameAs). openingHours omitted for now (need service end-times to avoid fabricating). (done 2026-06-15, build ✓)
+- ✅ 0.5 Wired `lib/church.ts` real data into contact page + header (top bar) + footer (replaced placeholder phone/email/address/schedule/socials). FIXED contact-page Google Map → coords-based embed (`maps.google.com?q=lat,lng&output=embed`) centered on exact pin. Removed dead Telegram footer icon (no link). External social links got `target=_blank rel=noopener aria-label`. (done 2026-06-15, build ✓)
 
 ### Phase 1 — Content model + homepage→CMS (split per type/section)
 - 1.1 `siteSettings` singleton (contacts, schedule, socials, OG defaults) → header/footer/home; feeds 0.4 JSON-LD.
@@ -89,6 +90,10 @@ Agreed product decisions:
 - Дизайн нових сторінок (/about, /media, /give) — узгодити з замовником ПЕРЕД версткою (Phase 3).
 - Footer: захардкоджені slug служінь (`/ministries/children` тощо) — прибрати чи зробити динамічними з Sanity (Unit 0.2)?
 - Пріоритет Portable Text (1.8): лишити у Фазі 1 чи підняти одразу після Фази 0?
+- **TODO Лого**: є векторний EPS (`нове життя вектор.eps`), але конвертації в середовищі немає (gs/inkscape/imagemagick відсутні). Потрібен SVG або прозорий PNG від замовника (або встановити Inkscape) → вставити в хедер/футер замість тимчасового кружечка «НЖ». Додати logo в Organization JSON-LD після появи.
+- **Координати**: ✅ уточнено точним піном — 49.291239, 23.428751 (Unit 0.5 використає для мапи).
+- **openingHours**: додати в JSON-LD `openingHoursSpecification`, коли буде тривалість служінь (час завершення).
+- **Email-адреси**: на сайті є `prayer@newlife.church` / `info@newlife.church` (тестові) — замінити на реальний `zerkvahrista@gmail.com` (Unit 0.5).
 
 ## Architecture Decisions
 
