@@ -24,7 +24,7 @@ Agreed product decisions:
 - News body → **Portable Text** (one rich-text field, per-paragraph formatting) — Phase 1.8.
 
 ### Phase 0 — Foundation (in progress)
-- ✅ 0.1 `SITE_URL` env constant (`lib/site.ts`) + `metadataBase` in root layout; de-hardcoded `https://newlife.church` from team/ministry JSON-LD. (done 2026-06-15, build ✓)
+- ✅ 0.1 `SITE_URL` env constant (`lib/site.ts`) + `metadataBase` in root layout; de-hardcoded `https://newlife.church` from team/ministry JSON-LD. `SITE_URL` auto-detects Vercel production URL (`VERCEL_PROJECT_PRODUCTION_URL`) so canonical/OG URLs are correct before a custom domain exists. (done 2026-06-15, build ✓)
 - 0.2 Stub pages to kill 404s: `/about`, `/media`, `/privacy` + custom `not-found.tsx` + `error.tsx`; fix or make dynamic the hardcoded footer ministry-slug links.
 - 0.3 `app/robots.ts` + `app/sitemap.ts` (dynamic from Sanity: news/ministries/team/events slugs).
 - 0.4 `Organization` + `Church`/`LocalBusiness` + `WebSite` JSON-LD on homepage (address, geo, phone, openingHours, sameAs).
