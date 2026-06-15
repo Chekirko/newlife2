@@ -22,7 +22,9 @@
 - `app/(front)/team/components/` — Компоненти для сторінки команди (TeamSection, HonorarySection, TeamPhotoBanner, TeamMemberCard)
 - `app/(front)/**/queries.ts` — GROQ-запити, локальні для кожної сторінки
 - `app/studio/` — Sanity Studio (не модифікувати вручну)
-- `components/` — Спільні компоненти (Header, Footer, HeroSlider, NewsSlider, PageHero)
+- `components/` — Спільні компоненти (Header, Footer, HeroSlider, NewsSlider, PageHero, PlaceholderPage, NotFoundView)
+- `ChurchFooter` — async Server Component: підтягує топ-5 служінь із Sanity для колонки футера (динамічні посилання, без хардкоду slug)
+- `app/not-found.tsx` — глобальний 404 для незіставлених URL (додає Header/Footer вручну, бо root layout без хрому); `app/(front)/not-found.tsx` — 404 для `notFound()` усередині сайту (хром із (front)-layout); `app/(front)/error.tsx` — error-межа сегмента (Client Component)
 - `components/sections/` — Спільні секційні компоненти
 - `components/ui/` — Базові UI-компоненти (MinistryCard)
 - `sanity/lib/` — Sanity client, image helper, спільні запити, згенеровані типи

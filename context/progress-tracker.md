@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- Phase 0, Unit 0.2: stub pages (/about, /media, /privacy) + not-found.tsx + error.tsx; fix footer ministry-slug links. See **Improvement Roadmap** below.
+- Phase 0, Unit 0.3: `app/robots.ts` + `app/sitemap.ts` (dynamic from Sanity). NOTE: while site is unfinished, robots should `disallow` indexing (open it at launch). See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -25,7 +25,7 @@ Agreed product decisions:
 
 ### Phase 0 — Foundation (in progress)
 - ✅ 0.1 `SITE_URL` env constant (`lib/site.ts`) + `metadataBase` in root layout; de-hardcoded `https://newlife.church` from team/ministry JSON-LD. `SITE_URL` auto-detects Vercel production URL (`VERCEL_PROJECT_PRODUCTION_URL`) so canonical/OG URLs are correct before a custom domain exists. (done 2026-06-15, build ✓)
-- 0.2 Stub pages to kill 404s: `/about`, `/media`, `/privacy` + custom `not-found.tsx` + `error.tsx`; fix or make dynamic the hardcoded footer ministry-slug links.
+- ✅ 0.2 Placeholder pages `/about`, `/media`, `/privacy` (shared `PlaceholderPage`, `robots:{index:false}`); branded 404 (`NotFoundView` + `app/not-found.tsx` with chrome + `app/(front)/not-found.tsx`) and `app/(front)/error.tsx`; footer ministry links made dynamic from Sanity (no more hardcoded slug 404s); removed dead `/sitemap` footer link; added `/about` (Про церкву) to the header «Про нас» dropdown. (done 2026-06-15, build ✓)
 - 0.3 `app/robots.ts` + `app/sitemap.ts` (dynamic from Sanity: news/ministries/team/events slugs).
 - 0.4 `Organization` + `Church`/`LocalBusiness` + `WebSite` JSON-LD on homepage (address, geo, phone, openingHours, sameAs).
 

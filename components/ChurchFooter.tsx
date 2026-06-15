@@ -1,4 +1,6 @@
 import Link from 'next/link'
+import { defineQuery } from 'next-sanity'
+import { client } from '@/sanity/lib/client'
 
 const quickLinks = [
   { label: 'Про нас', href: '/about' },
@@ -8,16 +10,20 @@ const quickLinks = [
   { label: 'Медіа', href: '/media' },
 ]
 
-const ministryLinks = [
-  { label: 'Дитяче служіння', href: '/ministries/children' },
-  { label: 'Молодіжне служіння', href: '/ministries/youth' },
-  { label: 'Жіноче служіння', href: '/ministries/women' },
-  { label: 'Чоловіче служіння', href: '/ministries/men' },
-  { label: 'Музичне служіння', href: '/ministries/worship' },
-]
+// Top ministries for the footer column — dynamic so links never 404.
+const FOOTER_MINISTRIES_QUERY = defineQuery(`
+  *[_type == "ministry"] | order(order asc, title asc)[0...5]{
+    _id,
+    title,
+    "slug": slug.current
+  }
+`)
 
-export default function ChurchFooter() {
+type FooterMinistry = { _id: string; title: string; slug: string | null }
+
+export default async function ChurchFooter() {
   const currentYear = new Date().getFullYear()
+  const ministries = await client.fetch<FooterMinistry[]>(FOOTER_MINISTRIES_QUERY)
 
   return (
     <footer className="footer">
@@ -79,14 +85,25 @@ export default function ChurchFooter() {
           <div>
             <h4 className="footer-title">Служіння</h4>
             <ul className="footer-links">
-              {ministryLinks.map((link, idx) => (
-                <li key={idx}>
-                  <Link href={link.href} className="hover:text-white transition-colors">
+              {ministries.length > 0 ? (
+                ministries.map((m) =>
+                  m.slug ? (
+                    <li key={m._id}>
+                      <Link href={`/ministries/${m.slug}`} className="hover:text-white transition-colors">
+                        <i className="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                        {m.title}
+                      </Link>
+                    </li>
+                  ) : null,
+                )
+              ) : (
+                <li>
+                  <Link href="/ministries" className="hover:text-white transition-colors">
                     <i className="fas fa-chevron-right text-xs mr-2 text-primary"></i>
-                    {link.label}
+                    Усі служіння
                   </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
 
@@ -133,9 +150,6 @@ export default function ChurchFooter() {
             <div className="flex gap-4 text-sm">
               <Link href="/privacy" className="hover:text-white">
                 Політика конфіденційності
-              </Link>
-              <Link href="/sitemap" className="hover:text-white">
-                Карта сайту
               </Link>
             </div>
           </div>

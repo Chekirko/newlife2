@@ -13,9 +13,10 @@ interface NavItem {
 const navItems: NavItem[] = [
   { label: 'Головна', href: '/' },
   { 
-    label: 'Про нас', 
+    label: 'Про нас',
     href: '#',
     children: [
+      { label: 'Про церкву', href: '/about' },
       { label: 'Історія', href: '/history' },
       { label: 'Команда', href: '/team' }
     ]
