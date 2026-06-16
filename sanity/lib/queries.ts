@@ -69,6 +69,16 @@ export const HOMEPAGE_QUERY = defineQuery(`
     faq[]{
       question,
       answer
+    },
+    whatYouFind[]{
+      icon,
+      title,
+      description,
+      image
+    },
+    stats[]{
+      value,
+      label
     }
   }
 `)

@@ -22,6 +22,8 @@ export const homepageType = defineType({
     { name: 'hero', title: 'Hero-слайдер', default: true },
     { name: 'testimonials', title: 'Свідчення' },
     { name: 'faq', title: 'Часті запитання' },
+    { name: 'whatYouFind', title: 'Що ви знайдете' },
+    { name: 'stats', title: 'Статистика' },
   ],
   fields: [
     defineField({
@@ -185,6 +187,107 @@ export const homepageType = defineType({
             prepare({ title, subtitle }) {
               return {
                 title: title || 'Запитання',
+                subtitle: subtitle || undefined,
+              }
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'whatYouFind',
+      title: 'Що ви знайдете',
+      type: 'array',
+      group: 'whatYouFind',
+      description: 'Картки «Більше, ніж просто церква». Іконку оберіть зі списку.',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'icon',
+              title: 'Іконка',
+              type: 'string',
+              options: {
+                list: [
+                  { title: 'Біблія / Слово', value: 'fas fa-book-bible' },
+                  { title: 'Музика / Прославлення', value: 'fas fa-music' },
+                  { title: 'Серце / Любов', value: 'fas fa-heart' },
+                  { title: 'Допомога (руки)', value: 'fas fa-hands-helping' },
+                  { title: 'Діти / Молодь', value: 'fas fa-child' },
+                  { title: 'Відкриті двері', value: 'fas fa-door-open' },
+                  { title: 'Молитва', value: 'fas fa-pray' },
+                  { title: 'Спільнота (люди)', value: 'fas fa-users' },
+                  { title: 'Турбота (серце в руці)', value: 'fas fa-hand-holding-heart' },
+                  { title: 'Хрест', value: 'fas fa-cross' },
+                  { title: 'Голуб / Дух', value: 'fas fa-dove' },
+                  { title: 'Зірка', value: 'fas fa-star' },
+                ],
+              },
+              validation: (rule) => rule.required().error('Оберіть іконку'),
+            }),
+            defineField({
+              name: 'title',
+              title: 'Заголовок',
+              type: 'string',
+              validation: (rule) => rule.required().error("Заголовок обов'язковий"),
+            }),
+            defineField({
+              name: 'description',
+              title: 'Опис',
+              type: 'text',
+              rows: 3,
+              validation: (rule) => rule.required().error("Опис обов'язковий"),
+            }),
+            defineField({
+              name: 'image',
+              title: 'Зображення',
+              type: 'image',
+              options: { hotspot: true },
+            }),
+          ],
+          preview: {
+            select: { title: 'title', subtitle: 'description', media: 'image' },
+            prepare({ title, subtitle, media }) {
+              return {
+                title: title || 'Картка',
+                subtitle: subtitle || undefined,
+                media,
+              }
+            },
+          },
+        },
+      ],
+    }),
+    defineField({
+      name: 'stats',
+      title: 'Статистика',
+      type: 'array',
+      group: 'stats',
+      description: 'Лічильники у секції «Про нашу церкву» (напр. 19+ / Років служіння).',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            defineField({
+              name: 'value',
+              title: 'Значення',
+              type: 'string',
+              description: 'Напр.: 19+, 350+, 6',
+              validation: (rule) => rule.required().error("Значення обов'язкове"),
+            }),
+            defineField({
+              name: 'label',
+              title: 'Підпис',
+              type: 'string',
+              validation: (rule) => rule.required().error("Підпис обов'язковий"),
+            }),
+          ],
+          preview: {
+            select: { title: 'value', subtitle: 'label' },
+            prepare({ title, subtitle }) {
+              return {
+                title: title || '—',
                 subtitle: subtitle || undefined,
               }
             },

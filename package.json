@@ -12,6 +12,7 @@
     "seed:homepage": "tsx scripts/seed-homepage.ts",
     "seed:testimonials": "tsx scripts/seed-testimonials.ts",
     "seed:faq": "tsx scripts/seed-faq.ts",
+    "seed:homepage-sections": "tsx scripts/seed-homepage-sections.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"
   },
