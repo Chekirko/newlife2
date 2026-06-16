@@ -46,7 +46,7 @@ export const EVENT_BY_SLUG_QUERY = defineQuery(`
     location,
     tag,
     description,
-    body,
+    body[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } },
     image
   }
 `)

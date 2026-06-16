@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
+import { getPageHeroes } from '@/lib/page-heroes'
 import {
   NEWS_PAGINATED_QUERY,
   NEWS_COUNT_QUERY,
@@ -48,7 +49,7 @@ export default async function NewsPage({
   const end = start + ITEMS_PER_PAGE
 
   // Parallel fetches
-  const [newsRaw, totalCount, recentRaw, categories] = await Promise.all([
+  const [newsRaw, totalCount, recentRaw, categories, heroes] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_PAGINATED_QUERY, {
       start,
       end,
@@ -65,6 +66,7 @@ export default async function NewsPage({
       image: any
     }>>(NEWS_RECENT_QUERY),
     client.fetch<string[]>(NEWS_CATEGORIES_QUERY),
+    getPageHeroes(),
   ])
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
@@ -85,7 +87,7 @@ export default async function NewsPage({
       {/* Hero */}
       <PageHero
         title="Новини"
-        backgroundImage="/images/ministries-hero.jpg"
+        backgroundImage={heroes.newsHero}
         breadcrumbs={[
           { label: 'Головна', href: '/' },
           { label: 'Новини' },

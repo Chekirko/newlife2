@@ -13,10 +13,13 @@
     "seed:testimonials": "tsx scripts/seed-testimonials.ts",
     "seed:faq": "tsx scripts/seed-faq.ts",
     "seed:homepage-sections": "tsx scripts/seed-homepage-sections.ts",
+    "migrate:pt": "tsx scripts/migrate-portable-text.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
+    "@portabletext/react": "^6.2.0",
+    "@portabletext/types": "^4.0.2",
     "@sanity/image-url": "^1.2.0",
     "@sanity/ui": "^3.2.0",
     "@sanity/vision": "^4.22.0",

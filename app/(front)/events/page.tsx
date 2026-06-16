@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
+import { getPageHeroes } from '@/lib/page-heroes'
 import { formatEventDate } from '@/lib/utils'
 import type { SanityEvent } from '@/sanity/lib/types'
 import {
@@ -41,12 +42,13 @@ export default async function EventsPage({
   const start = (currentPage - 1) * ITEMS_PER_PAGE
   const end = start + ITEMS_PER_PAGE
 
-  const [eventsRaw, totalCount, recentRaw] = await Promise.all([
+  const [eventsRaw, totalCount, recentRaw, heroes] = await Promise.all([
     client.fetch<SanityEvent[]>(EVENTS_PAGINATED_QUERY, { start, end }),
     client.fetch<number>(EVENTS_COUNT_QUERY),
     client.fetch<
       Array<{ _id: string; title: string; slug: string; startDate: string; image: unknown }>
     >(EVENTS_RECENT_QUERY),
+    getPageHeroes(),
   ])
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
@@ -66,7 +68,7 @@ export default async function EventsPage({
       {/* Hero */}
       <PageHero
         title="Події"
-        backgroundImage="/images/hero-church-3.jpg"
+        backgroundImage={heroes.eventsHero}
         breadcrumbs={[
           { label: 'Головна', href: '/' },
           { label: 'Події' },

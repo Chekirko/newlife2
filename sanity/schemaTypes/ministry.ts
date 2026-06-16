@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { richTextBlocks } from './objects/richText'
 
 export const ministryType = defineType({
   name: 'ministry',
@@ -30,9 +31,10 @@ export const ministryType = defineType({
     defineField({
       name: 'fullDescription',
       title: 'Повний опис',
-      type: 'text',
-      rows: 6,
-      description: 'Розгорнутий опис служіння для деталь сторінки',
+      type: 'array',
+      of: richTextBlocks,
+      description:
+        'Розгорнутий опис служіння для деталь сторінки з форматуванням: заголовки, жирний, списки, посилання, зображення',
     }),
     defineField({
       name: 'image',

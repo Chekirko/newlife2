@@ -11,7 +11,7 @@ export const MINISTRY_BY_SLUG_QUERY = defineQuery(`
     title,
     "slug": slug.current,
     shortDescription,
-    fullDescription,
+    fullDescription[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } },
     image,
     leader->{
       _id,

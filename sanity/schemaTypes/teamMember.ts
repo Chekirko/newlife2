@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { richTextBlocks } from './objects/richText'
 
 export const teamMemberType = defineType({
   name: 'teamMember',
@@ -67,8 +68,9 @@ export const teamMemberType = defineType({
     defineField({
       name: 'bio',
       title: 'Біографія',
-      type: 'text',
-      rows: 8,
+      type: 'array',
+      of: richTextBlocks,
+      description: 'Текст із форматуванням: заголовки, жирний, списки, посилання, зображення',
     }),
     defineField({
       name: 'photo',

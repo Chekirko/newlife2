@@ -66,6 +66,15 @@
 - Якщо referenced-документ видалений — UI gracefully ховає відповідний блок, а не показує помилку або порожні дані
 - При створенні нової Sanity-схеми з reference-полем — обов'язково написати відповідний null-guard у компоненті ДО деплою
 
+## Rich Text (Portable Text)
+
+- Long-form **body** fields (news `body`, event `body`, ministry `fullDescription`, teamMember `bio`) are **Portable Text** (`type: 'array', of: richTextBlocks`). The toolbar is defined ONCE in `sanity/schemaTypes/objects/richText.ts` (`richTextBlocks`): heading styles H2–H4 + Quote (these set the on-page text size — no custom px decorators), `strong`/`em`/`underline` decorators, bullet & numbered lists, a `link` annotation, and inline images (with `alt`). Add a new rich field by importing `richTextBlocks` and spreading it into `of`.
+- **Excerpt/card fields stay plain** `text` (news), `description` (event), `shortDescription` (ministry) — used by cards, sliders, and SEO meta. Never render Portable Text in a card; never put the card summary inside the rich field.
+- Render bodies with the shared **`PortableTextBody`** Server Component (`components/PortableTextBody.tsx`, exported from `@/components`) — it maps every node to the site's typography (no `prose` plugin is installed, so the `prose` classes are inert; use this component, not raw `<PortableText>`). It also falls back to a plain `<p>` if handed a legacy string, so a not-yet-migrated document never throws.
+- **Detail-page GROQ** must deref inline-image dimensions: `body[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } }` (same for `fullDescription`/`bio`). `next/image` uses those dimensions.
+- For SEO `description` derived from a rich field, use `toPlainText()` from `@portabletext/react` (e.g. team bio); plain excerpt fields need no conversion.
+- Converting a `text` field to Portable Text changes its stored type — run `scripts/migrate-portable-text.ts` (`pnpm migrate:pt`, dry-run by default, `--write` to apply) to convert existing string values to blocks.
+
 ## Sanity Singletons & Site-wide Settings
 
 - **Singleton pattern**: a document type that must have exactly ONE instance (e.g. `siteSettings`) is enforced in two places — (1) `sanity/structure.ts` pins a single fixed list item via `S.document().schemaType('x').documentId('x')` (the `documentId` equals the type name), and (2) `sanity.config.ts` strips `create`/`delete`/`duplicate`/`unpublish` from `document.actions` for that type (see `SINGLETON_TYPES` set). To add a new singleton, register it in both places.

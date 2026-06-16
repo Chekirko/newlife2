@@ -2,9 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { toPlainText } from '@portabletext/react'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
+import { PortableTextBody } from '@/components'
 import { getSiteSettings } from '@/lib/site-settings'
+import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
 import { formatEventDate } from '@/lib/utils'
 import type { SanityEvent } from '@/sanity/lib/types'
@@ -21,9 +24,12 @@ export async function generateMetadata({
   const event = await client.fetch<SanityEvent | null>(EVENT_BY_SLUG_QUERY, { slug })
   if (!event) return { title: 'Подію не знайдено' }
 
+  const plainDescription =
+    event.description || (event.body ? toPlainText(event.body) : undefined)
+
   return {
     title: `${event.title} | Події | Церква «Нове Життя»`,
-    description: (event.description || event.body)?.substring(0, 160),
+    description: plainDescription?.substring(0, 160),
   }
 }
 
@@ -33,9 +39,10 @@ export default async function EventDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [event, settings] = await Promise.all([
+  const [event, settings, heroes] = await Promise.all([
     client.fetch<SanityEvent | null>(EVENT_BY_SLUG_QUERY, { slug }),
     getSiteSettings(),
+    getPageHeroes(),
   ])
 
   if (!event) notFound()
@@ -63,7 +70,12 @@ export default async function EventDetailPage({
               addressCountry: settings.address.country,
             },
           },
-          ...(event.description ? { description: event.description } : {}),
+          ...(event.description || event.body
+            ? {
+                description:
+                  event.description || (event.body ? toPlainText(event.body) : undefined),
+              }
+            : {}),
           ...(imageUrl ? { image: imageUrl } : {}),
           organizer: { '@type': 'Organization', name: settings.name, url: SITE_URL },
         }
@@ -84,7 +96,7 @@ export default async function EventDetailPage({
       <section
         className="relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden"
         style={{
-          backgroundImage: imageUrl ? `url(${imageUrl})` : 'url(/images/hero-church-3.jpg)',
+          backgroundImage: `url(${heroes.eventsHero})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -163,10 +175,8 @@ export default async function EventDetailPage({
             )}
 
             {/* Body */}
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-700 leading-relaxed text-base lg:text-lg whitespace-pre-line">
-                {event.body || event.description}
-              </p>
+            <div className="max-w-none">
+              <PortableTextBody value={event.body ?? event.description} />
             </div>
 
             {/* Back link */}

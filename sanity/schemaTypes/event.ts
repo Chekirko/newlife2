@@ -1,4 +1,5 @@
 import { defineType, defineField } from 'sanity'
+import { richTextBlocks } from './objects/richText'
 
 export const eventType = defineType({
   name: 'event',
@@ -80,9 +81,10 @@ export const eventType = defineType({
     defineField({
       name: 'body',
       title: 'Повний текст',
-      type: 'text',
-      rows: 8,
-      description: 'Детальна інформація на сторінці події (необовʼязково).',
+      type: 'array',
+      of: richTextBlocks,
+      description:
+        'Детальна інформація на сторінці події з форматуванням (необовʼязково).',
     }),
     defineField({
       name: 'image',

@@ -1,4 +1,5 @@
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import type { PortableTextBlock } from '@portabletext/types'
 
 // ============================================
 // Sanity Document Types
@@ -17,7 +18,7 @@ export interface SanityMinistryCard {
 
 /** Ministry — full detail page */
 export interface SanityMinistry extends SanityMinistryCard {
-  fullDescription: string
+  fullDescription: PortableTextBlock[] | null
   leader: {
     _id: string
     name: string
@@ -45,6 +46,7 @@ export interface SanityNews {
   mainCategory: string
   categories: string[] | null
   text: string
+  body: PortableTextBlock[] | null
   image: SanityImageSource
 }
 
@@ -59,7 +61,7 @@ export interface SanityEvent {
   location: string | null
   tag: string | null
   description: string | null
-  body: string | null
+  body: PortableTextBlock[] | null
   image: SanityImageSource | null
 }
 
@@ -78,5 +80,5 @@ export interface SanityTeamMemberCard {
 
 /** Team member — full detail page */
 export interface SanityTeamMember extends SanityTeamMemberCard {
-  bio: string | null
+  bio: PortableTextBlock[] | null
 }

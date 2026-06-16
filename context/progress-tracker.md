@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- **Phase 1.6 COMPLETE** ("what you'll find" + stats → CMS). **Головна повністю мігрована в CMS.** Next: **Phase 1.8 — news Portable Text + NewsArticle JSON-LD**. See **Improvement Roadmap** below.
+- **Phase 1.8 rich text DONE** (Portable Text body для news/event/ministry/team; build ✓ 34 стор.; live-міграція виконана — 26 docs). Лишилось: **commit** (чекає на підтвердження користувача). NewsArticle JSON-LD — окремий під-юніт (поза цією задачею). See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -43,7 +43,7 @@ Agreed product decisions:
 - ✅ 1.5 FAQ → CMS (+FAQPage JSON-LD). Додано групу `faq` до singleton `homepage` (масив question/answer). `getHomepage()` повертає `faq`, fallback `lib/faq-data.ts`. page.tsx передає `homepage.faq` у `FAQSplit` + другий `<script>` FAQPage JSON-LD (mainEntity з тих самих даних). Seed `seed-faq.ts` — patch. Заголовок секції лишився захардкоджений (UI-chrome). (done 2026-06-16, build ✓, prerender verified — 5 Q&A в акордеоні + 5 у JSON-LD)
 - ✅ 1.6 "what you'll find" + stats → CMS. Дві останні статичні секції головної перенесено в singleton `homepage` (групи `whatYouFind` + `stats`). Іконка карток — курований дропдаун (label→FA-клас, без реєстр-файлу). Зображення карток заливаються в Sanity (seed `seed-homepage-sections.ts`, PATCH — зберігає hero/testimonials/faq). `getHomepage()` віддає `whatYouFind`+`stats`, fallback `lib/what-you-find-data.ts`/`lib/stats-data.ts`. Заголовки/проза секцій лишились захардкоджені. **Головна повністю в CMS.** (done 2026-06-16, build ✓ 34 стор., prerender — картки = Sanity CDN, 0 `/images/action`)
 - ✅ 1.7 `event`: events + announcements (одна модель, поле `type`). Додано `startDate` (datetime), `activeUntil` (опц. дедлайн), `location`, `body`; прибрано вільний `date`. Гомпейдж-секція фільтрує актуальні (`coalesce(activeUntil,startDate) >= now`, EventsSlider сам ховається коли порожньо). Нові `/events` (список+сайдбар+пагінація, дзеркало `news/`) та `/events/[slug]` (деталі + Event JSON-LD тільки для типу «подія»). Хедер-нав «Події», sitemap +`/events`+слаги. `formatEventDate()` (дата+час). (done 2026-06-16, build ✓ 34 стор.)
-- 1.8 `news`: Portable Text body + NewsArticle JSON-LD (+ migrate existing `text`)
+- ✅ 1.8 Rich text (Portable Text) body для **news/event/ministry/team** — build ✓ (34 стор.), live-міграція виконана (26 docs). Спільний `richTextBlocks` (тулбар: H2–H4/цитата = розмір, жирний/курсив/підкреслення, списки, посилання, вбудовані зображення) + спільний рендер `PortableTextBody` (fallback на `<p>` для legacy-рядка). Excerpt-поля лишились простим текстом. Міграція `scripts/migrate-portable-text.ts` (`pnpm migrate:pt`, dry-run за замовч., `--write`). NewsArticle JSON-LD — окремий під-юніт.
 
 ### Phase 2 — Accessibility + UI/UX
 - WCAG AA contrast fix (gray-500/600, white-on-gradient buttons), focus-visible, keyboard-accessible dropdown, skip-link, aria-current; hero/PageHero → `next/image`; Font Awesome self-host/replace.
@@ -113,7 +113,7 @@ Agreed product decisions:
 - **TODO Лого**: є векторний EPS (`нове життя вектор.eps`), але конвертації в середовищі немає (gs/inkscape/imagemagick відсутні). Потрібен SVG або прозорий PNG від замовника (або встановити Inkscape) → вставити в хедер/футер замість тимчасового кружечка «НЖ». Додати logo в Organization JSON-LD після появи.
 - **Координати**: ✅ уточнено точним піном — 49.291239, 23.428751 (Unit 0.5 використає для мапи).
 - **openingHours**: ✅ ВИРІШЕНО (Phase 1.3) — `openingHoursSpecification` у homepage Church JSON-LD. Час завершення = стандартна тривалість (Неділя 11:00–13:00; реш­та 19:00–20:30), редагується у /studio через поле `endTime`.
-- **Per-page hero images → CMS** (follow-up з Phase 1.2): головна має унікальний hero-слайдер (`homepage` singleton), а решта сторінок використовують інший hero (`PageHero`, без слайдера) — кожній сторінці потрібне СВОЄ редаговане фонове зображення. Окремий юніт: реалізувати, коли відповідні сторінки добудовуються (Phase 3) або як виділений 1.x. НЕ робити разом із 1.2.
+- **Per-page hero images → CMS** (follow-up з Phase 1.2): головна має унікальний hero-слайдер (`homepage` singleton), а решта сторінок використовують інший hero (`PageHero`, без слайдера) — кожній сторінці потрібне СВОЄ редаговане фонове зображення. ✅ ЧАСТКОВО ЗРОБЛЕНО для **Новин і Подій** — singleton `pageHeroes` (`newsHero`/`eventsHero`, по одному фото на розділ, спільне для списку+деталей; `getPageHeroes()` з fallback на статичні файли). Деталі новин/подій більше НЕ беруть hero з власного фото матеріалу. Лишилось (за потреби): hero-фони для /about, /media, /give, /contact, /history, /ministries, /team — додати поля в `pageHeroes` за тим же патерном.
 - **Email-адреси**: ✅ вирішено — реальний `zerkvahrista@gmail.com` тепер у singleton `siteSettings` (з fallback у `church.ts`), редагується у /studio.
 
 ## Architecture Decisions

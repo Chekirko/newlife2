@@ -42,6 +42,18 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
   }
 `)
 
+/** Page heroes singleton (editable hero background images for section pages)
+ *  Used on: /news + /news/[slug] (newsHero), /events + /events/[slug] (eventsHero).
+ *  Read through `getPageHeroes()` in `lib/page-heroes.ts`, which falls back to
+ *  the static `/public/images` files when a field is empty.
+ */
+export const PAGE_HEROES_QUERY = defineQuery(`
+  *[_type == "pageHeroes"][0]{
+    newsHero,
+    eventsHero
+  }
+`)
+
 /** Homepage singleton (editable homepage content; hero slider for now)
  *  Used on: homepage. Read through `getHomepage()` in `lib/homepage.ts`,
  *  which falls back to `lib/homepage.ts` defaults when the array is empty.

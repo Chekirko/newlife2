@@ -4,6 +4,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
+import { getPageHeroes } from '@/lib/page-heroes'
+import { PortableTextBody } from '@/components'
 import type { SanityNews } from '@/sanity/lib/types'
 import { defineQuery } from 'next-sanity'
 
@@ -18,6 +20,7 @@ const NEWS_BY_SLUG_QUERY = defineQuery(`
     mainCategory,
     categories,
     text,
+    body[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } },
     image
   }
 `)
@@ -45,7 +48,10 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const news = await client.fetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug })
+  const [news, heroes] = await Promise.all([
+    client.fetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug }),
+    getPageHeroes(),
+  ])
 
   if (!news) notFound()
 
@@ -55,9 +61,7 @@ export default async function NewsDetailPage({
       <section
         className="relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden"
         style={{
-          backgroundImage: news.image
-            ? `url(${urlFor(news.image).width(1600).height(900).url()})`
-            : 'url(/images/ministries-hero.jpg)',
+          backgroundImage: `url(${heroes.newsHero})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -143,11 +147,9 @@ export default async function NewsDetailPage({
               </div>
             )}
 
-            {/* Text */}
-            <div className="prose prose-lg max-w-none">
-              <p className="text-gray-700 leading-relaxed text-base lg:text-lg whitespace-pre-line">
-                {news.text}
-              </p>
+            {/* Body */}
+            <div className="max-w-none">
+              <PortableTextBody value={news.body ?? news.text} />
             </div>
 
             {/* Back link */}

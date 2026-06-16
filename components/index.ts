@@ -21,6 +21,9 @@ export { NewsSlider } from './sections/NewsSlider'
 // Section Components - PageHero (shared: history, ministry detail)
 export { PageHero, type PageHeroProps, type Breadcrumb } from './sections/PageHero'
 
+// Rich-text (Portable Text) body renderer (shared: news/event/ministry/team detail)
+export { PortableTextBody } from './PortableTextBody'
+
 // Placeholder page (shared: /about, /media, /privacy stubs)
 export { PlaceholderPage, type PlaceholderPageProps } from './PlaceholderPage'
 

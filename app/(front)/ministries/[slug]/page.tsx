@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
-import { NewsSlider, PageHero } from '@/components'
+import { NewsSlider, PageHero, PortableTextBody } from '@/components'
 import { PhotoGalleryGrid } from './components/PhotoGalleryGrid'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
@@ -158,13 +158,11 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               </div>
 
               {/* Full Description */}
-              <div className="prose prose-lg max-w-none mb-8">
+              <div className="max-w-none mb-8">
                 <h2 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
                   {ministry.title}
                 </h2>
-                <p className="text-gray-600 leading-relaxed text-base lg:text-lg">
-                  {ministry.fullDescription}
-                </p>
+                <PortableTextBody value={ministry.fullDescription} />
               </div>
 
               {/* Bible Quote */}

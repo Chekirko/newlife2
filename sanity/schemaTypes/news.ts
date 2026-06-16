@@ -1,5 +1,6 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
 import { CategoryInput } from '../components/CategoryInput'
+import { richTextBlocks } from './objects/richText'
 
 export const newsType = defineType({
   name: 'news',
@@ -44,10 +45,17 @@ export const newsType = defineType({
     }),
     defineField({
       name: 'text',
-      title: 'Текст новини',
+      title: 'Короткий опис',
       type: 'text',
-      rows: 5,
-      description: 'Короткий текст для картки та основна інформація новини',
+      rows: 3,
+      description: 'Анонс для картки та SEO (простий текст, без форматування)',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Повний текст',
+      type: 'array',
+      of: richTextBlocks,
+      description: 'Текст статті з форматуванням: заголовки, жирний, списки, посилання, зображення',
     }),
     defineField({
       name: 'image',
