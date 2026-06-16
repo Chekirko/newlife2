@@ -44,6 +44,12 @@
 - Sidebar: останні новини, категорії
 - Деталі новини (`/news/[slug]`)
 
+### Події / оголошення (`/events`)
+- Одна модель `event` із полем `type` (подія / оголошення)
+- Список з пагінацією + sidebar «інші події» (вкл. минулі), структура як у новин
+- Деталі події (`/events/[slug]`) з Event JSON-LD (тільки для типу «подія»)
+- На головній секція з'являється лише за наявності актуальних (дедлайн `activeUntil`/`startDate` не минув)
+
 ### Історія (`/history`)
 - Timeline церкви з фото, відео, акордеонами
 
@@ -57,7 +63,7 @@
 ### In Scope
 - Публічний фронтенд (SSG/SSR)
 - Sanity Studio (вбудований на /studio)
-- CMS-моделі: siteSettings (singleton — контакти/розклад/соцмережі/SEO), homepage (singleton — контент головної: hero-слайдер, далі testimonials/FAQ/stats), ministry, news, event, teamMember
+- CMS-моделі: siteSettings (singleton — контакти/розклад/соцмережі/SEO), homepage (singleton — hero-слайдер/testimonials/FAQ, далі stats), ministry, news, event (події + оголошення: type/startDate/activeUntil/location/body), teamMember
 - SEO-метадані для кожної сторінки
 - Адаптивний дизайн (mobile → desktop)
 - Автоматична генерація типів (Sanity TypeGen)

@@ -48,15 +48,19 @@ export interface SanityNews {
   image: SanityImageSource
 }
 
-/** Event item */
+/** Event / announcement item */
 export interface SanityEvent {
   _id: string
+  type: 'подія' | 'оголошення'
   title: string
   slug: string
-  date: string
+  startDate: string
+  activeUntil: string | null
+  location: string | null
   tag: string | null
-  description: string
-  image: SanityImageSource
+  description: string | null
+  body: string | null
+  image: SanityImageSource | null
 }
 
 /** Team member — list view (cards) */

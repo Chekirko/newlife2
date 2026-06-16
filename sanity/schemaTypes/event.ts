@@ -2,13 +2,27 @@ import { defineType, defineField } from 'sanity'
 
 export const eventType = defineType({
   name: 'event',
-  title: 'Події',
+  title: 'Події / оголошення',
   type: 'document',
   icon: () => '📅',
   fields: [
     defineField({
+      name: 'type',
+      title: 'Тип',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Подія', value: 'подія' },
+          { title: 'Оголошення', value: 'оголошення' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'подія',
+      validation: (rule) => rule.required().error('Оберіть тип'),
+    }),
+    defineField({
       name: 'title',
-      title: 'Назва події',
+      title: 'Назва',
       type: 'string',
       validation: (rule) => rule.required().error('Назва обовʼязкова'),
     }),
@@ -20,11 +34,24 @@ export const eventType = defineType({
       validation: (rule) => rule.required().error('Slug обовʼязковий'),
     }),
     defineField({
-      name: 'date',
-      title: 'Дата проведення',
+      name: 'startDate',
+      title: 'Дата та час',
+      type: 'datetime',
+      description: 'Коли відбувається подія (або дата оголошення). Використовується для сортування, показу та schema.',
+      validation: (rule) => rule.required().error('Дата обовʼязкова'),
+    }),
+    defineField({
+      name: 'activeUntil',
+      title: 'Актуально до',
+      type: 'datetime',
+      description:
+        'Необовʼязково. Доки показувати на головній. Якщо порожньо — до дати події. Корисно для оголошень із дедлайном.',
+    }),
+    defineField({
+      name: 'location',
+      title: 'Місце',
       type: 'string',
-      description: 'Формат довільний, наприклад: "20 квітня 2026" або "Щосуботи о 16:00"',
-      validation: (rule) => rule.required(),
+      description: 'Необовʼязково. Адреса чи назва місця проведення.',
     }),
     defineField({
       name: 'tag',
@@ -45,9 +72,17 @@ export const eventType = defineType({
     }),
     defineField({
       name: 'description',
-      title: 'Опис',
+      title: 'Короткий опис',
       type: 'text',
       rows: 4,
+      description: 'Анонс для карток (списку та головної).',
+    }),
+    defineField({
+      name: 'body',
+      title: 'Повний текст',
+      type: 'text',
+      rows: 8,
+      description: 'Детальна інформація на сторінці події (необовʼязково).',
     }),
     defineField({
       name: 'image',
@@ -58,16 +93,31 @@ export const eventType = defineType({
   ],
   orderings: [
     {
-      title: 'За датою створення',
-      name: 'createdAtDesc',
-      by: [{ field: '_createdAt', direction: 'desc' }],
+      title: 'За датою (новіші спершу)',
+      name: 'startDateDesc',
+      by: [{ field: 'startDate', direction: 'desc' }],
     },
   ],
   preview: {
     select: {
       title: 'title',
-      subtitle: 'date',
+      type: 'type',
+      startDate: 'startDate',
       media: 'image',
+    },
+    prepare({ title, type, startDate, media }) {
+      const date = startDate
+        ? new Date(startDate).toLocaleDateString('uk-UA', {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+          })
+        : 'без дати'
+      return {
+        title: title || 'Без назви',
+        subtitle: [type, date].filter(Boolean).join(' · '),
+        media,
+      }
     },
   },
 })

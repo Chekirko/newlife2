@@ -26,7 +26,7 @@ import { getHomepage } from '@/lib/homepage'
 // Using actual Larexa components
 // ============================================
 
-import { formatDate } from '@/lib/utils'
+import { formatDate, formatEventDate } from '@/lib/utils'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
@@ -34,7 +34,7 @@ export default async function HomePage() {
   // Fetch news, events, site settings and homepage content from Sanity
   const [newsRaw, eventsRaw, settings, homepage] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
-    client.fetch<SanityEvent[]>(EVENTS_QUERY),
+    client.fetch<SanityEvent[]>(EVENTS_QUERY, { now: new Date().toISOString() }),
     getSiteSettings(),
     getHomepage(),
   ])
@@ -56,9 +56,9 @@ export default async function HomePage() {
     title: e.title,
     slug: e.slug,
     image: e.image ? urlFor(e.image).width(600).height(400).url() : '/images/placeholder.jpg',
-    date: e.date,
+    date: formatEventDate(e.startDate),
     tag: e.tag,
-    description: e.description,
+    description: e.description ?? '',
   }))
 
   const churchJsonLd = {

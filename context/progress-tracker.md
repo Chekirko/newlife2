@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- **Phase 1.5 COMPLETE** (FAQ → CMS + FAQPage JSON-LD). Next: **Phase 1.6 — "what you'll find" + stats → CMS**. See **Improvement Roadmap** below.
+- **Events COMPLETE** (roadmap 1.7 — events + announcements: model, homepage filter, /events pages, Event JSON-LD; зроблено за запитом користувача раніше за чергою). Next options: **1.6 "what you'll find" + stats → CMS** (відкладено) або **1.8 news Portable Text**. See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -41,8 +41,8 @@ Agreed product decisions:
 - ✅ 1.3 service schedule structured + feeds openingHours. Додано поле `endTime` у `siteSettings.services` (час завершення, необов'язкове). `getSiteSettings()` віддає похідний масив `openingHours` (тільки служіння з днем+початком+кінцем; UA-день → schema-англ. через `UA_DAY_TO_SCHEMA`). Homepage Church JSON-LD отримав `openingHoursSpecification` (4 записи, 24h). ВИПРАВЛЕНО баг: CTA «Розклад богослужінь» більше не захардкоджений хибними даними — будується з `settings.services`. (done 2026-06-15, build ✓, prerender verified — JSON-LD + CTA = реальний розклад)
 - ✅ 1.4 testimonials → CMS. Додано групу `testimonials` до singleton `homepage` (масив: quote/name/position/rating + опц. `avatar` image). `getHomepage()` повертає `testimonials` (map → `TestimonialData`, avatar через `urlFor` якщо є), fallback `lib/testimonials-data.ts`. Seed `seed-testimonials.ts` — **patch** (не createOrReplace), щоб не зачепити hero-слайди. page.tsx передає `homepage.testimonials`, статичний const видалено. Заголовок секції лишився захардкоджений (UI-chrome, поза scope 1.4). (done 2026-06-15, build ✓, prerender verified)
 - ✅ 1.5 FAQ → CMS (+FAQPage JSON-LD). Додано групу `faq` до singleton `homepage` (масив question/answer). `getHomepage()` повертає `faq`, fallback `lib/faq-data.ts`. page.tsx передає `homepage.faq` у `FAQSplit` + другий `<script>` FAQPage JSON-LD (mainEntity з тих самих даних). Seed `seed-faq.ts` — patch. Заголовок секції лишився захардкоджений (UI-chrome). (done 2026-06-16, build ✓, prerender verified — 5 Q&A в акордеоні + 5 у JSON-LD)
-- 1.6 "what you'll find" + stats → CMS
-- 1.7 `event`: real date/place fields → `/events` + `/events/[slug]` + Event JSON-LD
+- ⏸️ 1.6 "what you'll find" + stats → CMS (ВІДКЛАДЕНО — користувач попросив події раніше за чергою)
+- ✅ 1.7 `event`: events + announcements (одна модель, поле `type`). Додано `startDate` (datetime), `activeUntil` (опц. дедлайн), `location`, `body`; прибрано вільний `date`. Гомпейдж-секція фільтрує актуальні (`coalesce(activeUntil,startDate) >= now`, EventsSlider сам ховається коли порожньо). Нові `/events` (список+сайдбар+пагінація, дзеркало `news/`) та `/events/[slug]` (деталі + Event JSON-LD тільки для типу «подія»). Хедер-нав «Події», sitemap +`/events`+слаги. `formatEventDate()` (дата+час). (done 2026-06-16, build ✓ 34 стор.)
 - 1.8 `news`: Portable Text body + NewsArticle JSON-LD (+ migrate existing `text`)
 
 ### Phase 2 — Accessibility + UI/UX
@@ -84,6 +84,8 @@ Agreed product decisions:
 
 - **Homepage Singleton — Hero (Phase 1.2)**: Створено Sanity-singleton `homepage` (той самий патерн enforce: structure.ts + sanity.config.ts SINGLETON_TYPES). Поле `heroSlides` — масив слайдів (зображення+hotspot, pre/title/subtitle, дві кнопки, align), редагується/сортується у /studio. Seed `seed-homepage.ts` аплоадить 3 hero-зображення з `/public` (reuse `uploadImage` з `migrate.ts`). `getHomepage()` (`lib/homepage.ts`) резолвить зображення через `urlFor()`, fallback на чисті дефолти `lib/hero-slides-data.ts` (без Sanity-залежностей — щоб seed-скрипт міг імпортувати). page.tsx фетчить у `Promise.all`, статичний const `heroSlides` видалено. + UI-фікси Hero: inactive-слайди `pointer-events-none` (кнопки клікабельні), прибрано проп `overlayDark`, додано градієнтний scrim + text-shadow + видима друга кнопка (`btn-outline-white`) для легібельності тексту на фото.
 
+- **Events + Announcements (roadmap 1.7)**: Розширено модель `event` — одна модель для подій ТА оголошень через поле `type` (подія/оголошення). Додано `startDate` (datetime — сортування/показ/Event JSON-LD), `activeUntil` (опц. дедлайн «Актуально до»), `location`, `body` (повний текст); прибрано вільнотекстовий `date`. **Актуальність** на головній = `coalesce(activeUntil, startDate) >= now` (GROQ-параметр `$now`); `EventsSlider` сам повертає `null` коли порожньо → секція зникає, якщо немає актуальних. Нові сторінки `/events` (список карток + сайдбар «Інші події» вкл. минулі + пагінація — дзеркало `news/`) і `/events/[slug]` (деталі + **Event JSON-LD** лише для типу «подія», location/organizer з `getSiteSettings()`). Хедер-навігація отримала «Події»; sitemap +`/events`+слаги подій. Хелпер `formatEventDate()` (дата+час). Дзеркальні page-local компоненти `EventCard`/`SidebarRecentEvents`/`EventsPagination`. Legacy-події без `startDate` graceful-сховані до заповнення у /studio.
+
 - **FAQ → CMS + FAQPage JSON-LD (Phase 1.5)**: До singleton `homepage` додано групу/поле `faq` (масив question/answer). `getHomepage()` тепер віддає ще й `faq` (CMS → `FAQItem`), fallback на `lib/faq-data.ts` (5 наявних Q&A). page.tsx передає `homepage.faq` у `FAQSplit` і будує **FAQPage JSON-LD** з тих самих даних — другий `<script application/ld+json>` поруч із Church/WebSite (єдине джерело). Seed `seed-faq.ts` — **patch** поля `faq` (не createOrReplace, щоб зберегти hero+testimonials). Статичний const `faqItems` + import `FAQItem` видалено. Заголовок/контактний сайдбар секції лишилися захардкодженими (UI-chrome). Примітка: Google з 2023 показує FAQ rich results лише для gov/health, але розмітка корисна для AI-пошуку/structured data.
 
 - **Testimonials → CMS (Phase 1.4)**: До singleton `homepage` додано групу/поле `testimonials` (масив: текст відгуку, ім'я, підпис, рейтинг 1–5, опційне фото `avatar`). `getHomepage()` тепер віддає і `heroSlides`, і `testimonials` (CMS → `TestimonialData`, avatar резолвиться через `urlFor` лише за наявності), fallback на чисті дефолти `lib/testimonials-data.ts` (як `hero-slides-data.ts`). Seed `seed-testimonials.ts` робить **patch** поля `testimonials` (не `createOrReplace`) — щоб НЕ перезаписати hero-зображення, які користувач поміняв у /studio. page.tsx передає `homepage.testimonials`, статичний const видалено. Заголовок секції («Що кажуть наші члени») лишився захардкодженим — UI-chrome поза scope.
@@ -96,7 +98,8 @@ Agreed product decisions:
 
 ## Next Up
 
-- See **Improvement Roadmap** above. Active: **Phase 1.6 — "what you'll find" + stats → CMS**.
+- See **Improvement Roadmap** above. Active: **1.6 "what you'll find" + stats → CMS** (відкладене) або **1.8 news Portable Text**.
+- ⚠️ Legacy events: наявні демо-події не мають `startDate`/`type` → відфільтровані всюди (graceful). Менеджер має заповнити дату/тип у /studio (pre-launch) або створити нові.
 - Sanity content audit: unique gallery images per ministry
 - ⚠️ Build/typegen note: `sanity schema extract` requires Sanity CLI auth. Locally set `SANITY_AUTH_TOKEN` (e.g. from `SANITY_API_WRITE_TOKEN`) before `pnpm build`/`pnpm typegen`, else `CorsOriginError`. Vercel has its own auth.
 

@@ -12,3 +12,10 @@ export function formatDate(isoDate: string): string {
   const d = new Date(isoDate)
   return `${d.getDate()} ${MONTHS_UK[d.getMonth()]} ${d.getFullYear()}`
 }
+
+/** Like formatDate but adds the time: "25 грудня 2025, 18:00" (events carry a time). */
+export function formatEventDate(isoDate: string): string {
+  const d = new Date(isoDate)
+  const time = d.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' })
+  return `${formatDate(isoDate)}, ${time}`
+}

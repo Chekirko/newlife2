@@ -24,6 +24,7 @@ const navItems: NavItem[] = [
   },
   { label: 'Служіння', href: '/ministries' },
   { label: 'Новини', href: '/news' },
+  { label: 'Події', href: '/events' },
   { label: 'Медіа', href: '/media' },
   { label: 'Контакти', href: '/contact' },
 ]
