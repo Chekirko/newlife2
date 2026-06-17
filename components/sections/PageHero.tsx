@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 
 // =========================================
@@ -26,12 +27,16 @@ export function PageHero({
   return (
     <section
       className={`relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden ${className || ''}`}
-      style={{
-        backgroundImage: `url(${backgroundImage})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-      }}
     >
+      {/* Background image (optimized; decorative — empty alt) */}
+      <Image
+        src={backgroundImage}
+        alt=""
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover -z-10"
+      />
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/55" />
 

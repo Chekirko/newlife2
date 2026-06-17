@@ -17,8 +17,8 @@ All components must use CSS custom property tokens from `globals.css` — no har
 | Surface / section | `--color-gray-100`   | `#f7f8f9` |
 | Border            | `--border-color`     | `rgba(0,0,0,0.1)` |
 | Text primary      | `--color-gray-800`   | `#343a40` |
-| Text body         | `--color-gray-600`   | `#8f9397` |
-| Text muted        | `--color-gray-500`   | `#b4b9bd` |
+| Text body         | `--color-gray-600`   | `#6b7177` (AA ≥4.5:1 on white) |
+| Text muted        | `--color-gray-500`   | `#6f757a` (AA ≥4.5:1 on white) |
 | Success           | `--color-success`    | `#28a745` |
 | Danger            | `--color-danger`     | `#dc3545` |
 | Warning           | `--color-warning`    | `#ffc107` |
@@ -30,7 +30,17 @@ background: linear-gradient(150deg, var(--gradient-end) 0%, var(--gradient-start
 background-size: 260% 100%;
 ```
 
-Use `.bg-grad` utility class or `.btn-grad` for buttons.
+Use `.bg-grad` utility class for decorative backgrounds (bright gradient `--gradient-start/end`).
+
+**Buttons use a separate darker gradient** (`--gradient-btn-start: #4e7d2a` → `--gradient-btn-end: #1c7e70`) so white button text passes WCAG AA contrast (`.btn-grad`, `.btn-outline-grad` hover). Do not put white text on the bright decorative gradient — it fails AA.
+
+## Accessibility (WCAG 2.2 AA)
+
+- Global `:focus-visible` outline (2px `--color-primary`, 2px offset) is defined in `globals.css` base layer — never re-add `outline:none`/`ring-0` without a visible replacement.
+- `prefers-reduced-motion: reduce` damps animations/transitions globally.
+- Skip-link (`Перейти до вмісту`) targets `<main id="main-content">` in `app/(front)/layout.tsx`.
+- Header nav: active item gets `aria-current="page"` (via `usePathname()`); the "Про нас" dropdown is a keyboard-operable disclosure (`aria-haspopup`/`aria-expanded`, opens on click+hover, closes on Escape/blur); mobile toggle has `aria-expanded`. Decorative `<i class="fa…">` icons are `aria-hidden="true"`.
+- Section heroes (`PageHero` + news/events detail) render the background via `next/image` (`fill priority`), not CSS `background-image`.
 
 ## Typography
 
@@ -92,5 +102,4 @@ Used on: History, Ministry Detail pages
 
 ## Icons
 
-No dedicated icon library. Using Unicode characters and inline SVGs where needed.
-Social icons use Font Awesome classes via `.social-icons` component system in `globals.css`.
+Inline SVGs where needed. **Font Awesome is self-hosted** via the `@fortawesome/fontawesome-free` npm package (CSS imported once in `app/layout.tsx`, pinned to 6.x) — no external cdnjs request. Use the same `fas`/`far`/`fab` class names; mark decorative icons `aria-hidden="true"`.

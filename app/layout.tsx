@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins, Roboto, Playfair_Display } from "next/font/google";
 import { SITE_URL } from "@/lib/site";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -44,22 +45,6 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="uk">
-      <head>
-        {/* Font Awesome - preload for faster loading */}
-        <link 
-          rel="preload"
-          as="style"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-          crossOrigin="anonymous"
-        />
-        <link 
-          rel="stylesheet" 
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" 
-          integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" 
-          crossOrigin="anonymous" 
-          referrerPolicy="no-referrer"
-        />
-      </head>
       <body
         className={`${roboto.variable} ${poppins.variable} ${playfair.variable} antialiased`}
       >

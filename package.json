@@ -18,6 +18,7 @@
     "prebuild": "sanity schema extract && sanity typegen generate"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.7.2",
     "@portabletext/react": "^6.2.0",
     "@portabletext/types": "^4.0.2",
     "@sanity/image-url": "^1.2.0",

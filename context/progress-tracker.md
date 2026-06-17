@@ -8,7 +8,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Goal
 
-- **Phase 1.8 COMPLETE** (Portable Text body для news/event/ministry/team + NewsArticle/BreadcrumbList JSON-LD на /news/[slug]; live-міграція 26 docs; build ✓ 34 стор.). Також: редаговані hero-фони для всіх сторінок крім головної (`pageHeroes`). **Phase 1 завершено.** Next: Phase 2 (a11y/UI) або Phase 3 (нові сторінки — спершу узгодити дизайн із замовником). See **Improvement Roadmap** below.
+- **Phase 1 + Phase 2 COMPLETE** (build ✓ 34 стор.). Phase 1: контент-модель, головна→CMS, rich text, per-page hero, NewsArticle JSON-LD. Phase 2: a11y (keyboard/focus/skip-link/aria), WCAG AA контраст (сірі+кнопки), hero→`next/image`, self-host Font Awesome. **Next: Phase 3** (нові сторінки /about, /media, /give — спершу узгодити дизайн із замовником) АБО залишок контрасту (бренд-рішення щодо `--color-primary`). See **Improvement Roadmap** below.
 
 ## Improvement Roadmap (agreed 2026-06-15)
 
@@ -45,8 +45,12 @@ Agreed product decisions:
 - ✅ 1.7 `event`: events + announcements (одна модель, поле `type`). Додано `startDate` (datetime), `activeUntil` (опц. дедлайн), `location`, `body`; прибрано вільний `date`. Гомпейдж-секція фільтрує актуальні (`coalesce(activeUntil,startDate) >= now`, EventsSlider сам ховається коли порожньо). Нові `/events` (список+сайдбар+пагінація, дзеркало `news/`) та `/events/[slug]` (деталі + Event JSON-LD тільки для типу «подія»). Хедер-нав «Події», sitemap +`/events`+слаги. `formatEventDate()` (дата+час). (done 2026-06-16, build ✓ 34 стор.)
 - ✅ 1.8 Rich text (Portable Text) body для **news/event/ministry/team** — build ✓ (34 стор.), live-міграція виконана (26 docs). Спільний `richTextBlocks` (тулбар: H2–H4/цитата = розмір, жирний/курсив/підкреслення, списки, посилання, вбудовані зображення) + спільний рендер `PortableTextBody` (fallback на `<p>` для legacy-рядка). Excerpt-поля лишились простим текстом. Міграція `scripts/migrate-portable-text.ts` (`pnpm migrate:pt`, dry-run за замовч., `--write`). **NewsArticle + BreadcrumbList JSON-LD** додано на `/news/[slug]` (headline/image/datePublished/dateModified=`_updatedAt`/description/articleSection/author+publisher=Organization з `getSiteSettings()`/mainEntityOfPage). publisher.logo поки відсутнє (немає лого-ассета — див. TODO Лого).
 
-### Phase 2 — Accessibility + UI/UX
-- WCAG AA contrast fix (gray-500/600, white-on-gradient buttons), focus-visible, keyboard-accessible dropdown, skip-link, aria-current; hero/PageHero → `next/image`; Font Awesome self-host/replace.
+### Phase 2 — Accessibility + UI/UX ✅ DONE (build ✓ 34 стор.)
+- ✅ 2.1 Keyboard & semantics: global `:focus-visible` + `prefers-reduced-motion` (globals.css); skip-link → `<main id="main-content">` (front layout); ChurchHeader — keyboard-operable "Про нас" dropdown (`aria-haspopup`/`aria-expanded`, Escape/blur close), `aria-current` via `usePathname()`, mobile toggle `aria-expanded` + UA label, decorative `<i>` → `aria-hidden`.
+- ✅ 2.2 Contrast (WCAG AA): darkened `--color-gray-600` #8f9397→**#6b7177** (4.94:1) і `--color-gray-500` #b4b9bd→**#6f757a** (4.67:1); окремий темніший градієнт кнопок `--gradient-btn-start #4e7d2a`/`--gradient-btn-end #1c7e70` (білий текст ≥4.5:1) для `.btn-grad`/`.btn-outline-grad`; `.footer-bottom`→gray-400 (світлий на темному). Декоративний bright-градієнт лишився яскравим (рішення замовника). Перевірено `contrast_checker.py`.
+- ✅ 2.3 Heroes → `next/image`: `PageHero` + news/events detail героі через `<Image fill priority>` замість CSS `background-image` (LCP).
+- ✅ 2.4 Font Awesome self-host: `@fortawesome/fontawesome-free` (pin 6.x), CSS-імпорт у `app/layout.tsx`, прибрано cdnjs `<link>` (без зовнішнього render-blocking запиту).
+- ⚠️ **Залишок контрасту (потребує бренд-рішення)**: `--color-primary #4cbd89` як текст посилань на білому (~1.9:1) і колір focus-ring (<3:1); білий текст на bright-градієнтних CTA-боксах (сайдбари новин/подій/служінь) і `.gradient-text` — усе fail AA. Не чіпав (поза узгодженим scope 2.2 = сірі+кнопки; зміна primary = зміна бренду). Винести на рішення замовника окремо.
 
 ### Phase 3 — New pages (ASK design first)
 - `/about`, `/media` (YouTube archive + live), `/give` (requisites) + homepage sections (latest sermon, Telegram, plan-your-visit).

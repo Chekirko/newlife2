@@ -93,6 +93,16 @@ Whenever a new public page or a new Sanity content type with a public detail rou
 - **Site-wide `robots.ts`** is `Disallow: /` while pre-launch; per-page `noindex` controls indexing once the site is opened at launch. Do not open site-wide indexing without explicit user go-ahead (see progress-tracker → Launch checklist).
 - **Add JSON-LD** appropriate to the new page type (load the `schema-markup` skill): Article/NewsArticle, Event, Person, BreadcrumbList, etc. Absolute URLs come from `SITE_URL` (`lib/site.ts`).
 
+## Accessibility (WCAG 2.2 AA)
+
+- **Color contrast**: text on white must be ≥4.5:1. Use `text-gray-600`/`text-gray-800` for readable body text — `--color-gray-500`/`-600` are tuned to pass AA. Verify new color pairs with `.agents/skills/a11y-audit/scripts/contrast_checker.py "<fg>" "<bg>"`.
+- **White button text** goes only on the darker `--gradient-btn-*` (via `.btn-grad`), never the bright decorative `--gradient-start/end`.
+- **Focus**: rely on the global `:focus-visible` outline; never set `outline:none`/`ring-0` without an equally visible replacement.
+- **Interactive elements**: use native `<button>`/`<a>`; menus/disclosures need `aria-haspopup`/`aria-expanded`, keyboard open/close (Escape), and must not be hover-only. Active nav links get `aria-current="page"`.
+- **Decorative icons** (`<i class="fa…">`, inline SVG) get `aria-hidden="true"`; icon-only controls get an `aria-label`.
+- **Images**: section/hero backgrounds use `next/image` (`fill priority`, empty `alt=""` when decorative), not CSS `background-image`.
+- **Font Awesome** is self-hosted (`@fortawesome/fontawesome-free`, imported in `app/layout.tsx`) — do not re-add the cdnjs `<link>`.
+
 ## Naming Conventions
 
 - Components: PascalCase (`EventsSlider.tsx`)

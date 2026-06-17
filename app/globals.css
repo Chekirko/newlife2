@@ -14,8 +14,8 @@
   --color-gray-200: #f0f1f3;
   --color-gray-300: #dfe2e5;
   --color-gray-400: #d0d4d9;
-  --color-gray-500: #b4b9bd;
-  --color-gray-600: #8f9397;
+  --color-gray-500: #6f757a;
+  --color-gray-600: #6b7177;
   --color-gray-700: #495057;
   --color-gray-800: #343a40;
   --color-gray-900: #212529;
@@ -146,15 +146,19 @@
   --color-gray-200: #f0f1f3;
   --color-gray-300: #dfe2e5;
   --color-gray-400: #d0d4d9;
-  --color-gray-500: #b4b9bd;
-  --color-gray-600: #8f9397;
+  --color-gray-500: #6f757a;
+  --color-gray-600: #6b7177;
   --color-gray-700: #495057;
   --color-gray-800: #343a40;
   --color-gray-900: #212529;
 
-  /* Gradient */
+  /* Gradient (bright — decorative backgrounds, icons, accents) */
   --gradient-start: #97c74e;
   --gradient-end: #2ab9a5;
+
+  /* Darker gradient for buttons — white text passes WCAG AA (a11y) */
+  --gradient-btn-start: #4e7d2a;
+  --gradient-btn-end: #1c7e70;
 
   /* Transition */
   --transition-base: all 0.3s ease-in-out;
@@ -232,6 +236,25 @@
 
   section {
     @apply py-12 md:py-16;
+  }
+
+  /* Visible keyboard focus indicator (a11y — WCAG 2.4.7) */
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  /* Respect users who prefer reduced motion (a11y — WCAG 2.3.3) */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 
@@ -507,10 +530,10 @@
     background-color: var(--color-gray-200);
   }
 
-  /* Gradient button */
+  /* Gradient button (darker gradient — white text passes WCAG AA) */
   .btn-grad {
     @apply text-white border-0;
-    background: linear-gradient(150deg, var(--gradient-end) 0%, var(--gradient-start) 50%, var(--gradient-end) 100%);
+    background: linear-gradient(150deg, var(--gradient-btn-end) 0%, var(--gradient-btn-start) 50%, var(--gradient-btn-end) 100%);
     background-size: 260% 100%;
     background-position: right bottom;
     line-height: 1.92;
@@ -579,7 +602,8 @@
 
   .btn-outline-grad::before {
     @apply inset-0 -z-[2];
-    background: linear-gradient(150deg, var(--gradient-end) 0%, var(--gradient-start) 50%, var(--gradient-end) 100%);
+    /* darker gradient — text turns white on hover, must pass AA */
+    background: linear-gradient(150deg, var(--gradient-btn-end) 0%, var(--gradient-btn-start) 50%, var(--gradient-btn-end) 100%);
     background-size: 260% 100%;
     background-position: right bottom;
   }
@@ -927,8 +951,9 @@
     color: var(--color-gray-800);
   }
 
-  .accordion-button:focus {
-    @apply outline-none ring-0;
+  .accordion-button:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -2px;
   }
 
   .accordion-body {
@@ -1656,7 +1681,8 @@
   .footer-bottom {
     @apply mt-12 pt-8;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
-    color: var(--color-gray-500);
+    /* gray-400 (light) — gray-500 was darkened for AA on white, too dark on the dark footer */
+    color: var(--color-gray-400);
   }
 
   .footer a {
