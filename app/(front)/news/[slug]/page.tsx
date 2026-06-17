@@ -2,9 +2,12 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { toPlainText } from '@portabletext/react'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
+import { getSiteSettings } from '@/lib/site-settings'
+import { SITE_URL } from '@/lib/site'
 import { PortableTextBody } from '@/components'
 import type { SanityNews } from '@/sanity/lib/types'
 import { defineQuery } from 'next-sanity'
@@ -14,6 +17,7 @@ export const revalidate = 60 // Revalidate page every 60 seconds
 const NEWS_BY_SLUG_QUERY = defineQuery(`
   *[_type == "news" && slug.current == $slug][0] {
     _id,
+    _updatedAt,
     title,
     "slug": slug.current,
     publishedAt,
@@ -48,15 +52,58 @@ export default async function NewsDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [news, heroes] = await Promise.all([
+  const [news, heroes, settings] = await Promise.all([
     client.fetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug }),
     getPageHeroes(),
+    getSiteSettings(),
   ])
 
   if (!news) notFound()
 
+  const articleUrl = `${SITE_URL}/news/${news.slug}`
+  const articleImage = news.image
+    ? urlFor(news.image).width(1200).height(675).url()
+    : undefined
+  const articleDescription =
+    news.text?.trim() || (news.body ? toPlainText(news.body).slice(0, 160) : undefined)
+
+  // NewsArticle JSON-LD (schema-markup skill)
+  const newsArticleJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'NewsArticle',
+    headline: news.title,
+    datePublished: news.publishedAt,
+    dateModified: news._updatedAt || news.publishedAt,
+    ...(articleImage ? { image: [articleImage] } : {}),
+    ...(articleDescription ? { description: articleDescription } : {}),
+    ...(news.mainCategory ? { articleSection: news.mainCategory } : {}),
+    author: { '@type': 'Organization', name: settings.name, url: SITE_URL },
+    publisher: { '@type': 'Organization', name: settings.name, url: SITE_URL },
+    mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
+  }
+
+  // BreadcrumbList JSON-LD (schema-markup skill)
+  const breadcrumbJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
+      { '@type': 'ListItem', position: 2, name: 'Новини', item: `${SITE_URL}/news` },
+      { '@type': 'ListItem', position: 3, name: news.title, item: articleUrl },
+    ],
+  }
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+      />
+
       {/* Hero */}
       <section
         className="relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden"

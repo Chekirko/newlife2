@@ -40,6 +40,7 @@ export interface SanityMinistryLink {
 /** News item */
 export interface SanityNews {
   _id: string
+  _updatedAt?: string
   title: string
   slug: string
   publishedAt: string
