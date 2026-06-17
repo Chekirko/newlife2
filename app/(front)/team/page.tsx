@@ -9,6 +9,7 @@ import {
 } from './queries'
 import { TeamSection, HonorarySection, TeamPhotoBanner } from './components'
 import type { SanityTeamMemberCard } from '@/sanity/lib/types'
+import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
 
 export const metadata: Metadata = {
@@ -20,11 +21,12 @@ export const revalidate = 60 // Revalidate page every 60 seconds
 
 export default async function TeamPage() {
   // Parallel fetching (senior-frontend skill: Promise.all pattern)
-  const [honorary, ordained, candidates, responsible] = await Promise.all([
+  const [honorary, ordained, candidates, responsible, heroes] = await Promise.all([
     client.fetch<SanityTeamMemberCard[]>(TEAM_HONORARY_QUERY),
     client.fetch<SanityTeamMemberCard[]>(TEAM_ORDAINED_QUERY),
     client.fetch<SanityTeamMemberCard[]>(TEAM_CANDIDATE_QUERY),
     client.fetch<SanityTeamMemberCard[]>(TEAM_RESPONSIBLE_QUERY),
+    getPageHeroes(),
   ])
 
   // Track rendered content sections for alternating background colors (bg-gray-50 / bg-white)
@@ -39,7 +41,7 @@ export default async function TeamPage() {
     <>
       <PageHero
         title="Наша команда"
-        backgroundImage="/images/team.jpg"
+        backgroundImage={heroes.teamHero}
         breadcrumbs={[
           { label: 'Головна', href: '/' },
           { label: 'Команда' },

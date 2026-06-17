@@ -4,6 +4,7 @@ import { ContactInfoCard } from './components/ContactInfoCard'
 import { ContactForm } from './components/ContactForm'
 import { MapEmbed } from './components/MapEmbed'
 import { getSiteSettings } from '@/lib/site-settings'
+import { getPageHeroes } from '@/lib/page-heroes'
 
 export const metadata: Metadata = {
   title: 'Контакти | Церква «Нове Життя»',
@@ -38,7 +39,7 @@ const ClockIcon = () => (
 )
 
 export default async function ContactPage() {
-  const settings = await getSiteSettings()
+  const [settings, heroes] = await Promise.all([getSiteSettings(), getPageHeroes()])
   const { address, email, phone, phoneDisplay, geo, services } = settings
 
   // Google Maps embed centered on the church's exact pin (no API key needed).
@@ -48,7 +49,7 @@ export default async function ContactPage() {
     <>
       <PageHero
         title="Контакти"
-        backgroundImage="/images/hero-church-2.jpg"
+        backgroundImage={heroes.contactHero}
         breadcrumbs={[
           { label: 'Головна', href: '/' },
           { label: 'Контакти' },

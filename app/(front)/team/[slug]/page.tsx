@@ -4,6 +4,7 @@ import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
 import { PageHero, PortableTextBody } from '@/components'
 import { client } from '@/sanity/lib/client'
+import { getPageHeroes } from '@/lib/page-heroes'
 import { urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
@@ -36,9 +37,10 @@ export default async function TeamMemberPage({
   params,
 }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const member = await client.fetch<SanityTeamMember | null>(
-    TEAM_MEMBER_BY_SLUG_QUERY, { slug }
-  )
+  const [member, heroes] = await Promise.all([
+    client.fetch<SanityTeamMember | null>(TEAM_MEMBER_BY_SLUG_QUERY, { slug }),
+    getPageHeroes(),
+  ])
   if (!member) notFound()
 
   const photoUrl = urlFor(member.photo).width(800).height(1000).url()
@@ -70,6 +72,7 @@ export default async function TeamMemberPage({
 
       <PageHero
         title={member.name}
+        backgroundImage={heroes.teamHero}
         breadcrumbs={[
           { label: 'Головна', href: '/' },
           { label: 'Команда', href: '/team' },

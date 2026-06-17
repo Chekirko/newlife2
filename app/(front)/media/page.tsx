@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { PlaceholderPage } from '@/components'
+import { getPageHeroes } from '@/lib/page-heroes'
 
 export const metadata: Metadata = {
   title: 'Медіа | Церква «Нове Життя»',
@@ -8,10 +9,14 @@ export const metadata: Metadata = {
   robots: { index: false, follow: true },
 }
 
-export default function MediaPage() {
+export const revalidate = 60 // Revalidate page every 60 seconds
+
+export default async function MediaPage() {
+  const heroes = await getPageHeroes()
   return (
     <PlaceholderPage
       title="Медіа"
+      backgroundImage={heroes.mediaHero}
       description="Розділ «Медіа» зараз у розробці. Невдовзі тут зʼявляться проповіді, відео та записи наших богослужінь і подій."
     />
   )

@@ -13,6 +13,7 @@ import {
   OTHER_MINISTRIES_QUERY,
 } from './queries'
 import { NEWS_QUERY } from '@/sanity/lib/queries'
+import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
 import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/lib/types'
 
@@ -48,10 +49,11 @@ import { formatDate } from '@/lib/utils'
 export default async function MinistryDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
 
-  const [ministry, otherMinistries, newsRaw] = await Promise.all([
+  const [ministry, otherMinistries, newsRaw, heroes] = await Promise.all([
     client.fetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug }),
     client.fetch<SanityMinistryLink[]>(OTHER_MINISTRIES_QUERY, { slug }),
     client.fetch<SanityNews[]>(NEWS_QUERY),
+    getPageHeroes(),
   ])
 
   if (!ministry) notFound()
@@ -77,6 +79,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
     <>
       <PageHero
         title={ministry.title}
+        backgroundImage={heroes.ministriesHero}
         breadcrumbs={[
           { label: 'Головна', href: '/' },
           { label: 'Служіння', href: '/ministries' },

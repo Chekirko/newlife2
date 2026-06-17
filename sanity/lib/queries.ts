@@ -50,7 +50,14 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
 export const PAGE_HEROES_QUERY = defineQuery(`
   *[_type == "pageHeroes"][0]{
     newsHero,
-    eventsHero
+    eventsHero,
+    ministriesHero,
+    teamHero,
+    historyHero,
+    contactHero,
+    aboutHero,
+    mediaHero,
+    privacyHero
   }
 `)
 

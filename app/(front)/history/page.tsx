@@ -2,11 +2,14 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { PageHero } from '@/components'
+import { getPageHeroes } from '@/lib/page-heroes'
 
 export const metadata: Metadata = {
   title: 'Історія | Церква «Нове Життя»',
   description: 'Дізнайтеся більше про історію та пройдений шлях нашої церкви.',
 }
+
+export const revalidate = 60 // Revalidate page every 60 seconds
 
 const timelineEvents = [
   {
@@ -52,11 +55,14 @@ const timelineEvents = [
   }
 ]
 
-export default function HistoryPage() {
+export default async function HistoryPage() {
+  const heroes = await getPageHeroes()
+
   return (
     <>
       <PageHero
         title="Історія"
+        backgroundImage={heroes.historyHero}
         breadcrumbs={[
           { label: 'Головна', href: '/' },
           { label: 'Про нас' },
