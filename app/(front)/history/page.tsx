@@ -7,6 +7,7 @@ import { getPageHeroes } from '@/lib/page-heroes'
 export const metadata: Metadata = {
   title: 'Історія | Церква «Нове Життя»',
   description: 'Дізнайтеся більше про історію та пройдений шлях нашої церкви.',
+  alternates: { canonical: '/history' },
 }
 
 export const revalidate = 60 // Revalidate page every 60 seconds

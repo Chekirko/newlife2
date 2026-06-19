@@ -38,10 +38,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${ministry.title} | Церква «Нове Життя»`,
     description: ministry.shortDescription,
+    alternates: { canonical: `/ministries/${slug}` },
   }
 }
 
-import { formatDate } from '@/lib/utils'
+import { formatDate, jsonLdHtml } from '@/lib/utils'
 
 // ============================================
 // PAGE (Server Component)
@@ -91,7 +92,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: jsonLdHtml({
             '@context': 'https://schema.org',
             '@type': 'BreadcrumbList',
             itemListElement: [

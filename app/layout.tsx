@@ -34,7 +34,24 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Церква «Нове Життя»",
     description: "Євангельська церква в Бориславі",
+    url: SITE_URL,
+    siteName: "Церква «Нове Життя»",
+    locale: "uk_UA",
     type: "website",
+    images: [
+      {
+        url: "/images/hero-church-1.jpg",
+        width: 1920,
+        height: 1080,
+        alt: "Церква «Нове Життя», Борислав",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Церква «Нове Життя»",
+    description: "Євангельська церква в Бориславі",
+    images: ["/images/hero-church-1.jpg"],
   },
 };
 

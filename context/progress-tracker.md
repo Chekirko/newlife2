@@ -4,7 +4,8 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- Фази 0–2 ✅ DONE. Повне впорядковане меню продовження зафіксовано в **`context/improvement-roadmap.md`** (Tier A–E), Working Agreement узгоджено (2026-06-19, див. `ai-workflow-rules.md`). **Очікую вибір користувача** з якої фази/пунктів стартувати — гейт перед Фазою A (карта не починається без явного вибору).
+- Фази 0–2 ✅ DONE. Повне впорядковане меню продовження зафіксовано в **`context/improvement-roadmap.md`** (Tier A–E), Working Agreement узгоджено (2026-06-19, див. `ai-workflow-rules.md`).
+- **A4 (pre-launch аудит) виконано** + реалізовано фікси **S2** (екранування JSON-LD), **SEO quick wins** (canonical на 11 маршрутах + OG/Twitter), **C2** (security headers enforce + CSP Report-Only). `next build` ✓ 34 стор. CSP лишається Report-Only до runtime-смоук-тесту → потім enforce. Деталі — `improvement-roadmap.md` → Прогрес.
 
 ## Current Goal
 

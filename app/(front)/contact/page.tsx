@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: 'Контакти | Церква «Нове Життя»',
   description:
     'Контактна інформація церкви «Нове Життя» в м. Борислав. Адреса, телефон, розклад богослужінь та форма зворотного зв\'язку.',
+  alternates: { canonical: '/contact' },
 }
 
 // SVG icons for contact cards

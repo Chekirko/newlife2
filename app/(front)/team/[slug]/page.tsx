@@ -8,6 +8,7 @@ import { getPageHeroes } from '@/lib/page-heroes'
 import { urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
+import { jsonLdHtml } from '@/lib/utils'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
@@ -30,6 +31,7 @@ export async function generateMetadata({
   return {
     title: `${member.name} | Церква «Нове Життя»`,
     description: plainBio.slice(0, 160) || `${member.name} — служитель церкви «Нове Життя»`,
+    alternates: { canonical: `/team/${slug}` },
   }
 }
 
@@ -55,7 +57,7 @@ export default async function TeamMemberPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
+          __html: jsonLdHtml({
             '@context': 'https://schema.org',
             '@type': 'Person',
             name: member.name,

@@ -11,6 +11,7 @@ import { SITE_URL } from '@/lib/site'
 import { PortableTextBody } from '@/components'
 import type { SanityNews } from '@/sanity/lib/types'
 import { defineQuery } from 'next-sanity'
+import { jsonLdHtml } from '@/lib/utils'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
@@ -43,6 +44,7 @@ export async function generateMetadata({
   return {
     title: `${news.title} | Новини | Церква «Нове Життя»`,
     description: news.text?.substring(0, 160),
+    alternates: { canonical: `/news/${slug}` },
   }
 }
 
@@ -97,11 +99,11 @@ export default async function NewsDetailPage({
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(newsArticleJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(newsArticleJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(breadcrumbJsonLd) }}
       />
 
       {/* Hero */}

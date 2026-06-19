@@ -9,7 +9,7 @@ import { PortableTextBody } from '@/components'
 import { getSiteSettings } from '@/lib/site-settings'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
-import { formatEventDate } from '@/lib/utils'
+import { formatEventDate, jsonLdHtml } from '@/lib/utils'
 import type { SanityEvent } from '@/sanity/lib/types'
 import { EVENT_BY_SLUG_QUERY } from '../queries'
 
@@ -30,6 +30,7 @@ export async function generateMetadata({
   return {
     title: `${event.title} | Події | Церква «Нове Життя»`,
     description: plainDescription?.substring(0, 160),
+    alternates: { canonical: `/events/${slug}` },
   }
 }
 
@@ -88,7 +89,7 @@ export default async function EventDetailPage({
       {eventJsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(eventJsonLd) }}
+          dangerouslySetInnerHTML={{ __html: jsonLdHtml(eventJsonLd) }}
         />
       )}
 

@@ -19,3 +19,12 @@ export function formatEventDate(isoDate: string): string {
   const time = d.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' })
   return `${formatDate(isoDate)}, ${time}`
 }
+
+/**
+ * Serialize a value into a JSON-LD `__html` string, escaping `<` as `<`
+ * so CMS-authored content containing `</script>` cannot break out of the
+ * surrounding <script type="application/ld+json"> tag.
+ */
+export function jsonLdHtml(data: unknown): string {
+  return JSON.stringify(data).replace(/</g, '\\u003c')
+}

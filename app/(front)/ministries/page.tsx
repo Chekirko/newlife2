@@ -8,6 +8,7 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Служіння | Церква «Нове Життя»',
+  alternates: { canonical: '/ministries' },
 }
 
 export const revalidate = 60 // Revalidate page every 60 seconds

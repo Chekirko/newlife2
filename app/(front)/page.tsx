@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import {
   HeroSlider,
   HeroGradientImage,
@@ -26,7 +27,11 @@ import { getHomepage } from '@/lib/homepage'
 // Using actual Larexa components
 // ============================================
 
-import { formatDate, formatEventDate } from '@/lib/utils'
+import { formatDate, formatEventDate, jsonLdHtml } from '@/lib/utils'
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
@@ -125,11 +130,11 @@ export default async function HomePage() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(churchJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(churchJsonLd) }}
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdHtml(faqJsonLd) }}
       />
 
       {/* HERO SECTION - HeroSlider з Larexa (slides from Sanity homepage singleton) */}
