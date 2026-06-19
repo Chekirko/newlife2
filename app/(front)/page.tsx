@@ -36,10 +36,17 @@ export const metadata: Metadata = {
 export const revalidate = 60 // Revalidate page every 60 seconds
 
 export default async function HomePage() {
-  // Fetch news, events, site settings and homepage content from Sanity
+  // Fetch news, events, site settings and homepage content from Sanity.
+  // Homepage events: type "подія" hides after its own day (startDate >= start of today),
+  // type "оголошення" stays until activeUntil/startDate >= now — see EVENTS_QUERY.
+  const _now = new Date()
+  const eventParams = {
+    now: _now.toISOString(),
+    today: new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).toISOString(),
+  }
   const [newsRaw, eventsRaw, settings, homepage] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
-    client.fetch<SanityEvent[]>(EVENTS_QUERY, { now: new Date().toISOString() }),
+    client.fetch<SanityEvent[]>(EVENTS_QUERY, eventParams),
     getSiteSettings(),
     getHomepage(),
   ])

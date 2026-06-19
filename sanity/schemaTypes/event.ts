@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity'
 import { richTextBlocks } from './objects/richText'
+import { TagInput } from '../components/TagInput'
 
 export const eventType = defineType({
   name: 'event',
@@ -58,7 +59,7 @@ export const eventType = defineType({
       name: 'tag',
       title: 'Мітка',
       type: 'string',
-      description: 'Наприклад: Подія, Конференція, Родина, Навчання',
+      description: 'Оберіть зі списку або впишіть свою',
       options: {
         list: [
           { title: 'Подія', value: 'Подія' },
@@ -70,6 +71,7 @@ export const eventType = defineType({
           { title: 'Служіння', value: 'Служіння' },
         ],
       },
+      components: { input: TagInput },
     }),
     defineField({
       name: 'description',

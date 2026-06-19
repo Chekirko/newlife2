@@ -5,10 +5,15 @@ import { defineQuery } from 'next-sanity'
 // ============================================
 
 /** Current events/announcements for the homepage slider (soonest first).
- *  "Current" = the deadline (activeUntil, else startDate) has not passed.
- *  Param: $now (ISO string). */
+ *  "Current" differs by type:
+ *   - "подія" (event): visible through the end of its own day (startDate >= $today).
+ *   - "оголошення" (announcement): visible until its deadline (activeUntil, else startDate) >= $now.
+ *  Params: $now (ISO instant) and $today (ISO start-of-today). */
 export const EVENTS_QUERY = defineQuery(`
-  *[_type == "event" && defined(startDate) && coalesce(activeUntil, startDate) >= $now]
+  *[_type == "event" && defined(startDate) && (
+    (type == "подія" && startDate >= $today) ||
+    (type != "подія" && coalesce(activeUntil, startDate) >= $now)
+  )]
     | order(startDate asc) {
     _id,
     type,

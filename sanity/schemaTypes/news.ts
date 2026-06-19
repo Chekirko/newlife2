@@ -1,6 +1,9 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
-import { CategoryInput } from '../components/CategoryInput'
+import { TagInput } from '../components/TagInput'
 import { richTextBlocks } from './objects/richText'
+
+// Suggested categories — editors can also type a brand-new one (TagInput allows free text).
+const NEWS_CATEGORIES = ['Місія', 'Навчання', 'Служіння', 'Молодь', 'Культура', 'Волонтерство', 'Подія']
 
 export const newsType = defineType({
   name: 'news',
@@ -32,16 +35,21 @@ export const newsType = defineType({
       name: 'mainCategory',
       title: 'Основна категорія',
       type: 'string',
-      components: {
-        input: CategoryInput,
-      },
+      options: { list: NEWS_CATEGORIES },
+      components: { input: TagInput },
       description: 'Оберіть зі списку або почніть вводити власну',
     }),
     defineField({
       name: 'categories',
       title: 'Додаткові категорії',
       type: 'array',
-      of: [defineArrayMember({ type: 'string' })],
+      of: [
+        defineArrayMember({
+          type: 'string',
+          options: { list: NEWS_CATEGORIES },
+          components: { input: TagInput },
+        }),
+      ],
     }),
     defineField({
       name: 'text',
