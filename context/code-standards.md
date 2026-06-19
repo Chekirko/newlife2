@@ -92,6 +92,14 @@ Whenever a new public page or a new Sanity content type with a public detail rou
 - **Dynamic CMS content is automatic.** Existing types already covered by `SITEMAP_QUERY` (news, ministry, teamMember) need no manual sitemap edits per item.
 - **Site-wide `robots.ts`** is `Disallow: /` while pre-launch; per-page `noindex` controls indexing once the site is opened at launch. Do not open site-wide indexing without explicit user go-ahead (see progress-tracker → Launch checklist).
 - **Add JSON-LD** appropriate to the new page type (load the `schema-markup` skill): Article/NewsArticle, Event, Person, BreadcrumbList, etc. Absolute URLs come from `SITE_URL` (`lib/site.ts`).
+- **Render JSON-LD safely.** Serialize with `jsonLdHtml()` from `lib/utils.ts` (escapes `<` → `<`) inside `dangerouslySetInnerHTML` — never raw `JSON.stringify`, so CMS content containing `</script>` cannot break out of the `<script>` tag.
+- **Canonical + social.** Every indexable page sets `alternates: { canonical: '/path' }` (resolved against `metadataBase`; dynamic pages build it from the slug). Root `app/layout.tsx` holds the default OpenGraph (`url`/`siteName`/`locale: uk_UA`/image) + Twitter `summary_large_image`. Do NOT set a global canonical — it would mis-canonicalize every page to one URL.
+
+## Security Headers & CSP
+
+- HTTP security headers live in `next.config.ts` (`headers()`): `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Strict-Transport-Security`, `Permissions-Policy` — **enforced on all routes**.
+- The Content-Security-Policy is currently **`Content-Security-Policy-Report-Only`** (non-blocking) with `/studio` excluded (Studio needs `unsafe-eval`/blob/ws). Flip it to the enforcing `Content-Security-Policy` only after a runtime smoke test (homepage scripts, Sanity images, Google Maps embed, Studio) — see `improvement-roadmap.md` → C2.
+- Adding any external embed/script (e.g. YouTube for /media) requires updating the matching CSP source list (`frame-src`/`img-src`/`connect-src`).
 
 ## Accessibility (WCAG 2.2 AA)
 
