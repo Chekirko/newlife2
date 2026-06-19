@@ -4,7 +4,7 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-- Improvement roadmap agreed (2026-06-15) after deep audit. Executing **Phase 0 — Foundation**.
+- Фази 0–2 ✅ DONE. Повне впорядковане меню продовження зафіксовано в **`context/improvement-roadmap.md`** (Tier A–E), Working Agreement узгоджено (2026-06-19, див. `ai-workflow-rules.md`). **Очікую вибір користувача** з якої фази/пунктів стартувати — гейт перед Фазою A (карта не починається без явного вибору).
 
 ## Current Goal
 
@@ -17,6 +17,7 @@ Deep audit completed. Agreed working rules for this roadmap:
 - ASK the user for design direction BEFORE building any new page (user provides references / recommendations).
 - After EVERY completed unit: show the user what was done (summary + key files/changes). Commit + push to `origin` (Chekirko/newlife2) ONLY after the user approves.
 - Load the matching `.agents/skills/*/SKILL.md` per unit (schema-markup, seo-audit, a11y-audit, performance-profiler, security-guidance, senior-frontend/fullstack, karpathy-coder).
+- **Extended 2026-06-19 (Working Agreement — `ai-workflow-rules.md`):** karpathy-coder is now always-on (load before every coding unit); present the phase's item-list and ASK which to do BEFORE starting each phase; ASK about commit+push after each completed stage; opening search indexing is the VERY LAST step of the whole project. Full menu lives in `context/improvement-roadmap.md`.
 
 Agreed product decisions:
 - Homepage static content → **fully migrated to Sanity CMS**.

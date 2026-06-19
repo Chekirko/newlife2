@@ -4,6 +4,17 @@
 
 Build this project incrementally using a spec-driven workflow. Context files define what to build, how to build it, and the current state of progress. Always implement against these specs — do not infer or invent behavior from scratch.
 
+## Working Agreement (project-wide, agreed 2026-06-19)
+
+Узгоджено з користувачем; діє на весь подальший проєкт. Канонічне місце цих правил — цей файл; жива дорожня карта — `context/improvement-roadmap.md`.
+
+1. **Karpathy завжди.** Перед будь-яким кодовим юнітом завантажувати `.agents/skills/karpathy-coder/SKILL.md` і застосовувати 4 принципи (припущення вголос → простота → хірургічні зміни → перевіряльні цілі). Always-on, не лише за тригером.
+2. **Гейт перед кожною фазою.** Перед стартом кожної фази надати користувачу перелік запланованих пунктів цієї фази і ЗАПИТАТИ, що саме з них робити. Не починати без явного вибору.
+3. **Коміт/пуш-гейт після кожного етапу.** Після кожного завершеного етапу/юніту ЗАПИТАТИ про commit + push; виконувати лише за згодою користувача (push як `Chekirko`).
+4. **Індексація — найостанніший крок.** Відкриття індексації (flip `app/robots.ts` → allow, зняти `noindex`, виставити власний домен у `NEXT_PUBLIC_SITE_URL`) — найостанніша дія всього проєкту, лише за явним «готово» від користувача. Ніколи раніше. Див. `progress-tracker.md` → Launch checklist.
+5. **Контекст у синхроні.** Дописувати важливі зміни в усі релевантні `context/*.md` (не лише `progress-tracker.md`: `architecture.md`/`ui-context.md`/`code-standards.md`/`project-overview.md` — за доменом зміни).
+6. **Спершу — план у контекст.** Будь-яка нова велика ініціатива спершу фіксується в контексті (`context/improvement-roadmap.md` / spec у `context/specs/`), і тільки тоді починається робота.
+
 ## Scoping Rules
 
 - Work on one feature unit at a time
