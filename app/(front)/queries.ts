@@ -25,3 +25,14 @@ export const EVENTS_QUERY = defineQuery(`
     image
   }
 `)
+
+/** Senior pastor for the homepage greeting: title "Старший пастор", excluding
+ *  honorary ministers. Returns one (lowest order) or null. */
+export const SENIOR_PASTOR_QUERY = defineQuery(`
+  *[_type == "teamMember" && title == "Старший пастор" && !("honorary" in category)]
+    | order(order asc)[0] {
+    name,
+    title,
+    photo
+  }
+`)

@@ -14,8 +14,9 @@ import { Ministries } from './components/Ministries'
 import { EventsSlider } from './components/EventsSlider'
 import { client } from '@/sanity/lib/client'
 import { NEWS_QUERY } from '@/sanity/lib/queries'
-import { EVENTS_QUERY } from './queries'
+import { EVENTS_QUERY, SENIOR_PASTOR_QUERY } from './queries'
 import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
+import type { SENIOR_PASTOR_QUERYResult } from '@/sanity/lib/sanity.types'
 import { urlFor } from '@/sanity/lib/image'
 import { SITE_URL } from '@/lib/site'
 import { getSiteSettings } from '@/lib/site-settings'
@@ -43,11 +44,12 @@ export default async function HomePage() {
     now: _now.toISOString(),
     today: new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).toISOString(),
   }
-  const [newsRaw, eventsRaw, settings, homepage] = await Promise.all([
+  const [newsRaw, eventsRaw, settings, homepage, pastor] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
     client.fetch<SanityEvent[]>(EVENTS_QUERY, eventParams),
     getSiteSettings(),
     getHomepage(),
+    client.fetch<SENIOR_PASTOR_QUERYResult>(SENIOR_PASTOR_QUERY),
   ])
 
   // Transform Sanity data for components
@@ -185,10 +187,10 @@ export default async function HomePage() {
         description="Дорогі друзі! Я вірю, що ваш візит на наш сайт — не випадковість. Бог має чудовий план для вашого життя, і ми хочемо допомогти вам відкрити його."
         description2="У церкві «Нове Життя» ви знайдете теплу атмосферу, щирі стосунки та можливість зростати духовно. Ми віримо, що разом ми можемо змінювати наше місто та світ навколо."
         quote={{
-          author: 'Пастор Іван Петренко',
-          role: 'Старший пастор церкви'
+          author: pastor?.name ?? 'Пастор',
+          role: pastor?.title ?? 'Старший пастор',
         }}
-        image="/images/pastor-welcome.jpg"
+        image={pastor?.photo ? urlFor(pastor.photo).width(800).height(800).url() : '/images/pastor-welcome.jpg'}
       />
 
       {/* SERVICE SCHEDULE - розклад богослужінь рано (коли/де — ключове для гостя) */}
