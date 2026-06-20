@@ -1,4 +1,6 @@
-﻿// =========================================
+﻿import Link from 'next/link'
+
+// =========================================
 // OUR VISION - Church vision section
 // With gradient block and images
 // =========================================
@@ -11,6 +13,8 @@ export interface OurVisionProps {
   visionHighlight?: string
   image1?: string
   image2?: string
+  ctaText?: string
+  ctaHref?: string
   className?: string
 }
 
@@ -22,6 +26,8 @@ export const OurVision = ({
   visionHighlight,
   image1 = '/images/church-worship.jpg',
   image2 = '/images/church-community.jpg',
+  ctaText,
+  ctaHref,
   className,
 }: OurVisionProps) => {
   return (
@@ -41,6 +47,17 @@ export const OurVision = ({
             <p className="text-lg text-gray-600 leading-relaxed">
               {subtitle}
             </p>
+          )}
+          {ctaText && ctaHref && (
+            <Link
+              href={ctaHref}
+              className="inline-flex items-center gap-2 mt-5 text-primary font-semibold hover:gap-3 transition-all"
+            >
+              {ctaText}
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </Link>
           )}
         </div>
 

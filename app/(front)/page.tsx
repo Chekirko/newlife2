@@ -5,7 +5,6 @@ import {
   NewsSlider,
 } from '@/components'
 import dynamic from 'next/dynamic'
-import { AboutWithStats } from './components/AboutWithStats'
 const TestimonialsGrid = dynamic(() => import('./components/TestimonialsGrid').then(m => m.TestimonialsGrid))
 const FAQSplit = dynamic(() => import('./components/FAQSplit').then(m => m.FAQSplit))
 const ActionBoxFullWidth = dynamic(() => import('./components/ActionBoxFullWidth').then(m => m.ActionBoxFullWidth))
@@ -174,6 +173,8 @@ export default async function HomePage() {
         visionText="Допомагати кожній людині пізнати Бога як джерело істинного Щастя, відновлювати сім'ї та служити громаді через практичну любов, змінюючи атмосферу в Україні."
         image1="/images/vision1.jpg"
         image2="/images/vision2.jpg"
+        ctaText="Дізнатися більше про нас"
+        ctaHref="/about"
       />
 
       {/* PASTOR WELCOME - PastorGreeting з Larexa demo style */}
@@ -190,17 +191,7 @@ export default async function HomePage() {
         image="/images/pastor-welcome.jpg"
       />
 
-      {/* WHAT YOU'LL FIND - Що ви знайдете в церкві */}
-      <Ministries
-        preTitle="Що ви знайдете"
-        title="Більше, ніж просто церква"
-        description="Церква — це місце, де кожен може знайти спільноту, підтримку та духовне зростання."
-        items={homepage.whatYouFind}
-        columns={3}
-        className="bg-gray-100"
-      />
-
-      {/* SERVICE SCHEDULE - HeroGradientImage з Larexa (як CTA) */}
+      {/* SERVICE SCHEDULE - розклад богослужінь рано (коли/де — ключове для гостя) */}
       <HeroGradientImage
         preTitle="Приєднуйтесь до нас"
         title="Розклад богослужінь"
@@ -213,6 +204,16 @@ export default async function HomePage() {
         className="py-12"
       />
 
+      {/* WHAT YOU'LL FIND - Що ви знайдете в церкві */}
+      <Ministries
+        preTitle="Що ви знайдете"
+        title="Більше, ніж просто церква"
+        description="Церква — це місце, де кожен може знайти спільноту, підтримку та духовне зростання."
+        items={homepage.whatYouFind}
+        columns={3}
+        className="bg-gray-100"
+      />
+
       {/* NEWS - NewsSlider (після розкладу богослужінь) */}
       {newsData.length > 0 && (
         <NewsSlider
@@ -223,18 +224,6 @@ export default async function HomePage() {
           className="bg-gray-50"
         />
       )}
-
-      {/* ABOUT WITH STATS - AboutWithStats з Larexa */}
-      <AboutWithStats
-        preTitle="Про нашу церкву"
-        title="Ми — спільнота віруючих людей"
-        description="Церква «Нове Життя» заснована у 2005 році. За ці роки ми виросли з маленької групи в велику церковну сім'ю."
-        description2="Наша місія — допомагати людям знайти Бога, будувати міцні стосунки та служити громаді."
-        stats={homepage.stats}
-        buttonText="Дізнатися більше"
-        buttonHref="/about"
-        className="py-16 lg:py-24"
-      />
 
       {/* TESTIMONIALS - TestimonialsGrid з Larexa */}
       <TestimonialsGrid
