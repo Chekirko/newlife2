@@ -12,7 +12,7 @@ interface NewsCardProps {
 
 export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: NewsCardProps) {
   return (
-    <article className="mb-8 rounded-xl overflow-hidden bg-white shadow-card transition-shadow duration-300 hover:shadow-hover-lg">
+    <article className="h-full rounded-xl overflow-hidden bg-white shadow-card transition-shadow duration-300 hover:shadow-hover-lg">
       {/* Image */}
       <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
         <Link href={`/news/${slug}`}>
@@ -20,7 +20,7 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
             src={imageUrl}
             alt={title}
             fill
-            sizes="(max-width: 768px) 100vw, 66vw"
+            sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 37vw"
             className="object-cover transition-transform duration-500 hover:scale-105"
           />
         </Link>

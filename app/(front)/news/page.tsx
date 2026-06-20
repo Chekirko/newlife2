@@ -120,7 +120,8 @@ export default async function NewsPage({
 
               {/* News grid */}
               {newsRaw.length > 0 ? (
-                newsRaw.map((n) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                {newsRaw.map((n) => (
                   <NewsCard
                     key={n._id}
                     title={n.title}
@@ -134,7 +135,8 @@ export default async function NewsPage({
                         : '/images/placeholder.jpg'
                     }
                   />
-                ))
+                ))}
+                </div>
               ) : (
                 <div className="text-center py-20">
                   <i className="far fa-newspaper text-5xl text-gray-300 mb-4 block" />

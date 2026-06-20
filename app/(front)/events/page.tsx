@@ -83,7 +83,8 @@ export default async function EventsPage({
             {/* -------- MAIN CONTENT -------- */}
             <div className="w-full md:w-3/4 px-4 order-2 md:order-1">
               {eventsRaw.length > 0 ? (
-                eventsRaw.map((e) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                {eventsRaw.map((e) => (
                   <EventCard
                     key={e._id}
                     title={e.title}
@@ -98,7 +99,8 @@ export default async function EventsPage({
                         : '/images/placeholder.jpg'
                     }
                   />
-                ))
+                ))}
+                </div>
               ) : (
                 <div className="text-center py-20">
                   <i className="far fa-calendar-alt text-5xl text-gray-300 mb-4 block" />

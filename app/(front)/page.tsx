@@ -67,7 +67,7 @@ export default async function HomePage() {
     _id: e._id,
     title: e.title,
     slug: e.slug,
-    image: e.image ? urlFor(e.image).width(600).height(400).url() : '/images/placeholder.jpg',
+    image: e.image ? urlFor(e.image).width(800).height(533).url() : '/images/placeholder.jpg',
     date: formatEventDate(e.startDate),
     tag: e.tag,
     description: e.description ?? '',

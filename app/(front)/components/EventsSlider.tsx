@@ -120,7 +120,7 @@ export const EventsSlider = ({
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             <div className="grid md:grid-cols-2 gap-0">
               {/* Image */}
-              <div className="relative h-64 md:h-auto md:min-h-[400px]">
+              <div className="relative aspect-[3/2]">
                 <Image
                   src={event.image}
                   alt={event.title}
@@ -209,7 +209,7 @@ export const EventsSlider = ({
                 >
                   <div className="bg-white rounded-xl shadow-md overflow-hidden h-full hover:shadow-xl transition-shadow">
                     {/* Image */}
-                    <div className="relative h-48 lg:h-56">
+                    <div className="relative aspect-[3/2]">
                       <Image
                         src={event.image}
                         alt={event.title}

@@ -99,6 +99,8 @@ Used on: History, Ministry Detail pages
 - **Grid**: Flexbox-based with `-mx-4` / `px-4` columns pattern
 - **Sidebar layout**: `w-full md:w-1/4` sidebar + `w-full md:w-3/4` main content
 - **Cards**: `shadow-card` / `shadow-hover` with `transition-all duration-300`
+- **Списки новин/подій — сітка карток**: `NewsCard`/`EventCard` рендеряться у **2-колонкову сітку** на десктопі (`grid grid-cols-1 sm:grid-cols-2 gap-6`, 1 колонка на мобільному); картки `h-full` (БЕЗ власного `mb-8` — відступ дає `gap`). Це прибирає завеликі картки на всю ширину 3/4-колонки. `sizes` зображення = `(max-width: 640px) 100vw, (max-width: 768px) 50vw, 37vw`.
+- **Картки подій на головній (`EventsSlider`)**: контейнер фото = `aspect-[3/2]`, що збігається з доставленим фото 3:2 (`urlFor 800×533`) → `object-cover` показує все зображення без обрізки (раніше була фіксована висота → сильний кроп).
 
 ## Icons
 
