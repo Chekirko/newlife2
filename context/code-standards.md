@@ -98,7 +98,7 @@ Whenever a new public page or a new Sanity content type with a public detail rou
 ## Security Headers & CSP
 
 - HTTP security headers live in `next.config.ts` (`headers()`): `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Strict-Transport-Security`, `Permissions-Policy` — **enforced on all routes**.
-- The Content-Security-Policy is currently **`Content-Security-Policy-Report-Only`** (non-blocking) with `/studio` excluded (Studio needs `unsafe-eval`/blob/ws). Flip it to the enforcing `Content-Security-Policy` only after a runtime smoke test (homepage scripts, Sanity images, Google Maps embed, Studio) — see `improvement-roadmap.md` → C2.
+- The Content-Security-Policy is currently **`Content-Security-Policy-Report-Only`** (non-blocking) with `/studio` excluded (Studio needs `unsafe-eval`/blob/ws). Flip it to the enforcing `Content-Security-Policy` only after a runtime smoke test (homepage scripts, Sanity images, Google Maps embed, Studio) — see `master-plan.md` → C2.
 - Adding any external embed/script (e.g. YouTube for /media) requires updating the matching CSP source list (`frame-src`/`img-src`/`connect-src`).
 
 ## Accessibility (WCAG 2.2 AA)

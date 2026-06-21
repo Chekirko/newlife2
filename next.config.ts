@@ -5,7 +5,7 @@ const isDev = process.env.NODE_ENV === "development";
 // Content Security Policy. Shipped as **Report-Only** first (non-blocking) so it
 // can be validated against the live site — homepage/JSON-LD scripts, Sanity image
 // CDN, the Google Maps embed, and the /studio app — before being flipped to the
-// enforcing `Content-Security-Policy` header. See context/improvement-roadmap.md (C2).
+// enforcing `Content-Security-Policy` header. See context/master-plan.md (C2).
 const csp = [
   "default-src 'self'",
   "base-uri 'self'",
