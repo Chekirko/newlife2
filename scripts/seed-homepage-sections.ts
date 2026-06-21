@@ -4,7 +4,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { loadEnvConfig } from '@next/env'
 import { WHAT_YOU_FIND_FALLBACK } from '../lib/what-you-find-data'
-import { STATS_FALLBACK } from '../lib/stats-data'
 
 // Load environment variables from .env.local
 const projectDir = process.cwd()
@@ -53,17 +52,11 @@ async function uploadImage(imagePath: string) {
   }
 }
 
-const stats = STATS_FALLBACK.map((s, i) => ({
-  _key: `stat-${i}`,
-  value: s.value,
-  label: s.label,
-}))
-
 async function runSeed() {
   const isDryRun = !process.argv.includes('--write')
 
   console.log(
-    `Seeding homepage.whatYouFind + stats. Mode: ${isDryRun ? 'DRY-RUN (no changes written)' : 'LIVE-WRITE'}`,
+    `Seeding homepage.whatYouFind. Mode: ${isDryRun ? 'DRY-RUN (no changes written)' : 'LIVE-WRITE'}`,
   )
 
   if (isDryRun) {
@@ -75,7 +68,7 @@ async function runSeed() {
       title: w.title,
       description: w.description,
     }))
-    console.log(JSON.stringify({ _id: HOMEPAGE_ID, whatYouFind: whatYouFindPreview, stats }, null, 2))
+    console.log(JSON.stringify({ _id: HOMEPAGE_ID, whatYouFind: whatYouFindPreview }, null, 2))
     return
   }
 
@@ -94,10 +87,8 @@ async function runSeed() {
     }
 
     // Patch (not createOrReplace) → preserves hero / testimonials / faq.
-    await client.patch(HOMEPAGE_ID).set({ whatYouFind, stats }).commit()
-    console.log(
-      `✓ homepage patched (${whatYouFind.length} "what you'll find" cards, ${stats.length} stats)`,
-    )
+    await client.patch(HOMEPAGE_ID).set({ whatYouFind }).commit()
+    console.log(`✓ homepage patched (${whatYouFind.length} "what you'll find" cards)`)
   } catch (err) {
     console.error('Error patching homepage document:', err)
     process.exit(1)

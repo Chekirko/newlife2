@@ -94,10 +94,49 @@ export const HOMEPAGE_QUERY = defineQuery(`
       title,
       description,
       image
-    },
-    stats[]{
-      value,
-      label
     }
+  }
+`)
+
+/** About page singleton (editable /about content — headings + content).
+ *  Used on: /about. Read through `getAboutPage()` in `lib/about.ts`, which
+ *  merges CMS values over `ABOUT_FALLBACK` (lib/about-data.ts) field-by-field.
+ *  Stats numbers come from the homepage singleton — only headings live here.
+ */
+export const ABOUT_PAGE_QUERY = defineQuery(`
+  *[_type == "aboutPage"][0]{
+    heroTitle,
+    whoPreTitle,
+    whoHeading,
+    denomination,
+    missionLabel,
+    mission,
+    historyPreTitle,
+    historyTitle,
+    historyParagraphs,
+    beliefsPreTitle,
+    beliefsTitle,
+    beliefs[]{ title, text },
+    valuesPreTitle,
+    valuesTitle,
+    valuesDescription,
+    values[]{ iconKey, title, text, featured },
+    expectPreTitle,
+    expectTitle,
+    expectDescription,
+    whatToExpect[]{ icon, title, text },
+    expectCtaText,
+    leadershipPreTitle,
+    leadershipTitle,
+    leadershipIntro,
+    leadershipCtaText,
+    statsPreTitle,
+    statsTitle,
+    statsDescription,
+    stats[]{ value, label },
+    ctaTitle,
+    ctaText,
+    ctaPrimaryText,
+    ctaSecondaryText
   }
 `)

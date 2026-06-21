@@ -18,12 +18,10 @@ import type { HeroSlide } from '@/components/sections/Hero'
 import type { TestimonialData } from '@/app/(front)/components/TestimonialsGrid'
 import type { FAQItem } from '@/app/(front)/components/FAQSplit'
 import type { MinistryItem } from '@/app/(front)/components/Ministries'
-import type { AboutStat } from '@/app/(front)/components/AboutWithStats'
 import { HERO_SLIDES_FALLBACK } from '@/lib/hero-slides-data'
 import { TESTIMONIALS_FALLBACK } from '@/lib/testimonials-data'
 import { FAQ_FALLBACK } from '@/lib/faq-data'
 import { WHAT_YOU_FIND_FALLBACK } from '@/lib/what-you-find-data'
-import { STATS_FALLBACK } from '@/lib/stats-data'
 
 export { HERO_SLIDES_FALLBACK }
 
@@ -37,7 +35,6 @@ export async function getHomepage(): Promise<{
   testimonials: TestimonialData[]
   faq: FAQItem[]
   whatYouFind: MinistryItem[]
-  stats: AboutStat[]
 }> {
   const data = await client.fetch<HOMEPAGE_QUERYResult>(
     HOMEPAGE_QUERY,
@@ -90,15 +87,10 @@ export async function getHomepage(): Promise<{
         : '/images/placeholder.jpg',
     }))
 
-  const cmsStats = (data?.stats ?? [])
-    .filter((s) => s.value && s.label)
-    .map((s): AboutStat => ({ value: s.value!, label: s.label! }))
-
   return {
     heroSlides: cmsSlides.length > 0 ? cmsSlides : HERO_SLIDES_FALLBACK,
     testimonials: cmsTestimonials.length > 0 ? cmsTestimonials : TESTIMONIALS_FALLBACK,
     faq: cmsFaq.length > 0 ? cmsFaq : FAQ_FALLBACK,
     whatYouFind: cmsWhatYouFind.length > 0 ? cmsWhatYouFind : WHAT_YOU_FIND_FALLBACK,
-    stats: cmsStats.length > 0 ? cmsStats : STATS_FALLBACK,
   }
 }

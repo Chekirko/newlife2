@@ -13,6 +13,7 @@
     "seed:testimonials": "tsx scripts/seed-testimonials.ts",
     "seed:faq": "tsx scripts/seed-faq.ts",
     "seed:homepage-sections": "tsx scripts/seed-homepage-sections.ts",
+    "seed:about": "tsx scripts/seed-about-page.ts",
     "migrate:pt": "tsx scripts/migrate-portable-text.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"

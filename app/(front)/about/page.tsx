@@ -4,19 +4,11 @@ import Link from 'next/link'
 import { PageHero } from '@/components'
 import { AboutWithStats } from '../components/AboutWithStats'
 import { getPageHeroes } from '@/lib/page-heroes'
-import { getHomepage } from '@/lib/homepage'
 import { getSiteSettings } from '@/lib/site-settings'
+import { getAboutPage } from '@/lib/about'
 import { SITE_URL } from '@/lib/site'
 import { jsonLdHtml } from '@/lib/utils'
-import {
-  ABOUT_DENOMINATION,
-  ABOUT_MISSION,
-  ABOUT_HISTORY,
-  ABOUT_BELIEFS,
-  ABOUT_VALUES,
-  ABOUT_EXPECTATIONS,
-  type AboutValue,
-} from '@/lib/about-data'
+import type { AboutValue } from '@/lib/about-data'
 
 // Line (outline) icons for the values bento — currentColor follows the card text.
 const svgIcon = (children: ReactNode) => (
@@ -37,7 +29,7 @@ const VALUE_ICONS: Record<string, ReactNode> = {
 function ValueCard({ value }: { value: AboutValue }) {
   const featured = value.featured
   return (
-    <div className={`rounded-lg p-7 lg:p-8 ${featured ? 'bg-grad text-white' : 'bg-gray-50'}`}>
+    <div className={`rounded-lg p-7 lg:p-8 ${featured ? 'bg-grad text-white' : 'bg-white shadow-card'}`}>
       <span className={`inline-block mb-5 ${featured ? 'text-white' : 'text-primary'}`}>
         {VALUE_ICONS[value.iconKey]}
       </span>
@@ -63,11 +55,16 @@ export const metadata: Metadata = {
 export const revalidate = 60
 
 export default async function AboutPage() {
-  const [heroes, homepage, settings] = await Promise.all([
+  const [heroes, settings, about] = await Promise.all([
     getPageHeroes(),
-    getHomepage(),
     getSiteSettings(),
+    getAboutPage(),
   ])
+
+  // Distribute values across 3 columns in order (handles any count); the middle
+  // column is offset down. `featured` styling is driven by the flag, not position.
+  const valueColumns: AboutValue[][] = [[], [], []]
+  about.values.items.forEach((v, i) => valueColumns[i % 3].push(v))
 
   const aboutJsonLd = {
     '@context': 'https://schema.org',
@@ -101,7 +98,7 @@ export default async function AboutPage() {
       />
 
       <PageHero
-        title="Про нас"
+        title={about.heroTitle}
         backgroundImage={heroes.aboutHero}
         breadcrumbs={[{ label: 'Головна', href: '/' }, { label: 'Про нас' }]}
       />
@@ -111,18 +108,18 @@ export default async function AboutPage() {
         <div className="container-larexa max-w-4xl">
           <div className="text-center">
             <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
-              Хто ми
+              {about.whoWeAre.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-6 leading-tight">
-              Спільнота, що знаходить щастя в Бозі й дарує його іншим
+              {about.whoWeAre.heading}
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed mb-6">
-              {ABOUT_DENOMINATION}
+              {about.whoWeAre.denomination}
             </p>
             <div className="bg-grad rounded-2xl p-8 lg:p-10 text-white">
-              <span className="block text-base opacity-90 mb-2">Наша місія</span>
+              <span className="block text-base opacity-90 mb-2">{about.whoWeAre.missionLabel}</span>
               <p className="text-xl lg:text-2xl font-semibold leading-snug m-0">
-                {ABOUT_MISSION}
+                {about.whoWeAre.mission}
               </p>
             </div>
           </div>
@@ -134,14 +131,14 @@ export default async function AboutPage() {
         <div className="container-larexa max-w-4xl">
           <div className="text-center mb-10">
             <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
-              Наш шлях
+              {about.history.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 leading-tight">
-              Наша історія
+              {about.history.title}
             </h2>
           </div>
           <div className="space-y-5">
-            {ABOUT_HISTORY.map((paragraph, idx) => (
+            {about.history.paragraphs.map((paragraph, idx) => (
               <p key={idx} className="text-gray-600 text-lg leading-relaxed">
                 {paragraph}
               </p>
@@ -166,10 +163,10 @@ export default async function AboutPage() {
         <div className="container-larexa">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
-              Наша віра
+              {about.beliefs.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 leading-tight">
-              У що ми віримо
+              {about.beliefs.title}
             </h2>
             <p className="text-gray-600 text-lg">
               Ключові істини нашого сповідання. Повне віровчення братства —{' '}
@@ -185,7 +182,7 @@ export default async function AboutPage() {
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {ABOUT_BELIEFS.map((belief) => (
+            {about.beliefs.items.map((belief) => (
               <div
                 key={belief.title}
                 className="rounded-2xl border border-gray-100 bg-white p-6 shadow-card hover:shadow-hover-lg transition-shadow border-t-4 border-t-primary"
@@ -198,37 +195,40 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* VALUES — staggered 3-column "services" layout (intro integrated, one gradient card) */}
-      <section className="py-16 lg:py-24">
+      {/* VALUES — staggered 3-column layout (intro integrated, gradient = featured) */}
+      <section className="py-16 lg:py-24 bg-gray-100">
         <div className="container-larexa">
           <div className="flex flex-col lg:flex-row items-start gap-6 lg:gap-7">
             {/* Column 1 — intro + cards */}
             <div className="w-full lg:flex-1 flex flex-col gap-6">
               <div>
                 <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
-                  Що для нас важливо
+                  {about.values.preTitle}
                 </span>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 leading-tight mb-4">
-                  Цінності, що нас формують
+                  {about.values.title}
                 </h2>
                 <p className="text-gray-600 leading-relaxed">
-                  Принципи, на яких будується наше служіння, спільнота та щоденне життя віри.
+                  {about.values.description}
                 </p>
               </div>
-              <ValueCard value={ABOUT_VALUES[0]} />
-              <ValueCard value={ABOUT_VALUES[5]} />
+              {valueColumns[0].map((value, i) => (
+                <ValueCard key={`v0-${i}`} value={value} />
+              ))}
             </div>
 
             {/* Column 2 — offset down */}
             <div className="w-full lg:flex-1 flex flex-col gap-6 lg:mt-16">
-              <ValueCard value={ABOUT_VALUES[1]} />
-              <ValueCard value={ABOUT_VALUES[2]} />
+              {valueColumns[1].map((value, i) => (
+                <ValueCard key={`v1-${i}`} value={value} />
+              ))}
             </div>
 
-            {/* Column 3 — featured (gradient) on top */}
+            {/* Column 3 */}
             <div className="w-full lg:flex-1 flex flex-col gap-6">
-              <ValueCard value={ABOUT_VALUES[4]} />
-              <ValueCard value={ABOUT_VALUES[3]} />
+              {valueColumns[2].map((value, i) => (
+                <ValueCard key={`v2-${i}`} value={value} />
+              ))}
             </div>
           </div>
         </div>
@@ -239,31 +239,31 @@ export default async function AboutPage() {
         <div className="container-larexa">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
-              Вперше у нас?
+              {about.whatToExpect.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 leading-tight">
-              Чого очікувати
+              {about.whatToExpect.title}
             </h2>
             <p className="text-gray-600 text-lg">
-              Ми розуміємо, що перший візит може хвилювати. Ось що на вас чекає.
+              {about.whatToExpect.description}
             </p>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {ABOUT_EXPECTATIONS.map((item) => (
+            {about.whatToExpect.items.map((item) => (
               <div key={item.title} className="flex gap-4 items-start">
                 <div className="shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
                   <i className={`${item.icon} text-primary text-lg`} aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="text-lg font-bold text-gray-800 mb-1">{item.title}</h3>
-                  <p className="text-gray-600 text-sm leading-relaxed m-0">{item.text}</p>
+                  <h3 className="text-xl font-bold text-gray-800 mb-1">{item.title}</h3>
+                  <p className="text-gray-600 text-base leading-relaxed m-0">{item.text}</p>
                 </div>
               </div>
             ))}
           </div>
           <div className="text-center mt-10">
             <Link href="/contact" className="btn btn-grad">
-              Розклад і як нас знайти
+              {about.whatToExpect.ctaText}
             </Link>
           </div>
         </div>
@@ -273,27 +273,26 @@ export default async function AboutPage() {
       <section className="py-16 lg:py-24 bg-gray-100">
         <div className="container-larexa max-w-3xl text-center">
           <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
-            Служителі
+            {about.leadership.preTitle}
           </span>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 leading-tight">
-            Наше керівництво
+            {about.leadership.title}
           </h2>
           <p className="text-gray-600 text-lg leading-relaxed mb-6">
-            Церкву ведуть рукопокладені служителі — пастори, диякони та відповідальні за
-            різні напрями служіння, які з любов’ю піклуються про спільноту.
+            {about.leadership.intro}
           </p>
           <Link href="/team" className="btn btn-outline-grad">
-            Познайомитися з командою
+            {about.leadership.ctaText}
           </Link>
         </div>
       </section>
 
       {/* STATS (moved here from the homepage) */}
       <AboutWithStats
-        preTitle="Церква в цифрах"
-        title="Кілька штрихів про нас"
-        description="За роки служіння Бог зробив чимало — і ми вдячні бути частиною цієї історії."
-        stats={homepage.stats}
+        preTitle={about.stats.preTitle}
+        title={about.stats.title}
+        description={about.stats.description}
+        stats={about.stats.items}
         className="py-16 lg:py-24"
       />
 
@@ -304,17 +303,16 @@ export default async function AboutPage() {
             className="rounded-2xl p-10 lg:p-14 text-center text-white"
             style={{ background: 'linear-gradient(150deg, #97c74e 0%, #2ab9a5 100%)' }}
           >
-            <h2 className="text-3xl lg:text-4xl font-bold mb-3">Готові зробити наступний крок?</h2>
+            <h2 className="text-3xl lg:text-4xl font-bold mb-3">{about.finalCta.title}</h2>
             <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
-              Будемо раді познайомитися з вами особисто. Заплануйте свій перший візит або
-              напишіть нам.
+              {about.finalCta.text}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">
               <Link href="/contact" className="btn btn-white">
-                Запланувати візит
+                {about.finalCta.primaryText}
               </Link>
               <Link href="/ministries" className="btn btn-outline-white">
-                Наші служіння
+                {about.finalCta.secondaryText}
               </Link>
             </div>
           </div>

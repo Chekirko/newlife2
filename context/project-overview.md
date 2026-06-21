@@ -60,14 +60,14 @@
 
 ### Про нас (`/about`)
 - Реальна сторінка (не плейсхолдер): Хто ми + місія, наша історія (наратив + лінк на `/history`), у що ми віримо (курована добірка віровчення УЦХВЄ), цінності, «чого очікувати», керівництво (лінк на `/team`), статистика (перенесена з головної), CTA
-- Контент у `lib/about-data.ts` (типізований); статистика — єдине джерело `homepage.stats` через `getHomepage()`. JSON-LD AboutPage + BreadcrumbList. **TODO:** CMS-редагування (singleton `aboutPage`) — окремий follow-up
+- Увесь контент (заголовки секцій + текст + числа статистики) редагується у /studio через singleton `aboutPage` (`getAboutPage()`); `lib/about-data.ts` — типізований fallback. JSON-LD AboutPage + BreadcrumbList
 
 ## Scope
 
 ### In Scope
 - Публічний фронтенд (SSG/SSR)
 - Sanity Studio (вбудований на /studio)
-- CMS-моделі: siteSettings (singleton — контакти/розклад/соцмережі/SEO), homepage (singleton — hero-слайдер/testimonials/FAQ, далі stats), ministry, news, event (події + оголошення: type/startDate/activeUntil/location/body), teamMember
+- CMS-моделі: siteSettings (singleton — контакти/розклад/соцмережі/SEO), homepage (singleton — hero-слайдер/testimonials/FAQ/stats), pageHeroes (singleton — hero-фони сторінок), aboutPage (singleton — увесь контент /about), ministry, news, event (події + оголошення: type/startDate/activeUntil/location/body), teamMember
 - SEO-метадані для кожної сторінки
 - Адаптивний дизайн (mobile → desktop)
 - Автоматична генерація типів (Sanity TypeGen)

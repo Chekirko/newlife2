@@ -23,7 +23,6 @@ export const homepageType = defineType({
     { name: 'testimonials', title: 'Свідчення' },
     { name: 'faq', title: 'Часті запитання' },
     { name: 'whatYouFind', title: 'Що ви знайдете' },
-    { name: 'stats', title: 'Статистика' },
   ],
   fields: [
     defineField({
@@ -253,42 +252,6 @@ export const homepageType = defineType({
                 title: title || 'Картка',
                 subtitle: subtitle || undefined,
                 media,
-              }
-            },
-          },
-        },
-      ],
-    }),
-    defineField({
-      name: 'stats',
-      title: 'Статистика',
-      type: 'array',
-      group: 'stats',
-      description: 'Лічильники у секції «Про нашу церкву» (напр. 19+ / Років служіння).',
-      of: [
-        {
-          type: 'object',
-          fields: [
-            defineField({
-              name: 'value',
-              title: 'Значення',
-              type: 'string',
-              description: 'Напр.: 19+, 350+, 6',
-              validation: (rule) => rule.required().error("Значення обов'язкове"),
-            }),
-            defineField({
-              name: 'label',
-              title: 'Підпис',
-              type: 'string',
-              validation: (rule) => rule.required().error("Підпис обов'язковий"),
-            }),
-          ],
-          preview: {
-            select: { title: 'value', subtitle: 'label' },
-            prepare({ title, subtitle }) {
-              return {
-                title: title || '—',
-                subtitle: subtitle || undefined,
               }
             },
           },
