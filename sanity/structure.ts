@@ -60,6 +60,10 @@ export const structure: StructureResolver = (S) =>
         .schemaType('event')
         .child(S.documentTypeList('event').title('Події')),
       S.listItem()
+        .title('Медіа')
+        .schemaType('mediaItem')
+        .child(S.documentTypeList('mediaItem').title('Медіа')),
+      S.listItem()
         .title('Служителі')
         .schemaType('teamMember')
         .child(S.documentTypeList('teamMember').title('Служителі')),

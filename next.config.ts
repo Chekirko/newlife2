@@ -13,10 +13,10 @@ const csp = [
   // Next.js needs inline scripts for hydration; dev (HMR) additionally needs eval.
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: https://cdn.sanity.io",
+  "img-src 'self' data: https://cdn.sanity.io https://img.youtube.com",
   "font-src 'self' data:",
   "connect-src 'self' https://*.sanity.io",
-  "frame-src 'self' https://www.google.com https://maps.google.com",
+  "frame-src 'self' https://www.google.com https://maps.google.com https://www.youtube-nocookie.com https://www.youtube.com",
   "frame-ancestors 'self'",
   "form-action 'self'",
 ].join("; ");
@@ -36,6 +36,10 @@ const nextConfig: NextConfig = {
       {
         protocol: "https",
         hostname: "cdn.sanity.io",
+      },
+      {
+        protocol: "https",
+        hostname: "img.youtube.com",
       },
     ],
   },

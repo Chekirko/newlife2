@@ -14,6 +14,7 @@
     "seed:faq": "tsx scripts/seed-faq.ts",
     "seed:homepage-sections": "tsx scripts/seed-homepage-sections.ts",
     "seed:about": "tsx scripts/seed-about-page.ts",
+    "seed:media": "tsx scripts/seed-media.ts",
     "migrate:pt": "tsx scripts/migrate-portable-text.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"
@@ -26,6 +27,7 @@
     "@sanity/ui": "^3.2.0",
     "@sanity/vision": "^4.22.0",
     "clsx": "^2.1.1",
+    "motion": "^12.40.0",
     "next": "16.1.6",
     "next-sanity": "^11.6.13",
     "react": "19.2.3",

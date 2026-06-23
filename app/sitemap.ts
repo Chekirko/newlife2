@@ -7,9 +7,9 @@ import { client } from '@/sanity/lib/client'
 export const revalidate = 60
 
 // Static routes that hold real, indexable content.
-// NOTE: /media, /privacy are intentionally excluded while they are
-// `noindex` placeholders — add them here once they become real pages.
-const STATIC_ROUTES = ['', '/about', '/history', '/team', '/ministries', '/news', '/events', '/contact'] as const
+// NOTE: /privacy is intentionally excluded while it is a `noindex`
+// placeholder — add it here once it becomes a real page.
+const STATIC_ROUTES = ['', '/about', '/history', '/team', '/ministries', '/news', '/events', '/media', '/contact'] as const
 
 const SITEMAP_QUERY = defineQuery(`{
   "news": *[_type == "news" && defined(slug.current)]{ "slug": slug.current, _updatedAt },

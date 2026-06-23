@@ -37,6 +37,9 @@ export interface SiteSettings {
   services: { label: string; day: string; time: string; endTime: string }[]
   /** schema.org openingHoursSpecification entries (only services with both start & end). */
   openingHours: { dayOfWeek: string; opens: string; closes: string }[]
+  /** Live broadcast config for /media. `null` when no channel is configured.
+   *  Liveness is resolved at request time via lib/live-stream.ts. */
+  liveStream: { channelId: string; label: string } | null
   defaultDescription: string | null
   /** Flat list of social URLs for JSON-LD `sameAs` (empty ones dropped). */
   sameAs: string[]
@@ -114,6 +117,13 @@ export async function getSiteSettings(): Promise<SiteSettings> {
     social,
     services,
     openingHours,
+    // Surface the channel config when set; liveness is checked in lib/live-stream.ts.
+    liveStream: data?.liveStream?.channelId
+      ? {
+          channelId: data.liveStream.channelId,
+          label: data.liveStream.label ?? 'Пряма трансляція',
+        }
+      : null,
     defaultDescription: data?.defaultDescription ?? null,
     sameAs: social.map((s) => s.url).filter(Boolean),
   }

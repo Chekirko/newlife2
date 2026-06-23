@@ -20,6 +20,7 @@ export const siteSettingsType = defineType({
     { name: 'general', title: 'Загальне', default: true },
     { name: 'contacts', title: 'Контакти' },
     { name: 'schedule', title: 'Розклад' },
+    { name: 'live', title: 'Трансляція' },
     { name: 'social', title: 'Соцмережі' },
     { name: 'seo', title: 'SEO / OG' },
   ],
@@ -189,6 +190,30 @@ export const siteSettingsType = defineType({
             },
           },
         },
+      ],
+    }),
+
+    defineField({
+      name: 'liveStream',
+      title: 'Пряма трансляція',
+      type: 'object',
+      group: 'live',
+      description:
+        'Банер «Наживо» на /media зʼявляється автоматично, коли канал у прямому ефірі. Достатньо вказати ID каналу — посилання щоразу вставляти не треба.',
+      fields: [
+        defineField({
+          name: 'channelId',
+          title: 'ID YouTube-каналу',
+          type: 'string',
+          description:
+            'Наприклад: UCxxxxxxxxxxxxxxxxxxxxxx. Сайт сам перевіряє, чи канал у ефірі, і показує трансляцію. (Потрібен ключ YOUTUBE_API_KEY у налаштуваннях середовища.)',
+        }),
+        defineField({
+          name: 'label',
+          title: 'Підпис',
+          type: 'string',
+          description: 'Наприклад: Недільне богослужіння наживо',
+        }),
       ],
     }),
 
