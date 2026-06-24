@@ -1,4 +1,5 @@
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, defineArrayMember } from 'sanity'
+import { TagInput } from '../components/TagInput'
 
 // =========================================
 // MEDIA ITEM — одиниця медіатеки /media (трансляції, проповіді, пісні, різне).
@@ -14,6 +15,9 @@ const MEDIA_CATEGORIES = [
   { title: 'Пісня', value: 'пісня' },
   { title: 'Різне', value: 'різне' },
 ]
+
+// Підказки для тегів — менеджер може дописати будь-який власний (TagInput).
+const MEDIA_TAGS = ['молитва', 'сімʼя', 'віра', 'свідчення', 'надія', 'любов', 'служіння']
 
 export const mediaItemType = defineType({
   name: 'mediaItem',
@@ -65,6 +69,20 @@ export const mediaItemType = defineType({
       title: 'Писання',
       type: 'string',
       description: 'Необовʼязково — наприклад: Івана 3:16',
+    }),
+    defineField({
+      name: 'tags',
+      title: 'Теги',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'string',
+          options: { list: MEDIA_TAGS },
+          components: { input: TagInput },
+        }),
+      ],
+      options: { layout: 'tags' },
+      description: 'Теми для пошуку й фільтрування. Оберіть зі списку або впишіть свій.',
     }),
     defineField({
       name: 'description',

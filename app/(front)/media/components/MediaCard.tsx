@@ -16,6 +16,7 @@ export interface MediaCardItem {
   speaker: string | null
   scripture: string | null
   description: string | null
+  tags: string[] | null
 }
 
 interface MediaCardProps {
@@ -67,6 +68,18 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
           {item.title}
         </h3>
         <p className="line-clamp-2 h-11 text-sm text-gray-600">{item.description}</p>
+        {item.tags && item.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {item.tags.slice(0, 3).map((tag) => (
+              <span
+                key={tag}
+                className="rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
     </button>
   )

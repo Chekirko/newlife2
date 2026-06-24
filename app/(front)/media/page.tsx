@@ -4,14 +4,17 @@ import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
-import { SITE_URL } from '@/lib/site'
-import { formatDate, jsonLdHtml } from '@/lib/utils'
+import { jsonLdHtml } from '@/lib/utils'
 import { getYouTubeId, getYouTubeThumbnail, getYouTubeEmbedUrl } from '@/lib/youtube'
-import { MEDIA_ALL_QUERY } from './queries'
-import type { MEDIA_ALL_QUERYResult } from '@/sanity/lib/sanity.types'
+import { toMediaCard, toMatchQuery, type RawMediaItem } from '@/lib/media'
+import {
+  MEDIA_SEARCH_QUERY,
+  MEDIA_COUNT_QUERY,
+  MEDIA_SPEAKERS_QUERY,
+  MEDIA_PER_PAGE,
+} from './queries'
 import { getLiveVideoId } from '@/lib/live-stream'
 import { MediaGallery } from './components/MediaGallery'
-import type { MediaCardItem } from './components/MediaCard'
 import { LiveBanner } from './components/LiveBanner'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
@@ -23,9 +26,24 @@ export const metadata: Metadata = {
   alternates: { canonical: '/media' },
 }
 
-export default async function MediaPage() {
-  const [itemsRaw, heroes, settings] = await Promise.all([
-    client.fetch<MEDIA_ALL_QUERYResult>(MEDIA_ALL_QUERY),
+export default async function MediaPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ category?: string; speaker?: string; q?: string }>
+}) {
+  const { category = '', speaker = '', q = '' } = await searchParams
+  const params = {
+    category,
+    speaker,
+    q: toMatchQuery(q),
+    start: 0,
+    end: MEDIA_PER_PAGE,
+  }
+
+  const [itemsRaw, total, speakers, heroes, settings] = await Promise.all([
+    client.fetch<RawMediaItem[]>(MEDIA_SEARCH_QUERY, params),
+    client.fetch<number>(MEDIA_COUNT_QUERY, { category, speaker, q: params.q }),
+    client.fetch<string[]>(MEDIA_SPEAKERS_QUERY),
     getPageHeroes(),
     getSiteSettings(),
   ])
@@ -35,34 +53,16 @@ export default async function MediaPage() {
     ? await getLiveVideoId(settings.liveStream.channelId)
     : null
 
-  // Transform for the client grid: resolve YouTube id + cover thumbnail.
-  const cards: MediaCardItem[] = itemsRaw.map((m) => {
-    const youtubeId = getYouTubeId(m.youtubeUrl)
-    const thumbnailUrl = m.image
-      ? urlFor(m.image).width(800).height(450).url()
-      : youtubeId
-        ? getYouTubeThumbnail(youtubeId)
-        : '/images/placeholder.jpg'
-    return {
-      _id: m._id,
-      title: m.title ?? 'Без назви',
-      category: m.category ?? 'різне',
-      youtubeId,
-      thumbnailUrl,
-      date: m.date ? formatDate(m.date) : '',
-      speaker: m.speaker ?? null,
-      scripture: m.scripture ?? null,
-      description: m.description ?? null,
-    }
-  })
+  const cards = itemsRaw.map(toMediaCard)
 
-  // ItemList of VideoObject JSON-LD (schema-markup skill) — only playable items.
+  // ItemList of VideoObject JSON-LD (schema-markup skill) — only the first batch
+  // of playable items; the full archive can run to thousands.
   const itemListJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     itemListElement: itemsRaw
       .map((m) => ({ m, id: getYouTubeId(m.youtubeUrl) }))
-      .filter((x): x is { m: (typeof itemsRaw)[number]; id: string } => Boolean(x.id))
+      .filter((x): x is { m: RawMediaItem; id: string } => Boolean(x.id))
       .map(({ m, id }, idx) => ({
         '@type': 'ListItem',
         position: idx + 1,
@@ -101,7 +101,14 @@ export default async function MediaPage() {
 
       <section className="py-12 lg:py-16">
         <div className="container-larexa">
-          <MediaGallery items={cards} />
+          <MediaGallery
+            initialCards={cards}
+            total={total}
+            speakers={speakers}
+            category={category}
+            speaker={speaker}
+            q={q}
+          />
         </div>
       </section>
     </>

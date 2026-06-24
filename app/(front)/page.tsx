@@ -12,11 +12,14 @@ import { PastorGreeting } from './components/PastorGreeting'
 import { OurVision } from './components/OurVision'
 import { Ministries } from './components/Ministries'
 import { EventsSlider } from './components/EventsSlider'
+import { LatestSermon } from './components/LatestSermon'
 import { client } from '@/sanity/lib/client'
 import { NEWS_QUERY } from '@/sanity/lib/queries'
 import { EVENTS_QUERY, SENIOR_PASTOR_QUERY } from './queries'
+import { LATEST_SERMON_QUERY } from './media/queries'
 import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
 import type { SENIOR_PASTOR_QUERYResult } from '@/sanity/lib/sanity.types'
+import { toMediaCard, type RawMediaItem } from '@/lib/media'
 import { urlFor } from '@/sanity/lib/image'
 import { SITE_URL } from '@/lib/site'
 import { getSiteSettings } from '@/lib/site-settings'
@@ -44,13 +47,16 @@ export default async function HomePage() {
     now: _now.toISOString(),
     today: new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).toISOString(),
   }
-  const [newsRaw, eventsRaw, settings, homepage, pastor] = await Promise.all([
+  const [newsRaw, eventsRaw, settings, homepage, pastor, sermonRaw] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
     client.fetch<SanityEvent[]>(EVENTS_QUERY, eventParams),
     getSiteSettings(),
     getHomepage(),
     client.fetch<SENIOR_PASTOR_QUERYResult>(SENIOR_PASTOR_QUERY),
+    client.fetch<RawMediaItem | null>(LATEST_SERMON_QUERY),
   ])
+
+  const latestSermon = sermonRaw ? toMediaCard(sermonRaw) : null
 
   // Transform Sanity data for components
   const newsData = newsRaw.map((n) => ({
@@ -165,6 +171,9 @@ export default async function HomePage() {
           className="bg-gray-100"
         />
       )}
+
+      {/* LATEST SERMON - остання проповідь з медіатеки (B2 Етап 3) */}
+      {latestSermon && <LatestSermon sermon={latestSermon} />}
 
       {/* OUR VISION - Before Pastor Greeting */}
       <OurVision
