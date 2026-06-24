@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { getYouTubeThumbnail } from '@/lib/youtube'
 import { Lightbox } from '../media/components/Lightbox'
 import type { MediaCardItem } from '../media/components/MediaCard'
 
@@ -18,6 +19,7 @@ interface LatestSermonProps {
 
 export function LatestSermon({ sermon }: LatestSermonProps) {
   const [open, setOpen] = useState(false)
+  const [src, setSrc] = useState(sermon.thumbnailUrl)
 
   return (
     <section className="py-16 lg:py-20">
@@ -39,11 +41,17 @@ export function LatestSermon({ sermon }: LatestSermonProps) {
             className="group relative aspect-video w-full overflow-hidden bg-gray-100 disabled:cursor-default"
           >
             <Image
-              src={sermon.thumbnailUrl}
+              src={src}
               alt={sermon.title}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
+              quality={90}
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+              onError={() => {
+                if (sermon.youtubeId && src.includes('maxresdefault')) {
+                  setSrc(getYouTubeThumbnail(sermon.youtubeId, 'sd'))
+                }
+              }}
             />
             {sermon.youtubeId && (
               <span className="absolute inset-0 flex items-center justify-center bg-black/15 transition-colors group-hover:bg-black/30">

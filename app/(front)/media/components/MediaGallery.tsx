@@ -1,20 +1,19 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useEffect, useState, useTransition } from 'react'
 import { clsx } from 'clsx'
-import { motion, useReducedMotion } from 'motion/react'
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { MediaCard, type MediaCardItem } from './MediaCard'
 import { Lightbox } from './Lightbox'
-import { loadMoreMedia } from '../actions'
+import { loadMoreMedia, searchMedia } from '../actions'
 
 // =========================================
-// MediaGallery — server-driven media library. Category tabs, the sermon-only
-// speaker dropdown and the text search all live in the URL (?category/&speaker/&q),
-// so filtering and search run SERVER-side (GROQ) and scale to thousands of items.
-// The first batch is rendered on the server; "Завантажити ще" appends the next
-// batch via the loadMoreMedia server action without a navigation. Clicking a card
-// opens the YouTube player in the Lightbox.
+// MediaGallery — media library with SERVER-side search/filter that updates only
+// the grid (no full-page navigation). Tab / speaker / search changes call the
+// searchMedia server action inside a transition and cross-fade the grid; the URL
+// is synced shallowly (history.replaceState) so links stay shareable. The first
+// batch comes pre-rendered from the server (direct links / SEO). "Завантажити ще"
+// appends the next batch via loadMoreMedia. Clicking a card opens the Lightbox.
 // =========================================
 
 const TABS = [
@@ -22,6 +21,9 @@ const TABS = [
   { value: 'трансляція', label: 'Трансляції' },
   { value: 'проповідь', label: 'Проповіді' },
   { value: 'пісня', label: 'Пісні' },
+  { value: 'свідчення', label: 'Свідчення' },
+  { value: 'вірші', label: 'Вірші' },
+  { value: 'програми', label: 'Програми' },
   { value: 'різне', label: 'Різне' },
 ] as const
 
@@ -36,57 +38,62 @@ interface MediaGalleryProps {
 
 export function MediaGallery({
   initialCards,
-  total,
+  total: initialTotal,
   speakers,
-  category,
-  speaker,
-  q,
+  category: initialCategory,
+  speaker: initialSpeaker,
+  q: initialQ,
 }: MediaGalleryProps) {
-  const router = useRouter()
   const reduceMotion = useReducedMotion()
+  const [isPending, startTransition] = useTransition()
 
-  // Accumulated list. Re-syncs to the server's first batch whenever the filter
-  // changes (a new initialCards array arrives from the re-rendered page).
+  // Committed filter state (drives the server action + the shallow URL).
+  const [category, setCategory] = useState(initialCategory)
+  const [speaker, setSpeaker] = useState(initialSpeaker)
+  const [q, setQ] = useState(initialQ)
+  const [search, setSearch] = useState(initialQ) // search-box value (debounced into q)
+
   const [cards, setCards] = useState(initialCards)
-  const [loading, setLoading] = useState(false)
+  const [total, setTotal] = useState(initialTotal)
   const [active, setActive] = useState<MediaCardItem | null>(null)
-  const [search, setSearch] = useState(q)
 
-  useEffect(() => {
-    setCards(initialCards)
-  }, [initialCards])
+  // Apply a new filter: update state, sync the URL shallowly, fetch the first page.
+  const applyFilter = (next: { category: string; speaker: string; q: string }) => {
+    setCategory(next.category)
+    setSpeaker(next.speaker)
+    setQ(next.q)
+    window.history.replaceState(null, '', buildUrl(next))
+    startTransition(async () => {
+      const res = await searchMedia(next)
+      setCards(res.cards)
+      setTotal(res.total)
+    })
+  }
 
-  // Debounced search → URL. Server re-renders the first batch for the new query.
+  // Debounce the search box into a committed query.
   useEffect(() => {
     if (search === q) return
     const t = setTimeout(() => {
-      router.replace(buildUrl({ category, speaker, q: search }))
+      applyFilter({ category, speaker, q: search })
     }, 350)
     return () => clearTimeout(t)
   }, [search]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const onCategory = (value: string) => {
     // Speaker filter only applies to sermons — drop it when leaving that tab.
-    router.push(
-      buildUrl({ category: value, speaker: value === 'проповідь' ? speaker : '', q: search }),
-    )
+    applyFilter({ category: value, speaker: value === 'проповідь' ? speaker : '', q: search })
   }
+  const onSpeaker = (value: string) => applyFilter({ category, speaker: value, q: search })
 
-  const onSpeaker = (value: string) => {
-    router.push(buildUrl({ category, speaker: value, q: search }))
-  }
-
-  const loadMore = async () => {
-    setLoading(true)
-    try {
+  const loadMore = () => {
+    startTransition(async () => {
       const more = await loadMoreMedia({ category, speaker, q, start: cards.length })
       setCards((prev) => [...prev, ...more])
-    } finally {
-      setLoading(false)
-    }
+    })
   }
 
   const hasMore = cards.length < total
+  const filterKey = `${category}|${speaker}|${q}`
 
   return (
     <>
@@ -163,28 +170,42 @@ export function MediaGallery({
         {total > 0 ? `Показано ${cards.length} з ${total}` : ''}
       </p>
 
-      {/* Grid */}
-      <div className="mt-4">
-        {cards.length > 0 ? (
-          <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {cards.map((item) => (
-              <motion.div
-                key={item._id}
-                initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, ease: 'easeOut' }}
-              >
-                <MediaCard item={item} onPlay={setActive} />
-              </motion.div>
-            ))}
-          </div>
-        ) : (
-          <div className="py-20 text-center">
-            <i className="far fa-play-circle mb-4 block text-5xl text-gray-300" />
-            <h3 className="mb-2 text-xl font-semibold text-gray-700">Нічого не знайдено</h3>
-            <p className="text-gray-500">Спробуйте інший запит або категорію.</p>
-          </div>
-        )}
+      {/* Grid — cross-fades on filter change; dims while a filter is pending */}
+      <div className={clsx('mt-4 transition-opacity', isPending && 'opacity-60')}>
+        <AnimatePresence mode="wait" initial={false}>
+          {cards.length > 0 ? (
+            <motion.div
+              key={filterKey}
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={reduceMotion ? undefined : { opacity: 0 }}
+              transition={{ duration: 0.2, ease: 'easeOut' }}
+              className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3"
+            >
+              {cards.map((item) => (
+                <motion.div
+                  key={item._id}
+                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                >
+                  <MediaCard item={item} onPlay={setActive} />
+                </motion.div>
+              ))}
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty"
+              initial={reduceMotion ? false : { opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="py-20 text-center"
+            >
+              <i className="far fa-play-circle mb-4 block text-5xl text-gray-300" />
+              <h3 className="mb-2 text-xl font-semibold text-gray-700">Нічого не знайдено</h3>
+              <p className="text-gray-500">Спробуйте інший запит або категорію.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {/* Load more */}
@@ -193,10 +214,10 @@ export function MediaGallery({
           <button
             type="button"
             onClick={loadMore}
-            disabled={loading}
+            disabled={isPending}
             className="bg-grad inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
           >
-            {loading ? (
+            {isPending ? (
               <>
                 <i className="fas fa-spinner fa-spin" /> Завантаження…
               </>

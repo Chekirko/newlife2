@@ -26,7 +26,14 @@ const navItems: NavItem[] = [
   { label: 'Служіння', href: '/ministries' },
   { label: 'Новини', href: '/news' },
   { label: 'Події', href: '/events' },
-  { label: 'Медіа', href: '/media' },
+  {
+    label: 'Медіа',
+    href: '#',
+    children: [
+      { label: 'Відео', href: '/media' },
+      { label: 'Фото', href: '/media/photos' }
+    ]
+  },
   { label: 'Контакти', href: '/contact' },
 ]
 
@@ -256,11 +263,22 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
   )
 }
 
+// A dropdown parent is "active" when the current route is one of its children
+// (e.g. «Медіа» highlights on /media and /media/photos; «Про нас» on /about etc.).
+function isParentActive(item: NavItem, pathname: string): boolean {
+  return Boolean(
+    item.children?.some(
+      (c) => pathname === c.href || (c.href !== '/' && pathname.startsWith(c.href)),
+    ),
+  )
+}
+
 // Desktop Dropdown Menu — keyboard-accessible disclosure (opens on hover + click,
 // closes on Escape or when focus/pointer leaves the group)
 function DropdownMenu({ item, pathname }: { item: NavItem; pathname: string }) {
   const [open, setOpen] = useState(false)
   const menuId = `dropdown-${item.label.replace(/\s+/g, '-')}`
+  const isActive = isParentActive(item, pathname)
 
   return (
     <div
@@ -280,7 +298,10 @@ function DropdownMenu({ item, pathname }: { item: NavItem; pathname: string }) {
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((v) => !v)}
-        className="nav-link px-4 py-2 flex items-center gap-1 font-medium text-[15px] text-gray-700 hover:text-primary transition-colors"
+        className={clsx(
+          'nav-link px-4 py-2 flex items-center gap-1 font-medium text-[15px] transition-colors hover:text-primary',
+          isActive ? 'text-primary' : 'text-gray-700',
+        )}
       >
         {item.label}
         <svg
@@ -332,12 +353,17 @@ function MobileDropdown({
 }) {
   const [isOpen, setIsOpen] = useState(false)
 
+  const isActive = isParentActive(item, pathname)
+
   return (
     <div>
       <button
         type="button"
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between py-2 px-4 text-gray-700 hover:text-primary hover:bg-gray-50 rounded"
+        className={clsx(
+          'w-full flex items-center justify-between py-2 px-4 rounded hover:text-primary hover:bg-gray-50',
+          isActive ? 'text-primary' : 'text-gray-700',
+        )}
         onClick={() => setIsOpen(!isOpen)}
       >
         {item.label}

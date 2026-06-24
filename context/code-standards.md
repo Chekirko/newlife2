@@ -27,7 +27,7 @@
 - Use `generateMetadata()` for dynamic SEO
 - Configure all dynamic, CMS-connected pages with `export const revalidate = 60` to enforce Incremental Static Regeneration (ISR)
 - Client-triggered incremental loads ("Завантажити ще") use a **Server Action** (`'use server'`), co-located as `app/(front)/[page]/actions.ts`, that returns already-transformed data for the client to append — no API route, no client-side Sanity client
-- Велику колекцію (тисячі+) фільтруй/шукай/пагінуй на СЕРВЕРІ через `searchParams` + GROQ (`match` + slice `[$start...$end]`), а не на клієнті in-memory. Такі сторінки стають dynamic (`ƒ`) — це свідомий виняток з ISR (див. `architecture.md` → Caching, інваріант 12)
+- Велику колекцію (тисячі+) фільтруй/шукай/пагінуй на СЕРВЕРІ через GROQ (`match` + slice `[$start...$end]`), а не на клієнті in-memory. **Початковий рендер** читає `searchParams` (прямий лінк/SEO → сторінка dynamic `ƒ`); **інтерактивна зміна фільтра** — клієнтський виклик Server Action (НЕ навігація), що оновлює лише результати, + плавна анімація; URL синхронізуй шалов через `history.replaceState`, не `router.push` (див. `architecture.md` → інваріант 12)
 - Трансформ raw→view-model, спільний для сторінки та Server Action, виноситься в `lib/` (одне джерело правди)
 
 ## Styling

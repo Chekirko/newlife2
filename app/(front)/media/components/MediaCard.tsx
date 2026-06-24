@@ -1,9 +1,15 @@
+'use client'
+
+import { useState } from 'react'
 import Image from 'next/image'
+import { getYouTubeThumbnail } from '@/lib/youtube'
 
 // =========================================
 // MediaCard — one media item in the /media grid. The whole card is a button
 // that opens the lightbox player. Cover image falls back to the YouTube
 // thumbnail (resolved server-side). Speaker / scripture show for sermons.
+// The high-res YouTube cover (maxresdefault) can 404 → onError falls back to
+// mqdefault (both true 16:9), so quality is best-effort without broken images.
 // =========================================
 
 export interface MediaCardItem {
@@ -25,6 +31,7 @@ interface MediaCardProps {
 }
 
 export function MediaCard({ item, onPlay }: MediaCardProps) {
+  const [src, setSrc] = useState(item.thumbnailUrl)
   return (
     <button
       type="button"
@@ -34,11 +41,19 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
       {/* Cover with play overlay */}
       <div className="relative aspect-video w-full overflow-hidden bg-gray-100">
         <Image
-          src={item.thumbnailUrl}
+          src={src}
           alt={item.title}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+          quality={90}
           className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
+          onError={() => {
+            // maxresdefault missing → fall back to sddefault (640px, always exists;
+            // object-cover crops its 4:3 letterbox bars to a clean, still-sharp 16:9).
+            if (item.youtubeId && src.includes('maxresdefault')) {
+              setSrc(getYouTubeThumbnail(item.youtubeId, 'sd'))
+            }
+          }}
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black/15 transition-colors group-hover:bg-black/30">
           <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-primary shadow-md transition-transform group-hover:scale-110">

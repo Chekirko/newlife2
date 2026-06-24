@@ -8,7 +8,8 @@ const quickLinks = [
   { label: 'Служіння', href: '/ministries' },
   { label: 'Новини', href: '/news' },
   { label: 'Контакти', href: '/contact' },
-  { label: 'Медіа', href: '/media' },
+  { label: 'Відео', href: '/media' },
+  { label: 'Фото', href: '/media/photos' },
 ]
 
 // Top ministries for the footer column — dynamic so links never 404.

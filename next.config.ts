@@ -32,6 +32,9 @@ const securityHeaders = [
 
 const nextConfig: NextConfig = {
   images: {
+    // Next 16 only allows quality values listed here (default [75]); 90 is used
+    // for the sharper YouTube card thumbnails.
+    qualities: [75, 90],
     remotePatterns: [
       {
         protocol: "https",

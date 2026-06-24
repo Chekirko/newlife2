@@ -1,5 +1,6 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
 import { TagInput } from '../components/TagInput'
+import { SpeakerInput } from '../components/SpeakerInput'
 
 // =========================================
 // MEDIA ITEM — одиниця медіатеки /media (трансляції, проповіді, пісні, різне).
@@ -13,6 +14,9 @@ const MEDIA_CATEGORIES = [
   { title: 'Трансляція', value: 'трансляція' },
   { title: 'Проповідь', value: 'проповідь' },
   { title: 'Пісня', value: 'пісня' },
+  { title: 'Свідчення', value: 'свідчення' },
+  { title: 'Вірші', value: 'вірші' },
+  { title: 'Програми', value: 'програми' },
   { title: 'Різне', value: 'різне' },
 ]
 
@@ -53,16 +57,18 @@ export const mediaItemType = defineType({
     defineField({
       name: 'date',
       title: 'Дата',
-      type: 'datetime',
+      type: 'date',
+      options: { dateFormat: 'DD.MM.YYYY' },
       description: 'Коли відбулося/опубліковано. Використовується для сортування.',
-      initialValue: () => new Date().toISOString(),
+      initialValue: () => new Date().toISOString().slice(0, 10),
       validation: (rule) => rule.required().error('Дата обовʼязкова'),
     }),
     defineField({
       name: 'speaker',
       title: 'Проповідник / спікер',
       type: 'string',
-      description: 'Імʼя проповідника (вводиться вручну; переважно для проповідей)',
+      components: { input: SpeakerInput },
+      description: 'Оберіть зі списку раніше доданих або впишіть нового (переважно для проповідей)',
     }),
     defineField({
       name: 'scripture',

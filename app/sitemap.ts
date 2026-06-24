@@ -9,7 +9,7 @@ export const revalidate = 60
 // Static routes that hold real, indexable content.
 // NOTE: /privacy is intentionally excluded while it is a `noindex`
 // placeholder — add it here once it becomes a real page.
-const STATIC_ROUTES = ['', '/about', '/history', '/team', '/ministries', '/news', '/events', '/media', '/contact'] as const
+const STATIC_ROUTES = ['', '/about', '/history', '/team', '/ministries', '/news', '/events', '/media', '/media/photos', '/contact'] as const
 
 const SITEMAP_QUERY = defineQuery(`{
   "news": *[_type == "news" && defined(slug.current)]{ "slug": slug.current, _updatedAt },

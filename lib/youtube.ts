@@ -25,10 +25,16 @@ export function getYouTubeId(url: string | null | undefined): string | null {
   return null
 }
 
-/** YouTube-hosted thumbnail for a video id. `mqdefault` is a true 16:9 frame
- *  (no letterbox bars), so cards stay visually uniform; always available. */
-export function getYouTubeThumbnail(id: string): string {
-  return `https://img.youtube.com/vi/${id}/mqdefault.jpg`
+/** YouTube-hosted thumbnail for a video id.
+ *  - `max` → maxresdefault (1280×720, true 16:9) — sharpest, but may 404.
+ *  - `sd`  → sddefault (640×480) — always exists; a 4:3 frame whose letterbox
+ *            bars get cropped away by `object-cover` in a 16:9 box, so it stays
+ *            sharp. Use as the maxres fallback (much crisper than mqdefault).
+ *  - `mq`  → mqdefault (320×180, true 16:9) — always exists, low-res. */
+export function getYouTubeThumbnail(id: string, quality: 'mq' | 'sd' | 'max' = 'mq'): string {
+  const file =
+    quality === 'max' ? 'maxresdefault' : quality === 'sd' ? 'sddefault' : 'mqdefault'
+  return `https://img.youtube.com/vi/${id}/${file}.jpg`
 }
 
 /** Privacy-friendly embed URL (youtube-nocookie). Pass autoplay for the lightbox. */

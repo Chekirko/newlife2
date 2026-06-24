@@ -3,7 +3,7 @@
 import { client } from '@/sanity/lib/client'
 import { toMediaCard, toMatchQuery, type RawMediaItem } from '@/lib/media'
 import type { MediaCardItem } from './components/MediaCard'
-import { MEDIA_SEARCH_QUERY, MEDIA_PER_PAGE } from './queries'
+import { MEDIA_SEARCH_QUERY, MEDIA_COUNT_QUERY, MEDIA_PER_PAGE } from './queries'
 
 // =========================================
 // loadMoreMedia — "Load More" server action. Fetches the next batch for the
@@ -33,4 +33,29 @@ export async function loadMoreMedia({
     end: start + MEDIA_PER_PAGE,
   })
   return raw.map(toMediaCard)
+}
+
+// searchMedia — first page + total for a filter change (tab / speaker / search),
+// fetched client-side so only the grid updates (no full-page navigation).
+export interface SearchParams {
+  category: string
+  speaker: string
+  q: string
+}
+
+export async function searchMedia({
+  category,
+  speaker,
+  q,
+}: SearchParams): Promise<{ cards: MediaCardItem[]; total: number }> {
+  const params = {
+    category: category || '',
+    speaker: speaker || '',
+    q: toMatchQuery(q),
+  }
+  const [raw, total] = await Promise.all([
+    client.fetch<RawMediaItem[]>(MEDIA_SEARCH_QUERY, { ...params, start: 0, end: MEDIA_PER_PAGE }),
+    client.fetch<number>(MEDIA_COUNT_QUERY, params),
+  ])
+  return { cards: raw.map(toMediaCard), total }
 }
