@@ -2,7 +2,6 @@
 
 import { useEffect, useState, useTransition } from 'react'
 import { clsx } from 'clsx'
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react'
 import { MediaCard, type MediaCardItem } from './MediaCard'
 import { Lightbox } from './Lightbox'
 import { loadMoreMedia, searchMedia } from '../actions'
@@ -10,7 +9,8 @@ import { loadMoreMedia, searchMedia } from '../actions'
 // =========================================
 // MediaGallery — media library with SERVER-side search/filter that updates only
 // the grid (no full-page navigation). Tab / speaker / search changes call the
-// searchMedia server action inside a transition and cross-fade the grid; the URL
+// searchMedia server action inside a transition; the grid dims while loading and
+// the result set swaps in place (no remount, so no flicker/stale frame). The URL
 // is synced shallowly (history.replaceState) so links stay shareable. The first
 // batch comes pre-rendered from the server (direct links / SEO). "Завантажити ще"
 // appends the next batch via loadMoreMedia. Clicking a card opens the Lightbox.
@@ -44,7 +44,6 @@ export function MediaGallery({
   speaker: initialSpeaker,
   q: initialQ,
 }: MediaGalleryProps) {
-  const reduceMotion = useReducedMotion()
   const [isPending, startTransition] = useTransition()
 
   // Committed filter state (drives the server action + the shallow URL).
@@ -93,7 +92,6 @@ export function MediaGallery({
   }
 
   const hasMore = cards.length < total
-  const filterKey = `${category}|${speaker}|${q}`
 
   return (
     <>
@@ -170,42 +168,28 @@ export function MediaGallery({
         {total > 0 ? `Показано ${cards.length} з ${total}` : ''}
       </p>
 
-      {/* Grid — cross-fades on filter change; dims while a filter is pending */}
-      <div className={clsx('mt-4 transition-opacity', isPending && 'opacity-60')}>
-        <AnimatePresence mode="wait" initial={false}>
-          {cards.length > 0 ? (
-            <motion.div
-              key={filterKey}
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={reduceMotion ? undefined : { opacity: 0 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3"
-            >
-              {cards.map((item) => (
-                <motion.div
-                  key={item._id}
-                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, ease: 'easeOut' }}
-                >
-                  <MediaCard item={item} onPlay={setActive} />
-                </motion.div>
-              ))}
-            </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={reduceMotion ? false : { opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="py-20 text-center"
-            >
-              <i className="far fa-play-circle mb-4 block text-5xl text-gray-300" />
-              <h3 className="mb-2 text-xl font-semibold text-gray-700">Нічого не знайдено</h3>
-              <p className="text-gray-500">Спробуйте інший запит або категорію.</p>
-            </motion.div>
-          )}
-        </AnimatePresence>
+      {/* Grid — dims (opacity) while a new filter is loading, then the result set
+          swaps in place and brightens. No remount/exit animation, so cards never
+          flicker or briefly show the previous (stale) set. */}
+      <div
+        className={clsx(
+          'mt-4 transition-opacity duration-200 motion-reduce:transition-none',
+          isPending && 'pointer-events-none opacity-50',
+        )}
+      >
+        {cards.length > 0 ? (
+          <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {cards.map((item) => (
+              <MediaCard key={item._id} item={item} onPlay={setActive} />
+            ))}
+          </div>
+        ) : (
+          <div className="py-20 text-center">
+            <i className="far fa-play-circle mb-4 block text-5xl text-gray-300" />
+            <h3 className="mb-2 text-xl font-semibold text-gray-700">Нічого не знайдено</h3>
+            <p className="text-gray-500">Спробуйте інший запит або категорію.</p>
+          </div>
+        )}
       </div>
 
       {/* Load more */}
