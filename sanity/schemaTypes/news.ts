@@ -1,8 +1,9 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
-import { TagInput } from '../components/TagInput'
+import { CategoryInput, MultiCategoryInput } from '../components/CategoryInput'
 import { richTextBlocks } from './objects/richText'
 
-// Suggested categories — editors can also type a brand-new one (TagInput allows free text).
+// Suggested categories — editors can also type a brand-new one (the category
+// inputs are searchable dropdowns that accept free text).
 const NEWS_CATEGORIES = ['Місія', 'Навчання', 'Служіння', 'Молодь', 'Культура', 'Волонтерство', 'Подія']
 
 export const newsType = defineType({
@@ -36,7 +37,7 @@ export const newsType = defineType({
       title: 'Основна категорія',
       type: 'string',
       options: { list: NEWS_CATEGORIES },
-      components: { input: TagInput },
+      components: { input: CategoryInput },
       description: 'Оберіть зі списку або почніть вводити власну',
     }),
     defineField({
@@ -47,9 +48,24 @@ export const newsType = defineType({
         defineArrayMember({
           type: 'string',
           options: { list: NEWS_CATEGORIES },
-          components: { input: TagInput },
         }),
       ],
+      components: { input: MultiCategoryInput },
+      description: 'Оберіть кілька зі списку або додайте власні',
+    }),
+    defineField({
+      name: 'ministries',
+      title: 'Служіння',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          weak: true,
+          to: [{ type: 'ministry' }],
+        }),
+      ],
+      description:
+        'Прив’яжіть новину до служінь — вона з’явиться в розділі новин на сторінках цих служінь',
     }),
     defineField({
       name: 'text',

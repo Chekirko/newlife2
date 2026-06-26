@@ -141,6 +141,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 **Найбільший ризик** інженерно — відсутність автотестів (D7); закрити паралельно з CI (C4).
 
 ## Прогрес по плану
+- 2026-06-26 (R6) — новини: категорії стали справжніми пошуковими дропдаунами (`CategoryInput` single + `MultiCategoryInput` chips, `@sanity/ui Autocomplete`, замість `TagInput`-datalist) із додаванням нового; нове поле `news.ministries` (weak-ref мультивибір) → сторінка служіння показує **лише** свої новини (`MINISTRY_NEWS_QUERY`); dev-only `disableTransition`-warning лишено (internal @sanity/ui). `typegen`+`tsc` ✓; curl: /ministries/* 200, /studio 200.
 - 2026-06-25 (R5) — бенто-варіація (великий тайл чергує ліво/право); миттєва навігація лайтбокса фото (індекс усередині + префетч сусідів); «Остання проповідь»→**«Актуальне слово»**, перенесено вниз + **ручний вибір у Studio** (`homepage.featuredSermon`, single weak-ref → дві одночасно неможливі); прибрано мертве поле `stats` з документа `homepage` (скрипт `cleanup-homepage-stats`). `build` ✓ 35 стор.
 - 2026-06-25 (R4) — хотфікс мерехтіння табів /media (прибрано key-remount/`AnimatePresence`; чистий CSS-dim). commit `685fb0a`.
 - 2026-06-25 (R3) — медіа-полірування: чіткіші прев'ю (maxres@q90 + sd-фолбек, `images.qualities`); таби без релоуду (клієнт Server Action `searchMedia` + анімація, шалов URL); підсвічування батьківського нав-пункту; `SpeakerInput` → `@sanity/ui Autocomplete` (дропдаун + вільний ввід). `build` ✓ 35 стор.

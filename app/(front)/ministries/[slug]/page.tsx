@@ -11,8 +11,8 @@ import {
   MINISTRY_BY_SLUG_QUERY,
   MINISTRY_SLUGS_QUERY,
   OTHER_MINISTRIES_QUERY,
+  MINISTRY_NEWS_QUERY,
 } from './queries'
-import { NEWS_QUERY } from '@/sanity/lib/queries'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
 import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/lib/types'
@@ -53,7 +53,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
   const [ministry, otherMinistries, newsRaw, heroes] = await Promise.all([
     client.fetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug }),
     client.fetch<SanityMinistryLink[]>(OTHER_MINISTRIES_QUERY, { slug }),
-    client.fetch<SanityNews[]>(NEWS_QUERY),
+    client.fetch<SanityNews[]>(MINISTRY_NEWS_QUERY, { slug }),
     getPageHeroes(),
   ])
 

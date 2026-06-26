@@ -39,3 +39,17 @@ export const OTHER_MINISTRIES_QUERY = defineQuery(`
     "slug": slug.current
   }
 `)
+
+/** News tagged with this ministry (by slug) — newest first. Params: $slug */
+export const MINISTRY_NEWS_QUERY = defineQuery(`
+  *[_type == "news" && $slug in ministries[]->slug.current] | order(publishedAt desc) {
+    _id,
+    title,
+    "slug": slug.current,
+    publishedAt,
+    mainCategory,
+    categories,
+    text,
+    image
+  }
+`)
