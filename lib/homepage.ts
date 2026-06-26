@@ -14,6 +14,7 @@ import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { HOMEPAGE_QUERY } from '@/sanity/lib/queries'
 import type { HOMEPAGE_QUERYResult } from '@/sanity/lib/sanity.types'
+import type { RawMediaItem } from '@/lib/media'
 import type { HeroSlide } from '@/components/sections/Hero'
 import type { TestimonialData } from '@/app/(front)/components/TestimonialsGrid'
 import type { FAQItem } from '@/app/(front)/components/FAQSplit'
@@ -35,6 +36,7 @@ export async function getHomepage(): Promise<{
   testimonials: TestimonialData[]
   faq: FAQItem[]
   whatYouFind: MinistryItem[]
+  featuredSermon: RawMediaItem | null
 }> {
   const data = await client.fetch<HOMEPAGE_QUERYResult>(
     HOMEPAGE_QUERY,
@@ -92,5 +94,7 @@ export async function getHomepage(): Promise<{
     testimonials: cmsTestimonials.length > 0 ? cmsTestimonials : TESTIMONIALS_FALLBACK,
     faq: cmsFaq.length > 0 ? cmsFaq : FAQ_FALLBACK,
     whatYouFind: cmsWhatYouFind.length > 0 ? cmsWhatYouFind : WHAT_YOU_FIND_FALLBACK,
+    // Manually-picked "Актуальне слово" (a weak ref → may be null if unset/deleted).
+    featuredSermon: (data?.featuredSermon as RawMediaItem | null) ?? null,
   }
 }

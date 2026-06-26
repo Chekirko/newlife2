@@ -12,7 +12,7 @@ import { PastorGreeting } from './components/PastorGreeting'
 import { OurVision } from './components/OurVision'
 import { Ministries } from './components/Ministries'
 import { EventsSlider } from './components/EventsSlider'
-import { LatestSermon } from './components/LatestSermon'
+import { FeaturedSermon } from './components/FeaturedSermon'
 import { client } from '@/sanity/lib/client'
 import { NEWS_QUERY } from '@/sanity/lib/queries'
 import { EVENTS_QUERY, SENIOR_PASTOR_QUERY } from './queries'
@@ -47,7 +47,7 @@ export default async function HomePage() {
     now: _now.toISOString(),
     today: new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).toISOString(),
   }
-  const [newsRaw, eventsRaw, settings, homepage, pastor, sermonRaw] = await Promise.all([
+  const [newsRaw, eventsRaw, settings, homepage, pastor, latestSermonRaw] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
     client.fetch<SanityEvent[]>(EVENTS_QUERY, eventParams),
     getSiteSettings(),
@@ -56,7 +56,10 @@ export default async function HomePage() {
     client.fetch<RawMediaItem | null>(LATEST_SERMON_QUERY),
   ])
 
-  const latestSermon = sermonRaw ? toMediaCard(sermonRaw) : null
+  // "Актуальне слово": the manually-picked sermon (homepage.featuredSermon) wins;
+  // otherwise fall back to the newest sermon. Null → section is hidden.
+  const sermonRaw = homepage.featuredSermon ?? latestSermonRaw
+  const featuredSermon = sermonRaw ? toMediaCard(sermonRaw) : null
 
   // Transform Sanity data for components
   const newsData = newsRaw.map((n) => ({
@@ -172,9 +175,6 @@ export default async function HomePage() {
         />
       )}
 
-      {/* LATEST SERMON - остання проповідь з медіатеки (B2 Етап 3) */}
-      {latestSermon && <LatestSermon sermon={latestSermon} />}
-
       {/* OUR VISION - Before Pastor Greeting */}
       <OurVision
         preTitle="Хто ми"
@@ -256,6 +256,9 @@ export default async function HomePage() {
         contactButtonHref="/contact"
         className="py-16 lg:py-24"
       />
+
+      {/* ACTUAL WORD - «Актуальне слово» (ручний вибір у Studio або найновіша) */}
+      {featuredSermon && <FeaturedSermon sermon={featuredSermon} />}
 
       {/* CONNECT CTA - ActionBoxFullWidth з Larexa (has subtitle and multiple buttons) */}
       <ActionBoxFullWidth

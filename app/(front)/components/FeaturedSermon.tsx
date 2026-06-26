@@ -8,16 +8,17 @@ import { Lightbox } from '../media/components/Lightbox'
 import type { MediaCardItem } from '../media/components/MediaCard'
 
 // =========================================
-// LatestSermon — homepage section showing the newest sermon (B2 Stage 3).
+// FeaturedSermon — homepage "Актуальне слово" section. Shows the sermon manually
+// picked in Studio (homepage.featuredSermon), falling back to the newest sermon.
 // Reuses the media Lightbox player; clicking the cover opens the video inline.
 // Rendered only when a sermon exists (homepage null-guards before mounting).
 // =========================================
 
-interface LatestSermonProps {
+interface FeaturedSermonProps {
   sermon: MediaCardItem
 }
 
-export function LatestSermon({ sermon }: LatestSermonProps) {
+export function FeaturedSermon({ sermon }: FeaturedSermonProps) {
   const [open, setOpen] = useState(false)
   const [src, setSrc] = useState(sermon.thumbnailUrl)
 
@@ -28,7 +29,7 @@ export function LatestSermon({ sermon }: LatestSermonProps) {
           <span className="text-primary mb-2 block text-sm font-semibold uppercase tracking-wide">
             Слово Боже
           </span>
-          <h2 className="text-3xl font-bold text-gray-800 lg:text-4xl">Остання проповідь</h2>
+          <h2 className="text-3xl font-bold text-gray-800 lg:text-4xl">Актуальне слово</h2>
         </div>
 
         <div className="mx-auto grid max-w-5xl items-center gap-8 overflow-hidden rounded-3xl bg-white shadow-card ring-1 ring-gray-100 lg:grid-cols-2">

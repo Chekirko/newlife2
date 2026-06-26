@@ -68,6 +68,9 @@ export const PAGE_HEROES_QUERY = defineQuery(`
  */
 export const HOMEPAGE_QUERY = defineQuery(`
   *[_type == "homepage"][0]{
+    featuredSermon->{
+      _id, title, category, youtubeUrl, scripture, description, date, image, speaker, tags
+    },
     heroSlides[]{
       preTitle,
       title,

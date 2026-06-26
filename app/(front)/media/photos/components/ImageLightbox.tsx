@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import type { PhotoItem } from './PhotoGallery'
 
@@ -8,31 +8,34 @@ import type { PhotoItem } from './PhotoGallery'
 // ImageLightbox — accessible full-screen photo viewer. Esc / backdrop / close
 // button dismiss it; ← → (and on-screen arrows) move through the gallery; focus
 // is trapped and restored to the trigger on close; body scroll is locked.
-// Models the video Lightbox a11y pattern (app/(front)/media/components/Lightbox).
+//
+// The current index lives HERE (not in the parent grid), so navigating does not
+// re-render the gallery. The visible image is keyed by index (instant blur on
+// change) and the two neighbours are preloaded off-screen → arrows feel instant.
 // =========================================
 
 interface ImageLightboxProps {
   photos: PhotoItem[]
-  index: number
+  initialIndex: number
   onClose: () => void
-  onNavigate: (index: number) => void
 }
 
-export function ImageLightbox({ photos, index, onClose, onNavigate }: ImageLightboxProps) {
+export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
-  const photo = photos[index]
-  const hasPrev = index > 0
-  const hasNext = index < photos.length - 1
+  const [index, setIndex] = useState(initialIndex)
 
+  const count = photos.length
+  // Mount-only: listeners, scroll-lock, focus. Arrow keys use functional updates
+  // so the handler never depends on `index` → it is not re-bound on navigation.
   useEffect(() => {
     const trigger = document.activeElement as HTMLElement | null
     closeRef.current?.focus()
 
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') return onClose()
-      if (e.key === 'ArrowLeft' && index > 0) return onNavigate(index - 1)
-      if (e.key === 'ArrowRight' && index < photos.length - 1) return onNavigate(index + 1)
+      if (e.key === 'ArrowLeft') return setIndex((i) => (i > 0 ? i - 1 : i))
+      if (e.key === 'ArrowRight') return setIndex((i) => (i < count - 1 ? i + 1 : i))
       if (e.key === 'Tab' && dialogRef.current) {
         const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
           'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])',
@@ -59,9 +62,14 @@ export function ImageLightbox({ photos, index, onClose, onNavigate }: ImageLight
       document.body.style.overflow = prevOverflow
       trigger?.focus()
     }
-  }, [index, photos.length, onClose, onNavigate])
+  }, [onClose, count])
 
+  const photo = photos[index]
   if (!photo) return null
+
+  const hasPrev = index > 0
+  const hasNext = index < count - 1
+  const neighbours = [photos[index - 1], photos[index + 1]].filter(Boolean) as PhotoItem[]
 
   return (
     <div
@@ -83,7 +91,7 @@ export function ImageLightbox({ photos, index, onClose, onNavigate }: ImageLight
           type="button"
           onClick={(e) => {
             e.stopPropagation()
-            onNavigate(index - 1)
+            setIndex((i) => i - 1)
           }}
           aria-label="Попереднє фото"
           className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white transition-colors hover:bg-white/20"
@@ -96,7 +104,7 @@ export function ImageLightbox({ photos, index, onClose, onNavigate }: ImageLight
           type="button"
           onClick={(e) => {
             e.stopPropagation()
-            onNavigate(index + 1)
+            setIndex((i) => i + 1)
           }}
           aria-label="Наступне фото"
           className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white transition-colors hover:bg-white/20"
@@ -114,15 +122,32 @@ export function ImageLightbox({ photos, index, onClose, onNavigate }: ImageLight
         onClick={(e) => e.stopPropagation()}
       >
         <Image
+          key={index}
           src={photo.fullUrl}
           alt={photo.alt}
           width={photo.width}
           height={photo.height}
           sizes="90vw"
+          priority
           placeholder={photo.lqip ? 'blur' : 'empty'}
           blurDataURL={photo.lqip}
           className="h-auto max-h-[88vh] w-auto max-w-[92vw] rounded-lg object-contain"
         />
+      </div>
+
+      {/* Off-screen preload of the neighbouring photos so ◀ ▶ are instant. */}
+      <div aria-hidden className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
+        {neighbours.map((n) => (
+          <Image
+            key={n.id}
+            src={n.fullUrl}
+            alt=""
+            width={n.width}
+            height={n.height}
+            sizes="90vw"
+            loading="eager"
+          />
+        ))}
       </div>
     </div>
   )

@@ -20,11 +20,23 @@ export const homepageType = defineType({
   icon: () => '🏠',
   groups: [
     { name: 'hero', title: 'Hero-слайдер', default: true },
+    { name: 'featured', title: 'Актуальне слово' },
     { name: 'testimonials', title: 'Свідчення' },
     { name: 'faq', title: 'Часті запитання' },
     { name: 'whatYouFind', title: 'Що ви знайдете' },
   ],
   fields: [
+    defineField({
+      name: 'featuredSermon',
+      title: 'Актуальне слово (проповідь)',
+      type: 'reference',
+      group: 'featured',
+      weak: true,
+      to: [{ type: 'mediaItem' }],
+      options: { filter: 'category == "проповідь"' },
+      description:
+        'Оберіть проповідь для секції «Актуальне слово» на головній. Можна обрати лише одну. Якщо не обрано — показується найновіша.',
+    }),
     defineField({
       name: 'heroSlides',
       title: 'Слайди Hero',

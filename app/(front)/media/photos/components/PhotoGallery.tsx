@@ -62,7 +62,8 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             aria-label={`Відкрити: ${photo.alt}`}
             className={clsx(
               'group relative overflow-hidden rounded-2xl bg-gray-100 shadow-sm',
-              idx % 6 === 0 && 'lg:col-span-2 lg:row-span-2',
+              idx % 6 === 0 && 'lg:col-span-2 lg:row-span-2', // every 6th tile is large…
+              idx % 12 === 6 && 'lg:col-start-2', // …and every other large tile hugs the right
             )}
           >
             <Image
@@ -92,12 +93,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
       )}
 
       {active !== null && (
-        <ImageLightbox
-          photos={photos}
-          index={active}
-          onClose={() => setActive(null)}
-          onNavigate={setActive}
-        />
+        <ImageLightbox photos={photos} initialIndex={active} onClose={() => setActive(null)} />
       )}
     </>
   )
