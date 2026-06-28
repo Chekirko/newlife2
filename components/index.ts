@@ -20,6 +20,9 @@ export {
 // Section Components - NewsSlider (shared: homepage + ministry detail)
 export { NewsSlider } from './sections/NewsSlider'
 
+// Section Components - LiveBanner (shared: homepage + /media live banner)
+export { LiveBanner } from './sections/LiveBanner'
+
 // Section Components - PageHero (shared: history, ministry detail)
 export { PageHero, type PageHeroProps, type Breadcrumb } from './sections/PageHero'
 

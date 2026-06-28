@@ -3,6 +3,7 @@ import {
   HeroSlider,
   HeroGradientImage,
   NewsSlider,
+  LiveBanner,
 } from '@/components'
 import dynamic from 'next/dynamic'
 const TestimonialsGrid = dynamic(() => import('./components/TestimonialsGrid').then(m => m.TestimonialsGrid))
@@ -24,6 +25,7 @@ import { urlFor } from '@/sanity/lib/image'
 import { SITE_URL } from '@/lib/site'
 import { getSiteSettings } from '@/lib/site-settings'
 import { getHomepage } from '@/lib/homepage'
+import { getLiveVideoId } from '@/lib/live-stream'
 
 // ============================================
 // HOMEPAGE - Церква "Нове Життя"
@@ -60,6 +62,13 @@ export default async function HomePage() {
   // otherwise fall back to the newest sermon. Null → section is hidden.
   const sermonRaw = homepage.featuredSermon ?? latestSermonRaw
   const featuredSermon = sermonRaw ? toMediaCard(sermonRaw) : null
+
+  // Live banner: auto-detect whether the configured YouTube channel is live now
+  // (same cached check as /media → shared fetch, no extra quota). Null when no
+  // channel/key is configured, so nothing renders.
+  const liveVideoId = settings.liveStream
+    ? await getLiveVideoId(settings.liveStream.channelId)
+    : null
 
   // Transform Sanity data for components
   const newsData = newsRaw.map((n) => ({
@@ -163,6 +172,11 @@ export default async function HomePage() {
         showArrows={true}
         showDots={true}
       />
+
+      {/* LIVE BANNER — directly under the hero, only while the channel is live */}
+      {liveVideoId && settings.liveStream && (
+        <LiveBanner videoId={liveVideoId} label={settings.liveStream.label || 'Пряма трансляція'} />
+      )}
 
       {/* EVENTS - EventsSlider (під Hero) */}
       {eventsData.length > 0 && (

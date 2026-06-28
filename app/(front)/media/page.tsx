@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { PageHero } from '@/components'
+import { LiveBanner, PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
@@ -15,7 +15,6 @@ import {
 } from './queries'
 import { getLiveVideoId } from '@/lib/live-stream'
 import { MediaGallery } from './components/MediaGallery'
-import { LiveBanner } from './components/LiveBanner'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
@@ -96,7 +95,7 @@ export default async function MediaPage({
       />
 
       {liveVideoId && settings.liveStream && (
-        <LiveBanner videoId={liveVideoId} label={settings.liveStream.label} />
+        <LiveBanner videoId={liveVideoId} label={settings.liveStream.label || 'Пряма трансляція'} />
       )}
 
       <section className="py-12 lg:py-16">
