@@ -2,8 +2,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
-import { ImagePlaceholder, NewsSlider, PageHero, PortableTextBody } from '@/components'
+import { ImagePlaceholder, NewsSlider, PageHero, PortableTextBody, type PhotoItem } from '@/components'
 import { PhotoGalleryGrid } from './components/PhotoGalleryGrid'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
@@ -71,10 +72,16 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
     image: n.image ? urlFor(n.image).width(600).height(400).url() : '/images/placeholder.jpg',
   }))
 
-  // Transform gallery images
-  const galleryImages = ministry.gallery
-    ? ministry.gallery.map((img) => urlFor(img).width(800).height(600).url())
-    : []
+  // Transform gallery images into lightbox-ready photos (thumb + full + lqip)
+  const galleryPhotos: PhotoItem[] = (ministry.gallery ?? []).map((img, i) => ({
+    id: img._key ?? `${ministry.slug}-${i}`,
+    thumbUrl: urlFor(img as SanityImageSource).width(800).height(600).url(),
+    fullUrl: urlFor(img as SanityImageSource).width(1600).url(),
+    lqip: img.lqip ?? undefined,
+    alt: `Фото — ${ministry.title}`,
+    width: img.dimensions?.width ?? 1600,
+    height: img.dimensions?.height ?? 1067,
+  }))
 
   return (
     <>
@@ -215,9 +222,9 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               )}
 
               {/* Photo Gallery */}
-              {galleryImages.length > 0 && (
+              {galleryPhotos.length > 0 && (
                 <PhotoGalleryGrid
-                  images={galleryImages}
+                  photos={galleryPhotos}
                   title="Фотогалерея"
                   className="mt-10"
                 />

@@ -2,17 +2,27 @@
 
 import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
-import type { PhotoItem } from './PhotoGallery'
 
 // =========================================
-// ImageLightbox — accessible full-screen photo viewer. Esc / backdrop / close
-// button dismiss it; ← → (and on-screen arrows) move through the gallery; focus
-// is trapped and restored to the trigger on close; body scroll is locked.
+// ImageLightbox — accessible full-screen photo viewer (shared: /media/photos
+// bento + ministry detail gallery). Esc / backdrop / close button dismiss it;
+// ← → (and on-screen arrows) move through the gallery; focus is trapped and
+// restored to the trigger on close; body scroll is locked.
 //
 // The current index lives HERE (not in the parent grid), so navigating does not
 // re-render the gallery. The visible image is keyed by index (instant blur on
 // change) and the two neighbours are preloaded off-screen → arrows feel instant.
 // =========================================
+
+export interface PhotoItem {
+  id: string
+  thumbUrl: string
+  fullUrl: string
+  lqip?: string
+  alt: string
+  width: number
+  height: number
+}
 
 interface ImageLightboxProps {
   photos: PhotoItem[]
@@ -152,3 +162,5 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
     </div>
   )
 }
+
+export default ImageLightbox

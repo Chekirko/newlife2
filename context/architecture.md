@@ -5,7 +5,7 @@
 | Layer       | Technology                      | Role                                      |
 | ----------- | ------------------------------- | ----------------------------------------- |
 | Framework   | Next.js 16 (App Router) + TS    | SSG/SSR, routing, React Server Components |
-| CMS         | Sanity v3                       | Контент, медіа, вбудоване Studio          |
+| CMS         | Sanity v4                       | Контент, медіа, вбудоване Studio (+ `sanity-plugin-media` — бібліотека ассетів) |
 | CMS Client  | next-sanity + @sanity/image-url | GROQ-запити, генерація URL зображень      |
 | Styling     | Tailwind CSS v4 + globals.css   | Utility-first + кастомна дизайн-система   |
 | Types       | Sanity TypeGen                  | Автогенерація TS-типів з GROQ-запитів     |

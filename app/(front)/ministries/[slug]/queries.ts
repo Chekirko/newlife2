@@ -19,7 +19,12 @@ export const MINISTRY_BY_SLUG_QUERY = defineQuery(`
       "slug": slug.current,
       photo
     },
-    gallery,
+    gallery[]{
+      _key,
+      ...,
+      "lqip": asset->metadata.lqip,
+      "dimensions": asset->metadata.dimensions
+    },
     bibleQuoteText,
     bibleQuoteReference,
     order

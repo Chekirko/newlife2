@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Image from 'next/image'
 import { clsx } from 'clsx'
-import { ImageLightbox } from './ImageLightbox'
+import { ImageLightbox, type PhotoItem } from '@/components'
 
 // =========================================
 // PhotoGallery — bento mosaic of all ministry photos. Fixed-height cells +
@@ -14,15 +14,7 @@ import { ImageLightbox } from './ImageLightbox'
 // ImageLightbox (Esc / ← → / arrows to browse the whole gallery).
 // =========================================
 
-export interface PhotoItem {
-  id: string
-  thumbUrl: string
-  fullUrl: string
-  lqip?: string
-  alt: string
-  width: number
-  height: number
-}
+export type { PhotoItem } from '@/components'
 
 const PER_PAGE = 12
 

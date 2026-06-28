@@ -16,6 +16,14 @@ export interface SanityMinistryCard {
   order: number
 }
 
+/** Gallery image with the asset metadata the lightbox needs (lqip + dimensions) */
+export interface SanityGalleryImage {
+  _key?: string
+  asset?: { _ref?: string; _type?: string }
+  lqip?: string | null
+  dimensions?: { width?: number; height?: number } | null
+}
+
 /** Ministry — full detail page */
 export interface SanityMinistry extends SanityMinistryCard {
   fullDescription: PortableTextBlock[] | null
@@ -25,7 +33,7 @@ export interface SanityMinistry extends SanityMinistryCard {
     slug: string
     photo: SanityImageSource
   } | null
-  gallery: SanityImageSource[] | null
+  gallery: SanityGalleryImage[] | null
   bibleQuoteText: string | null
   bibleQuoteReference: string | null
 }

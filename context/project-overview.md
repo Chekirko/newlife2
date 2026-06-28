@@ -38,6 +38,7 @@
 ### Служіння (`/ministries`)
 - Список усіх служінь — grid з карток (дані з Sanity)
 - Деталі служіння (`/ministries/[slug]`): опис, лідер (reference до `teamMember` з лінком на `/team/[slug]`), галерея, цитата з Біблії, останні новини, sidebar
+- Головне фото служіння **необовʼязкове** — без нього скрізь (картка + детальна) показується брендова заглушка (`ImagePlaceholder`)
 
 ### Новини (`/news`)
 - Список новин з пагінацією та фільтрацією за категоріями
@@ -81,7 +82,7 @@
 
 ### In Scope
 - Публічний фронтенд (SSG/SSR)
-- Sanity Studio (вбудований на /studio)
+- Sanity Studio (вбудований на /studio) — з медіа-бібліотекою (`sanity-plugin-media`): вкладка «Media» + у кожному полі фото діалог «Select» із прев'юшками, прокруткою, пошуком і сортуванням за датою/розміром/назвою
 - CMS-моделі: siteSettings (singleton — контакти/розклад/соцмережі/SEO), homepage (singleton — hero-слайдер/testimonials/FAQ/stats), pageHeroes (singleton — hero-фони сторінок), aboutPage (singleton — увесь контент /about), ministry, news, event (події + оголошення: type/startDate/activeUntil/location/body), teamMember
 - SEO-метадані для кожної сторінки
 - Адаптивний дизайн (mobile → desktop)
