@@ -16,7 +16,8 @@ export interface NewsItem {
   title: string
   date: string
   mainCategory: string
-  categories?: string[] | null
+  /** Optional ministry name shown compactly next to the date */
+  ministry?: string | null
   text: string
   image: string
   slug: string
@@ -159,20 +160,21 @@ export const NewsSlider = ({
 
                       {/* Content */}
                       <div className="p-5 lg:p-6">
-                        {/* Date & extra categories */}
-                        <div className="flex items-center gap-2 mb-2 text-sm text-gray-500">
-                          <time className="flex items-center gap-1">
+                        {/* Date & ministry */}
+                        <div className="flex items-center gap-2 mb-2 text-sm text-gray-500 min-w-0">
+                          <time className="flex items-center gap-1 shrink-0">
                             <i className="far fa-calendar-alt text-primary text-xs" />
                             {item.date}
                           </time>
-                          {item.categories && item.categories.length > 0 && (
+                          {item.ministry && (
                             <>
-                              <span className="text-gray-300">|</span>
-                              {item.categories.map((cat, i) => (
-                                <span key={i} className="text-primary text-xs font-medium">
-                                  {cat}
-                                </span>
-                              ))}
+                              <span className="text-gray-300 shrink-0">|</span>
+                              <span
+                                className="text-primary text-xs font-medium truncate max-w-[160px]"
+                                title={item.ministry}
+                              >
+                                {item.ministry}
+                              </span>
                             </>
                           )}
                         </div>

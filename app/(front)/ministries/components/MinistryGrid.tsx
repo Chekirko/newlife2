@@ -45,7 +45,7 @@ export const MinistryGridSection = ({
               key={item._id}
               title={item.title}
               shortDescription={item.shortDescription}
-              image={urlFor(item.image).width(600).height(450).url()}
+              image={item.image ? urlFor(item.image).width(600).height(450).url() : null}
               href={`/ministries/${item.slug}`}
             />
           ))}

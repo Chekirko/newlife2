@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 
-import { NewsSlider, PageHero, PortableTextBody } from '@/components'
+import { ImagePlaceholder, NewsSlider, PageHero, PortableTextBody } from '@/components'
 import { PhotoGalleryGrid } from './components/PhotoGalleryGrid'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
@@ -66,7 +66,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
     slug: n.slug,
     date: formatDate(n.publishedAt),
     mainCategory: n.mainCategory,
-    categories: n.categories,
+    ministry: n.ministry ?? null,
     text: n.text,
     image: n.image ? urlFor(n.image).width(600).height(400).url() : '/images/placeholder.jpg',
   }))
@@ -151,14 +151,18 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
             <div className="w-full md:w-3/4 px-4 mb-10 md:mb-0">
               {/* Ministry Image */}
               <div className="relative rounded-xl overflow-hidden mb-8" style={{ aspectRatio: '16 / 9' }}>
-                <Image
-                  src={urlFor(ministry.image).width(1200).height(675).url()}
-                  alt={ministry.title}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 75vw"
-                  className="object-cover"
-                  priority
-                />
+                {ministry.image ? (
+                  <Image
+                    src={urlFor(ministry.image).width(1200).height(675).url()}
+                    alt={ministry.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 75vw"
+                    className="object-cover"
+                    priority
+                  />
+                ) : (
+                  <ImagePlaceholder className="absolute inset-0" />
+                )}
               </div>
 
               {/* Full Description */}

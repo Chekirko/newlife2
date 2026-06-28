@@ -41,7 +41,7 @@ export const ministryType = defineType({
       title: 'Головне зображення',
       type: 'image',
       options: { hotspot: true },
-      validation: (rule) => rule.required().error('Зображення обовʼязкове'),
+      description: 'Необовʼязкове — якщо не задати, на сайті покажеться заглушка',
     }),
     defineField({
       name: 'leader',

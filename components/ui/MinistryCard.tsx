@@ -3,6 +3,7 @@
 import { clsx } from 'clsx'
 import Image from 'next/image'
 import Link from 'next/link'
+import { ImagePlaceholder } from './ImagePlaceholder'
 
 // =====================
 // Ministry Card Component
@@ -11,8 +12,8 @@ import Link from 'next/link'
 export interface MinistryCardProps {
   title: string
   shortDescription?: string
-  /** Image URL — either a Sanity CDN URL (from urlFor()) or a static path */
-  image: string
+  /** Image URL (Sanity CDN from urlFor() or static path); null → branded placeholder */
+  image?: string | null
   href?: string
   className?: string
 }
@@ -28,13 +29,17 @@ export const MinistryCard = ({
     <Link href={href} className={clsx('group block overflow-hidden rounded-lg relative', className)}>
       {/* Image */}
       <div className="relative overflow-hidden" style={{ aspectRatio: '4 / 3' }}>
-        <Image
-          src={image}
-          alt={title}
-          width={600}
-          height={450}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-        />
+        {image ? (
+          <Image
+            src={image}
+            alt={title}
+            width={600}
+            height={450}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          />
+        ) : (
+          <ImagePlaceholder className="absolute inset-0 transition-transform duration-500 group-hover:scale-105" />
+        )}
       </div>
 
       {/* Bottom blurred banner — green gradient theme */}

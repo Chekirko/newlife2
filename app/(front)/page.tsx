@@ -68,7 +68,7 @@ export default async function HomePage() {
     slug: n.slug,
     date: formatDate(n.publishedAt),
     mainCategory: n.mainCategory,
-    categories: n.categories,
+    ministry: n.ministry ?? null,
     text: n.text,
     image: n.image ? urlFor(n.image).width(600).height(400).url() : '/images/placeholder.jpg',
   }))

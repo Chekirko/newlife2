@@ -7,6 +7,7 @@
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {structureTool} from 'sanity/structure'
+import {media} from 'sanity-plugin-media'
 
 // Go to https://www.sanity.io/docs/api-versioning to learn how API versioning works
 import {apiVersion, dataset, projectId} from './sanity/env'
@@ -34,6 +35,10 @@ export default defineConfig({
   },
   plugins: [
     structureTool({structure}),
+    // Media library — adds a "Media" tool + an asset source so every image field's
+    // "Select" dialog browses previously uploaded images (thumbnails, scroll, sort
+    // by date/size/name, search). https://github.com/sanity-io/sanity-plugin-media
+    media(),
     // Vision is for querying with GROQ from inside the Studio
     // https://www.sanity.io/docs/the-vision-plugin
     visionTool({defaultApiVersion: apiVersion}),

@@ -46,6 +46,7 @@ export interface SanityNews {
   publishedAt: string
   mainCategory: string
   categories: string[] | null
+  ministry?: string | null
   text: string
   body: PortableTextBlock[] | null
   image: SanityImageSource

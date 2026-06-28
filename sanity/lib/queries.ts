@@ -16,6 +16,7 @@ export const NEWS_QUERY = defineQuery(`
     publishedAt,
     mainCategory,
     categories,
+    "ministry": ministries[0]->title,
     text,
     image
   }
