@@ -225,7 +225,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
 
               {leaders.length > 1 && (
                 <div className="bg-gray-50 rounded-xl p-6 mt-8">
-                  <p className="text-sm text-gray-500 mb-4">Відповідальні за служіння</p>
+                  <p className="text-lg lg:text-xl font-bold text-gray-800 mb-5">Відповідальні за служіння</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {leaders.map((leader) => (
                       <Link
@@ -233,12 +233,12 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                         href={`/team/${leader.slug}`}
                         className="flex items-center gap-4 group no-underline"
                       >
-                        <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
+                        <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
                           <Image
                             src={urlFor(leader.photo).width(160).height(160).url()}
                             alt={leader.name}
                             fill
-                            sizes="56px"
+                            sizes="80px"
                             className="object-cover"
                           />
                         </div>
