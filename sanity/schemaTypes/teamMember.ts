@@ -47,9 +47,10 @@ export const teamMemberType = defineType({
     }),
     defineField({
       name: 'responsibility',
-      title: 'Відповідальність',
-      type: 'string',
-      description: 'За яке служіння відповідає (для відповідальних)',
+      title: 'Відповідальність за служіння',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'За які служіння відповідає (можна додати кілька; перше показується на загальній сторінці команди)',
       hidden: ({ document }) => {
         const category = document?.category as string[] | undefined
         return !category?.includes('responsible')

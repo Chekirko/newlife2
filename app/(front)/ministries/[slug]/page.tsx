@@ -60,6 +60,8 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
 
   if (!ministry) notFound()
 
+  const leaders = ministry.leaders ?? []
+
   // Transform news for NewsSlider
   const newsData = newsRaw.map((n) => ({
     _id: n._id,
@@ -197,16 +199,16 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                 </blockquote>
               )}
 
-              {/* Leader Info — clickable link to /team/[slug] */}
-              {ministry.leader && (
+              {/* Responsible(s) — clickable link(s) to /team/[slug] */}
+              {leaders.length === 1 && (
                 <Link
-                  href={`/team/${ministry.leader.slug}`}
+                  href={`/team/${leaders[0].slug}`}
                   className="flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8 group hover:bg-gray-100 transition-colors no-underline"
                 >
                   <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
                     <Image
-                      src={urlFor(ministry.leader.photo).width(160).height(160).url()}
-                      alt={ministry.leader.name}
+                      src={urlFor(leaders[0].photo).width(160).height(160).url()}
+                      alt={leaders[0].name}
                       fill
                       sizes="80px"
                       className="object-cover"
@@ -215,10 +217,38 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
                     <h4 className="text-lg font-bold text-gray-800 m-0 group-hover:text-primary transition-colors">
-                      {ministry.leader.name}
+                      {leaders[0].name}
                     </h4>
                   </div>
                 </Link>
+              )}
+
+              {leaders.length > 1 && (
+                <div className="bg-gray-50 rounded-xl p-6 mt-8">
+                  <p className="text-sm text-gray-500 mb-4">Відповідальні за служіння</p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {leaders.map((leader) => (
+                      <Link
+                        key={leader._id}
+                        href={`/team/${leader.slug}`}
+                        className="flex items-center gap-4 group no-underline"
+                      >
+                        <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
+                          <Image
+                            src={urlFor(leader.photo).width(160).height(160).url()}
+                            alt={leader.name}
+                            fill
+                            sizes="56px"
+                            className="object-cover"
+                          />
+                        </div>
+                        <h4 className="text-base font-bold text-gray-800 m-0 group-hover:text-primary transition-colors">
+                          {leader.name}
+                        </h4>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
               )}
 
               {/* Photo Gallery */}

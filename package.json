@@ -16,6 +16,7 @@
     "seed:about": "tsx scripts/seed-about-page.ts",
     "seed:media": "tsx scripts/seed-media.ts",
     "migrate:pt": "tsx scripts/migrate-portable-text.ts",
+    "migrate:multi-responsible": "tsx scripts/migrate-multi-responsible.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"
   },

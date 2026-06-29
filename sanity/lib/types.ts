@@ -27,12 +27,12 @@ export interface SanityGalleryImage {
 /** Ministry — full detail page */
 export interface SanityMinistry extends SanityMinistryCard {
   fullDescription: PortableTextBlock[] | null
-  leader: {
+  leaders: {
     _id: string
     name: string
     slug: string
     photo: SanityImageSource
-  } | null
+  }[] | null
   gallery: SanityGalleryImage[] | null
   bibleQuoteText: string | null
   bibleQuoteReference: string | null
@@ -82,7 +82,7 @@ export interface SanityTeamMemberCard {
   slug: string
   category: ('ordained' | 'responsible' | 'candidate' | 'honorary')[]
   title: string | null
-  responsibility: string | null
+  responsibility: string[] | null
   candidateTitle: string | null
   photo: SanityImageSource
   order: number

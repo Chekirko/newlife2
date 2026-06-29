@@ -31,19 +31,23 @@ export function TeamSection({ preTitle, title, members, subtitleField, bgClass =
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            {members.map((member) => (
+            {members.map((member) => {
+              const raw = member[subtitleField]
+              const subtitle = Array.isArray(raw) ? (raw[0] ?? '') : (raw ?? '')
+              return (
               <TeamMemberCard
                 key={member._id}
                 slug={member.slug}
                 name={member.name}
-                subtitle={member[subtitleField] || ''}
+                subtitle={subtitle}
                 photoUrl={
                   member.photo
                     ? urlFor(member.photo).width(600).height(800).url()
                     : '/images/placeholder.jpg'
                 }
               />
-            ))}
+              )
+            })}
           </div>
         )}
       </div>

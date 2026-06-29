@@ -44,12 +44,11 @@ export const ministryType = defineType({
       description: 'Необовʼязкове — якщо не задати, на сайті покажеться заглушка',
     }),
     defineField({
-      name: 'leader',
-      title: 'Відповідальний за служіння',
-      type: 'reference',
-      to: [{ type: 'teamMember' }],
-      weak: true,
-      description: 'Оберіть служителя з наявних або залиште порожнім, якщо відповідального немає',
+      name: 'leaders',
+      title: 'Відповідальні за служіння',
+      type: 'array',
+      of: [{ type: 'reference', to: [{ type: 'teamMember' }], weak: true }],
+      description: 'Оберіть одного або кількох служителів, або залиште порожнім, якщо відповідального немає',
     }),
     defineField({
       name: 'gallery',
@@ -95,7 +94,7 @@ export const ministryType = defineType({
       title: 'title',
       subtitle: 'shortDescription',
       media: 'image',
-      leaderName: 'leader.name',
+      leaderName: 'leaders.0.name',
     },
     prepare({ title, subtitle, media, leaderName }) {
       return {

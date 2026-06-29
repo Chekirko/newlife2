@@ -49,7 +49,7 @@ export default async function TeamMemberPage({
   const roles: string[] = []
   if (member.title) roles.push(member.title)
   if (member.candidateTitle) roles.push(member.candidateTitle)
-  if (member.responsibility) roles.push(member.responsibility)
+  if (member.responsibility?.length) roles.push(...member.responsibility)
 
   return (
     <>
@@ -117,11 +117,11 @@ export default async function TeamMemberPage({
                     {member.candidateTitle}
                   </span>
                 )}
-                {member.responsibility && (
-                  <span className="border border-primary text-primary text-sm font-semibold px-4 py-1.5 rounded-full">
-                    {member.responsibility}
+                {member.responsibility?.map((r) => (
+                  <span key={r} className="border border-primary text-primary text-sm font-semibold px-4 py-1.5 rounded-full">
+                    {r}
                   </span>
-                )}
+                ))}
               </div>
 
               {/* Bio */}
