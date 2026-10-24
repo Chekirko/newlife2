@@ -73,6 +73,7 @@ export interface SanityEvent {
   description: string | null
   body: PortableTextBlock[] | null
   image: SanityImageSource | null
+  imageDimensions?: { width: number; height: number } | null
 }
 
 /** Team member — list view (cards) */

@@ -14,7 +14,8 @@ export const EVENTS_PAGINATED_QUERY = defineQuery(`
     startDate,
     tag,
     description,
-    image
+    image,
+    "imageDimensions": image.asset->metadata.dimensions
   }
 `)
 
@@ -47,6 +48,7 @@ export const EVENT_BY_SLUG_QUERY = defineQuery(`
     tag,
     description,
     body[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } },
-    image
+    image,
+    "imageDimensions": image.asset->metadata.dimensions
   }
 `)

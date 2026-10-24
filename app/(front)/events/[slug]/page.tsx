@@ -163,14 +163,14 @@ export default async function EventDetailPage({
             {imageUrl && (
               <div
                 className="relative rounded-xl overflow-hidden mb-8"
-                style={{ aspectRatio: '16 / 9' }}
               >
                 <Image
-                  src={urlFor(event.image!).width(1200).height(675).url()}
+                  src={urlFor(event.image!).ignoreImageParams().width(1600).fit('max').auto('format').url()}
                   alt={event.title}
-                  fill
+                  width={event.imageDimensions?.width || 1200}
+                  height={event.imageDimensions?.height || 675}
                   sizes="(max-width: 768px) 100vw, 800px"
-                  className="object-cover"
+                  className="w-full h-auto"
                   priority
                 />
               </div>

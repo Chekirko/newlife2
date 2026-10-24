@@ -83,7 +83,7 @@ export default async function EventsPage({
             {/* -------- MAIN CONTENT -------- */}
             <div className="w-full md:w-3/4 px-4 order-2 md:order-1">
               {eventsRaw.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+                <div className="columns-1 sm:columns-2 gap-6 mb-8">
                 {eventsRaw.map((e) => (
                   <EventCard
                     key={e._id}
@@ -95,9 +95,10 @@ export default async function EventsPage({
                     description={e.description}
                     imageUrl={
                       e.image
-                        ? urlFor(e.image).width(1200).height(675).url()
+                        ? urlFor(e.image).ignoreImageParams().width(900).fit('max').auto('format').url()
                         : '/images/placeholder.jpg'
                     }
+                    imageDimensions={e.imageDimensions}
                   />
                 ))}
                 </div>
