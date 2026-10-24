@@ -44,7 +44,7 @@ export const Ministries = ({
         {(preTitle || title || description) && (
           <div className="max-w-3xl mx-auto text-center mb-12">
             {preTitle && (
-              <span className="text-primary font-semibold tracking-wide uppercase text-sm block mb-3">
+              <span className="text-primary-text font-semibold tracking-wide uppercase text-sm block mb-3">
                 {preTitle}
               </span>
             )}
@@ -95,7 +95,7 @@ export const Ministries = ({
                   {item.link && (
                     <Link 
                       href={item.link} 
-                      className="inline-flex items-center text-primary font-medium text-sm hover:underline"
+                      className="inline-flex items-center text-primary-text font-medium text-sm hover:underline"
                     >
                       {item.linkText || 'Дізнатися більше'}
                       <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

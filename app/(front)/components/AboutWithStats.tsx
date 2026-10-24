@@ -53,7 +53,7 @@ export const AboutWithStats = ({
               <div className="grid grid-cols-2 gap-4 sm:gap-6">
                 {stats.map((stat, idx) => (
                   <div key={idx} className="text-center bg-gray-100 rounded-2xl px-6 py-8">
-                    <div className="text-4xl lg:text-5xl font-bold text-primary mb-2">{stat.value}</div>
+                    <div className="text-4xl lg:text-5xl font-bold text-primary-text mb-2">{stat.value}</div>
                     <p className="m-0 text-gray-600 leading-snug">{stat.label}</p>
                   </div>
                 ))}

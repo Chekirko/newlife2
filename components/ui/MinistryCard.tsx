@@ -42,14 +42,9 @@ export const MinistryCard = ({
         )}
       </div>
 
-      {/* Bottom blurred banner — green gradient theme */}
+      {/* Opaque gradient keeps white titles readable over any photo. */}
       <div
-        className="absolute bottom-0 left-0 right-0 px-5 py-5 z-10"
-        style={{
-          background: 'linear-gradient(150deg, rgba(151, 199, 78, 0.75) 0%, rgba(42, 185, 165, 0.75) 100%)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-        }}
+        className="bg-grad-readable absolute bottom-0 left-0 right-0 px-5 py-5 z-10"
       >
         <h6 className="text-white text-xl font-semibold m-0">{title}</h6>
       </div>

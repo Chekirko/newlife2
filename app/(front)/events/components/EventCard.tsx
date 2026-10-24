@@ -27,7 +27,7 @@ export function EventCard({ title, slug, date, type, tag, description, imageUrl 
             className="object-cover transition-transform duration-500 hover:scale-105"
           />
         </Link>
-        <span className="absolute top-4 left-4 bg-grad text-white text-xs font-semibold px-3 py-1.5 rounded">
+        <span className="absolute top-4 left-4 bg-grad-readable text-white text-xs font-semibold px-3 py-1.5 rounded">
           {badge}
         </span>
       </div>
@@ -46,7 +46,7 @@ export function EventCard({ title, slug, date, type, tag, description, imageUrl 
         <h4 className="text-lg font-semibold mb-3 leading-snug">
           <Link
             href={`/events/${slug}`}
-            className="text-gray-800 hover:text-primary transition-colors"
+            className="text-gray-800 hover:text-primary-text transition-colors"
           >
             {title}
           </Link>
@@ -62,7 +62,7 @@ export function EventCard({ title, slug, date, type, tag, description, imageUrl 
         {/* Read more */}
         <Link
           href={`/events/${slug}`}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors group"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-primary-text hover:text-primary-text transition-colors group"
         >
           Детальніше
           <svg

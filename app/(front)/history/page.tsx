@@ -138,7 +138,7 @@ function TimelineCard({ item }: { item: any }) {
   return (
     <div className="bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden text-left hover:-translate-y-1 transition-transform duration-300">
       <div className="p-6 md:p-8">
-        <div className="text-sm font-bold text-primary mb-3 float-right bg-primary/10 px-3 py-1 rounded-full">
+        <div className="text-sm font-bold text-primary-text mb-3 float-right bg-primary/10 px-3 py-1 rounded-full">
           {item.date}
         </div>
         <h4 className="text-xl md:text-2xl font-bold mb-3 text-gray-800 clear-none">{item.title}</h4>
@@ -151,7 +151,7 @@ function TimelineCard({ item }: { item: any }) {
           <ul className="space-y-2 mt-2">
             {item.listItems.map((listItem: string, i: number) => (
               <li key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-700">
-                <span className="flex-shrink-0 w-6 h-6 rounded bg-primary text-white flex items-center justify-center font-semibold text-xs text-center">
+                <span className="flex-shrink-0 w-6 h-6 rounded bg-primary text-gray-900 flex items-center justify-center font-semibold text-xs text-center">
                   0{i + 1}
                 </span>
                 {listItem}
@@ -166,7 +166,7 @@ function TimelineCard({ item }: { item: any }) {
               <details key={i} className="group border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                 <summary className="cursor-pointer font-semibold px-4 py-3 text-gray-800 flex justify-between items-center outline-none">
                   {acc.q}
-                  <span className="transition-transform group-open:rotate-180 text-primary">
+                  <span className="transition-transform group-open:rotate-180 text-primary-text">
                     <svg fill="none" height="24" shapeRendering="geometricPrecision" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" viewBox="0 0 24 24" width="24"><path d="M6 9l6 6 6-6"></path></svg>
                   </span>
                 </summary>

@@ -8,6 +8,7 @@
 @theme {
   /* ===== COLORS ===== */
   --color-primary: #4cbd89;
+  --color-primary-text: #216e4e;
 
   /* Grayscale */
   --color-gray-100: #f7f8f9;
@@ -142,6 +143,7 @@
 :root {
   /* Colors */
   --color-primary: #4cbd89;
+  --color-primary-text: #216e4e;
   --color-gray-100: #f7f8f9;
   --color-gray-200: #f0f1f3;
   --color-gray-300: #dfe2e5;
@@ -174,6 +176,11 @@
 /* =========================================
    BASE STYLES
    ========================================= */
+/* Keep the focus halo above utility shadows and focus rings in the cascade. */
+:focus-visible {
+  box-shadow: 0 0 0 2px var(--color-white);
+}
+
 @layer base {
   body {
     font-family: var(--font-base);
@@ -225,13 +232,13 @@
   }
 
   a {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     text-decoration: none;
     transition: var(--transition-base);
   }
 
   a:hover {
-    color: color-mix(in srgb, var(--color-primary) 80%, black);
+    color: color-mix(in srgb, var(--color-primary-text) 80%, black);
   }
 
   section {
@@ -240,7 +247,7 @@
 
   /* Visible keyboard focus indicator (a11y — WCAG 2.4.7) */
   :focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-primary-text);
     outline-offset: 2px;
     border-radius: 2px;
   }
@@ -274,8 +281,19 @@
     background-position: left bottom;
   }
 
+  /* Text-bearing surfaces use the same accessible stops as gradient buttons. */
+  .bg-grad-readable {
+    background: linear-gradient(150deg, var(--gradient-btn-end) 0%, var(--gradient-btn-start) 50%, var(--gradient-btn-end) 100%);
+    background-size: 260% 100%;
+    background-position: right bottom;
+  }
+
+  .bg-grad-readable:hover {
+    background-position: left bottom;
+  }
+
   .gradient-text {
-    background: linear-gradient(150deg, var(--gradient-start) 0%, var(--gradient-end) 100%);
+    background: linear-gradient(150deg, var(--gradient-btn-start) 0%, var(--gradient-btn-end) 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -293,8 +311,9 @@
     color: var(--color-primary);
   }
 
-  /* All text white */
-  .all-text-white * {
+  /* Inherit white copy without overriding white buttons' dark labels. */
+  .all-text-white,
+  .all-text-white :where(h1, h2, h3, h4, h5, h6, p) {
     color: white;
   }
 
@@ -428,7 +447,7 @@
   /* Back to Top */
   .back-top {
     @apply w-10 h-10 leading-[40px] p-[13px] fixed bottom-6 right-6 rounded text-center block;
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-text);
     @apply text-white transition-all duration-300;
     @apply opacity-0 translate-y-1/2;
   }
@@ -479,13 +498,13 @@
 
   /* Button variants */
   .btn-primary {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
+    background-color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
     @apply text-white;
   }
 
   .btn-primary:hover {
-    background-color: color-mix(in srgb, var(--color-primary) 90%, black);
+    background-color: color-mix(in srgb, var(--color-primary-text) 90%, black);
   }
 
   .btn-secondary {
@@ -547,12 +566,12 @@
   /* Outline variants */
   .btn-outline-primary {
     @apply bg-transparent;
-    color: var(--color-primary);
-    border-color: var(--color-primary);
+    color: var(--color-primary-text);
+    border-color: var(--color-primary-text);
   }
 
   .btn-outline-primary:hover {
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-text);
     @apply text-white;
   }
 
@@ -589,7 +608,7 @@
   /* Outline gradient */
   .btn-outline-grad {
     @apply inline-block bg-transparent rounded relative z-[1];
-    color: var(--color-primary);
+    color: var(--color-primary-text);
     border: none;
     line-height: 2;
   }
@@ -623,13 +642,13 @@
   /* Link button with animation */
   .btn-link {
     @apply bg-transparent p-0 border-0;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 
   .btn-link::after {
     content: '';
     @apply block scale-x-0 transition-transform duration-300 origin-right;
-    border-bottom: 2px solid color-mix(in srgb, var(--color-primary) 80%, black);
+    border-bottom: 2px solid color-mix(in srgb, var(--color-primary-text) 80%, black);
   }
 
   .btn-link:hover::after {
@@ -952,7 +971,7 @@
   }
 
   .accordion-button:focus-visible {
-    outline: 2px solid var(--color-primary);
+    outline: 2px solid var(--color-primary-text);
     outline-offset: -2px;
   }
 
@@ -967,12 +986,12 @@
 
   .accordion-icon-primary .accordion-button {
     @apply text-white rounded-none pl-7;
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-text);
   }
 
   .accordion-icon-primary .accordion-button.collapsed {
     @apply text-white;
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-text);
   }
 
   .accordion-icon-primary .accordion-body {
@@ -1059,12 +1078,12 @@
   }
 
   .team-name a:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 
   .team-position {
     @apply text-xs;
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 
   .team-item p {
@@ -1317,7 +1336,7 @@
   }
 
   .post-info a:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 
   .post-tag {
@@ -1582,7 +1601,7 @@
   }
 
   .navbar-top a:hover {
-    color: var(--color-primary);
+    color: var(--color-primary-text);
   }
 }
 

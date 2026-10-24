@@ -47,7 +47,7 @@ export function NotFoundView() {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-primary hover:underline focus-visible:underline focus-visible:outline-none rounded"
+                    className="text-primary-text hover:underline focus-visible:underline rounded"
                   >
                     {link.label}
                   </Link>

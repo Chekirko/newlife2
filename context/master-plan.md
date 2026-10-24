@@ -25,6 +25,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 6. **Спершу — план у контекст.** Будь-яка нова велика ініціатива спершу фіксується тут (`master-plan.md`) / spec у `context/specs/`, і тільки тоді починається робота.
 
 ## Scoping
+- **1–2 юніти за сесію** (узгоджено 2026-10-24), послідовно, із перевіркою та записами в документацію після кожного. Великі пункти backlog розбивати на під'юніти; правила скілів і commit/push лишаються чинними.
 - Один feature-юніт за раз; малі перевіряльні інкременти замість великих спекулятивних змін.
 - Не поєднувати в одному кроці: UI + Sanity-схему; кілька непов'язаних сторінок; створення нового + рефакторинг наявного.
 - Якщо зміну не можна швидко перевірити end-to-end — scope завеликий, розбити.
@@ -57,7 +58,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 | # | Юніт | Тег | Скіл | Зус. | Суть | Стан |
 |---|------|-----|------|------|------|------|
 | A1 | **Логотип** | BLOCKER · PLAN | schema-markup | S | Є EPS, нема SVG/PNG. Ассет від замовника → хедер/футер (замість кружечка «НЖ») + `Organization.logo`/`publisher.logo` у JSON-LD. | ⛔ чекає на ассет |
-| A2 | **Бренд-контраст** | BLOCKER · PLAN | a11y-audit | M | Залишок Фази 2: `--color-primary` як текст лінків (~1.9:1), focus-ring (<3:1), білий текст на яскравому градієнті CTA-боксів, `.gradient-text` — fail AA. Рішення: затемнити токен лінків/фокусу або ввести окремий доступний варіант. Перевірити `a11y-audit/scripts/contrast_checker.py`. | ⛔ потребує бренд-рішення |
+| A2 | **Бренд-контраст** | ✅ DONE | a11y-audit · senior-frontend · karpathy-coder | M | **A2.1:** `--color-primary-text #216e4e` для тексту/посилань/фокусу (6.17:1 на білому), видимий контур полів. **A2.2:** `.bg-grad-readable` для CTA/бейджів/карток (білий текст ≥4.89:1 на кінцях градієнта), темніший `.gradient-text`, читабельні білі кнопки, двоколірний фокус. Декоративний градієнт збережено. | ✅ 2026-10-24; обидві збірки ✓, browser QA; повний a11y-аудит лишається D8 |
 | A3 | **Реальний контент** | PLAN | content-creator | M | Legacy-події без `startDate`/`type` (приховані); унікальні фото галерей служінь; реальні свідчення/FAQ/stats; тексти /about (фінал), /media, /give. Контент у /studio, не код. | ⛔ контент від замовника |
 | A4 | **Pre-launch SEO/perf/security-прохід** | PLAN | seo-audit · performance-profiler · security-guidance | M | Аудит ✅ зроблено (S2, canonical×11, security headers). **Залишок:** CSP **Report-Only → enforce** після runtime-смоук (скрипти/Sanity-зображення/Google Maps/Studio); виставити `NEXT_PUBLIC_SITE_URL` на власний домен у Vercel. Відкриття індексації тут НЕ робиться. | 🔄 частково (CSP enforce лишився) |
 
@@ -141,6 +142,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 **Найбільший ризик** інженерно — відсутність автотестів (D7); закрити паралельно з CI (C4).
 
 ## Прогрес по плану
+- 2026-10-24 — **A2.1 + A2.2 завершено** за вибором користувача. Контраст перевірено проєктним `contrast_checker.py`; обидва `pnpm run build` ✓ (TypeGen/TS/41 стор.). Browser QA охопив головну/about/news/ministries/team/media/contact на десктопній або мобільній ширині; фокус форми/медіапошуку/FAQ, кольори CTA та кнопок, відсутність горизонтального overflow. Повний WCAG-аудит не заявляється (D8). Докладні результати та обмеження — `progress-tracker.md`. Commit/push — лише після згоди користувача.
 - 2026-06-26 (R8) — live-банер «Наживо» додано **на головну** (найперша секція) поряд із /media; `LiveBanner` винесено у спільний `components/sections/`. Діагноз «не підтягувалось»: бракувало конфігу — `siteSettings.liveStream.channelId` (Studio) + env `YOUTUBE_API_KEY` (Vercel); код детекції (YouTube Data API, кеш 15 хв) був коректний. `tsc`+`build` ✓. **Дії замовника:** створити безкоштовний YouTube Data API ключ (Google Cloud) → Vercel env; ID каналу+підпис у Studio.
 - 2026-06-26 (R7) — фото служіння стало опційним (+ брендова заглушка `ImagePlaceholder` на картці й детальній); картка новин (NewsSlider) показує одну компактну назву служіння (`ministries[0]->title`, `truncate`) замість усіх категорій; медіа-бібліотека Studio (`sanity-plugin-media`, `media()` → вкладка «Media» + asset source у кожному полі фото); фотогалерея служіння тепер відкриває фото у спільному `ImageLightbox` (винесено в `components/ui/`, reuse із /media/photos). `typegen`+`tsc`+`build` ✓ 36 стор.
 - 2026-06-26 (R6) — новини: категорії стали справжніми пошуковими дропдаунами (`CategoryInput` single + `MultiCategoryInput` chips, `@sanity/ui Autocomplete`, замість `TagInput`-datalist) із додаванням нового; нове поле `news.ministries` (weak-ref мультивибір) → сторінка служіння показує **лише** свої новини (`MINISTRY_NEWS_QUERY`); dev-only `disableTransition`-warning лишено (internal @sanity/ui). `typegen`+`tsc` ✓; curl: /ministries/* 200, /studio 200.

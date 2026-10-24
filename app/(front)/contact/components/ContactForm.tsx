@@ -50,7 +50,7 @@ export function ContactForm() {
           className="mb-6 px-4 py-3 rounded-lg text-sm font-medium"
           style={{
             background: 'linear-gradient(135deg, rgba(151,199,78,0.12), rgba(42,185,165,0.12))',
-            color: 'var(--color-primary)',
+            color: 'var(--color-primary-text)',
             border: '1px solid rgba(75,189,137,0.25)',
           }}
         >
@@ -67,7 +67,7 @@ export function ContactForm() {
             onChange={handleChange}
             placeholder="Ваше ім'я"
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all"
           />
           <input
             type="email"
@@ -76,7 +76,7 @@ export function ContactForm() {
             onChange={handleChange}
             placeholder="E-mail"
             required
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all"
           />
         </div>
 
@@ -87,7 +87,7 @@ export function ContactForm() {
           onChange={handleChange}
           placeholder="Тема"
           required
-          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all"
         />
 
         <textarea
@@ -97,7 +97,7 @@ export function ContactForm() {
           placeholder="Ваше повідомлення..."
           rows={6}
           required
-          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all resize-none"
+          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all resize-none"
         />
 
         <button

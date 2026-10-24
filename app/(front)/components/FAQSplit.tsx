@@ -78,7 +78,7 @@ export const FAQSplit = ({
 
           {/* Contact side */}
           <div className="w-full lg:w-1/3 px-4">
-            <div className="bg-grad rounded p-6 lg:p-8 all-text-white">
+            <div className="bg-grad-readable rounded p-6 lg:p-8 all-text-white">
               {contactTitle && <h4>{contactTitle}</h4>}
               {contactDescription && <p>{contactDescription}</p>}
               {contactButtonText && (

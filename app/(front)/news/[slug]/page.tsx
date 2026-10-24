@@ -164,7 +164,7 @@ export default async function NewsDetailPage({
               {news.mainCategory && (
                 <Link
                   href={`/news?category=${encodeURIComponent(news.mainCategory)}`}
-                  className="bg-grad text-white text-xs font-semibold px-3 py-1 rounded"
+                  className="bg-grad-readable text-white text-xs font-semibold px-3 py-1 rounded"
                 >
                   {news.mainCategory}
                 </Link>
@@ -206,7 +206,7 @@ export default async function NewsDetailPage({
             <div className="mt-10 pt-8 border-t border-gray-200">
               <Link
                 href="/news"
-                className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold transition-colors"
+                className="inline-flex items-center gap-2 text-primary-text hover:text-primary-text font-semibold transition-colors"
               >
                 <svg
                   className="w-4 h-4"

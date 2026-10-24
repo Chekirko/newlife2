@@ -120,13 +120,10 @@ export default async function EventsPage({
 
               {/* CTA box */}
               <div
-                className="rounded-xl p-6 text-white text-center"
-                style={{
-                  background: 'linear-gradient(150deg, #97c74e 0%, #2ab9a5 100%)',
-                }}
+                className="bg-grad-readable rounded-xl p-6 text-white text-center"
               >
-                <h6 className="font-bold text-lg mb-2">Запрошуєте на подію?</h6>
-                <p className="text-white/90 text-sm mb-4">
+                <h6 className="text-white font-bold text-lg mb-2">Запрошуєте на подію?</h6>
+                <p className="text-white text-sm mb-4">
                   Хочете додати подію чи оголошення — напишіть нам!
                 </p>
                 <Link

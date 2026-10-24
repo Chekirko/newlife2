@@ -107,8 +107,9 @@ Whenever a new public page or a new Sanity content type with a public detail rou
 ## Accessibility (WCAG 2.2 AA)
 
 - **Color contrast**: text on white must be ≥4.5:1. Use `text-gray-600`/`text-gray-800` for readable body text — `--color-gray-500`/`-600` are tuned to pass AA. Verify new color pairs with `.agents/skills/a11y-audit/scripts/contrast_checker.py "<fg>" "<bg>"`.
-- **White button text** goes only on the darker `--gradient-btn-*` (via `.btn-grad`), never the bright decorative `--gradient-start/end`.
+- **White text on gradients** goes only on the darker `--gradient-btn-*` (`.btn-grad` / `.bg-grad-readable`), never the bright decorative `--gradient-start/end`. Keep normal copy opaque; do not lower the opacity of enabled buttons on hover. `.gradient-text` uses dark stops on light surfaces. White-button labels must remain dark inside `.all-text-white`.
 - **Focus**: rely on the global `:focus-visible` outline; never set `outline:none`/`ring-0` without an equally visible replacement.
+- **Green text on light backgrounds**: use `text-primary-text` (`--color-primary-text: #216e4e`), including hover/active states; `--color-primary` remains the bright decorative accent. Do not lower link opacity on hover. Focus rings/borders must stay opaque and visible.
 - **Interactive elements**: use native `<button>`/`<a>`; menus/disclosures need `aria-haspopup`/`aria-expanded`, keyboard open/close (Escape), and must not be hover-only. Active nav links get `aria-current="page"`.
 - **Decorative icons** (`<i class="fa…">`, inline SVG) get `aria-hidden="true"`; icon-only controls get an `aria-label`.
 - **Images**: section/hero backgrounds use `next/image` (`fill priority`, empty `alt=""` when decorative), not CSS `background-image`.

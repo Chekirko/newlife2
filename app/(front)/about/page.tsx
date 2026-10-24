@@ -29,12 +29,12 @@ const VALUE_ICONS: Record<string, ReactNode> = {
 function ValueCard({ value }: { value: AboutValue }) {
   const featured = value.featured
   return (
-    <div className={`rounded-lg p-7 lg:p-8 ${featured ? 'bg-grad text-white' : 'bg-white shadow-card'}`}>
-      <span className={`inline-block mb-5 ${featured ? 'text-white' : 'text-primary'}`}>
+    <div className={`rounded-lg p-7 lg:p-8 ${featured ? 'bg-grad-readable text-white' : 'bg-white shadow-card'}`}>
+      <span className={`inline-block mb-5 ${featured ? 'text-white' : 'text-primary-text'}`}>
         {VALUE_ICONS[value.iconKey]}
       </span>
       <h3 className={`text-lg font-bold mb-2 ${featured ? 'text-white' : 'text-gray-800'}`}>{value.title}</h3>
-      <p className={`text-sm leading-relaxed m-0 ${featured ? 'text-white/90' : 'text-gray-600'}`}>{value.text}</p>
+      <p className={`text-sm leading-relaxed m-0 ${featured ? 'text-white' : 'text-gray-600'}`}>{value.text}</p>
     </div>
   )
 }
@@ -107,7 +107,7 @@ export default async function AboutPage() {
       <section className="py-16 lg:py-24">
         <div className="container-larexa max-w-4xl">
           <div className="text-center">
-            <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
+            <span className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3 block">
               {about.whoWeAre.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-6 leading-tight">
@@ -116,8 +116,8 @@ export default async function AboutPage() {
             <p className="text-lg text-gray-600 leading-relaxed mb-6">
               {about.whoWeAre.denomination}
             </p>
-            <div className="bg-grad rounded-2xl p-8 lg:p-10 text-white">
-              <span className="block text-base opacity-90 mb-2">{about.whoWeAre.missionLabel}</span>
+            <div className="bg-grad-readable rounded-2xl p-8 lg:p-10 text-white">
+              <span className="block text-base mb-2">{about.whoWeAre.missionLabel}</span>
               <p className="text-xl lg:text-2xl font-semibold leading-snug m-0">
                 {about.whoWeAre.mission}
               </p>
@@ -130,7 +130,7 @@ export default async function AboutPage() {
       <section className="py-16 lg:py-24 bg-gray-100">
         <div className="container-larexa max-w-4xl">
           <div className="text-center mb-10">
-            <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
+            <span className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3 block">
               {about.history.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 leading-tight">
@@ -147,7 +147,7 @@ export default async function AboutPage() {
           <div className="text-center mt-8">
             <Link
               href="/history"
-              className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 text-primary-text font-semibold hover:gap-3 transition-all"
             >
               Повна хронологія церкви
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,7 +162,7 @@ export default async function AboutPage() {
       <section className="py-16 lg:py-24">
         <div className="container-larexa">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
+            <span className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3 block">
               {about.beliefs.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 leading-tight">
@@ -174,7 +174,7 @@ export default async function AboutPage() {
                 href="https://www.chve.org.ua/doctrine/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-primary hover:underline"
+                className="text-primary-text hover:underline"
               >
                 на сайті УЦХВЄ
               </a>
@@ -202,7 +202,7 @@ export default async function AboutPage() {
             {/* Column 1 — intro + cards */}
             <div className="w-full lg:flex-1 flex flex-col gap-6">
               <div>
-                <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
+                <span className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3 block">
                   {about.values.preTitle}
                 </span>
                 <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 leading-tight mb-4">
@@ -238,7 +238,7 @@ export default async function AboutPage() {
       <section className="py-16 lg:py-24">
         <div className="container-larexa">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
+            <span className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3 block">
               {about.whatToExpect.preTitle}
             </span>
             <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 leading-tight">
@@ -252,7 +252,7 @@ export default async function AboutPage() {
             {about.whatToExpect.items.map((item) => (
               <div key={item.title} className="flex gap-4 items-start">
                 <div className="shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <i className={`${item.icon} text-primary text-lg`} aria-hidden="true" />
+                  <i className={`${item.icon} text-primary-text text-lg`} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-1">{item.title}</h3>
@@ -272,7 +272,7 @@ export default async function AboutPage() {
       {/* LEADERSHIP */}
       <section className="py-16 lg:py-24 bg-gray-100">
         <div className="container-larexa max-w-3xl text-center">
-          <span className="text-primary font-semibold tracking-wide uppercase text-sm mb-3 block">
+          <span className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3 block">
             {about.leadership.preTitle}
           </span>
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 leading-tight">
@@ -300,11 +300,10 @@ export default async function AboutPage() {
       <section className="py-16 lg:py-20">
         <div className="container-larexa">
           <div
-            className="rounded-2xl p-10 lg:p-14 text-center text-white"
-            style={{ background: 'linear-gradient(150deg, #97c74e 0%, #2ab9a5 100%)' }}
+            className="bg-grad-readable rounded-2xl p-10 lg:p-14 text-center text-white"
           >
-            <h2 className="text-3xl lg:text-4xl font-bold mb-3">{about.finalCta.title}</h2>
-            <p className="text-white/90 text-lg mb-8 max-w-2xl mx-auto">
+            <h2 className="text-white text-3xl lg:text-4xl font-bold mb-3">{about.finalCta.title}</h2>
+            <p className="text-white text-lg mb-8 max-w-2xl mx-auto">
               {about.finalCta.text}
             </p>
             <div className="flex flex-wrap gap-4 justify-center">

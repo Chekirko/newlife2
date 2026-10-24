@@ -77,7 +77,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
           <button
             type="button"
             onClick={() => setVisible((v) => v + PER_PAGE)}
-            className="bg-grad inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+            className="bg-grad-readable inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition-[background-position] duration-300"
           >
             <i className="fas fa-arrow-down" /> Завантажити ще
           </button>

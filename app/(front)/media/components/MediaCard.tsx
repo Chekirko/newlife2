@@ -56,11 +56,11 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
           }}
         />
         <div className="absolute inset-0 flex items-center justify-center bg-black/15 transition-colors group-hover:bg-black/30">
-          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-primary shadow-md transition-transform group-hover:scale-110">
+          <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 text-primary-text shadow-md transition-transform group-hover:scale-110">
             <i className="fas fa-play ml-0.5 text-xl" />
           </span>
         </div>
-        <span className="bg-grad absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold capitalize text-white">
+        <span className="bg-grad-readable absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold capitalize text-white">
           {item.category}
         </span>
       </div>
@@ -79,7 +79,7 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
             </span>
           )}
         </div>
-        <h3 className="mb-2 line-clamp-2 h-14 text-lg font-bold leading-snug text-gray-800 transition-colors group-hover:text-primary">
+        <h3 className="mb-2 line-clamp-2 h-14 text-lg font-bold leading-snug text-gray-800 transition-colors group-hover:text-primary-text">
           {item.title}
         </h3>
         <p className="line-clamp-2 h-11 text-sm text-gray-600">{item.description}</p>

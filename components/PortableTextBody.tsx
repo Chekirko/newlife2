@@ -64,7 +64,7 @@ const components: PortableTextComponents = {
         <a
           href={href}
           {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
-          className="text-primary underline underline-offset-2 hover:text-primary/80 transition-colors"
+          className="text-primary-text underline underline-offset-2 hover:text-primary-text transition-colors"
         >
           {children}
         </a>

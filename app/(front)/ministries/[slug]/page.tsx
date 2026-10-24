@@ -129,9 +129,9 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                     <li key={m._id}>
                       <Link
                         href={`/ministries/${m.slug}`}
-                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-primary transition-colors text-sm font-medium"
+                        className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-primary-text transition-colors text-sm font-medium"
                       >
-                        <svg className="w-4 h-4 text-primary flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 text-primary-text flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                         </svg>
                         {m.title}
@@ -142,9 +142,9 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               </div>
 
               {/* Quick Contact CTA */}
-              <div className="rounded-xl p-6 text-white text-center" style={{ background: 'linear-gradient(150deg, #97c74e 0%, #2ab9a5 100%)' }}>
-                <h6 className="font-bold text-lg mb-2">Хочете долучитися?</h6>
-                <p className="text-white/90 text-sm mb-4">
+              <div className="bg-grad-readable rounded-xl p-6 text-white text-center">
+                <h6 className="text-white font-bold text-lg mb-2">Хочете долучитися?</h6>
+                <p className="text-white text-sm mb-4">
                   Зв&apos;яжіться з нами, щоб дізнатися, як приєднатися до цього служіння.
                 </p>
                 <Link
@@ -185,14 +185,14 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               {/* Bible Quote */}
               {ministry.bibleQuoteText && (
                 <blockquote className="relative my-10 py-6 px-8 rounded-xl bg-gray-50 border-l-4 border-primary">
-                  <svg className="absolute top-4 right-4 w-10 h-10 text-primary/20" fill="currentColor" viewBox="0 0 24 24">
+                  <svg className="absolute top-4 right-4 w-10 h-10 text-primary-text/20" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983z" />
                   </svg>
                   <p className="text-lg lg:text-xl italic text-gray-700 mb-3 leading-relaxed">
                     &ldquo;{ministry.bibleQuoteText}&rdquo;
                   </p>
                   {ministry.bibleQuoteReference && (
-                    <cite className="text-primary font-semibold text-sm not-italic">
+                    <cite className="text-primary-text font-semibold text-sm not-italic">
                       — {ministry.bibleQuoteReference}
                     </cite>
                   )}
@@ -216,7 +216,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
-                    <h4 className="text-lg font-bold text-gray-800 m-0 group-hover:text-primary transition-colors">
+                    <h4 className="text-lg font-bold text-gray-800 m-0 group-hover:text-primary-text transition-colors">
                       {leaders[0].name}
                     </h4>
                   </div>
@@ -242,7 +242,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                             className="object-cover"
                           />
                         </div>
-                        <h4 className="text-base font-bold text-gray-800 m-0 group-hover:text-primary transition-colors">
+                        <h4 className="text-base font-bold text-gray-800 m-0 group-hover:text-primary-text transition-colors">
                           {leader.name}
                         </h4>
                       </Link>

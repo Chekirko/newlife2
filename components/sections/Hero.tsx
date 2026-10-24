@@ -198,7 +198,7 @@ export const HeroGradientImage = ({
   className,
 }: HeroGradientImageProps) => {
   return (
-    <section className={clsx('p-0 py-10 bg-grad pattern-overlay-2 relative', className)}>
+    <section className={clsx('p-0 py-10 bg-grad-readable pattern-overlay-2 relative', className)}>
       <div className="container-larexa">
         <div className="flex flex-wrap py-0 md:py-10 items-center">
           {/* Content */}

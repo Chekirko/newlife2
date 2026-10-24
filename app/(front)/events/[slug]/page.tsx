@@ -148,7 +148,7 @@ export default async function EventDetailPage({
                 <i className="far fa-calendar-alt" />
                 {formatEventDate(event.startDate)}
               </span>
-              <span className="bg-grad text-white text-xs font-semibold px-3 py-1 rounded">
+              <span className="bg-grad-readable text-white text-xs font-semibold px-3 py-1 rounded">
                 {badge}
               </span>
               {event.location && (
@@ -185,7 +185,7 @@ export default async function EventDetailPage({
             <div className="mt-10 pt-8 border-t border-gray-200">
               <Link
                 href="/events"
-                className="inline-flex items-center gap-2 text-primary hover:text-primary/80 font-semibold transition-colors"
+                className="inline-flex items-center gap-2 text-primary-text hover:text-primary-text font-semibold transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path

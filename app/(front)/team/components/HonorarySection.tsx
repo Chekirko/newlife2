@@ -49,7 +49,7 @@ export function HonorarySection({ members, bgClass = 'bg-gray-50' }: HonorarySec
                 </div>
 
                 {/* Name */}
-                <h5 className="text-lg font-bold text-gray-800 font-heading mb-1 group-hover:text-primary transition-colors">
+                <h5 className="text-lg font-bold text-gray-800 font-heading mb-1 group-hover:text-primary-text transition-colors">
                   {member.name}
                 </h5>
 

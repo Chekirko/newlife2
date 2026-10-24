@@ -32,7 +32,7 @@ export function PlaceholderPage({
       <section className="py-16 lg:py-24">
         <div className="container-larexa">
           <div className="max-w-xl mx-auto text-center">
-            <span className="bg-grad inline-flex w-16 h-16 rounded-full items-center justify-center mb-6">
+            <span className="bg-grad-readable inline-flex w-16 h-16 rounded-full items-center justify-center mb-6">
               <i className="fas fa-screwdriver-wrench text-white text-2xl" aria-hidden="true" />
             </span>
             <h2 className="font-heading font-bold text-2xl lg:text-3xl text-gray-800 mb-3">

@@ -25,7 +25,7 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
           />
         </Link>
         {mainCategory && (
-          <span className="absolute top-4 left-4 bg-grad text-white text-xs font-semibold px-3 py-1.5 rounded">
+          <span className="absolute top-4 left-4 bg-grad-readable text-white text-xs font-semibold px-3 py-1.5 rounded">
             {mainCategory}
           </span>
         )}
@@ -45,7 +45,7 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
         <h4 className="text-lg font-semibold mb-3 leading-snug">
           <Link
             href={`/news/${slug}`}
-            className="text-gray-800 hover:text-primary transition-colors"
+            className="text-gray-800 hover:text-primary-text transition-colors"
           >
             {title}
           </Link>
@@ -59,7 +59,7 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
         {/* Read more */}
         <Link
           href={`/news/${slug}`}
-          className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary/80 transition-colors group"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-primary-text hover:text-primary-text transition-colors group"
         >
           Читати далі
           <svg

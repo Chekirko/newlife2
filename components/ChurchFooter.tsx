@@ -36,7 +36,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
           <div>
             <div className="flex items-center gap-3 mb-6">
               <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">НЖ</span>
+                <span className="text-gray-900 font-bold text-xl">НЖ</span>
               </div>
               <div>
                 <span className="font-heading font-bold text-xl text-white block leading-tight">

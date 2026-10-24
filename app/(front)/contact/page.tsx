@@ -147,7 +147,7 @@ export default async function ContactPage() {
               <h5 className="font-heading font-semibold text-gray-800 mb-2">Молитовна підтримка</h5>
               <p className="text-gray-500 text-sm">
                 Якщо вам потрібна молитва, напишіть на{' '}
-                <a href={`mailto:${email}`} className="text-primary hover:underline">
+                <a href={`mailto:${email}`} className="text-primary-text hover:underline">
                   {email}
                 </a>
               </p>
@@ -156,7 +156,7 @@ export default async function ContactPage() {
               <h5 className="font-heading font-semibold text-gray-800 mb-2">Загальні питання</h5>
               <p className="text-gray-500 text-sm">
                 Для загальних запитань або пропозицій{' '}
-                <a href={`mailto:${email}`} className="text-primary hover:underline">
+                <a href={`mailto:${email}`} className="text-primary-text hover:underline">
                   {email}
                 </a>
               </p>

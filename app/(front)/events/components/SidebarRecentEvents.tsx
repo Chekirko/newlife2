@@ -39,7 +39,7 @@ export function SidebarRecentEvents({ events }: SidebarRecentEventsProps) {
             <div className="flex-1 min-w-0">
               <Link
                 href={`/events/${event.slug}`}
-                className="text-sm font-medium text-gray-800 hover:text-primary transition-colors leading-snug line-clamp-2 block"
+                className="text-sm font-medium text-gray-800 hover:text-primary-text transition-colors leading-snug line-clamp-2 block"
               >
                 {event.title}
               </Link>

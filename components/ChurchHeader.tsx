@@ -86,12 +86,12 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
             {/* Left side */}
             <div className="hidden md:flex items-center gap-6 text-gray-600">
               <span className="flex items-center gap-2">
-                <i className="fas fa-phone text-primary" aria-hidden="true"></i>
-                <a href={`tel:${phone}`} className="hover:text-primary">{phoneDisplay}</a>
+                <i className="fas fa-phone text-primary-text" aria-hidden="true"></i>
+                <a href={`tel:${phone}`} className="hover:text-primary-text">{phoneDisplay}</a>
               </span>
               <span className="flex items-center gap-2">
-                <i className="fas fa-envelope text-primary" aria-hidden="true"></i>
-                <a href={`mailto:${email}`} className="hover:text-primary">{email}</a>
+                <i className="fas fa-envelope text-primary-text" aria-hidden="true"></i>
+                <a href={`mailto:${email}`} className="hover:text-primary-text">{email}</a>
               </span>
             </div>
 
@@ -99,7 +99,7 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
             <div className="flex items-center gap-4 ml-auto">
               {sundayService && (
                 <span className="hidden sm:inline text-gray-600">
-                  <i className="far fa-clock text-primary mr-1" aria-hidden="true"></i>
+                  <i className="far fa-clock text-primary-text mr-1" aria-hidden="true"></i>
                   {sundayService.day}: {sundayService.time}
                 </span>
               )}
@@ -140,7 +140,7 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
                 className="w-10 h-10 rounded-full flex items-center justify-center"
                 style={{ backgroundColor: 'var(--color-primary)' }}
               >
-                <span className="text-white font-bold text-lg">НЖ</span>
+                <span className="text-gray-900 font-bold text-lg">НЖ</span>
               </div>
               <div className="hidden sm:block">
                 <span className="font-heading font-bold text-lg block leading-tight text-gray-800">
@@ -161,8 +161,8 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
                         href={item.href}
                         aria-current={pathname === item.href ? 'page' : undefined}
                         className={clsx(
-                          'nav-link px-4 py-2 block font-medium text-[15px] transition-colors hover:text-primary',
-                          pathname === item.href ? 'text-primary' : 'text-gray-700',
+                          'nav-link px-4 py-2 block font-medium text-[15px] transition-colors hover:text-primary-text',
+                          pathname === item.href ? 'text-primary-text' : 'text-gray-700',
                         )}
                       >
                         {item.label}
@@ -236,8 +236,8 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
                       href={item.href}
                       aria-current={pathname === item.href ? 'page' : undefined}
                       className={clsx(
-                        'block py-2 px-4 rounded hover:text-primary hover:bg-gray-50',
-                        pathname === item.href ? 'text-primary' : 'text-gray-700',
+                        'block py-2 px-4 rounded hover:text-primary-text hover:bg-gray-50',
+                        pathname === item.href ? 'text-primary-text' : 'text-gray-700',
                       )}
                       onClick={() => setIsMobileMenuOpen(false)}
                     >
@@ -299,8 +299,8 @@ function DropdownMenu({ item, pathname }: { item: NavItem; pathname: string }) {
         aria-controls={menuId}
         onClick={() => setOpen((v) => !v)}
         className={clsx(
-          'nav-link px-4 py-2 flex items-center gap-1 font-medium text-[15px] transition-colors hover:text-primary',
-          isActive ? 'text-primary' : 'text-gray-700',
+          'nav-link px-4 py-2 flex items-center gap-1 font-medium text-[15px] transition-colors hover:text-primary-text',
+          isActive ? 'text-primary-text' : 'text-gray-700',
         )}
       >
         {item.label}
@@ -329,8 +329,8 @@ function DropdownMenu({ item, pathname }: { item: NavItem; pathname: string }) {
             aria-current={pathname === child.href ? 'page' : undefined}
             onClick={() => setOpen(false)}
             className={clsx(
-              'dropdown-item block px-4 py-2 hover:text-primary hover:bg-gray-50 transition-colors',
-              pathname === child.href ? 'text-primary' : 'text-gray-600',
+              'dropdown-item block px-4 py-2 hover:text-primary-text hover:bg-gray-50 transition-colors',
+              pathname === child.href ? 'text-primary-text' : 'text-gray-600',
             )}
           >
             {child.label}
@@ -361,8 +361,8 @@ function MobileDropdown({
         type="button"
         aria-expanded={isOpen}
         className={clsx(
-          'w-full flex items-center justify-between py-2 px-4 rounded hover:text-primary hover:bg-gray-50',
-          isActive ? 'text-primary' : 'text-gray-700',
+          'w-full flex items-center justify-between py-2 px-4 rounded hover:text-primary-text hover:bg-gray-50',
+          isActive ? 'text-primary-text' : 'text-gray-700',
         )}
         onClick={() => setIsOpen(!isOpen)}
       >
@@ -386,8 +386,8 @@ function MobileDropdown({
               href={child.href}
               aria-current={pathname === child.href ? 'page' : undefined}
               className={clsx(
-                'block py-2 px-4 rounded text-sm hover:text-primary hover:bg-gray-50',
-                pathname === child.href ? 'text-primary' : 'text-gray-500',
+                'block py-2 px-4 rounded text-sm hover:text-primary-text hover:bg-gray-50',
+                pathname === child.href ? 'text-primary-text' : 'text-gray-500',
               )}
               onClick={onClose}
             >

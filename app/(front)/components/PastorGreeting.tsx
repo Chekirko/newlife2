@@ -122,7 +122,7 @@ export const PastorGreeting = ({
           <div className="w-full md:w-1/2 md:pl-8 lg:pl-12">
             {/* Pre-title */}
             {preTitle && (
-              <h6 className="text-primary font-semibold tracking-wide uppercase text-sm mb-3">
+              <h6 className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3">
                 {preTitle}
               </h6>
             )}
@@ -157,7 +157,7 @@ export const PastorGreeting = ({
             {quote && (
               <p className="mb-4">
                 <span className="text-gray-800 font-bold">— {quote.author},</span>{' '}
-                <span className="text-primary">{quote.role}</span>
+                <span className="text-primary-text">{quote.role}</span>
               </p>
             )}
 

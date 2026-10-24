@@ -108,7 +108,7 @@ export default async function TeamMemberPage({
               {/* Roles */}
               <div className="flex flex-wrap gap-2 mb-6">
                 {member.title && (
-                  <span className="bg-grad text-white text-sm font-semibold px-4 py-1.5 rounded-full">
+                  <span className="bg-grad-readable text-white text-sm font-semibold px-4 py-1.5 rounded-full">
                     {member.title}
                   </span>
                 )}
@@ -118,7 +118,7 @@ export default async function TeamMemberPage({
                   </span>
                 )}
                 {member.responsibility?.map((r) => (
-                  <span key={r} className="border border-primary text-primary text-sm font-semibold px-4 py-1.5 rounded-full">
+                  <span key={r} className="border border-primary text-primary-text text-sm font-semibold px-4 py-1.5 rounded-full">
                     {r}
                   </span>
                 ))}

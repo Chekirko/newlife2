@@ -99,7 +99,7 @@ export const NewsSlider = ({
         {(preTitle || title || description) && (
           <div className="max-w-3xl mx-auto text-center mb-12">
             {preTitle && (
-              <span className="text-primary font-semibold tracking-wide uppercase text-sm block mb-3">
+              <span className="text-primary-text font-semibold tracking-wide uppercase text-sm block mb-3">
                 {preTitle}
               </span>
             )}
@@ -153,7 +153,7 @@ export const NewsSlider = ({
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
                         />
                         {/* Main category badge */}
-                        <span className="absolute top-3 left-3 bg-grad text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
+                        <span className="absolute top-3 left-3 bg-grad-readable text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
                           {item.mainCategory}
                         </span>
                       </div>
@@ -163,14 +163,14 @@ export const NewsSlider = ({
                         {/* Date & ministry */}
                         <div className="flex items-center gap-2 mb-2 text-sm text-gray-500 min-w-0">
                           <time className="flex items-center gap-1 shrink-0">
-                            <i className="far fa-calendar-alt text-primary text-xs" />
+                            <i className="far fa-calendar-alt text-primary-text text-xs" />
                             {item.date}
                           </time>
                           {item.ministry && (
                             <>
                               <span className="text-gray-300 shrink-0">|</span>
                               <span
-                                className="text-primary text-xs font-medium truncate max-w-[160px]"
+                                className="text-primary-text text-xs font-medium truncate max-w-[160px]"
                                 title={item.ministry}
                               >
                                 {item.ministry}
@@ -180,7 +180,7 @@ export const NewsSlider = ({
                         </div>
 
                         {/* Title */}
-                        <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-primary transition-colors line-clamp-2">
+                        <h3 className="text-lg font-bold text-gray-800 mb-2 group-hover:text-primary-text transition-colors line-clamp-2">
                           {item.title}
                         </h3>
 

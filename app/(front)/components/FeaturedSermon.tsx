@@ -26,7 +26,7 @@ export function FeaturedSermon({ sermon }: FeaturedSermonProps) {
     <section className="py-16 lg:py-20">
       <div className="container-larexa">
         <div className="mb-10 text-center">
-          <span className="text-primary mb-2 block text-sm font-semibold uppercase tracking-wide">
+          <span className="text-primary-text mb-2 block text-sm font-semibold uppercase tracking-wide">
             Слово Боже
           </span>
           <h2 className="text-3xl font-bold text-gray-800 lg:text-4xl">Актуальне слово</h2>
@@ -56,7 +56,7 @@ export function FeaturedSermon({ sermon }: FeaturedSermonProps) {
             />
             {sermon.youtubeId && (
               <span className="absolute inset-0 flex items-center justify-center bg-black/15 transition-colors group-hover:bg-black/30">
-                <span className="text-primary flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-md transition-transform group-hover:scale-110">
+                <span className="text-primary-text flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-md transition-transform group-hover:scale-110">
                   <i className="fas fa-play ml-1 text-2xl" />
                 </span>
               </span>
@@ -97,14 +97,14 @@ export function FeaturedSermon({ sermon }: FeaturedSermonProps) {
                 <button
                   type="button"
                   onClick={() => setOpen(true)}
-                  className="bg-grad inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90"
+                  className="bg-grad-readable inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-position] duration-300"
                 >
                   <i className="fas fa-play" /> Дивитися проповідь
                 </button>
               )}
               <Link
                 href="/media?category=проповідь"
-                className="text-primary inline-flex items-center gap-2 text-sm font-semibold hover:underline"
+                className="text-primary-text inline-flex items-center gap-2 text-sm font-semibold hover:underline"
               >
                 Усі проповіді <i className="fas fa-arrow-right text-xs" />
               </Link>

@@ -36,7 +36,7 @@ export const ActionBoxFullWidth = ({
     <section 
       className={clsx(
         'py-16',
-        isGradient && 'bg-grad',
+        isGradient && 'bg-grad-readable',
         backgroundImage && `bg-overlay-dark-${overlayDark} bg-cover bg-center`,
         'all-text-white',
         className

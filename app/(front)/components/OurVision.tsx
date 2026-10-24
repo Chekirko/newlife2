@@ -36,7 +36,7 @@ export const OurVision = ({
         {/* Header */}
         <div className="mb-12 max-w-3xl">
           {preTitle && (
-            <h6 className="text-primary font-semibold tracking-wide uppercase text-sm mb-3">
+            <h6 className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3">
               {preTitle}
             </h6>
           )}
@@ -51,7 +51,7 @@ export const OurVision = ({
           {ctaText && ctaHref && (
             <Link
               href={ctaHref}
-              className="inline-flex items-center gap-2 mt-5 text-primary font-semibold hover:gap-3 transition-all"
+              className="inline-flex items-center gap-2 mt-5 text-primary-text font-semibold hover:gap-3 transition-all"
             >
               {ctaText}
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,14 +87,14 @@ export const OurVision = ({
 
           {/* Vision block with gradient */}
           <div className="md:col-span-6">
-            <div className="bg-grad h-full w-full rounded-lg p-6 md:p-8 lg:p-12 flex items-center" style={{ minHeight: '220px' }}>
+            <div className="bg-grad-readable h-full w-full rounded-lg p-6 md:p-8 lg:p-12 flex items-center" style={{ minHeight: '220px' }}>
               <div className="text-white">
                 {visionHighlight && (
-                  <span className="block text-base md:text-lg lg:text-xl font-medium mb-2 md:mb-3 opacity-90">
+                  <span className="block text-base md:text-lg lg:text-xl font-medium mb-2 md:mb-3">
                     {visionHighlight}
                   </span>
                 )}
-                <h3 className="text-xl md:text-2xl lg:text-3xl font-bold leading-snug">
+                <h3 className="text-white text-xl md:text-2xl lg:text-3xl font-bold leading-snug">
                   {visionText}
                 </h3>
               </div>

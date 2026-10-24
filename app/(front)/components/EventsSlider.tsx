@@ -101,7 +101,7 @@ export const EventsSlider = ({
           {(preTitle || title || description) && (
             <div className="max-w-3xl mx-auto text-center mb-12">
               {preTitle && (
-                <span className="text-primary font-semibold tracking-wide uppercase text-sm block mb-3">
+                <span className="text-primary-text font-semibold tracking-wide uppercase text-sm block mb-3">
                   {preTitle}
                 </span>
               )}
@@ -129,21 +129,21 @@ export const EventsSlider = ({
                   className="object-cover"
                 />
                 {event.tag && (
-                  <span className="absolute top-4 left-4 bg-grad text-white px-4 py-2 rounded-full text-sm font-medium">
+                  <span className="absolute top-4 left-4 bg-grad-readable text-white px-4 py-2 rounded-full text-sm font-medium">
                     {event.tag}
                   </span>
                 )}
               </div>
               {/* Content */}
               <div className="p-8 lg:p-12 flex flex-col justify-center">
-                <span className="text-primary font-medium mb-2">{event.date}</span>
+                <span className="text-primary-text font-medium mb-2">{event.date}</span>
                 <h3 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
                   {event.title}
                 </h3>
                 <p className="text-gray-600 mb-6 text-lg">{event.description}</p>
                 <Link
                   href={`/events/${event.slug}`}
-                  className="inline-flex items-center justify-center px-6 py-3 bg-grad text-white font-medium rounded-lg hover:opacity-90 transition-opacity w-fit"
+                  className="inline-flex items-center justify-center px-6 py-3 bg-grad-readable text-white font-medium rounded-lg transition-[background-position] duration-300 w-fit"
                 >
                   Детальніше
                   <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +166,7 @@ export const EventsSlider = ({
         {(preTitle || title || description) && (
           <div className="max-w-3xl mx-auto text-center mb-12">
             {preTitle && (
-              <span className="text-primary font-semibold tracking-wide uppercase text-sm block mb-3">
+              <span className="text-primary-text font-semibold tracking-wide uppercase text-sm block mb-3">
                 {preTitle}
               </span>
             )}
@@ -218,14 +218,14 @@ export const EventsSlider = ({
                         className="object-cover"
                       />
                       {event.tag && (
-                        <span className="absolute top-4 left-4 bg-grad text-white px-3 py-1 rounded-full text-sm font-medium">
+                        <span className="absolute top-4 left-4 bg-grad-readable text-white px-3 py-1 rounded-full text-sm font-medium">
                           {event.tag}
                         </span>
                       )}
                     </div>
                     {/* Content */}
                     <div className="p-5 lg:p-6">
-                      <span className="text-primary text-sm font-medium mb-2 block">
+                      <span className="text-primary-text text-sm font-medium mb-2 block">
                         {event.date}
                       </span>
                       <h3 className="text-xl font-bold text-gray-800 mb-3">
@@ -236,7 +236,7 @@ export const EventsSlider = ({
                       </p>
                       <Link
                         href={`/events/${event.slug}`}
-                        className="inline-flex items-center text-primary font-medium text-sm hover:underline"
+                        className="inline-flex items-center text-primary-text font-medium text-sm hover:underline"
                       >
                         Детальніше
                         <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -108,7 +108,7 @@ export function MediaGallery({
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Пошук за назвою, проповідником, темою…"
-            className="w-full rounded-full border border-gray-200 bg-white py-3 pl-11 pr-4 text-sm text-gray-700 shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="w-full rounded-full border border-gray-200 bg-white py-3 pl-11 pr-4 text-sm text-gray-700 shadow-sm focus:border-primary-text focus:ring-2 focus:ring-primary-text"
           />
         </div>
       </div>
@@ -131,7 +131,7 @@ export function MediaGallery({
                 onClick={() => onCategory(tab.value)}
                 className={clsx(
                   'rounded-full px-5 py-2 text-sm font-semibold transition-colors',
-                  isActive ? 'bg-grad text-white' : 'text-gray-600 hover:text-gray-900',
+                  isActive ? 'bg-grad-readable text-white' : 'text-gray-600 hover:text-gray-900',
                 )}
               >
                 {tab.label}
@@ -151,7 +151,7 @@ export function MediaGallery({
             id="speaker-filter"
             value={speaker}
             onChange={(e) => onSpeaker(e.target.value)}
-            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:border-primary focus:outline-none"
+            className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm text-gray-700 focus:border-primary-text"
           >
             <option value="">Усі</option>
             {speakers.map((s) => (
@@ -199,7 +199,7 @@ export function MediaGallery({
             type="button"
             onClick={loadMore}
             disabled={isPending}
-            className="bg-grad inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition-opacity hover:opacity-90 disabled:opacity-60"
+            className="bg-grad-readable inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition-[background-position] duration-300 disabled:opacity-60"
           >
             {isPending ? (
               <>
