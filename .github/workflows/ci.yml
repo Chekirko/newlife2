@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Quality checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      SANITY_CLI_TELEMETRY_DISABLED: '1'
+      # Public identifiers used by the site; no CMS write token or YouTube key.
+      NEXT_PUBLIC_SANITY_PROJECT_ID: n4j5141g
+      NEXT_PUBLIC_SANITY_DATASET: production
+
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6
+        with:
+          run_install: false
+          standalone: true
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: pnpm
+          cache-dependency-path: |
+            pnpm-lock.yaml
+            pnpm-workspace.yaml
+            patches/*.patch
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm run lint
+
+      - name: Generate types and check TypeScript
+        run: pnpm run typecheck
+
+      - name: Regression tests
+        run: pnpm test
+
+      # typecheck already ran Sanity typegen; avoid repeating prebuild in CI.
+      - name: Production build
+        run: pnpm exec next build

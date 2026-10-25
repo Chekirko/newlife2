@@ -52,10 +52,11 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
 
   useEffect(() => {
     let ticking = false
+    let frameId = 0
     
     const handleScroll = () => {
       if (!ticking) {
-        window.requestAnimationFrame(() => {
+        frameId = window.requestAnimationFrame(() => {
           setScrollY(window.scrollY)
           ticking = false
         })
@@ -63,9 +64,12 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
       }
     }
 
-    setScrollY(window.scrollY)
+    handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+      window.cancelAnimationFrame(frameId)
+    }
   }, [])
 
   // Показати sticky header після прокрутки top bar

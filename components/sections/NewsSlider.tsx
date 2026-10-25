@@ -64,12 +64,10 @@ export const NewsSlider = ({
   const maxIndex = Math.max(0, news.length - visibleCards)
   const slidePercent = 100 / visibleCards
 
-  // Reset index when layout changes
-  useEffect(() => {
-    if (currentIndex > maxIndex) {
-      setCurrentIndex(maxIndex)
-    }
-  }, [visibleCards, maxIndex, currentIndex])
+  // Clamp before rendering when the viewport or news count changes.
+  if (currentIndex > maxIndex) {
+    setCurrentIndex(maxIndex)
+  }
 
   // Auto-scroll
   useEffect(() => {

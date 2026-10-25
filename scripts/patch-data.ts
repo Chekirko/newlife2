@@ -1,4 +1,4 @@
-import { createClient } from 'next-sanity'
+import { createClient, defineQuery } from 'next-sanity'
 import { loadEnvConfig } from '@next/env'
 
 const projectDir = process.cwd()
@@ -28,11 +28,15 @@ async function patchData() {
   console.log('Fetching ministries to patch...')
   
   // Fetch all ministries
-  const ministries = await client.fetch(`*[_type == "ministry"]{_id, leaderPhoto, gallery}`)
+  const ministries = await client.fetch<{
+    _id: string
+    leaderPhoto?: unknown
+    gallery?: ({ _key?: string } & Record<string, unknown>)[] | null
+  }[]>(defineQuery(`*[_type == "ministry"]{_id, leaderPhoto, gallery}`))
   
   for (const ministry of ministries) {
     let needsPatch = false
-    const patchObj: any = {}
+    const patchObj: Record<string, unknown> = {}
     const unsetArr: string[] = []
 
     // Fix 1: Null leaderPhoto
@@ -44,11 +48,11 @@ async function patchData() {
 
     // Fix 2: Missing keys in gallery array
     if (ministry.gallery && Array.isArray(ministry.gallery)) {
-      const hasMissingKeys = ministry.gallery.some((item: any) => !item._key)
+      const hasMissingKeys = ministry.gallery.some((item) => !item._key)
       
       if (hasMissingKeys) {
         console.log(`- Document ${ministry._id} has gallery items without _key. Fixing...`)
-        const fixedGallery = ministry.gallery.map((item: any) => {
+        const fixedGallery = ministry.gallery.map((item) => {
           if (!item._key) {
             return { ...item, _key: generateKey() }
           }

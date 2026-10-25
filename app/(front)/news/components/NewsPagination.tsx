@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
 
 interface NewsPaginationProps {
   currentPage: number
@@ -10,8 +9,6 @@ interface NewsPaginationProps {
 }
 
 export function NewsPagination({ currentPage, totalPages, category }: NewsPaginationProps) {
-  const router = useRouter()
-
   if (totalPages <= 1) return null
 
   const buildHref = (page: number) => {

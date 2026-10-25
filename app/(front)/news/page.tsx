@@ -64,7 +64,7 @@ export default async function NewsPage({
       title: string
       slug: string
       publishedAt: string
-      image: any
+      image: SanityNews['image'] | null
     }>>(NEWS_RECENT_QUERY),
     client.fetch<string[]>(NEWS_CATEGORIES_QUERY),
     getPageHeroes(),

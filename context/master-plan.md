@@ -86,7 +86,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 | C1 | **Справжня контактна форма** | PLAN | security-guidance · senior-fullstack | M | `contact/page.tsx` зараз лише client-валідація. Server Action + zod + honeypot + rate-limit + email (Resend/SMTP). Без зберігання ПД понад потрібне. | ⬜ |
 | C2 | **CSP enforce** | PLAN | security-guidance | S–M | Перемкнути `Content-Security-Policy-Report-Only` → enforce у `next.config.ts` після runtime-смоук. Будь-який новий embed/скрипт → оновити відповідний source-list (`frame-src`/`img-src`/`connect-src`). | 🔄 Report-Only активний |
 | C3 | **Sanity webhook → on-demand revalidation** | PLAN | senior-fullstack | M | `revalidateTag`/`revalidatePath` замість лише ISR-60. Route handler + GROQ-projection webhook. | ⬜ |
-| C4 | **CI-пайплайн** | PLAN | ci-cd-pipeline-builder | M | GitHub Actions: install → typegen → lint → build (gate на PR). Опційно Lighthouse CI + a11y CI. Шаблони у `ci-cd-pipeline-builder/references/`. | ⬜ |
+| C4 | **CI-пайплайн** | PLAN | ci-cd-pipeline-builder | M | GitHub Actions: frozen install → lint → Sanity/Next typegen + TypeScript → 2 регресії → build. Один cached job, PR/master, cancellation. `docs/ci.md`; required check у захисті master налаштовується окремо від YAML. | ✅ Реалізовано 2026-10-25 |
 | C5 | **Гігієна env/секретів** | ENH | env-secrets-manager | S | Аудит токенів, `.env.example`, ротація, перевірка на витоки (`env_auditor.py`). | ⬜ |
 
 ## Tier D — Best-practice (в межах scope)
@@ -99,7 +99,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 | D4 | **Календар подій + «додати в календар»** | ENH | senior-frontend | M | Вид-календар для `/events`, генерація `.ics`, повторювані події. На базі моделі `event`. |
 | D5 | **Пошук по сайту** | ENH | senior-frontend | M | GROQ-пошук по news/events/ministries або Pagefind. |
 | D6 | **Моніторинг помилок + uptime** | ENH | security-guidance | S | Sentry (frontend+server actions) + uptime-пінг. |
-| D7 | **Автотести (зараз 0)** | ENH | ci-cd-pipeline-builder | M–L | ⚠️ **Найбільший інженерний ризик.** Vitest для `lib/`-утиліт + Playwright smoke на критичні маршрути; під'єднати в CI (C4). |
+| D7 | **Цільові автотести** | ENH | ci-cd-pipeline-builder | M–L | Уже є 2 регресії Studio (gallery callback/controls і SSE reconnect), підключені в C4. Далі — тести конкретних багів/критичної логіки; Vitest/Playwright додавати лише за обґрунтованої потреби. |
 | D8 | **Повний a11y-прохід** | ENH | a11y-audit | M | `a11y_scanner.py` по всіх сторінках; форми, ARIA, фокус-пастки; закрити залишки після A2. |
 | D9 | **Медіа-оптимізація** | ENH | performance-profiler | S | LQIP blur-placeholders із Sanity-метаданих, AVIF/WebP, ревізія `sizes`. |
 
@@ -147,7 +147,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 `A1–A4 (готовність) → B1–B4 (нові сторінки) → C1–C5 (харденінг) → D1–D9 (best-practice) → E* (за бажанням) → НАЙОСТАННІШЕ: відкриття індексації`.
 Перед кожною фазою — перелік пунктів + запит, що робити; після кожного етапу — запит про commit+push. Альтернатива «менший обсяг до відкриття»: A1–A4 + C2 + D1, але відкриття індексації лишається фінальним кроком.
 
-**Найбільший ризик** інженерно — відсутність автотестів (D7); закрити паралельно з CI (C4).
+**Подальший ризик** інженерно — обмежене покриття бізнес-логіки (D7); дві наявні регресії Studio вже підключено в CI (C4).
 
 ## Прогрес по плану
 - 2026-10-24 — **A2.1 + A2.2 завершено** за вибором користувача. Контраст перевірено проєктним `contrast_checker.py`; обидва `pnpm run build` ✓ (TypeGen/TS/41 стор.). Browser QA охопив головну/about/news/ministries/team/media/contact на десктопній або мобільній ширині; фокус форми/медіапошуку/FAQ, кольори CTA та кнопок, відсутність горизонтального overflow. Повний WCAG-аудит не заявляється (D8). Докладні результати та обмеження — `progress-tracker.md`. Commit/push — лише після згоди користувача.

@@ -3,6 +3,7 @@
 ## General
 
 - Package manager: `pnpm@11.5.1`, pinned in `package.json#packageManager`. Vercel enables Corepack through `vercel.json#build.env.ENABLE_EXPERIMENTAL_COREPACK=1` so local and deployment installs use the same version. Do not infer pnpm's major from `lockfileVersion: 9.0`: pnpm 10 rejects the pnpm 11 string-form `patchedDependencies` metadata with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`. Validate dependency/patch changes with a clean `pnpm install --frozen-lockfile` in addition to `pnpm run build`.
+- C4: work in a separate `codex/*` branch; user authorized commit + push after completed tasks for Vercel Preview. Run `pnpm run lint`, `pnpm run typecheck`, `pnpm test`, and `pnpm run build`. CI runs one cached Ubuntu/Node 24 job on PRs to `master` and pushes to `master`; see `docs/ci.md`. Do not add test frameworks or expensive CI suites without a concrete regression/risk. Generated types and agent skill examples are outside ESLint; application/Studio/scripts rules stay enabled, warnings fail CI.
 - Keep modules small and single-purpose
 - Fix root causes — do not layer workarounds
 - Do not mix unrelated concerns in one component
