@@ -1,8 +1,7 @@
 'use client'
 
-import { useState } from 'react'
 import Image from 'next/image'
-import { ImageLightbox, type PhotoItem } from '@/components'
+import { PhotoViewer, type PhotoItem } from '@/components'
 
 /**
  * PhotoGalleryGrid — Creative mosaic photo grid for HORIZONTAL images.
@@ -18,6 +17,7 @@ import { ImageLightbox, type PhotoItem } from '@/components'
 
 export interface PhotoGalleryGridProps {
   photos: PhotoItem[]
+  viewerPhotos?: PhotoItem[]
   title?: string
   className?: string
 }
@@ -33,12 +33,11 @@ const SPANS = [
   'col-span-1 sm:col-span-2 lg:col-span-1',
 ]
 
-export function PhotoGalleryGrid({ photos, title, className = '' }: PhotoGalleryGridProps) {
-  const [active, setActive] = useState<number | null>(null)
+export function PhotoGalleryGrid({ photos, viewerPhotos = photos, title, className = '' }: PhotoGalleryGridProps) {
 
   if (!photos || photos.length === 0) return null
 
-  // Mosaic renders up to 7 tiles; the lightbox browses that same set.
+  // Keep the compact mosaic; the viewer includes every photo, plus the main one.
   const gallery = photos.slice(0, 7)
 
   return (
@@ -52,15 +51,15 @@ export function PhotoGalleryGrid({ photos, title, className = '' }: PhotoGallery
       {/* Grid mapping perfectly to horizontal aspect ratios */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5 auto-rows-[200px] sm:auto-rows-[220px] lg:auto-rows-[260px]">
         {gallery.map((photo, idx) => (
-          <button
+          <PhotoViewer
             key={photo.id}
-            type="button"
-            onClick={() => setActive(idx)}
-            aria-label={`Відкрити: ${photo.alt}`}
+            photos={viewerPhotos}
+            index={viewerPhotos.findIndex((item) => item.id === photo.id)}
             className={`relative rounded-2xl overflow-hidden group shadow-sm bg-gray-100 ${SPANS[idx] ?? ''}`}
           >
             <Image
               src={photo.thumbUrl}
+              unoptimized
               alt={photo.alt}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 66vw"
@@ -70,13 +69,10 @@ export function PhotoGalleryGrid({ photos, title, className = '' }: PhotoGallery
             />
             {/* Subtle darkening on hover */}
             <span className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out z-10 pointer-events-none" />
-          </button>
+          </PhotoViewer>
         ))}
       </div>
 
-      {active !== null && (
-        <ImageLightbox photos={gallery} initialIndex={active} onClose={() => setActive(null)} />
-      )}
     </div>
   )
 }

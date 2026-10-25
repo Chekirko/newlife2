@@ -2,3 +2,5 @@ allowBuilds:
   esbuild: true
   sharp: true
   unrs-resolver: true
+patchedDependencies:
+  event-source-polyfill@1.0.31: patches/event-source-polyfill@1.0.31.patch

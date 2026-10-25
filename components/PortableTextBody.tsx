@@ -2,10 +2,13 @@ import Image from 'next/image'
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
-import { urlFor } from '@/sanity/lib/image'
+import { originalImageUrl } from '@/sanity/lib/image'
+import { PhotoViewer } from './ui/PhotoViewer'
+import type { PhotoItem } from './ui/ImageLightbox'
 
 // Inline-image block shape (dimensions are deref'd in the page GROQ query).
 type InlineImage = {
+  _key?: string
   asset?: { _ref: string }
   alt?: string
   dimensions?: { width: number; height: number } | null
@@ -71,23 +74,6 @@ const components: PortableTextComponents = {
       )
     },
   },
-  types: {
-    image: ({ value }: { value: InlineImage }) => {
-      if (!value?.asset) return null
-      const width = value.dimensions?.width ?? 1200
-      const height = value.dimensions?.height ?? 800
-      return (
-        <Image
-          src={urlFor(value as SanityImageSource).width(1200).fit('max').auto('format').url()}
-          alt={value.alt ?? ''}
-          width={width}
-          height={height}
-          sizes="(max-width: 768px) 100vw, 800px"
-          className="rounded-xl my-6 w-full h-auto"
-        />
-      )
-    },
-  },
 }
 
 /**
@@ -111,5 +97,33 @@ export function PortableTextBody({
     )
   }
 
-  return <PortableText value={value} components={components} />
+  const photos: PhotoItem[] = (value.filter((block) => block._type === 'image') as unknown as InlineImage[])
+    .flatMap((image) => {
+      if (!image.asset?._ref) return []
+      const original = originalImageUrl(image as SanityImageSource)
+      return [{
+        id: image._key ?? image.asset._ref,
+        thumbUrl: original,
+        fullUrl: original,
+        alt: image.alt?.trim() || 'Фотографія',
+        width: image.dimensions?.width ?? 1200,
+        height: image.dimensions?.height ?? 800,
+      }]
+    })
+
+  return <PortableText value={value} components={{
+    ...components,
+    types: {
+      image: ({ value: image }: { value: InlineImage }) => {
+        const index = photos.findIndex((photo) => photo.id === (image._key ?? image.asset?._ref))
+        const photo = photos[index]
+        if (!photo) return null
+        return (
+          <PhotoViewer photos={photos} index={index} className="my-6 overflow-hidden rounded-xl">
+            <Image src={photo.fullUrl} alt={photo.alt} width={photo.width} height={photo.height} unoptimized className="w-full h-auto" />
+          </PhotoViewer>
+        )
+      },
+    },
+  }} />
 }

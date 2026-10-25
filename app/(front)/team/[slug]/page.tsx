@@ -2,10 +2,10 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
-import { PageHero, PortableTextBody } from '@/components'
+import { PageHero, PhotoViewer, PortableTextBody } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { getPageHeroes } from '@/lib/page-heroes'
-import { urlFor } from '@/sanity/lib/image'
+import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
 import { jsonLdHtml } from '@/lib/utils'
@@ -88,14 +88,24 @@ export default async function TeamMemberPage({
             {/* Photo */}
             <div className="w-full md:w-1/3 px-4 mb-8 md:mb-0">
               <div className="relative rounded-xl overflow-hidden bg-gray-100" style={{ aspectRatio: '3/4' }}>
+                <PhotoViewer photos={[{
+                  id: member._id,
+                  thumbUrl: originalImageUrl(member.photo),
+                  fullUrl: originalImageUrl(member.photo),
+                  alt: member.name,
+                  width: member.photoDimensions?.width ?? 800,
+                  height: member.photoDimensions?.height ?? 1000,
+                }]} className="absolute inset-0 h-full">
                 <Image
-                  src={photoUrl}
+                  src={originalImageUrl(member.photo)}
+                  unoptimized
                   alt={member.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
                   priority
                 />
+                </PhotoViewer>
               </div>
             </div>
 

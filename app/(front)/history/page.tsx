@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
-import { PageHero } from '@/components'
+import { PageHero, PhotoViewer } from '@/components'
 import { getPageHeroes } from '@/lib/page-heroes'
 
 export const metadata: Metadata = {
@@ -181,12 +181,15 @@ function TimelineCard({ item }: { item: any }) {
 
       {item.type === 'image' && (
           <div className="relative w-full h-[200px] sm:h-[250px]">
+            <PhotoViewer photos={[{ id: item.date, thumbUrl: item.image, fullUrl: item.image, alt: item.title, width: 1600, height: 900 }]} className="absolute inset-0 h-full">
             <Image 
               src={item.image} 
               alt={item.title} 
               fill 
               className="object-cover" 
+              unoptimized
             />
+            </PhotoViewer>
           </div>
         )}
 

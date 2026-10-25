@@ -1,6 +1,7 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
 import { CategoryInput, MultiCategoryInput } from '../components/CategoryInput'
 import { richTextBlocks } from './objects/richText'
+import { GalleryInput } from '../components/GalleryInput'
 
 // Suggested categories — editors can also type a brand-new one (the category
 // inputs are searchable dropdowns that accept free text).
@@ -83,9 +84,33 @@ export const newsType = defineType({
     }),
     defineField({
       name: 'image',
-      title: 'Зображення',
+      title: 'Основне фото',
       type: 'image',
       options: { hotspot: true },
+      validation: (rule) => rule.required().assetRequired().error('Додайте основне фото новини'),
+    }),
+    defineField({
+      name: 'gallery',
+      title: 'Додаткові фотографії',
+      type: 'array',
+      description: 'До 10 необов’язкових фото після тексту новини. Вертикальні й горизонтальні фото показуються повністю. Перетягуйте, щоб змінити порядок.',
+      options: { layout: 'grid' },
+      components: { input: GalleryInput },
+      validation: (rule) => rule.max(10).error('Можна додати не більше 10 додаткових фотографій'),
+      of: [
+        defineArrayMember({
+          type: 'image',
+          validation: (rule) => rule.required().assetRequired().error('Завантажте фото або видаліть порожній елемент'),
+          fields: [
+            defineField({
+              name: 'alt',
+              title: 'Опис фото (alt)',
+              type: 'string',
+              description: 'Коротко опишіть, що зображено, для людей, які користуються читачем екрана',
+            }),
+          ],
+        }),
+      ],
     }),
   ],
   orderings: [

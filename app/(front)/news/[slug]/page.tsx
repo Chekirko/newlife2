@@ -4,14 +4,15 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
 import { client } from '@/sanity/lib/client'
-import { urlFor } from '@/sanity/lib/image'
+import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
 import { SITE_URL } from '@/lib/site'
-import { PortableTextBody } from '@/components'
+import { PhotoViewer, PortableTextBody, type PhotoItem } from '@/components'
 import type { SanityNews } from '@/sanity/lib/types'
 import { defineQuery } from 'next-sanity'
 import { jsonLdHtml } from '@/lib/utils'
+import { NewsPhotoGallery } from './components/NewsPhotoGallery'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
@@ -26,7 +27,15 @@ const NEWS_BY_SLUG_QUERY = defineQuery(`
     categories,
     text,
     body[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } },
-    image
+    image,
+    "imageDimensions": image.asset->metadata.dimensions,
+    gallery[defined(asset->_id)][0...10]{
+      _key,
+      asset,
+      alt,
+      "lqip": asset->metadata.lqip,
+      "dimensions": asset->metadata.dimensions
+    }
   }
 `)
 
@@ -61,6 +70,30 @@ export default async function NewsDetailPage({
   ])
 
   if (!news) notFound()
+
+  const galleryPhotos: PhotoItem[] = (news.gallery ?? []).flatMap((photo, index) => {
+    const { width, height } = photo.dimensions ?? {}
+    if (!photo.asset?._ref || !width || !height) return []
+    const original = originalImageUrl(photo)
+    return [{
+      id: photo._key ?? `gallery-${index}`,
+      thumbUrl: original,
+      fullUrl: original,
+      alt: photo.alt?.trim() || `${news.title} — фото ${index + 1}`,
+      width,
+      height,
+      lqip: photo.lqip ?? undefined,
+    }]
+  }).slice(0, 10)
+  const mainPhoto: PhotoItem | null = news.image ? {
+    id: 'main',
+    thumbUrl: originalImageUrl(news.image),
+    fullUrl: originalImageUrl(news.image),
+    alt: news.title,
+    width: news.imageDimensions?.width ?? 1200,
+    height: news.imageDimensions?.height ?? 675,
+  } : null
+  const photos = mainPhoto ? [mainPhoto, ...galleryPhotos] : galleryPhotos
 
   const articleUrl = `${SITE_URL}/news/${news.slug}`
   const articleImage = news.image
@@ -181,26 +214,29 @@ export default async function NewsDetailPage({
             </div>
 
             {/* Image */}
-            {news.image && (
-              <div
+            {mainPhoto && (
+              <PhotoViewer photos={photos}
                 className="relative rounded-xl overflow-hidden mb-8"
-                style={{ aspectRatio: '16 / 9' }}
               >
                 <Image
-                  src={urlFor(news.image).width(1200).height(675).url()}
+                  src={mainPhoto.fullUrl}
                   alt={news.title}
-                  fill
+                  width={mainPhoto.width}
+                  height={mainPhoto.height}
+                  unoptimized
                   sizes="(max-width: 768px) 100vw, 800px"
-                  className="object-cover"
+                  className="w-full h-auto"
                   priority
                 />
-              </div>
+              </PhotoViewer>
             )}
 
             {/* Body */}
             <div className="max-w-none">
               <PortableTextBody value={news.body ?? news.text} />
             </div>
+
+            <NewsPhotoGallery photos={photos} startIndex={mainPhoto ? 1 : 0} />
 
             {/* Back link */}
             <div className="mt-10 pt-8 border-t border-gray-200">

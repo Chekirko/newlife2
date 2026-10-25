@@ -4,10 +4,10 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
-import { ImagePlaceholder, NewsSlider, PageHero, PortableTextBody, type PhotoItem } from '@/components'
+import { ImagePlaceholder, NewsSlider, PageHero, PhotoViewer, PortableTextBody, type PhotoItem } from '@/components'
 import { PhotoGalleryGrid } from './components/PhotoGalleryGrid'
 import { client } from '@/sanity/lib/client'
-import { urlFor } from '@/sanity/lib/image'
+import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import {
   MINISTRY_BY_SLUG_QUERY,
   MINISTRY_SLUGS_QUERY,
@@ -75,15 +75,24 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
   }))
 
   // Transform gallery images into lightbox-ready photos (thumb + full + lqip)
-  const galleryPhotos: PhotoItem[] = (ministry.gallery ?? []).map((img, i) => ({
+  const galleryPhotos: PhotoItem[] = (ministry.gallery ?? []).filter((img) => img.asset?._ref).map((img, i) => ({
     id: img._key ?? `${ministry.slug}-${i}`,
-    thumbUrl: urlFor(img as SanityImageSource).width(800).height(600).url(),
-    fullUrl: urlFor(img as SanityImageSource).width(1600).url(),
+    thumbUrl: originalImageUrl(img as SanityImageSource),
+    fullUrl: originalImageUrl(img as SanityImageSource),
     lqip: img.lqip ?? undefined,
     alt: `Фото — ${ministry.title}`,
     width: img.dimensions?.width ?? 1600,
     height: img.dimensions?.height ?? 1067,
   }))
+  const mainPhoto: PhotoItem | null = ministry.image ? {
+    id: 'main',
+    thumbUrl: originalImageUrl(ministry.image),
+    fullUrl: originalImageUrl(ministry.image),
+    alt: ministry.title,
+    width: ministry.imageDimensions?.width ?? 1200,
+    height: ministry.imageDimensions?.height ?? 675,
+  } : null
+  const viewerPhotos = mainPhoto ? [mainPhoto, ...galleryPhotos] : galleryPhotos
 
   return (
     <>
@@ -160,15 +169,18 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
             <div className="w-full md:w-3/4 px-4 mb-10 md:mb-0">
               {/* Ministry Image */}
               <div className="relative rounded-xl overflow-hidden mb-8" style={{ aspectRatio: '16 / 9' }}>
-                {ministry.image ? (
+                {mainPhoto ? (
+                  <PhotoViewer photos={viewerPhotos} className="absolute inset-0 h-full">
                   <Image
-                    src={urlFor(ministry.image).width(1200).height(675).url()}
+                    src={mainPhoto.fullUrl}
+                    unoptimized
                     alt={ministry.title}
                     fill
                     sizes="(max-width: 768px) 100vw, 75vw"
                     className="object-cover"
                     priority
                   />
+                  </PhotoViewer>
                 ) : (
                   <ImagePlaceholder className="absolute inset-0" />
                 )}
@@ -255,6 +267,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               {galleryPhotos.length > 0 && (
                 <PhotoGalleryGrid
                   photos={galleryPhotos}
+                  viewerPhotos={viewerPhotos}
                   title="Фотогалерея"
                   className="mt-10"
                 />

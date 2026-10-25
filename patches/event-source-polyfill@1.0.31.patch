@@ -1,0 +1,19 @@
+diff --git a/src/eventsource.js b/src/eventsource.js
+index cd2de7ce1699986cfcb237b6a40f8e249a856aed..4fcf8a82c507521d83d1eec91161e4d7bda12215 100644
+--- a/src/eventsource.js
++++ b/src/eventsource.js
+@@ -910,7 +910,13 @@
+         es.dispatchEvent(event);
+         fire(es, es.onerror, event);
+         if (error != undefined) {
+-          console.error(error);
++          // An idle heartbeat reconnect is recoverable, not an application error.
++          // Keep it visible without triggering Next.js' blocking error overlay.
++          if (/^No activity within \d+ milliseconds\..* Reconnecting\.$/.test(error.message)) {
++            console.warn(error);
++          } else {
++            console.error(error);
++          }
+         }
+       }
+     };

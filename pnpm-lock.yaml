@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+patchedDependencies:
+  event-source-polyfill@1.0.31: c02ee73a1e4ad02aee24f674397eff57e811a8b0136d96ec978f5fe85be6e918
+
 importers:
 
   .:
@@ -3629,6 +3632,7 @@ packages:
   eslint@9.39.2:
     resolution: {integrity: sha512-LEyamqS7W5HB3ujJyvi0HQK/dtVINZvd5mAAp9eT5S/ujByGjiZLCzPcHVzuXbpJDJF/cxwHlfceVUDZ2lnSTw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+    deprecated: This version is no longer supported. Please see https://eslint.org/version-support for other options.
     hasBin: true
     peerDependencies:
       jiti: '*'
@@ -8625,7 +8629,7 @@ snapshots:
     dependencies:
       '@types/event-source-polyfill': 1.0.5
       '@types/eventsource': 1.1.15
-      event-source-polyfill: 1.0.31
+      event-source-polyfill: 1.0.31(patch_hash=c02ee73a1e4ad02aee24f674397eff57e811a8b0136d96ec978f5fe85be6e918)
       eventsource: 2.0.2
 
   '@sanity/export@6.0.5':
@@ -10589,7 +10593,7 @@ snapshots:
 
   esutils@2.0.3: {}
 
-  event-source-polyfill@1.0.31: {}
+  event-source-polyfill@1.0.31(patch_hash=c02ee73a1e4ad02aee24f674397eff57e811a8b0136d96ec978f5fe85be6e918): {}
 
   event-target-shim@5.0.1: {}
 

@@ -1,5 +1,17 @@
 # Architecture Context
 
+## Studio: пакетний вибір наявних фото (2026-10-25)
+
+`news.gallery` має `GalleryInput` із двома кнопками: native multiple upload через `onSelectFile` і `Select — вибрати фото зі Studio`. Другий шлях відкриває `GalleryAssetPicker`: `useClient` поточного Studio workspace + параметризований `defineQuery` до `sanity.imageAsset`, пошук за originalFilename, стабільне сортування й порції по 40. Це окремий picker для масиву; `sanity-plugin-media` 4.3.6 у single-image source одразу повертає один asset і не реалізує потрібний multi-select. Вибрані assets додаються одним native `onInsert` (унікальні `_key`, image `_type`, weak asset refs, `skipInitialValue`, `open:false`); масив цілком не перезаписується. Основне image-поле лишається одиночним. Власних токенів, API routes чи CMS-клієнта для upload немає.
+
+`event-source-polyfill@1.0.31` має відтворюваний pnpm patch у `patches/`: лише його recoverable heartbeat message `No activity within … Reconnecting.` логовано як warning, щоб Next dev overlay не перекривав Studio. Події error/reconnect, retry/backoff та справжні мережеві/HTTP помилки збережено. Патч не усуває мережеві розриви й не вимикає live sync.
+
+### Studio: пакетний вибір наявних фото (2026-10-25)
+
+`news.gallery` має `GalleryInput` із двома кнопками: native multiple upload через `onSelectFile` і `Select — вибрати фото зі Studio`. Другий шлях відкриває `GalleryAssetPicker`: `useClient` поточного Studio workspace + параметризований `defineQuery` до `sanity.imageAsset`, пошук за originalFilename, стабільне сортування й порції по 40. Це окремий picker для масиву; `sanity-plugin-media` 4.3.6 у single-image source одразу повертає один asset і не реалізує потрібний multi-select. Вибрані assets додаються одним native `onInsert` (унікальні `_key`, image `_type`, weak asset refs, `skipInitialValue`, `open:false`); масив цілком не перезаписується. Основне image-поле лишається одиночним. Власних токенів, API routes чи CMS-клієнта для upload немає.
+
+`event-source-polyfill@1.0.31` має відтворюваний pnpm patch у `patches/`: лише його recoverable heartbeat message `No activity within … Reconnecting.` логовано як warning, щоб Next dev overlay не перекривав Studio. Події error/reconnect, retry/backoff та справжні мережеві/HTTP помилки збережено. Патч не усуває мережеві розриви й не вимикає live sync.
+
 ## Stack
 
 | Layer       | Technology                      | Role                                      |
@@ -40,6 +52,8 @@
 
 ## Storage Model
 
+- **Фото новин**: `news.image` — обов’язкове image-поле з перевіркою asset; `news.gallery` — необов’язковий масив до 10 image-елементів із необов’язковим `alt`. Asset кожного доданого елемента обов’язковий. Detail-запит через `defineQuery` відбирає до 10 наявних assets та проєктує dimensions/LQIP; сторінка будує єдину групу основного й додаткових фото. `NewsPhotoGallery` — Server Component із клієнтськими `PhotoViewer`-тригерами, пропускаються відсутні assets/розміри. `GalleryInput` у Studio додає multiple file picker і делегує кожен файл у штатний `onSelectFile({file, schemaType, assetSource})`; source з `Uploader` береться з `useFormBuilder().__internal.image.assetSources`, з урахуванням `directUploads`, як у native Sanity upload target. Sanity контролює прогрес, помилки, initial items і patches. **Sanity 4.22 не передає `onUpload` для image/object arrays** — не використовувати його як умову доступності чи upload callback. Добірка понад вільні місця або з непідтримуваним файлом відхиляється цілком до початку upload. Старі новини без gallery сумісні, міграція не потрібна. Галерея `/media/photos` лишається агрегатом `ministry.gallery`.
+- **Повнорозмірні фото**: `sanity/lib/image.ts` → `originalImageUrl()` повертає повну роздільність asset, ігнорує crop/hotspot, встановлює `q=100`; без resize/auto-format. Фото на детальних news/event/ministry/team, у фотогалереях і Portable Text використовують цей URL + `Image unoptimized`, без другого стиснення Next. Публічний CDN усе одно кодує JPEG; це не побітовий оригінал (`dlRaw` вимагає авторизації, не виносити токени на фронтенд). `PhotoViewer` — спільний клієнтський button-wrapper; відкриває `ImageLightbox` із групою `PhotoItem[]` і потрібним індексом. Переглядач використовує native modal `dialog` у top layer (працює всередині transformed-карток), Esc/бекдроп/закриття, ←/→ й екранні кнопки, лічильник, блокування scroll і повернення фокусу. Індекс живе всередині переглядача. Фонові hero, navigation-картки й відео мають окреме компонування. Повнорозмірні файли значно важчі; lazy loading збережено.
 - **Sanity Content Lake**: Весь динамічний контент (новини, служіння, події, текстові описи)
 - **Sanity CDN**: Медіа-файли (фотографії, зображення галерей)
 - **`public/`**: Статичні ресурси (hero-фони, логотип, іконки, фото пастора)

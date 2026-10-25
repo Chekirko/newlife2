@@ -26,6 +26,7 @@ export interface SanityGalleryImage {
 
 /** Ministry — full detail page */
 export interface SanityMinistry extends SanityMinistryCard {
+  imageDimensions?: { width: number; height: number } | null
   fullDescription: PortableTextBlock[] | null
   leaders: {
     _id: string
@@ -58,6 +59,8 @@ export interface SanityNews {
   text: string
   body: PortableTextBlock[] | null
   image: SanityImageSource
+  gallery?: (SanityGalleryImage & { alt?: string | null })[] | null
+  imageDimensions?: { width: number; height: number } | null
 }
 
 /** Event / announcement item */
@@ -91,5 +94,6 @@ export interface SanityTeamMemberCard {
 
 /** Team member — full detail page */
 export interface SanityTeamMember extends SanityTeamMemberCard {
+  photoDimensions?: { width: number; height: number } | null
   bio: PortableTextBlock[] | null
 }

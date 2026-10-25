@@ -1,8 +1,16 @@
 # Master Plan — сайт церкви «Нове Життя»
 
+**Studio feedback — пакетний Select і timeout (2026-10-25):** до галереї новини додано вибір кількох наявних assets через окремий діалог (checkboxes, пошук, порції 40, native `onInsert`, максимум 10, без повторів). Upload/Select стали виразними Sanity UI кнопками з hover/focus/pointer. Для recoverable 45s heartbeat reconnect — вузький pnpm patch рівня logging, без зміни retry/auth/CORS. Перевірки та межі live CMS QA зафіксовані у progress-tracker; публікацію не погоджено.
+
 > **Єдиний консолідований план проєкту.** Поєднує (1) усі правила/governance, (2) увесь незавершений backlog (Tier A–E + залишки специфікацій + дрібні TODO), (3) launch checklist. Замінює попередній `improvement-roadmap.md` і розрізнені scratch-плани. Повний канон процес-правил — `ai-workflow-rules.md`; жива хроніка стану — `progress-tracker.md`.
 
 ## Стан на момент консолідації (2026-06-21)
+
+**Завершений юніт (2026-10-25):** за прямим запитом користувача — обов’язкове основне фото новини + до 10 необов’язкових додаткових, окрема галерея після тексту `/news/[slug]` із повними кадрами різних пропорцій. Схема й серверний UI реалізовані; build, ESLint, Sanity validators та responsive browser QA ✓. Подробиці — у `progress-tracker.md`; commit/push ще не виконано.
+
+**Уточнення користувача — завершено (2026-10-25):** пакетний native multiple picker у Studio (`GalleryInput`, штатний upload, максимум 10); full-resolution `q=100` + `unoptimized` для контентних фото; спільний повноекранний лайтбокс зі стрілками (`PhotoViewer`/native-dialog `ImageLightbox`) для news/event/ministry/team, rich text, history і групового фото команди. Browser QA, TypeScript, targeted ESLint і фінальний `pnpm run build` (41 сторінка) ✓. Публічний Sanity CDN не гарантує побітового оригіналу (`dlRaw` потребує auth); повну роздільність і максимальну якість перевірено вимірюванням. Подробиці/межі QA — у `progress-tracker.md`; commit/push не виконано.
+
+**Виправлення після реального Studio feedback (2026-10-25):** `GalleryInput` помилково залежав від відсутнього `onUpload` і блокував picker. Переведено на фактичний `onSelectFile`/asset-source API Sanity 4.22; regression check без legacy callback PASS, build 41 сторінка ✓. Попередній mock `onUpload` не був підтвердженням роботи в Studio. Live authenticated upload ще не виконувався (IAB має окремий login); описано в progress-tracker. Публікація лишається непогодженою.
 
 Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **pre-launch** (`app/robots.ts` = `Disallow: /`, плейсхолдери `noindex`).
 

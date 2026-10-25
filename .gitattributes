@@ -1,0 +1,2 @@
+# pnpm hashes patch bytes; preserve upstream CRLF lines inside generated patches.
+patches/*.patch -text

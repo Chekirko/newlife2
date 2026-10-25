@@ -7,6 +7,7 @@
 export { MinistryCard, MinistryCardGrid, type MinistryCardProps, type MinistryCardGridProps } from './ui/MinistryCard'
 export { ImagePlaceholder } from './ui/ImagePlaceholder'
 export { ImageLightbox, type PhotoItem } from './ui/ImageLightbox'
+export { PhotoViewer } from './ui/PhotoViewer'
 
 // Section Components - Hero (only used variants)
 export {

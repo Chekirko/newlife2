@@ -4,8 +4,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
 import { client } from '@/sanity/lib/client'
-import { urlFor } from '@/sanity/lib/image'
-import { PortableTextBody } from '@/components'
+import { originalImageUrl, urlFor } from '@/sanity/lib/image'
+import { PhotoViewer, PortableTextBody } from '@/components'
 import { getSiteSettings } from '@/lib/site-settings'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
@@ -161,11 +161,19 @@ export default async function EventDetailPage({
 
             {/* Image */}
             {imageUrl && (
-              <div
+              <PhotoViewer photos={[{
+                id: event._id,
+                thumbUrl: originalImageUrl(event.image!),
+                fullUrl: originalImageUrl(event.image!),
+                alt: event.title,
+                width: event.imageDimensions?.width || 1200,
+                height: event.imageDimensions?.height || 675,
+              }]}
                 className="relative rounded-xl overflow-hidden mb-8"
               >
                 <Image
-                  src={urlFor(event.image!).ignoreImageParams().width(1600).fit('max').auto('format').url()}
+                  src={originalImageUrl(event.image!)}
+                  unoptimized
                   alt={event.title}
                   width={event.imageDimensions?.width || 1200}
                   height={event.imageDimensions?.height || 675}
@@ -173,7 +181,7 @@ export default async function EventDetailPage({
                   className="w-full h-auto"
                   priority
                 />
-              </div>
+              </PhotoViewer>
             )}
 
             {/* Body */}

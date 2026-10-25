@@ -12,6 +12,7 @@ export const TEAM_MEMBER_BY_SLUG_QUERY = defineQuery(`
     candidateTitle,
     bio[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } },
     photo,
+    "photoDimensions": photo.asset->metadata.dimensions,
     order
   }
 `)

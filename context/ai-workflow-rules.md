@@ -54,6 +54,8 @@ Do not modify the following unless explicitly instructed:
 
 ## Keeping Docs in Sync
 
+Для gallery Select перевіряти не тільки типи/SSR controls, а реальні read-only asset queries та інтерактивну добірку: кілька assets → одна `onInsert`, дублікати, залишок до 10, пошук, наступна порція, клавіатура й адаптивність. Відрізняти локальну form fixture з реальними assets від збереження у авторизованій CMS. Для heartbeat reconnect використовувати `scripts/check-studio-reconnect.mjs`: вузький warning-патч має зберігати error events, retry та реальні errors. Після зміни patched dependency перезапустити dev-сервер, щоб Webpack не тримав старий pnpm path.
+
 Update the relevant context file whenever implementation changes:
 
 - System architecture or boundaries → `architecture.md`
@@ -72,6 +74,9 @@ Update the relevant context file whenever implementation changes:
 5. No TypeScript errors in the modified files
 6. No console errors in the browser
 7. Responsive layout verified at mobile and desktop widths
+   Для галереї новин перевіряти відсутній/порожній масив, 1/2/10 фото та змішані вертикальні/горизонтальні пропорції; у Studio ліміт 10 має блокувати публікацію 11 фото. QA-дані не записувати в живий CMS-датасет.
+   Для пакетного завантаження перевіряти multiple picker, передачу всіх файлів у штатний uploader, ліміт залишку й readOnly. Для повнорозмірних фото перевіряти `q=100`, відсутність resize/Next optimizer та відповідність dimensions asset metadata; не обіцяти побітового збігу публічного CDN з upload. Для лайтбокса — стрілки, межі групи, Esc/бекдроп, focus restore і mobile viewport.
+   Для custom Studio inputs перевіряти фактично передані props встановленої версії Sanity, а не тільки TS interface. Regression mock не повинен додавати callback, якого немає в native field: для image/object arrays Sanity 4.22 це `onSelectFile`, без `onUpload`.
 8. Verified that relevant skills from the **Skill Registry** in `AGENTS.md` were loaded and applied (e.g., schema-markup JSON-LD for new pages, a11y patterns for new UI components, performance checks for image/bundle changes).
 9. **SEO surface kept in sync**: if the unit added a public page or a new Sanity content type, `app/sitemap.ts` was updated (new static route in `STATIC_ROUTES`, or a new branch in the GROQ query for a new type) and `noindex` was removed once the page is real. A new indexable page is NOT "done" until it is in the sitemap — or deliberately excluded with a noted reason (e.g. still a `noindex` placeholder). See `code-standards.md` → SEO & New Pages.
 

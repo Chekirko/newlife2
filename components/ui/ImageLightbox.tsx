@@ -4,10 +4,8 @@ import { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 
 // =========================================
-// ImageLightbox — accessible full-screen photo viewer (shared: /media/photos
-// bento + ministry detail gallery). Esc / backdrop / close button dismiss it;
-// ← → (and on-screen arrows) move through the gallery; focus is trapped and
-// restored to the trigger on close; body scroll is locked.
+// Shared full-screen viewer. A native modal dialog keeps controls and focus
+// together, above transformed cards and sticky headers. Photos use full-resolution URLs.
 //
 // The current index lives HERE (not in the parent grid), so navigating does not
 // re-render the gallery. The visible image is keyed by index (instant blur on
@@ -31,48 +29,26 @@ interface ImageLightboxProps {
 }
 
 export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxProps) {
-  const dialogRef = useRef<HTMLDivElement>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const [index, setIndex] = useState(initialIndex)
 
   const count = photos.length
-  // Mount-only: listeners, scroll-lock, focus. Arrow keys use functional updates
-  // so the handler never depends on `index` → it is not re-bound on navigation.
   useEffect(() => {
+    const dialog = dialogRef.current
+    if (!dialog) return
     const trigger = document.activeElement as HTMLElement | null
+    dialog.showModal()
     closeRef.current?.focus()
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') return onClose()
-      if (e.key === 'ArrowLeft') return setIndex((i) => (i > 0 ? i - 1 : i))
-      if (e.key === 'ArrowRight') return setIndex((i) => (i < count - 1 ? i + 1 : i))
-      if (e.key === 'Tab' && dialogRef.current) {
-        const focusable = dialogRef.current.querySelectorAll<HTMLElement>(
-          'a[href], button, textarea, input, select, [tabindex]:not([tabindex="-1"])',
-        )
-        if (focusable.length === 0) return
-        const first = focusable[0]
-        const last = focusable[focusable.length - 1]
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault()
-          last.focus()
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault()
-          first.focus()
-        }
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown)
     const prevOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
 
     return () => {
-      document.removeEventListener('keydown', onKeyDown)
+      dialog.close()
       document.body.style.overflow = prevOverflow
       trigger?.focus()
     }
-  }, [onClose, count])
+  }, [])
 
   const photo = photos[index]
   if (!photo) return null
@@ -82,21 +58,34 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
   const neighbours = [photos[index - 1], photos[index + 1]].filter(Boolean) as PhotoItem[]
 
   return (
-    <div
-      className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/85 p-4"
-      onClick={onClose}
+    <dialog
+      ref={dialogRef}
+      aria-label={photo.alt}
+      className="fixed inset-0 m-0 h-dvh w-dvw max-h-none max-w-none items-center justify-center border-0 bg-black/90 p-4 text-white open:flex"
+      onCancel={(event) => { event.preventDefault(); onClose() }}
+      onClick={(event) => { if (event.target === event.currentTarget) onClose() }}
+      onKeyDown={(event) => {
+        if (event.key === 'ArrowLeft') {
+          event.preventDefault()
+          setIndex((i) => Math.max(0, i - 1))
+        }
+        if (event.key === 'ArrowRight') {
+          event.preventDefault()
+          setIndex((i) => Math.min(count - 1, i + 1))
+        }
+      }}
     >
       <button
         ref={closeRef}
         type="button"
         onClick={onClose}
         aria-label="Закрити"
-        className="absolute right-4 top-4 z-10 text-2xl text-white/80 transition-colors hover:text-white"
+        className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-2xl text-white"
       >
-        <i className="fas fa-times" />
+        <i className="fas fa-times" aria-hidden="true" />
       </button>
 
-      {hasPrev && (
+      {count > 1 && (
         <button
           type="button"
           onClick={(e) => {
@@ -104,12 +93,13 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
             setIndex((i) => i - 1)
           }}
           aria-label="Попереднє фото"
-          className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white transition-colors hover:bg-white/20"
+          disabled={!hasPrev}
+          className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white disabled:opacity-40"
         >
-          <i className="fas fa-chevron-left" />
+          <i className="fas fa-chevron-left" aria-hidden="true" />
         </button>
       )}
-      {hasNext && (
+      {count > 1 && (
         <button
           type="button"
           onClick={(e) => {
@@ -117,17 +107,14 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
             setIndex((i) => i + 1)
           }}
           aria-label="Наступне фото"
-          className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-xl text-white transition-colors hover:bg-white/20"
+          disabled={!hasNext}
+          className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white disabled:opacity-40"
         >
-          <i className="fas fa-chevron-right" />
+          <i className="fas fa-chevron-right" aria-hidden="true" />
         </button>
       )}
 
       <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label={photo.alt}
         className="relative"
         onClick={(e) => e.stopPropagation()}
       >
@@ -138,12 +125,17 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
           width={photo.width}
           height={photo.height}
           sizes="90vw"
+          unoptimized
           priority
           placeholder={photo.lqip ? 'blur' : 'empty'}
           blurDataURL={photo.lqip}
           className="h-auto max-h-[88vh] w-auto max-w-[92vw] rounded-lg object-contain"
         />
       </div>
+
+      <p aria-live="polite" className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-4 py-2 text-sm text-white">
+        {index + 1} / {count}
+      </p>
 
       {/* Off-screen preload of the neighbouring photos so ◀ ▶ are instant. */}
       <div aria-hidden className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
@@ -155,11 +147,12 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
             width={n.width}
             height={n.height}
             sizes="90vw"
+            unoptimized
             loading="eager"
           />
         ))}
       </div>
-    </div>
+    </dialog>
   )
 }
 
