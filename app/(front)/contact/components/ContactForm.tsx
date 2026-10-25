@@ -1,39 +1,51 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { submitContact } from '../actions'
+import { CONTACT_LIMITS, type ContactResult, type ContactValues } from '../form-model'
 
-// =========================================
-// ContactForm — Client component with form state
-// Used on: Contact page
-// =========================================
+const emptyForm: ContactValues = { name: '', email: '', subject: '', message: '' }
+const inputClass = 'w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-500 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all aria-invalid:border-danger'
+const labelClass = 'block text-sm font-medium text-gray-800 mb-1.5'
 
 export function ContactForm() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-  })
+  const [formData, setFormData] = useState(emptyForm)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [result, setResult] = useState<ContactResult | null>(null)
+  const formRef = useRef<HTMLFormElement>(null)
+  const submitting = useRef(false)
+
+  useEffect(() => {
+    if (isSubmitting || !result?.fieldErrors) return
+    const field = Object.keys(result.fieldErrors)[0]
+    formRef.current?.querySelector<HTMLElement>(`[name="${field}"]`)?.focus()
+  }, [result, isSubmitting])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }))
+    setResult(null)
   }
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (submitting.current) return
+    submitting.current = true
+    const data = new FormData(e.currentTarget)
     setIsSubmitting(true)
+    setResult(null)
 
-    // Simulate submission (replace with real API later)
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    setIsSubmitting(false)
-    setIsSubmitted(true)
-    setFormData({ name: '', email: '', subject: '', message: '' })
-
-    // Reset success message after 5 seconds
-    setTimeout(() => setIsSubmitted(false), 5000)
+    try {
+      const response = await submitContact(data)
+      setResult(response)
+      if (response.status === 'success') {
+        setFormData(emptyForm)
+      }
+    } catch {
+      setResult({ status: 'error', message: 'Не вдалося надіслати повідомлення. Перевірте з’єднання та спробуйте ще раз.' })
+    } finally {
+      submitting.current = false
+      setIsSubmitting(false)
+    }
   }
 
   return (
@@ -42,74 +54,90 @@ export function ContactForm() {
         {'Зв\'язатися з нами'}
       </h3>
       <p className="text-gray-500 mb-6 text-sm">
-        Якщо у вас є запитання чи потреба в молитві, напишіть нам.
+        Якщо у вас є запитання чи потреба в молитві, напишіть нам. Усі поля обов’язкові.
       </p>
 
-      {isSubmitted && (
-        <div
-          className="mb-6 px-4 py-3 rounded-lg text-sm font-medium"
-          style={{
-            background: 'linear-gradient(135deg, rgba(151,199,78,0.12), rgba(42,185,165,0.12))',
-            color: 'var(--color-primary-text)',
-            border: '1px solid rgba(75,189,137,0.25)',
-          }}
-        >
-          Дякуємо! Ваше повідомлення успішно надіслано.
-        </div>
-      )}
+      <div role="status" aria-live="polite" aria-atomic="true">
+        {result?.status === 'success' && (
+          <p className="mb-6 px-4 py-3 rounded-lg text-sm font-medium bg-gray-100 text-primary-text border border-primary-text">
+            {result.message}
+          </p>
+        )}
+      </div>
+      <div role="alert" aria-live="assertive" aria-atomic="true">
+        {result?.status === 'error' && (
+          <p className="mb-6 px-4 py-3 rounded-lg text-sm text-gray-800 border border-danger">
+            {result.message}
+          </p>
+        )}
+      </div>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Ваше ім'я"
-            required
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all"
-          />
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            placeholder="E-mail"
-            required
-            className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all"
-          />
-        </div>
+      <form ref={formRef} method="post" onSubmit={handleSubmit} className="space-y-4" aria-busy={isSubmitting}>
+        <fieldset disabled={isSubmitting} className="space-y-4">
+          <legend className="sr-only">Ваше звернення</legend>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="contact-name" className={labelClass}>Ваше ім’я</label>
+              <input
+                id="contact-name" type="text" name="name" autoComplete="name"
+                value={formData.name} onChange={handleChange}
+                required maxLength={CONTACT_LIMITS.name} className={inputClass}
+                aria-invalid={!!result?.fieldErrors?.name}
+                aria-describedby={result?.fieldErrors?.name ? 'contact-name-error' : undefined}
+              />
+              {result?.fieldErrors?.name && <p id="contact-name-error" className="mt-1 text-sm text-gray-800">{result.fieldErrors.name}</p>}
+            </div>
+            <div>
+              <label htmlFor="contact-email" className={labelClass}>E-mail</label>
+              <input
+                id="contact-email" type="email" name="email" autoComplete="email"
+                value={formData.email} onChange={handleChange}
+                required maxLength={CONTACT_LIMITS.email} className={inputClass}
+                aria-invalid={!!result?.fieldErrors?.email}
+                aria-describedby={result?.fieldErrors?.email ? 'contact-email-error' : undefined}
+              />
+              {result?.fieldErrors?.email && <p id="contact-email-error" className="mt-1 text-sm text-gray-800">{result.fieldErrors.email}</p>}
+            </div>
+          </div>
 
-        <input
-          type="text"
-          name="subject"
-          value={formData.subject}
-          onChange={handleChange}
-          placeholder="Тема"
-          required
-          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all"
-        />
+          <div>
+            <label htmlFor="contact-subject" className={labelClass}>Тема</label>
+            <input
+              id="contact-subject" type="text" name="subject"
+              value={formData.subject} onChange={handleChange}
+              required maxLength={CONTACT_LIMITS.subject} className={inputClass}
+              aria-invalid={!!result?.fieldErrors?.subject}
+              aria-describedby={result?.fieldErrors?.subject ? 'contact-subject-error' : undefined}
+            />
+            {result?.fieldErrors?.subject && <p id="contact-subject-error" className="mt-1 text-sm text-gray-800">{result.fieldErrors.subject}</p>}
+          </div>
 
-        <textarea
-          name="message"
-          value={formData.message}
-          onChange={handleChange}
-          placeholder="Ваше повідомлення..."
-          rows={6}
-          required
-          className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-400 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all resize-none"
-        />
+          <div>
+            <label htmlFor="contact-message" className={labelClass}>Ваше повідомлення</label>
+            <textarea
+              id="contact-message" name="message" value={formData.message} onChange={handleChange}
+              rows={6} required maxLength={CONTACT_LIMITS.message} className={`${inputClass} resize-y`}
+              aria-invalid={!!result?.fieldErrors?.message}
+              aria-describedby={result?.fieldErrors?.message ? 'contact-message-error' : undefined}
+            />
+            {result?.fieldErrors?.message && <p id="contact-message-error" className="mt-1 text-sm text-gray-800">{result.fieldErrors.message}</p>}
+          </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="btn btn-grad w-full py-3 text-base font-semibold disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {isSubmitting ? 'Надсилається...' : 'Надіслати повідомлення'}
-        </button>
+          <div hidden aria-hidden="true">
+            <label htmlFor="contact-website">Залиште це поле порожнім</label>
+            <input id="contact-website" name="website" type="text" tabIndex={-1} autoComplete="off" maxLength={200} />
+          </div>
+
+          <p className="text-xs text-gray-600">
+            Ваше ім’я, email і повідомлення будуть передані церкві для відповіді на звернення.
+          </p>
+
+          <button type="submit" disabled={isSubmitting}
+            className="btn btn-grad w-full py-3 text-base font-semibold disabled:opacity-60 disabled:cursor-not-allowed">
+            {isSubmitting ? 'Надсилається...' : 'Надіслати повідомлення'}
+          </button>
+        </fieldset>
       </form>
     </div>
   )
 }
-
-export default ContactForm

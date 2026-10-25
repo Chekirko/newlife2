@@ -1,5 +1,9 @@
 # UI Context
 
+## Контактна форма C1 (2026-10-25)
+
+На `/contact` збережено наявну картку й grid. Усі 4 поля мають видимі labels, required/maxLength; ім’я/email — autocomplete. Server field errors зв’язані через aria-invalid/aria-describedby, фокус повертається до першого проблемного поля після розблокування fieldset. Pending блокує всі поля й кнопку; текст кнопки «Надсилається...». Успіх оголошується через persistent role=status лише після прийняття Resend; помилка — role=alert, введений текст зберігається. Honeypot прихований і виключений з Tab. Статуси використовують наявні theme tokens; жодного таймера приховування повідомлення. Коротка примітка пояснює передачу даних церкві для відповіді.
+
 ## Theme
 
 Light theme. Clean, modern church website aesthetic. White/light gray backgrounds with green accent colors. Frosted-glass effects on hero sections. Professional but warm and inviting feel.

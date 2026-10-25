@@ -28,12 +28,13 @@ CI використовує лише публічні `NEXT_PUBLIC_SANITY_PROJEC
 
 Шрифти зберігаються локально в `public/fonts/`, із CSS у `app/fonts.css`, ліцензіями й hashes джерел. Build не звертається до Google Fonts: Next 16.1.6 може падати на extensionless URL із query parameters (див. [upstream issue](https://github.com/vercel/next.js/issues/99114)). Шрифти та build command не потребують нового пакета або зміни bundler.
 
-Локальний gallery test підхоплює `.env.local`, якщо файл існує; у CI використовує workflow env. Обидві регресії працюють без записів у CMS і без мережевих upload:
+Локальний gallery test підхоплює `.env.local`, якщо файл існує; у CI використовує workflow env. Три регресії працюють без записів у CMS, мережевих upload або реального надсилання листів:
 
 - `check-gallery-input.tsx` — реальний Sanity callback `onSelectFile`, multiple picker, Select зі Studio, readOnly, ліміт 10 і вимкнені uploads.
 - `check-studio-reconnect.mjs` — patched browser dependency, віртуальний 45-секундний heartbeat, warning/error, reconnect і cleanup без очікування реальних 45 секунд.
+- `check-contact-form.ts` — серверна валідація/honeypot, HTTP contract лімітів, відмови Resend та plain-text payload. Окремий процес `tsx --conditions=react-server` для server-only модулів; mock HTTP, без mail/Redis credentials або live Redis/Lua. Конфігурація робочої форми — `docs/contact-form.md`.
 
-Новий тестовий фреймворк, Lighthouse CI, браузерна матриця й додаткові deploy jobs не додані. Наступні тести варто вводити для конкретної регресії або нової критичної логіки (наприклад, справжнього надсилання контактної форми C1).
+Новий тестовий фреймворк, Lighthouse CI, браузерна матриця й додаткові deploy jobs не додані. Наступні тести варто вводити для конкретної регресії або нової критичної логіки.
 
 ## Злиття й Vercel
 

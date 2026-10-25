@@ -1,5 +1,9 @@
 # Architecture Context
 
+## Контактна форма C1 (2026-10-25)
+
+`/contact/components/ContactForm` → page-local `actions.ts` (Server Action) → Zod-validation/honeypot → адреса одержувача з серверного env або `getSiteSettings()` → `delivery.ts` (server-only) → Upstash REST EVAL (атомарні ліміти між instances) → Resend HTTP API. Ключі тільки в server env, plain-text лист, visitor email лише Reply-To. Звернення не зберігаються у CMS/browser/application logs; Redis має тільки HMAC keys/counts із TTL. Конфігурація відсутня/сервіс не відповідає → помилка, без удаваного успіху. Докладно: `docs/contact-form.md`; реальний email/Redis QA потребує конфігурації. Нових Sanity-схем або API routes немає.
+
 ## Studio: пакетний вибір наявних фото (2026-10-25)
 
 `news.gallery` має `GalleryInput` із двома кнопками: native multiple upload через `onSelectFile` і `Select — вибрати фото зі Studio`. Другий шлях відкриває `GalleryAssetPicker`: `useClient` поточного Studio workspace + параметризований `defineQuery` до `sanity.imageAsset`, пошук за originalFilename, стабільне сортування й порції по 40. Це окремий picker для масиву; `sanity-plugin-media` 4.3.6 у single-image source одразу повертає один asset і не реалізує потрібний multi-select. Вибрані assets додаються одним native `onInsert` (унікальні `_key`, image `_type`, weak asset refs, `skipInitialValue`, `open:false`); масив цілком не перезаписується. Основне image-поле лишається одиночним. Власних токенів, API routes чи CMS-клієнта для upload немає.

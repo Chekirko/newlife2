@@ -53,9 +53,15 @@ importers:
       sanity-plugin-media:
         specifier: ^4.3.6
         version: 4.3.6(@emotion/is-prop-valid@1.4.0)(@types/react@19.2.10)(react-dom@19.2.3(react@19.2.3))(react-is@19.2.4)(react@19.2.3)(sanity@4.22.0(@emotion/is-prop-valid@1.4.0)(@portabletext/sanity-bridge@1.2.14(@types/react@19.2.10))(@types/node@20.19.30)(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(immer@11.1.8)(jiti@2.6.1)(lightningcss@1.30.2)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)(styled-components@6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))(tsx@4.21.0)(typescript@5.9.3)(yaml@2.8.2))(styled-components@6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3))
+      server-only:
+        specifier: ^0.0.1
+        version: 0.0.1
       styled-components:
         specifier: ^6.4.1
         version: 6.4.1(css-to-react-native@3.2.0)(react-dom@19.2.3(react@19.2.3))(react@19.2.3)
+      zod:
+        specifier: ^4.6.7
+        version: 4.6.7
     devDependencies:
       '@tailwindcss/postcss':
         specifier: ^4
@@ -6419,6 +6425,9 @@ packages:
 
   zod@4.3.6:
     resolution: {integrity: sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg==}
+
+  zod@4.6.7:
+    resolution: {integrity: sha512-g8W2D2kU6a8untc053fX1uVBKzM7yqAxW/3zwk83+6RyF2+SKOuV+c0wBDhUwzV1PaGapmZH+rmcUzPf+3CGwg==}
 
   zustand@5.0.11:
     resolution: {integrity: sha512-fdZY+dk7zn/vbWNCYmzZULHRrss0jx5pPFiOuMZ/5HJN6Yv3u+1Wswy/4MpZEkEGhtNH+pwxZB8OKgUBPzYAGg==}
@@ -13624,6 +13633,8 @@ snapshots:
   zod@3.25.76: {}
 
   zod@4.3.6: {}
+
+  zod@4.6.7: {}
 
   zustand@5.0.11(@types/react@19.2.10)(immer@11.1.8)(react@19.2.3)(use-sync-external-store@1.6.0(react@19.2.3)):
     optionalDependencies:

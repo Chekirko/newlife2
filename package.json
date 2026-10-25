@@ -9,7 +9,7 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "pnpm run typegen && next typegen && tsc --noEmit",
-    "test": "tsx --env-file-if-exists=.env.local scripts/check-gallery-input.tsx && node scripts/check-studio-reconnect.mjs",
+    "test": "tsx --env-file-if-exists=.env.local scripts/check-gallery-input.tsx && node scripts/check-studio-reconnect.mjs && tsx --conditions=react-server scripts/check-contact-form.ts",
     "migrate": "tsx scripts/migrate.ts",
     "seed:site": "tsx scripts/seed-site-settings.ts",
     "seed:homepage": "tsx scripts/seed-homepage.ts",
@@ -38,7 +38,9 @@
     "react-dom": "19.2.3",
     "sanity": "^4.22.0",
     "sanity-plugin-media": "^4.3.6",
-    "styled-components": "^6.4.1"
+    "server-only": "^0.0.1",
+    "styled-components": "^6.4.1",
+    "zod": "^4.6.7"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

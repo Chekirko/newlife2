@@ -83,10 +83,10 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 
 | # | Юніт | Тег | Скіл | Зус. | Суть | Стан |
 |---|------|-----|------|------|------|------|
-| C1 | **Справжня контактна форма** | PLAN | security-guidance · senior-fullstack | M | `contact/page.tsx` зараз лише client-валідація. Server Action + zod + honeypot + rate-limit + email (Resend/SMTP). Без зберігання ПД понад потрібне. | ⬜ |
+| C1 | **Справжня контактна форма** | PLAN | security-guidance · senior-fullstack | M | Погоджено 2026-10-25 після merge PR #1; користувач обрав Resend. Server Action + Zod + honeypot + атомарний Upstash rate-limit + plain-text email. Одержувач із CMS/env, visitor email лише Reply-To; без записів звернень у CMS/logs. `docs/contact-form.md`, spec `04-contact-delivery.md`. | 🔄 Код і перевірки готові; 2026-10-25 користувач підтвердив роботу Preview та погодив commit/push. PR #2 ще draft, не merged; Production-активація окремо |
 | C2 | **CSP enforce** | PLAN | security-guidance | S–M | Перемкнути `Content-Security-Policy-Report-Only` → enforce у `next.config.ts` після runtime-смоук. Будь-який новий embed/скрипт → оновити відповідний source-list (`frame-src`/`img-src`/`connect-src`). | 🔄 Report-Only активний |
 | C3 | **Sanity webhook → on-demand revalidation** | PLAN | senior-fullstack | M | `revalidateTag`/`revalidatePath` замість лише ISR-60. Route handler + GROQ-projection webhook. | ⬜ |
-| C4 | **CI-пайплайн** | PLAN | ci-cd-pipeline-builder | M | GitHub Actions: frozen install → lint → Sanity/Next typegen + TypeScript → 2 регресії → build. Один cached job, PR/master, cancellation. Захист master увімкнено: PR + required Quality checks + актуальна гілка, також для admin; 0 обов'язкових reviewers. `docs/ci.md`. | ✅ Реалізовано 2026-10-25 |
+| C4 | **CI-пайплайн** | PLAN | ci-cd-pipeline-builder | M | GitHub Actions: frozen install → lint → Sanity/Next typegen + TypeScript → регресії (2 Studio + контактна C1) → build. Один cached job, PR/master, cancellation. Захист master увімкнено: PR + required Quality checks + актуальна гілка, також для admin; 0 обов'язкових reviewers. `docs/ci.md`. | ✅ PR #1 злитий 2026-10-25; production success |
 | C5 | **Гігієна env/секретів** | ENH | env-secrets-manager | S | Аудит токенів, `.env.example`, ротація, перевірка на витоки (`env_auditor.py`). | ⬜ |
 
 ## Tier D — Best-practice (в межах scope)
