@@ -46,7 +46,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
             </Link>
             <p className="text-gray-400 mb-4">
               Ми — спільнота віруючих людей, які прагнуть жити за Божим Словом 
-              та ділитися любов'ю Христа з кожним.
+              та ділитися любов&apos;ю Христа з кожним.
             </p>
             <div className="social-icons">
               <ul className="flex gap-2">

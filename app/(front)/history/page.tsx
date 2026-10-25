@@ -134,7 +134,7 @@ export default async function HistoryPage() {
   )
 }
 
-function TimelineCard({ item }: { item: any }) {
+function TimelineCard({ item }: { item: (typeof timelineEvents)[number] }) {
   return (
     <div className="bg-white rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.05)] border border-gray-100 overflow-hidden text-left hover:-translate-y-1 transition-transform duration-300">
       <div className="p-6 md:p-8">
@@ -149,7 +149,7 @@ function TimelineCard({ item }: { item: any }) {
         {/* Dynamic content rendering based on type */}
         {item.type === 'list' && (
           <ul className="space-y-2 mt-2">
-            {item.listItems.map((listItem: string, i: number) => (
+            {item.listItems?.map((listItem, i) => (
               <li key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-700">
                 <span className="flex-shrink-0 w-6 h-6 rounded bg-primary text-gray-900 flex items-center justify-center font-semibold text-xs text-center">
                   0{i + 1}
@@ -162,7 +162,7 @@ function TimelineCard({ item }: { item: any }) {
 
         {item.type === 'accordion' && (
           <div className="space-y-3 mt-4">
-            {item.accordions.map((acc: any, i: number) => (
+            {item.accordions?.map((acc, i) => (
               <details key={i} className="group border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
                 <summary className="cursor-pointer font-semibold px-4 py-3 text-gray-800 flex justify-between items-center outline-none">
                   {acc.q}
@@ -179,7 +179,7 @@ function TimelineCard({ item }: { item: any }) {
         )}
       </div>
 
-      {item.type === 'image' && (
+      {item.type === 'image' && item.image && (
           <div className="relative w-full h-[200px] sm:h-[250px]">
             <PhotoViewer photos={[{ id: item.date, thumbUrl: item.image, fullUrl: item.image, alt: item.title, width: 1600, height: 900 }]} className="absolute inset-0 h-full">
             <Image 

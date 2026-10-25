@@ -60,12 +60,10 @@ export const EventsSlider = ({
   const maxIndex = Math.max(0, (events?.length || 0) - visibleCards)
   const slidePercent = isMobile ? 100 : 50
 
-  // Reset index when switching between mobile/desktop
-  useEffect(() => {
-    if (currentIndex > maxIndex) {
-      setCurrentIndex(maxIndex)
-    }
-  }, [isMobile, maxIndex, currentIndex])
+  // Clamp before rendering when the viewport or event count changes.
+  if (currentIndex > maxIndex) {
+    setCurrentIndex(maxIndex)
+  }
 
   // Auto-scroll effect - always called (hooks rule)
   useEffect(() => {

@@ -20,7 +20,6 @@ export interface MinistryCardProps {
 
 export const MinistryCard = ({
   title,
-  shortDescription,
   image,
   href = '#',
   className,

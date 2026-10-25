@@ -49,6 +49,8 @@ export default async function PhotosPage() {
 
   // Shuffle (Fisher–Yates) so the mosaic mixes ministries; re-shuffled per ISR cycle.
   for (let i = photos.length - 1; i > 0; i--) {
+    // Server-only ISR shuffle: the resulting list is serialized to the client.
+    // eslint-disable-next-line react-hooks/purity
     const j = Math.floor(Math.random() * (i + 1))
     ;[photos[i], photos[j]] = [photos[j], photos[i]]
   }

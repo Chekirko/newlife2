@@ -56,6 +56,8 @@ Bright `.bg-grad` remains for decoration. Ministry card captions use an **opaque
 
 ## Typography
 
+- Font faces are local WOFF2 in `public/fonts/`, declared in `app/fonts.css` with the original family names, Unicode ranges and `font-display: swap`. Keep Latin/Cyrillic coverage, existing CSS tokens, source hashes and OFL licenses. Root layout preloads only the body's Roboto Latin/Cyrillic faces. Do not reintroduce `next/font/google` or a remote CSS font import: Google can return URLs that break this Next.js version's build.
+
 | Role        | Font              | Variable         |
 | ----------- | ----------------- | ---------------- |
 | Headings    | Poppins           | `--font-heading` |

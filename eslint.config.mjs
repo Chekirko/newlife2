@@ -12,6 +12,11 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Agent skill examples and generated Sanity output are not application code.
+    ".agents/**",
+    ".claude/**",
+    ".codex/**",
+    "sanity/lib/sanity.types.ts",
   ]),
 ]);
 

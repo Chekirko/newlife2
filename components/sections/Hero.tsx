@@ -1,9 +1,8 @@
 'use client'
 
-import { ReactNode, useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { clsx } from 'clsx'
 import Image, { StaticImageData } from 'next/image'
-import Link from 'next/link'
 
 // =========================================
 // HERO VARIANT 1: Basic Slider
