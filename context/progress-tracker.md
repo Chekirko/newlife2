@@ -2,6 +2,20 @@
 
 Update this file after every meaningful implementation change.
 
+## C1: Preview підтверджено користувачем, commit + push погоджено — 2026-10-25
+
+- Користувач повідомив: «на прев'ю все працює» й прямо погодив commit + push. Це підтвердження користувача; агент не читав credentials, поштову скриньку або live Redis. Конкретні From/To, Reply-To й антиспам edge cases окремо не засвідчувалися.
+- Код контактної форми вже опублікований у draft PR #2 (`codex/c1-contact-form`, перевірений remote HEAD 28e9213). Поточний коміт синхронізує лише документацію: попередню інструкцію налаштування/майбутнього домену та успішну перевірку Preview. Код, env, DNS і секрети не змінюються. Merge PR #2 користувач цим запитом не доручав; Production-активація лишається окремим кроком.
+- Публікація — у ту саму робочу гілку з перевіркою remote SHA й чистоти дерева після push. Попередні локальні lint/typecheck/3 регресії/build та cloud CI/Vercel HEAD 28e9213 були успішні; новий docs-only HEAD має власні checks у PR.
+- Перед публікацією `git fetch origin` підтвердив HEAD/origin робочої гілки 0/0; фінальний `cmd /c "pnpm run build"` — PASS (TypeScript, 21 schema type / 34 queries, 41 сторінка), `git diff --check` — PASS. Повтор regression suite для docs-only зміни не потрібний; CI нового HEAD перевіряється в PR.
+
+## C1: інструкція налаштування та майбутній домен — 2026-10-25
+
+- Користувач просить детальну покрокову інструкцію Resend/Upstash/Vercel; сайт наразі на vercel.app, власний домен планує купити через Vercel пізніше й тоді запускати SEO. Налаштування акаунтів, DNS, env і індексації в цій консультації не змінювалися; секрети не запитувалися. PR #2 перевірено: open/draft, не merged, HEAD 28e9213. Нову форму тестувати саме в його Preview; production master ще без C1.
+- Звірено офіційні docs і код: до купівлі домену можливі From на вже verified домені іншого проєкту або тестовий onboarding@resend.dev лише до email власника Resend account (тимчасовий CONTACT_TO_EMAIL, лише Preview). Для цього сайту — окремий sending API key; Upstash потребує REST URL і Standard/write-capable token, не read-only/TCP URL. Env застосовується після redeploy. Поточна pricing page Resend показує Free 3 domains / 3000 emails per month / 100 per day; старий blog 2023 про 1 domain не використовувати як актуальний тариф. Фактичний account plan/usage не перевірено.
+- Майбутній порядок: купівля й прив’язка власного домену до цього самого Vercel project → один canonical hostname + redirects → Resend verify власного sending subdomain через точні provider DNS records, новий/відповідно scoped API key і CONTACT_FROM_EMAIL → Production NEXT_PUBLIC_SITE_URL → redeploy → перевірки canonical/OG/sitemap/form/SSL → Search Console DNS verification; відкрити індексацію тільки фінальним окремо погодженим кроком. Купівля домену сама SEO не активує; поточний robots.ts лишає Disallow: /.
+- Для embedded `/studio` новий точний origin слід додати у Sanity CORS з Allow credentials (офіційні docs перевірено); без platform-wide wildcard. Консультація змінює тільки цей tracker, без app/env/DNS змін. Обов’язковий `cmd /c "pnpm run build"` — PASS (TypeScript, 21 schema type / 34 queries, 41 сторінка); попередні Node/Browserslist warnings. Нового commit/push лише заради консультаційного запису не виконано.
+
 ## C1: контактна форма через Resend — 2026-10-25
 
 - Користувач прямо погодив merge PR #1 у master й реалізацію форми на `/contact`; потім обрав Resend, бо вже має акаунт для іншого проєкту. Перед merge перевірено саме HEAD `a79c45f2ca63b4f0c50b0427b3df9db1181ace84`: [CI 40211090568](https://github.com/Chekirko/newlife2/actions/runs/40211090568) success, Vercel success. PR переведено з draft і злитий звичайним merge, без обходу branch protection: `886145847cd48f4de7aff14bba66a00ed0763fa4`. Production Vercel для merge SHA теж success (`8nygMmrWYpBKZGJ4MbZtQmXy1ztV`). Локальний master fast-forward; нова робоча гілка `codex/c1-contact-form`.
