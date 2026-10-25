@@ -22,7 +22,7 @@
 | Styling     | Tailwind CSS v4 + globals.css   | Utility-first + кастомна дизайн-система   |
 | Types       | Sanity TypeGen                  | Автогенерація TS-типів з GROQ-запитів     |
 | Deploy      | Vercel                          | CI/CD, edge functions, preview            |
-| Fonts       | Google Fonts (Poppins, Roboto, Playfair Display) | Типографіка              |
+| Fonts       | Local WOFF2: Poppins, Roboto, Playfair Display (`public/fonts/`, `app/fonts.css`) | Типографіка без Google Fonts network під час build/runtime |
 
 ## System Boundaries
 

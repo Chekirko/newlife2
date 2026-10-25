@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900|Playfair+Display:400,400i,700,700i|Roboto:400,400i,500,700');
+@import "./fonts.css";
 
 @import "tailwindcss";
 

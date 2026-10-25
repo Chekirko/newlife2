@@ -26,6 +26,8 @@ pnpm run build
 
 CI використовує лише публічні `NEXT_PUBLIC_SANITY_PROJECT_ID=n4j5141g` та `NEXT_PUBLIC_SANITY_DATASET=production`. Build читає публічний контент Sanity; це також перевірка інтеграції, тому недоступність CMS може зупинити збірку. Секрети Sanity/Vercel, CMS write token і YouTube API key для CI не потрібні. Без YouTube key live-перевірка використовує наявний fallback без витрат квоти.
 
+Шрифти зберігаються локально в `public/fonts/`, із CSS у `app/fonts.css`, ліцензіями й hashes джерел. Build не звертається до Google Fonts: Next 16.1.6 може падати на extensionless URL із query parameters (див. [upstream issue](https://github.com/vercel/next.js/issues/99114)). Шрифти та build command не потребують нового пакета або зміни bundler.
+
 Локальний gallery test підхоплює `.env.local`, якщо файл існує; у CI використовує workflow env. Обидві регресії працюють без записів у CMS і без мережевих upload:
 
 - `check-gallery-input.tsx` — реальний Sanity callback `onSelectFile`, multiple picker, Select зі Studio, readOnly, ліміт 10 і вимкнені uploads.
