@@ -2,6 +2,14 @@
 
 Update this file after every meaningful implementation change.
 
+## C4: захист master увімкнено — 2026-10-25
+
+- Після окремого явного погодження користувача («давай зробимо») увімкнено GitHub branch protection для `master`. Повторний GET підтвердив required PR, `Quality checks` саме від GitHub Actions (`app_id=15368`), `strict=true` (актуальність гілки), `enforce_admins=true`; force push і видалення вимкнені. Попередній блок auto-review знято новою явною згодою; сторонніх чинних правил до зміни не було (GET: Branch not protected).
+- `required_approving_review_count=0`, code-owner і last-push approval не потрібні. Користувач переглядає Vercel Preview та натискає Merge після успішного CI; окремого обов'язкового Approve немає. Агент не виконує merge без окремого запиту. [PR #1](https://github.com/Chekirko/newlife2/pull/1) лишається draft; master не зливався.
+- Реалізацію C4 опубліковано комітом `a69c6ce` у `codex/c4-automated-checks`; remote SHA перевірено. [Перший CI](https://github.com/Chekirko/newlife2/actions/runs/40208451690) завершився success на Linux/Node 24: install, lint, typecheck, обидві регресії, build і cache cleanup. Vercel для цього коміту — success; [Preview гілки](https://newlife2-git-codex-c4-automated-checks-chekirkos-projects.vercel.app).
+- Поточне оновлення синхронізує лише `docs/ci.md`, master-plan і цей tracker із перевіреними GitHub settings; код застосунку, workflow та залежності не змінені. Commit + push документації — у ту саму робочу гілку за чинною вказівкою користувача. Скіли ci-cd-pipeline-builder, karpathy-coder, grill-with-docs застосовано повторно.
+- Обов'язкова фінальна `cmd /c "pnpm run build"` після оновлення документації — PASS (21 schema type / 34 GROQ queries, TypeScript, 41 сторінка); `git diff --check` — PASS. Повторних локальних lint/regression suite для docs-only зміни не додавали; повний CI для нового HEAD запускається через PR.
+
 ## C4: автоматичні перевірки — 2026-10-25
 
 - На прямий запит користувача створено робочу гілку `codex/c4-automated-checks` від актуального `master` (`894b75d`); робоче дерево на старті чисте, fetch підтвердив HEAD/origin/master 0/0. Користувач погодив commit + push після завершених завдань для Vercel Preview; подальша робота — в окремій гілці, без push у master.

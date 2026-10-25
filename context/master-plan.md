@@ -86,7 +86,7 @@ Next.js 16 (App Router) + Sanity v3 + Tailwind v4, Vercel, лише укр., **p
 | C1 | **Справжня контактна форма** | PLAN | security-guidance · senior-fullstack | M | `contact/page.tsx` зараз лише client-валідація. Server Action + zod + honeypot + rate-limit + email (Resend/SMTP). Без зберігання ПД понад потрібне. | ⬜ |
 | C2 | **CSP enforce** | PLAN | security-guidance | S–M | Перемкнути `Content-Security-Policy-Report-Only` → enforce у `next.config.ts` після runtime-смоук. Будь-який новий embed/скрипт → оновити відповідний source-list (`frame-src`/`img-src`/`connect-src`). | 🔄 Report-Only активний |
 | C3 | **Sanity webhook → on-demand revalidation** | PLAN | senior-fullstack | M | `revalidateTag`/`revalidatePath` замість лише ISR-60. Route handler + GROQ-projection webhook. | ⬜ |
-| C4 | **CI-пайплайн** | PLAN | ci-cd-pipeline-builder | M | GitHub Actions: frozen install → lint → Sanity/Next typegen + TypeScript → 2 регресії → build. Один cached job, PR/master, cancellation. `docs/ci.md`; required check у захисті master налаштовується окремо від YAML. | ✅ Реалізовано 2026-10-25 |
+| C4 | **CI-пайплайн** | PLAN | ci-cd-pipeline-builder | M | GitHub Actions: frozen install → lint → Sanity/Next typegen + TypeScript → 2 регресії → build. Один cached job, PR/master, cancellation. Захист master увімкнено: PR + required Quality checks + актуальна гілка, також для admin; 0 обов'язкових reviewers. `docs/ci.md`. | ✅ Реалізовано 2026-10-25 |
 | C5 | **Гігієна env/секретів** | ENH | env-secrets-manager | S | Аудит токенів, `.env.example`, ротація, перевірка на витоки (`env_auditor.py`). | ⬜ |
 
 ## Tier D — Best-practice (в межах scope)
