@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import Image from 'next/image'
 import { defineQuery } from 'next-sanity'
 import { client } from '@/sanity/lib/client'
 import type { SiteSettings } from '@/lib/site-settings'
@@ -34,19 +35,15 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* About Column */}
           <div>
-            <div className="flex items-center gap-3 mb-6">
-              <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                <span className="text-gray-900 font-bold text-xl">НЖ</span>
-              </div>
-              <div>
-                <span className="font-heading font-bold text-xl text-white block leading-tight">
-                  Нове Життя
-                </span>
-                <span className="text-xs text-gray-400">
-                  Євангельська церква
-                </span>
-              </div>
-            </div>
+            <Link href="/" aria-label="Церква «Нове життя» — головна" className="mb-6 inline-flex max-w-full">
+              <Image
+                src="/images/logo-white.svg"
+                alt="Нове життя — церква, м. Борислав"
+                width={1203}
+                height={461}
+                className="h-auto w-56 max-w-full"
+              />
+            </Link>
             <p className="text-gray-400 mb-4">
               Ми — спільнота віруючих людей, які прагнуть жити за Божим Словом 
               та ділитися любов'ю Христа з кожним.

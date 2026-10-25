@@ -35,9 +35,15 @@ Use `.bg-grad` utility class for decorative backgrounds (bright gradient `--grad
 
 **Readable gradient** (`--gradient-btn-start: #4e7d2a` → `--gradient-btn-end: #1c7e70`) is shared by `.btn-grad`, `.btn-outline-grad` hover, and `.bg-grad-readable` for text-bearing CTA blocks, badges, active tabs and pagination. White text contrast at the stops is 4.89:1 / 4.92:1. Keep text fully opaque and avoid fading the whole surface on hover. `.gradient-text` uses these darker stops too (≥4.60:1 on gray-100).
 
-Bright `.bg-grad` remains for decoration. Ministry card captions use an **opaque** `.bg-grad-readable` banner so photos cannot reduce white text contrast. Logo placeholder letters use `text-gray-900` on the bright primary circle (6.57:1).
+Bright `.bg-grad` remains for decoration. Ministry card captions use an **opaque** `.bg-grad-readable` banner so photos cannot reduce white text contrast.
 
 `.all-text-white` colors the wrapper and headings/paragraphs, not every descendant: white buttons retain dark labels (`gray-800` on white = 11.51:1).
+
+## Logo
+
+- The church's original EPS mark is converted to transparent SVG paths in `public/images/logo-dark.svg` and `logo-white.svg`. Preserve the handwritten lettering, cross, and «церква м. Борислав» inscription; do not substitute initials or a typeset name. The EPS's black page backdrop is removed, and the viewBox is cropped to the artwork.
+- `ChurchHeader` uses the dark mark (gray-800) on white, 56px tall at all breakpoints. `ChurchFooter` uses the white mark, 224px wide with `max-w-full`. Both use `next/image` with intrinsic dimensions 1203×461; the header image has `priority`. Both logo links point home and have an explicit accessible name.
+- Main content accounts for the fixed top bar (44px) plus header padding (24px) and its contents: 56px logo on mobile, 96px nav at `lg` (80px line height + 16px link padding). `app/(front)/layout.tsx` uses `pt-[124px] lg:pt-[164px]` so page content starts below the header.
 
 ## Accessibility (WCAG 2.2 AA)
 

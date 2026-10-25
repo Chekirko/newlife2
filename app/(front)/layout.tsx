@@ -21,8 +21,8 @@ export default async function FrontLayout({
         Перейти до вмісту
       </a>
       <ChurchHeader settings={settings} />
-      {/* pt-[92px] = top bar (44px) + main nav (~48px) — pushes content below fixed header */}
-      <main id="main-content" tabIndex={-1} className="pt-[92px]">
+      {/* Top bar (44px) + header: logo (56px) / desktop nav (96px) + vertical padding (24px). */}
+      <main id="main-content" tabIndex={-1} className="pt-[124px] lg:pt-[164px]">
         {children}
       </main>
       <ChurchFooter settings={settings} />

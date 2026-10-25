@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
 import type { SiteSettings } from '@/lib/site-settings'
@@ -135,18 +136,15 @@ export default function ChurchHeader({ settings }: { settings: SiteSettings }) {
         <div className="container-larexa py-3">
           <div className="flex items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="navbar-brand flex items-center gap-3">
-              <div 
-                className="w-10 h-10 rounded-full flex items-center justify-center"
-                style={{ backgroundColor: 'var(--color-primary)' }}
-              >
-                <span className="text-gray-900 font-bold text-lg">НЖ</span>
-              </div>
-              <div className="hidden sm:block">
-                <span className="font-heading font-bold text-lg block leading-tight text-gray-800">
-                  Нове Життя
-                </span>
-              </div>
+            <Link href="/" aria-label="Церква «Нове життя» — головна" className="flex shrink-0 items-center">
+              <Image
+                src="/images/logo-dark.svg"
+                alt="Нове життя — церква, м. Борислав"
+                width={1203}
+                height={461}
+                priority
+                className="h-14 w-auto"
+              />
             </Link>
 
             {/* Desktop Navigation */}
