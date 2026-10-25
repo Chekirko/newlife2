@@ -2,6 +2,7 @@
 
 ## General
 
+- Package manager: `pnpm@11.5.1`, pinned in `package.json#packageManager`. Vercel enables Corepack through `vercel.json#build.env.ENABLE_EXPERIMENTAL_COREPACK=1` so local and deployment installs use the same version. Do not infer pnpm's major from `lockfileVersion: 9.0`: pnpm 10 rejects the pnpm 11 string-form `patchedDependencies` metadata with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`. Validate dependency/patch changes with a clean `pnpm install --frozen-lockfile` in addition to `pnpm run build`.
 - Keep modules small and single-purpose
 - Fix root causes — do not layer workarounds
 - Do not mix unrelated concerns in one component
