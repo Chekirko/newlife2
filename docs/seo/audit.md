@@ -1,11 +1,11 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-1 та SEO-2.1 завершено; кодові виправлення ще не виконані.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Свіжа матриця захисту й контракт готовності — у розділі «SEO-2.1» нижче; початкові докази SEO-1 збережені як baseline.
+Дата: 2026-10-26. **SEO-1, SEO-2.1 і SEO-2.2 завершено; загальний noindex реалізовано й перевірено локально.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Матриця середовищ і контракт готовності — у розділі «SEO-2.1», результати нового коду — у «SEO-2.2»; початкові докази SEO-1 збережені як baseline.
 
 ## Висновки
 
 - Основа вже працює: 44/44 адреси локального sitemap відповідають HTTP 200, мають різні title та canonical із правильним шляхом; 5 перевірених відсутніх адрес повертають 404 із noindex. Переписувати ці механізми з нуля не потрібно.
-- Pre-launch crawling заблоковано. Водночас публічна Production-головна доступна без авторизації та без meta/header noindex. Сам `Disallow: /` не гарантує відсутності адрес у пошуку; це перший предмет SEO-2, а не дозвіл зняти блокування.
+- Pre-launch crawling заблоковано. За останньою live-перевіркою SEO-2.1 Production alias публічний без meta/header noindex. SEO-2.2 додає обидва сигнали в локальному коді; deployment цього diff не виконано. Сам `Disallow: /` і noindex, який crawler може не прочитати, не гарантують відсутності адрес у пошуку; F01 залишається відкритим.
 - 42/44 сторінки sitemap успадковують OG URL головної. `/about` має власний OG URL, але втрачає OG-зображення. SEO-поля CMS не підключені до metadata.
 - Виявлено відтворювані дефекти: 500 на некоректному номері сторінки новин/подій; падіння ministry-шаблону з нерозв’язаним weak-reference; відсутній H1 головної, дубльовані H1 служителів і пропуски рівнів заголовків.
 - Редакційна готовність не встановлена: заповнені поля не підтверджують факти. Є оголошення без тексту/опису, відома суперечність історії та непогоджений набір готових сторінок. Найменші технічні виправлення: OG defaults, null-guard, перевірка page та чесний lastmod; порядок визначає план нижче.
@@ -187,9 +187,46 @@ Local і Production alias віддають sitemap із 44 URL; зміст ві�
 - **Наступний юніт — SEO-2.2:** додатковий загальний pre-launch noindex у наявних metadata/header-механізмах, без нового env-перемикача, без зняття Disallow і без змін Production settings; перевірити production-build HTML/HTTP для static/dynamic/privacy/studio/404 і headers для не-HTML відповідей. Це посилення сигналів, не виправлення публічного доступу F01. Read-only перевірка platform settings і рішення власника про захист Production лишаються відкритими; не блокують локальний кодовий юніт.
 - SEO-3 → SEO-7 та окремий SEO-L залишаються за spec. F02 закривається лише після реалізації спільного відбору й перевірок SEO-4; F01 — після фактичного захисту потрібних публічних адрес, а не лише додавання noindex.
 
+## SEO-2.2: загальний pre-launch noindex — 2026-10-26
+
+**Результат:** локальний production build віддає загальний meta robots та `X-Robots-Tag: noindex`. Перевірено 66 анонімних GET: 56 HTML і 10 інших відповідей. F01 не закрито: noindex не обмежує доступ, platform protection Production alias досі потребує окремої дії. Після локального QA користувач прямо погодив commit+push у `codex/seo-1-audit`; live deployment нового коду окремо не засвідчений. Нижчі записи «ще не опубліковано» описують стан на момент QA.
+
+### Реалізація й успадкування
+
+- [Root metadata](../../app/layout.tsx): `robots: { index: false, follow: true }`, без env-перемикача. Чинна privacy metadata дає той самий `noindex, follow`; Studio зберігає власний `noindex` із `next-sanity/studio`. У Next.js вкладений об’єкт robots замінює батьківський цілком, тому нові page-specific robots мають зберігати pre-launch noindex.
+- [HTTP headers](../../next.config.ts): у чинне правило `/:path*` додано `X-Robots-Tag: noindex`, включно з ресурсами й RSC. Security headers та CSP Report-Only з винятком Studio збережено; окремої middleware немає.
+- `app/robots.ts` не змінено: `User-Agent: *`, `Disallow: /`, без Allow. Sitemap лишився з 44 URL; відбір за готовністю — майбутній SEO-4. OG, query-валідація, null-ref, CMS-схеми/контент, env/DNS/settings не змінені.
+
+### Production-build HTTP/HTML
+
+Origin `http://127.0.0.1:3004`, Next.js 16.1.6; старт із чистого `codex/seo-1-audit`, HEAD `19a9313` плюс поточний diff. GET без redirect-follow; кожна відповідь перевірена на `X-Robots-Tag: noindex`, nosniff і збережений scope CSP. У кожному HTML перевірено фактичні meta robots, а не лише exports у коді.
+
+| Вибірка | Кількість / HTTP | Meta robots | HTTP X-Robots-Tag |
+|---|---|---|---|
+| Усі URL sitemap: static, ISR ministry/team, dynamic news/events/media та details | 44 × 200 | `noindex, follow` | `noindex` |
+| `/privacy` | 1 × 200 | `noindex, follow` | `noindex` |
+| `/studio`, `/studio/structure` | 2 × 200 | `noindex` із next-sanity | `noindex` |
+| `/news?page=1`, `/events?page=1`, `/media?q=seo-2-2-empty`, `/media?category=invalid` | 4 × 200 | `noindex, follow` | `noindex` |
+| Missing `/seo-2-2-missing` і такий самий slug у news/events/ministries/team | 5 × 404 | Native `noindex` + успадкований `noindex, follow`, без суперечливого index | `noindex` |
+| `/robots.txt`, `/sitemap.xml` | 2 × 200 | Не HTML | `noindex` |
+| favicon, public JPG/SVG/WOFF2, optimized `/_next/image`, по одному фактичному `/_next/static` CSS/JS з HTML | 7 × 200 | Не HTML | `noindex` |
+| `/media` з request header `RSC: 1` | 1 × 200, `text/x-component` | Не HTML | `noindex` |
+
+Чинні noindex privacy/studio та справжній 404 збережені. Усі 44 sitemap URL залишилися доступними; їхній noindex зараз навмисний, це не погоджений launch sitemap. Headers стороннього Sanity/YouTube CDN цей застосунок не контролює й у вибірку не включено. Browser hydration/Studio login не перевірялися: UI й auth-код не змінені.
+
+### Перевірки й межі
+
+- `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 static-generation tasks. Перший запуск: sandbox EPERM Sanity config; дозволений повтор успішний. Попередні Node/Browserslist warnings лишилися.
+- `pnpm run lint`, `pnpm run typecheck`, `pnpm test` — PASS; три наявні регресії, contact HTTP лише mock, без live email/Redis. Typecheck також потребував доступу Sanity CLI до власної конфігурації.
+- HTTP probe — PASS, 66 GET; sandbox loopback був недоступний (EACCES/ETIMEDOUT), сервер і клієнт повторно запущені з потрібним доступом. Тимчасовий probe/JSON — ignored `.next/seo-2.2/`; довготривалий доказ — ця таблиця.
+- Завершальні перевірки: UTF-8 шести документів, 30 локальних посилань, звірка 66 HTTP-результатів і `git diff --check` — PASS. Сервер зупинено, порт 3004 без listener. `robots.ts`, sitemap, package/lockfile не змінені; commit/push ще не виконано.
+- [Next.js metadata](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging) та [headers](https://nextjs.org/docs/app/api-reference/config/next-config-js/headers) звірено з фактичною поведінкою встановленої версії. [Google noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing): заблокований crawling може завадити читанню meta/header. Джерела звірено 2026-10-26. Disallow не відкривали; відсутність URL у Google не перевірена й не гарантована.
+- До SEO-L разом переглянути root robots, загальний HTTP header і page-specific обмеження за спільною політикою SEO-4. Просте зняття Disallow не відкриє індексацію, поки діє загальний header. F01/settings залишаються зовнішньою дією за окремим дорученням; F02 — реалізація SEO-4.
+- **Наступна сесія — SEO-3.1:** наявні загальні metadata defaults та статичні сторінки (F07–F10 за scope), включно з підключенням CMS SEO defaults і OG `/about`; динамічні шаблони — окремий SEO-3.2. Зберегти root/header noindex й Disallow. Скіли: seo-audit, karpathy-coder, senior-frontend; grill-with-docs/handoff для контексту. Нових SEO-полів/OG-генератора не додавати.
+
 ## Порядок дій
 
-1. **SEO-2 — захист до запуску:** SEO-2.1 завершено; наступний SEO-2.2 — додатковий загальний pre-launch noindex. F01: Production alias публічний, settings не перевірені; F02: контракт готовності вище передано SEO-4. Зберегти всі обмеження.
+1. **SEO-2 — локальні юніти завершено:** SEO-2.1 — матриця/політика, SEO-2.2 — noindex metadata/header та 66 локальних GET. F01: Production alias публічний за останнім live-аудитом, settings не перевірені; F02: контракт передано SEO-4. Новий diff ще не опублікований; усі обмеження збережено.
 2. **SEO-3 — невеликі metadata-виправлення:** F07–F10; спочатку defaults/static, потім dynamic. OG `/about` і підключення наявних SEO-полів — окремі малі результати, не SEO-платформа.
 3. **SEO-4 — URL/sitemap:** F02/F03/F05/F06; lastmod і page-валідація — невеликі підтверджені правки. Зберегти робочі canonical та 404, застосувати політику SEO-2.
 4. **SEO-5 — JSON-LD і неповні дані:** почати з F04, далі звірити шаблони Event/VideoObject/Person/NewsArticle з видимими даними й актуальними вимогами. Не обіцяти rich results.

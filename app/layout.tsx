@@ -5,6 +5,8 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
+  // Pre-launch only; review together with X-Robots-Tag before SEO-L.
+  robots: { index: false, follow: true },
   title: "Церква «Нове Життя» | Євангельська церква в Бориславі",
   description: "Ласкаво просимо до церкви «Нове Життя»! Ми — спільнота віруючих людей, які прагнуть жити за Божим Словом та ділитися любов'ю Христа.",
   keywords: ["церква", "євангельська церква", "Борислав", "Нове Життя", "богослужіння"],

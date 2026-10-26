@@ -1,6 +1,6 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1 і SEO-2.1 завершено; наступна сесія — SEO-2.2 (додатковий загальний pre-launch noindex).
+Дата: 2026-10-26. Статус: SEO-1, SEO-2.1 і SEO-2.2 завершено; наступна сесія — SEO-3.1 (загальні metadata defaults та статичні сторінки). F01/platform protection залишається відкритим.
 
 ## Мета та погоджений задум
 
@@ -60,7 +60,11 @@
 
 **SEO-2.1 виконано 2026-10-26:** [матриця, докази та контракт готовності](../../docs/seo/audit.md#seo-21-захист-середовищ-і-контракт-готовності--2026-10-26) — у тому самому звіті. 28 анонімних GET на 4 origins: local / Production alias / актуальний Preview / generated Production. Два generated URLs захищені SSO (302 + X-Robots-Tag noindex), Production alias публічний, без noindex на головній/історії. Dashboard settings недоступні без авторизованої сесії; SHA generated URLs встановлено через GitHub Deployments API, прив’язку Production alias до SHA незалежно не засвідчено. Контракт передано SEO-4: жодного поточного launch approval; майбутній спільний критерій metadata/sitemap за схваленими маршрутами/CMS-документами, окремі правила unfinished/privacy/studio/search/filter/page. Нових CMS-полів/коду немає, F01/F02 ще не закриті. Build PASS: 21 schema type / 34 queries, TypeScript, 42/42 static-generation tasks.
 
-**Наступний юніт — SEO-2.2:** додати загальний pre-launch noindex через наявні root metadata та HTTP headers, без нового env-перемикача. Перевірити production-build HTML/HTTP static/dynamic/privacy/studio/404 та headers не-HTML ресурсів; зберегти Disallow й чинні page-specific обмеження. Noindex — додатковий сигнал, а не гарантія за Disallow і не контроль доступу. Production env/DNS/settings не змінювати; platform protection лишається відкритою зовнішньою дією за окремим дорученням. OG, sitemap, query-валідацію і null-ref fixes сюди не додавати. Скіли: seo-audit, karpathy-coder; senior-frontend для metadata boundary, security-guidance для header-зміни за scope; grill-with-docs/handoff для контексту.
+**SEO-2.2 виконано 2026-10-26:** root metadata `noindex, follow` та загальний `X-Robots-Tag: noindex`, без env-перемикача. [Результати](../../docs/seo/audit.md#seo-22-загальний-pre-launch-noindex--2026-10-26): 66 production-build GET — 56 HTML (усі 44 URL sitemap, privacy/studio/query/404) і 10 не-HTML відповідей (robots/sitemap/assets/optimized image/RSC). Build, lint, typecheck, три наявні регресії — PASS. Disallow, page-specific noindex, security headers і CSP scope збережено. Noindex не є контролем доступу й не гарантує відсутності URL у пошуку за Disallow; F01 лишається відкритим. Код локальний, deployment/settings/env/DNS/CMS не змінені. OG/sitemap/query/null-ref fixes не входили в юніт.
+
+Після локального QA користувач прямо погодив commit+push SEO-2.2 у `codex/seo-1-audit` 2026-10-26; результат публікації — у git history та фінальному повідомленні. Live deployment нового коду окремо не засвідчений; Production settings/env/DNS/CMS не змінюються.
+
+**Наступний юніт — SEO-3.1:** загальні title/description/social defaults і статичні сторінки за F07–F10, зокрема наявні CMS SEO defaults та OG `/about`; динамічні шаблони лишити окремому SEO-3.2. Перевіряти реальний production HTML, не вигадувати остаточні тексти й не додавати SEO-поля про запас. Зберегти загальний root/header noindex та Disallow. Скіли: seo-audit, karpathy-coder, senior-frontend; grill-with-docs/handoff для контексту. Platform protection лишається зовнішньою дією за окремим дорученням; не блокує SEO-3.
 
 ## Передача між сесіями та Definition of Done
 
@@ -83,10 +87,10 @@
 |---|---|---|
 | SEO-0 | Завершено 2026-10-26 | Збережено задум і порядок окремих сесій; код застосунку не змінено |
 | SEO-1 | Завершено 2026-10-26 | `docs/seo/audit.md`: маршрути, F01–F11, HTTP/fixture-перевірки, редакційні залежності; без змін коду |
-| SEO-2 | Частково завершено | SEO-2.1 завершено; наступний SEO-2.2 — додатковий загальний noindex. F01/settings відкриті; контракт F02 передано SEO-4 |
+| SEO-2 | Локальні юніти завершено; F01 відкритий | SEO-2.1/2.2 виконано; platform protection Production потребує окремої дії, F02 передано SEO-4 |
 | SEO-2.1 | Завершено 2026-10-26 | 4 origins × 7 GET, auth/robots/meta/header; контракт готовності; без змін застосунку/settings |
-| SEO-2.2 | Наступна сесія | Root metadata + header noindex, production-build HTTP-перевірки; Disallow збережено |
-| SEO-3 | Не розпочато | Після політики SEO-2 |
+| SEO-2.2 | Завершено 2026-10-26 | Root metadata + header noindex; 66 локальних GET, build/lint/typecheck/test PASS; Disallow збережено |
+| SEO-3 | Наступна сесія: SEO-3.1 | Defaults/static спочатку; dynamic у SEO-3.2. Усі pre-launch обмеження зберегти |
 | SEO-4 | Не розпочато | Використати результати SEO-1–3 |
 | SEO-5 | Не розпочато | Використати узгоджені URL/metadata |
 | SEO-6 | Не розпочато | Лише підтверджені дефекти шаблонів |

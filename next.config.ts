@@ -50,7 +50,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/:path*",
-        headers: securityHeaders,
+        headers: [
+          ...securityHeaders,
+          // Pre-launch signal for HTML and non-HTML responses; not access control.
+          { key: "X-Robots-Tag", value: "noindex" },
+        ],
       },
       {
         // CSP everywhere EXCEPT the embedded Sanity Studio (it needs eval/blob/ws

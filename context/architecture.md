@@ -72,6 +72,7 @@
 ## Auth and Access Model
 
 - Публічний сайт — авторизація користувачів відсутня
+- Pre-launch SEO-2.2: root metadata `noindex, follow` та `X-Robots-Tag: noindex` у чинному `next.config.ts#headers` на всіх шляхах/ресурсах; `robots.ts` зберігає `Disallow: /`. Це пошукові сигнали, не контроль доступу й не гарантія виключення URL за заблокованого crawling. Privacy/Studio зберігають свої robots. Production platform protection (F01) лишається окремою зовнішньою дією; перед SEO-L узгоджено переглянути root/header/page-specific правила. Докази — `docs/seo/audit.md`, SEO-2.2.
 - Sanity Studio (`/studio`) — доступ через Sanity Dashboard (окремий логін)
 - Контент-менеджер оновлює дані через Studio без участі розробника
 
