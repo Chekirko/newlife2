@@ -41,7 +41,7 @@ export function HonorarySection({ members, bgClass = 'bg-gray-50' }: HonorarySec
                 <div className="relative w-36 h-36 lg:w-44 lg:h-44 mx-auto mb-5 rounded-full overflow-hidden ring-2 ring-primary/30 group-hover:ring-primary group-hover:ring-4 transition-all duration-300">
                   <Image
                     src={photoUrl}
-                    alt={member.name}
+                    alt=""
                     fill
                     sizes="(max-width: 1024px) 144px, 176px"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -49,9 +49,9 @@ export function HonorarySection({ members, bgClass = 'bg-gray-50' }: HonorarySec
                 </div>
 
                 {/* Name */}
-                <h5 className="text-lg font-bold text-gray-800 font-heading mb-1 group-hover:text-primary-text transition-colors">
+                <h3 className="text-lg font-bold text-gray-800 font-heading mb-1 group-hover:text-primary-text transition-colors">
                   {member.name}
-                </h5>
+                </h3>
 
                 {/* Title (Сан) */}
                 {member.title && (

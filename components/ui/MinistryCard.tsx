@@ -31,7 +31,7 @@ export const MinistryCard = ({
         {image ? (
           <Image
             src={image}
-            alt={title}
+            alt=""
             width={600}
             height={450}
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
@@ -45,7 +45,7 @@ export const MinistryCard = ({
       <div
         className="bg-grad-readable absolute bottom-0 left-0 right-0 px-5 py-5 z-10"
       >
-        <h6 className="text-white text-xl font-semibold m-0">{title}</h6>
+        <h3 className="text-white text-xl font-semibold m-0">{title}</h3>
       </div>
     </Link>
   )

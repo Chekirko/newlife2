@@ -4,6 +4,8 @@
 
 ## General
 
+- **Card headings/links SEO-6.3:** картки під секційним H2 у `/team` та `/ministries` використовують H3 зі збереженою типографікою. Цілісне посилання вже назване видимим heading; вкладене фото має порожній alt, щоб не повторювати ім’я/назву. Це правило для цих карток, не для самостійних фото detail/lightbox. Перевіряти повний SSR із PageHero/layout, а не додавати H1/main у компоненти через regex scanner warnings. Crawl має охоплювати всі distinct href карток, keyboard/mobile QA — звичайні й почесні картки та ministry grid. Інші section/footer/detail headings лишаються F11/SEO-6.4+.
+
 - Package manager: `pnpm@11.5.1`, pinned in `package.json#packageManager`. Vercel enables Corepack through `vercel.json#build.env.ENABLE_EXPERIMENTAL_COREPACK=1` so local and deployment installs use the same version. Do not infer pnpm's major from `lockfileVersion: 9.0`: pnpm 10 rejects the pnpm 11 string-form `patchedDependencies` metadata with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`. Validate dependency/patch changes with a clean `pnpm install --frozen-lockfile` in addition to `pnpm run build`.
 - C4: work in a separate `codex/*` branch; user authorized commit + push after completed tasks for Vercel Preview. Run `pnpm run lint`, `pnpm run typecheck`, `pnpm test`, and `pnpm run build`. CI runs one cached Ubuntu/Node 24 job on PRs to `master` and pushes to `master`; see `docs/ci.md`. Do not add test frameworks or expensive CI suites without a concrete regression/risk. Generated types and agent skill examples are outside ESLint; application/Studio/scripts rules stay enabled, warnings fail CI. C1 adds a third regression for contact validation/delivery with mock HTTP; the workflow itself is unchanged.
 - Keep modules small and single-purpose

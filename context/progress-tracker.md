@@ -4,6 +4,17 @@ Update this file after every meaningful implementation change.
 
 ## Активний задум: SEO до завершення контенту — старт кожної наступної SEO-сесії тут
 
+**Commit + push SEO-6.3 прямо погоджені 2026-10-26:** після локального QA користувач відповів «так». Публікація 3 файлів застосунку та 6 документів у `codex/seo-1-audit` погоджена; нижчі згадки про потрібну згоду — попередній стан. Результат — у git history та фінальному повідомленні. Merge/Production settings без змін, live deployment окремо не засвідчений. Наступний юніт — SEO-6.4.
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Свіжий fetch — HEAD/origin 0/0; Git Credential Manager — `Chekirko`. UTF-8 6 документів / 92 локальні file+anchor targets та diff-check PASS; код і попередній QA не розширені. Точний SHA/remote SHA/чистота дерева — у фінальному повідомленні після push.
+
+**Актуально — SEO-6.3 локально завершено 2026-10-26; наступний юніт — SEO-6.4.** [Результат і докази](../docs/seo/audit.md#seo-63-картки-служителів-і-служінь--2026-10-26), [специфікація](specs/05-prelaunch-seo.md). На `/team` звичайні/почесні картки H5 → H3, на `/ministries` H6 → H3 під H2 секцій; фото в цих цілісних посиланнях має порожній alt, щоб не дублювати видиме ім’я/назву. Усі CSS-класи й href збережені. 3 файли застосунку, без нових залежностей/схем/запитів. Build/lint/tsc/3 наявні та 3 SEO-регресії, 11 SSR fixtures і 32 production GET — PASS. Browser 1280/390/320px: без overflow, видимий focus, Tab/Shift+Tab/Enter і переходи до details; console без errors у перевірених flows. Тимчасовий QA — ignored `.next/seo-6.3/`.
+
+- **Далі SEO-6.4:** OurVision/PastorGreeting pre-titles — два пов’язані шаблони; звірити актуальну структуру, зберегти typography, виконати SSR і keyboard/mobile QA. Далі окремо Testimonials names, FAQ contact block, footer і залишкові ministry detail headings (sidebar H5/CTA H6/leader H4). F11 закрито частково; повний D8, breadcrumbs contrast, SEO-7, F01 і SEO-L відкриті.
+- Старт — чистий `9c1816c`, гілка `codex/seo-1-audit`; SEO-6.2 уже в HEAD. Noindex/Disallow/порожній approval збережено; CMS/env/DNS/settings/package/lockfile без змін. Commit/push SEO-6.3 не виконано — окрема згода за workflow §3. Live deployment/Google index не засвідчені. QA-сервер зупинено; viewport скинуто, робочу browser-вкладку закрито. Нижчі записи SEO-6.2/6.1 — історичний стан.
+
+### Попередній стан SEO-6.2
+
 **Актуально — SEO-6.2 локально завершено 2026-10-26; наступний юніт — SEO-6.3.** [Результат і докази](../docs/seo/audit.md#seo-62-картки-новин-і-sidebar--2026-10-26), [специфікація](specs/05-prelaunch-seo.md). `/news`: H1 → H2 для карток, sidebar CTA і порожнього стану; доступна назва «Читати далі» містить назву новини, фото-посилання має повну площу та inset focus, активна категорія — `aria-current`. 4 файли застосунку, без нових залежностей/схем/запитів. Build/lint/tsc/3 наявні та 3 SEO-регресії, SSR fixtures і 16 production GET — PASS. Browser 1280/390/320px: без overflow, Tab/Shift+Tab/Enter, detail/category/reset transitions, console без errors у перевірених flows. Temporary QA — ignored `.next/seo-6.2/`.
 
 - **Далі SEO-6.3:** team/ministry card headings як 1–2 пов’язані шаблони, з актуальним SSR/crawl і keyboard/mobile QA. Після них окремо OurVision/PastorGreeting pre-titles, Testimonials names, FAQ contact block і footer. F11 закрито частково; повний D8, breadcrumbs contrast, SEO-7, F01 і launch SEO-L лишаються відкритими.

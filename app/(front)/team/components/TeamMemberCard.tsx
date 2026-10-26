@@ -15,7 +15,7 @@ export function TeamMemberCard({ slug, name, subtitle, photoUrl }: TeamMemberCar
       <div className="relative overflow-hidden rounded-xl mb-4 bg-gray-100" style={{ aspectRatio: '3/4' }}>
         <Image
           src={photoUrl}
-          alt={name}
+          alt=""
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           className="object-cover transition-transform duration-500 group-hover:scale-105"
@@ -24,7 +24,7 @@ export function TeamMemberCard({ slug, name, subtitle, photoUrl }: TeamMemberCar
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--gradient-start)]/80 via-[var(--gradient-end)]/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
       {/* Name + subtitle */}
-      <h5 className="text-lg font-bold text-gray-800 font-heading mb-1">{name}</h5>
+      <h3 className="text-lg font-bold text-gray-800 font-heading mb-1">{name}</h3>
       {subtitle && (
         <span className="gradient-text text-sm font-semibold block">{subtitle}</span>
       )}

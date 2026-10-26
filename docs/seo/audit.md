@@ -1,13 +1,13 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-1–SEO-5 і SEO-6.1/6.2 завершено локальними юнітами; наступний юніт — SEO-6.3.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Поточний результат — у «SEO-6.2» нижче; початкові докази й карта SEO-1 збережені як baseline, а не опис нинішнього коду. F11 виправлено частково, весь SEO-6/D8 не закрито.
+Дата: 2026-10-26. **SEO-1–SEO-5 і SEO-6.1/6.2/6.3 завершено локальними юнітами; наступний юніт — SEO-6.4.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Поточний результат — у «SEO-6.3» нижче; початкові докази й карта SEO-1 збережені як baseline, а не опис нинішнього коду. F11 виправлено частково, весь SEO-6/D8 не закрито.
 
 ## Висновки
 
 - Основа працює: 44/44 початкові адреси sitemap у SEO-1 відповідали HTTP 200 із canonical правильного шляху; доступність і canonical повторно підтверджені у SEO-4.1, 5 відсутніх адрес — 404/noindex. Нинішній sitemap навмисно порожній: запуск і жодна сторінка не схвалені.
 - Pre-launch crawling заблоковано. За останньою live-перевіркою SEO-2.1 Production alias публічний без meta/header noindex. SEO-2.2 додав обидва сигнали в коді; актуальний live deployment окремо не перевірений. Сам `Disallow: /` і noindex, який crawler може не прочитати, не гарантують відсутності адрес у пошуку; F01 залишається відкритим.
 - SEO-3.1 виправив соціальні metadata 11 статичних маршрутів, OG image `/about` і CMS defaults; SEO-3.2 — чотири detail families, фото матеріалу та description fallback оголошення. F07–F10 технічно закриті локально: 62 GET і 32 metadata fixtures SEO-3.2 — PASS. Остаточні тексти/редакційна готовність та live social preview не засвідчені.
-- F04 технічно закритий у SEO-5. SEO-6.1 виправив H1 головної й дубль H1 служителів, ізоляцію прихованих hero CTA, керування ротацією та битий `/contact#map`. SEO-6.2 узгодив news card/sidebar headings, назви detail links і фото-focus; 16 GET, keyboard/mobile/desktop QA та регресії пройшли. Інші пропуски рівнів заголовків — SEO-6.3+. Початкові 500 на page новин/подій виправлені у SEO-4.2.
+- F04 технічно закритий у SEO-5. SEO-6.1 виправив H1 головної й дубль H1 служителів, ізоляцію прихованих hero CTA, керування ротацією та битий `/contact#map`. SEO-6.2 узгодив news card/sidebar; SEO-6.3 — team/honorary/ministry listing cards H3 і назви посилань без дублювання від фото. 32 GET, keyboard/mobile/desktop QA та регресії SEO-6.3 пройшли. Інші пропуски рівнів заголовків — SEO-6.4+. Початкові 500 на page новин/подій виправлені у SEO-4.2.
 - SEO-4.1/4.2 технічно закрили F02/F03/F05/F06 локально; SEO-5 — null-guards і JSON-LD за видимими даними. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Noindex/Disallow та порожній approval збережено; F01 відкритий.
 
 ## Межі й метод перевірки
@@ -72,7 +72,7 @@ P1 — високий вплив до запуску або ризик недо�
 | F08. `/about` втрачає `og:image` | `/about` має власний openGraph object без images. HTML: OG URL `/about`, og:image відсутній; Twitter image залишається root | Середній: неповне соціальне прев’ю | Явно зберегти спільне зображення при перевизначенні OG. Повторно перевірити image/siteName/locale разом, не покладатися на deep merge | P2 / SEO-3, мале виправлення |
 | F09. CMS SEO/OG-поля не впливають на metadata | [siteSettings schema](../../sanity/schemaTypes/siteSettings.ts):221–234 визначає ogImage/defaultDescription. [query](../../sanity/lib/queries.ts):30–44 не вибирає ogImage; [helper](../../lib/site-settings.ts):127 повертає defaultDescription, але `rg` не знаходить його споживача в app. Root metadata статичні. Published settings зараз **без обох значень** | Середній для редактора: майбутнє заповнення не дасть очікуваного результату; зараз втрати конкретного заповненого значення не виявлено | Підключити наявні поля до defaults з fallback або уточнити контракт. Не створювати дублікати полів; порожній CMS не має прибирати metadata | P2 / SEO-3 |
 | F10. Неповні description | `/ministries` повторює description головної. `/events/obid-dlya-rodin-zagiblikh-zakhisnikiv` → 200, але description немає: немає ні CMS description, ні body. 43/44 URL sitemap мають description | Середній: загальний або відсутній анонс не описує сторінку | Для списку — опис лише підтвердженого призначення; для detail — безпечний fallback/правило відкладення за SEO-2. Остаточний зміст оголошення надає власник | P2 / SEO-3 + SEO-L |
-| F11. H1 і рівні heading неузгоджені | Baseline: `/` → 0 H1; 11 team details → 2 H1. SEO-6.1: головна й усі 11 details → 1 H1. SEO-6.2: `/news` main → H1,H2 (5 cards + 3 sidebar headings), empty-state теж H2. Залишок: `/ministries` → H1,H2,H6; `/team` → H2,H5; pre-titles/імена/FAQ головної та footer H4 | Середній для семантики/навігації; це не доказ санкцій або втрати конкретних позицій | H1 та news card/sidebar виправлені; решту heading templates виконувати окремими юнітами, далі team/ministry cards | P2 / частково закрито; SEO-6.3+ |
+| F11. H1 і рівні heading неузгоджені | SEO-6.1: головна й 11 team details → 1 H1. SEO-6.2: `/news` main → H1,H2. SEO-6.3: `/team` і `/ministries` main → H1,H2,H3 (по 15 карток). Залишок: pre-titles/імена/FAQ головної, footer H4; ministry detail sidebar H5/CTA H6/leader H4 | Середній для семантики/навігації; це не доказ санкцій або втрати конкретних позицій | H1, news card/sidebar і team/ministry listing cards виправлені; далі OurVision/PastorGreeting pre-titles | P2 / частково закрито; SEO-6.4+ |
 
 Поведінка `/about` відповідає [документації Next.js про shallow metadata merge](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging); джерелом істини для встановленої 16.1.6 тут слугує перевірений HTML. Довжина title/description сама по собі не використана як жорсткий критерій дефекту.
 
@@ -429,6 +429,39 @@ Build, lint, typecheck, 3 наявні регресії та `scripts/check-list
 До SEO-L власник підтверджує NAP/legalName/geo/соцмережі та їхні fallback, справжній розклад і його endTime, FAQ/свідчення/біографії/ролі, дати матеріалів та авторство. Event потребує точної адреси/статусу/організатора за кожною подією; video — справжньої uploadDate, назв/описів і готовності watch experience. У цій сесії відсутні факти пропущені або записані як залежності, а не вигадані. Історія й readiness approval лишаються непогодженими.
 
 Pre-launch root/header/page noindex, Disallow та порожній approval збережені. Schema/GROQ sources, package/lockfile, CMS/env/DNS/platform settings не змінені; TypeGen лише штатний ignored output. Live deployment/Search Console/Google index та mobile/desktop layout не перевірені: in-app browser localhost timeout, HTTP через локальний процес успішний. F01 лишається відкритим. Commit/push SEO-5 не виконано — [проєктний гейт §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19).
+
+## SEO-6.3: картки служителів і служінь — 2026-10-26
+
+**Commit + push прямо погоджені 2026-10-26:** після локального QA користувач відповів «так». Публікація охоплює 3 файли застосунку та 6 документів у `codex/seo-1-audit`; нижчі згадки про ще потрібну згоду описують попередній стан. Результат — у git history та фінальному повідомленні. Merge/Production settings без змін; live deployment окремо не засвідчений.
+
+Перед погодженими commit + push повторний build PASS: 21 schema type / 34 queries, TypeScript, 42/42 tasks; старі Node/Browserslist warnings. Свіжий fetch — HEAD/origin 0/0, Git Credential Manager — `Chekirko`. UTF-8 6 документів / 92 локальні file+anchor targets і diff-check PASS. Зміни застосунку та попередній QA не розширено; точний результат публікації перевіряється після push.
+
+- У списках `/team` і `/ministries` виправлені підтверджені H2 → H5/H6 skips: усі імена/назви карток тепер H3. Єдиний PageHero H1 і секційні H2 збережено.
+- У цілісному посиланні фото має `alt=""`: доступна назва походить від видимого імені/назви та підпису, без повторного озвучення від фото. Фото detail/lightbox не змінювались. CSS-класи, href, розміри й hover збережено.
+- 32 production GET, 11 SSR fixtures, browser 1280/390/320px і build/lint/tsc/наявні та SEO-регресії — PASS. F11 закрито лише для цих списків; повний SEO-6/D8 відкритий.
+
+Пряме доручення — «Роби Наступний крок — SEO-6.3». Старт із чистого `9c1816c` у `codex/seo-1-audit`, SEO-6.2 уже в HEAD. Два пов’язані шаблони — team cards (звичайний/почесний варіант) і ministry listing cards. Рівно 3 файли застосунку: [TeamMemberCard](../../app/(front)/team/components/TeamMemberCard.tsx), [HonorarySection](../../app/(front)/team/components/HonorarySection.tsx), [MinistryCard](../../components/ui/MinistryCard.tsx). Нових маршрутів, стану, схем, GROQ-запитів чи залежностей немає. Скіли seo-audit/a11y-audit/senior-frontend/karpathy-coder, grill-with-docs/handoff для контексту; окремого handoff-файлу немає.
+
+### Перевірки SEO-6.3
+
+| Перевірка | Результат і межі |
+|---|---|
+| Production build | `cmd /c "pnpm run build"` PASS: 21 schema type / 34 queries, TypeScript, 42/42 generation tasks. Початковий Sanity config EPERM усунуто дозволеним повтором; старі Node/Browserslist warnings |
+| Статичні перевірки | `pnpm run lint`, `pnpm run typecheck` (Sanity/Next typegen + tsc), `pnpm exec tsc --noEmit`, `pnpm test` (3 регресії), listing/jsonld/heading SEO scripts PASS; Diff Surgeon CLEAN (3 файли, 14 changed lines). UTF-8 6 документів / 92 локальні file+anchor targets і `git diff --check` PASS |
+| SSR fixtures | 11 renders реальних TeamSection/HonorarySection/MinistryGridSection через transpile/VM і mocked Link/Image/urlFor: H2/H3, чинні href, порожні списки, фото/fallback, довга назва, перша responsibility, фото з порожнім alt. Це SSR, без browser/CMS mutations |
+| HTTP crawl | 32 GET: 30×200 / 2×404. Обидва списки по 15 карток; 26 distinct targets = 11 team + 15 ministry details, усі 200 з власним canonical і 1 H1. Обидва missing slugs — 404. Усі відповіді header noindex, 30 HTML — meta noindex; robots Disallow, sitemap 0 URL. Вибірка — усі href цих карток, не весь сайт |
+| Browser | 1280×900 / 390×844 / 320×812: обидва списки без горизонтального overflow, назви служінь у межах карток, видимий глобальний focus. Tab/Shift+Tab для звичайної, почесної та ministry cards; Enter → відповідні details; breadcrumb Команда → список. Console errors відсутні в перевірених flows. Синтетичні порожні/без фото стани перевірені лише SSR |
+| Сканери | SEO checker підтвердив один H1 та hierarchy OK на обох HTML. Його «missing alt» для явного `alt=""` — false positive для фото з дубльованою текстовою назвою в тому самому link; евристики довжини metadata/word count не є scope цього юніту. A11y scanner очікує H1/main/nav/skip-link у кожному компоненті; реальні PageHero/layout дають їх на сторінці. Footer H4 не оголошено виправленим |
+
+Тимчасові runner/results — ignored `.next/seo-6.3/fixtures.mjs`, `crawl.mjs`, `crawl.json`; permanent тестовий framework чи новий tracked regression для заміни тегів не додано. Початкові loopback EACCES/timeout усунені дозволеним запуском локального сервера й crawl поза sandbox. Viewport override скинуто, робочу QA-вкладку закрито. Дві ранні error-вкладки не вдалося закрити через URL policy на browser-generated data URL; вони тимчасові. Семантика узгоджена з [W3C WAI: Headings](https://www.w3.org/WAI/tutorials/page-structure/headings/) та [Functional Images](https://www.w3.org/WAI/tutorials/images/functional/).
+
+QA-сервер зупинено, порт 3004 без listener. Фінальний diff — 3 файли застосунку + 6 документів. Root layout/robots/sitemap/next.config/readiness approval/schema sources/package/lockfile/env/DNS/CMS/platform settings збережені. Live deployment/Google index не засвідчені. Commit/push SEO-6.3 не виконано — потрібна окрема згода за [workflow §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19).
+
+### Наступний юніт після SEO-6.3
+
+1. **SEO-6.4 — OurVision/PastorGreeting pre-titles:** звірити актуальні H1–H6 у контексті сторінки, точково виправити підтверджені skips, зберегти typography; SSR і keyboard/mobile/desktop QA. Скіли seo-audit/a11y-audit/senior-frontend/karpathy-coder, grill-with-docs/handoff для контексту.
+2. **Решта F11 — окремими юнітами:** Testimonials names, FAQ contact block, footer; ministry detail sidebar H5, CTA H6 та leader H4 (single/multiple branches). Вони не належать до виправлених listing cards. Після всіх юнітів — свіжий heading crawl, без автоматичного закриття повного D8.
+3. **Зберегти межі:** F01/platform protection, breadcrumbs contrast/D8, performance SEO-7, редакційні біографії/історія та launch SEO-L лишаються відкритими. Жодного запуску індексації або live CMS edits у цьому юніті.
 
 ## SEO-6.2: картки новин і sidebar — 2026-10-26
 
