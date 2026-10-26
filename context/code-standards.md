@@ -4,6 +4,8 @@
 
 ## General
 
+- **Footer headings SEO-6.6:** незалежні групи `ChurchFooter` використовують H2 зі сталим рангом на всіх маршрутах; footer є сусідом main, а не підрозділом його останньої секції. `footer-title` зберігає typography без додаткових size utilities. SSR-порівняння до/після має підтвердити незмінність класів/href/optional-data branches; computed styles і розміри звіряти на desktop/mobile. Не додавати H1/main/skip-link до footer через попередження scanner, який трактує компонент як цілу сторінку. [QA](../docs/seo/audit.md#seo-66-заголовки-футера--2026-10-26); ministry detail headings — SEO-6.7, повний D8 окремо.
+
 - **Testimonials/FAQ headings SEO-6.5:** ім’я після цитати — підпис авторства в p, а не новий розділ H6. При заміні heading на p зберігати не лише font-family/size, а й line-height/color/margins; тут `font-heading text-h6 leading-heading text-gray-800 m-0 font-bold`. Контактний підрозділ FAQ має H3 під H2 з `text-h4` для попереднього розміру. Звіряти DOM/SSR та computed styles із baseline на desktop/mobile. Вузький heading QA не засвідчує повну доступність accordion або layout; FAQ disclosure semantics і nav landmark залишаються D8.
 
 - **Section pre-titles SEO-6.4:** OurVision/PastorGreeting використовують абзаци для коротких надзаголовків перед H2; H3 місії лишається вкладеним у OurVision. При заміні heading на p явно зберігати успадкований `font-heading`, решту typography — чинними класами; перевіряти computed styles до/після на desktop/mobile, оскільки один лише незмінний `text-sm` не зберігає font family. Перевіряти повну SSR-сторінку й реальний CTA, не додавати H1/main/nav до section-компонентів за regex-попередженнями. Решта F11 — SEO-6.5+.

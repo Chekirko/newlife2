@@ -2,6 +2,20 @@
 
 Update this file after every meaningful implementation change.
 
+## Поточний юніт — SEO-6.6, 2026-10-26
+
+**Commit + push SEO-6.6 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA. Погоджено 1 файл застосунку та 6 документів у `codex/seo-1-audit`. Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижча згадка про ще потрібну згоду — попередній стан. Результат публікації — у git history та фінальному повідомленні. Далі SEO-6.7; merge/Production settings без змін, live deployment окремо не засвідчений.
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. UTF-8 6 документів / 121 локальна ціль і staged diff-check — PASS; review трьох рядків застосунку CLEAN. Код і попередній QA не розширено.
+
+**SEO-6.6 локально завершено.** [Результат і докази](../docs/seo/audit.md#seo-66-заголовки-футера--2026-10-26), [spec](specs/05-prelaunch-seo.md). У ChurchFooter три групи H4 → H2 зі збереженим `footer-title`; три рядки одного компонента. Старт із чистого `32276d0`, гілка `codex/seo-1-audit`; SEO-6.5 уже в HEAD. 6 SSR fixtures зі звіркою до HEAD, lint, три штатні та три SEO-регресії — PASS; Diff Surgeon застосунку CLEAN.
+
+- Build: 21 schema type / 34 queries, TypeScript, 42/42 tasks — PASS. Усі стадії повного typecheck пройшли (Sanity typegen у build, потім next typegen + tsc); перші спроби мали службовий config EPERM, див. звіт. 16 production GET (15×200/1×404), усі 13 внутрішніх footer href — 200; noindex/Disallow/порожній sitemap збережені. Browser 1280/390/320px: exact computed styles і розміри до/після, без overflow; Tab/Shift+Tab, видимий focus, Enter → about/privacy/ministry PASS; console errors — 0. UTF-8 6 документів / 121 локальна ціль і diff-check PASS. QA-сервер зупинено, viewport скинуто, робочу вкладку закрито; тимчасові HTTP-артефакти в ignored `.next/seo-6.6/`.
+
+**Далі SEO-6.7:** ministry detail sidebar H5/CTA H6/leader H4 (single/multiple), повна сторінка/optional data/typography/SSR/links/keyboard/mobile. Потім окремий свіжий heading crawl. F11 частково закритий; D8 (FAQ disclosure semantics, nav landmark, breadcrumbs contrast), SEO-7, F01 і SEO-L відкриті. Скіли: seo-audit, a11y-audit, senior-frontend, karpathy-coder; grill-with-docs/handoff для контексту.
+
+Noindex/Disallow/порожній approval збережено; CMS/env/DNS/platform settings без змін. Commit/push SEO-6.6 не виконано — окрема згода за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Live deployment не засвідчений. Нижчі блоки — історія попередніх юнітів, а не поточний наступний крок.
+
 ## Активний задум: SEO до завершення контенту — старт кожної наступної SEO-сесії тут
 
 **Commit + push SEO-6.5 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA. Погоджено публікацію 2 файлів застосунку та 6 документів у `codex/seo-1-audit`; нижчі згадки про ще потрібну згоду — історичний стан. Свіжий fetch — HEAD/origin 0/0, Git Credential Manager — `Chekirko`. Результат commit/push — у git history та фінальному повідомленні. Наступний юніт — SEO-6.6; merge/Production settings без змін, live deployment окремо не засвідчений.

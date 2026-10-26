@@ -1,5 +1,9 @@
 # SEO до завершення реального контенту
 
+**Публікація SEO-6.6 погоджена 2026-10-26:** відповідь користувача «так» після локального QA дозволяє commit + push 1 файла застосунку та 6 документів у `codex/seo-1-audit`. Нижчі згадки про ще потрібну згоду — історичний стан. Результат — у git history та фінальному повідомленні; далі SEO-6.7. Merge/Production settings без змін, live deployment окремо не засвідчений.
+
+**SEO-6.6 локально завершено (2026-10-26):** [реалізація й QA](../../docs/seo/audit.md#seo-66-заголовки-футера--2026-10-26). У ChurchFooter три незалежні групи H4 → H2 зі збереженим `footer-title`; зміна трьох рядків одного компонента. 6 SSR fixtures, 16 GET, exact typography/Tab/Shift+Tab/Enter на 1280/390/320px, build/typecheck/lint/регресії — PASS. Наступний юніт — SEO-6.7: ministry detail sidebar H5/CTA H6/leader H4 (single/multiple), потім окремий свіжий heading crawl. F11 частковий; D8/SEO-7/F01/SEO-L відкриті. Noindex/Disallow/порожній approval збережено. Commit/push SEO-6.6 — за окремою згодою workflow §3. Нижчі записи про «наступний SEO-6.6» — історичний стан.
+
 **Публікація SEO-6.5 погоджена 2026-10-26:** відповідь користувача «так» після локального QA дозволяє commit + push 2 файлів застосунку та 6 документів у `codex/seo-1-audit`. Нижчі згадки про ще потрібну згоду — історичний стан. Результат — у git history та фінальному повідомленні; далі SEO-6.6. Merge/Production settings без змін, live deployment окремо не засвідчений.
 
 Дата: 2026-10-26. Статус: SEO-1–SEO-5 і SEO-6.1/6.2/6.3/6.4/6.5 завершено локальними юнітами; наступна сесія — SEO-6.6 (footer headings, залишок F11). Весь SEO-6/D8 ще не закрито; F01/platform protection залишається відкритим.
@@ -127,13 +131,14 @@
 | SEO-4.1 | Завершено локально 2026-10-26 | Спільна готовність metadata/sitemap, порожній approval, чесний lastmod; 58 GET/103 fixture-перевірки |
 | SEO-4.2 | Завершено локально 2026-10-26 | 154 GET + ізольована регресія; query/page, canonical, redirect/404, noindex filter, схвалення видимої порції metadata/sitemap |
 | SEO-5 | Завершено локально 2026-10-26 | F04/null-photo, JSON-LD за видимим контентом, 57 GET + tracked regression; Schema.org synthetic 0 errors/0 warnings; Google test вимагає login, eligibility не засвідчена |
-| SEO-6 | Частково виконано | H1-частина F11 закрита у SEO-6.1, news card/sidebar — у SEO-6.2, team/ministry listing cards — у SEO-6.3, OurVision/PastorGreeting pre-titles — у SEO-6.4, testimonials names/FAQ contact — у SEO-6.5; footer/detail headings у наступних вузьких юнітах |
+| SEO-6 | Частково виконано | H1-частина F11 закрита у SEO-6.1, news card/sidebar — у SEO-6.2, team/ministry listing cards — у SEO-6.3, OurVision/PastorGreeting pre-titles — у SEO-6.4, testimonials names/FAQ contact — у SEO-6.5, footer — у SEO-6.6; ministry detail headings — SEO-6.7, потім свіжий heading crawl |
 | SEO-6.1 | Завершено локально 2026-10-26 | Головний hero + team detail, pause/inert/keyboard, target #map; 53 GET, 51 fragments, mobile/desktop і регресії PASS |
 | SEO-6.2 | Завершено локально 2026-10-26 | `/news` card/sidebar/empty H2, конкретні detail link names, фото-focus й current category; 16 GET, SSR fixtures, keyboard/mobile/desktop QA PASS |
 | SEO-6.3 | Завершено локально 2026-10-26 | Team/honorary/ministry cards H3, назви посилань без повтору від фото; 11 SSR fixtures, 32 GET, keyboard/mobile/desktop QA PASS |
 | SEO-6.4 | Завершено локально 2026-10-26 | OurVision/PastorGreeting pre-titles — абзаци зі збереженим шрифтом; 6 SSR fixtures, 6 GET, computed typography і keyboard/mobile/desktop QA PASS |
 | SEO-6.5 | Завершено локально 2026-10-26 | TestimonialsGrid names H6 → p, FAQSplit contact H4 → H3 зі збереженою typography; 6 SSR fixtures, 6 GET, 1280/390/320px і keyboard/CTA QA PASS |
-| SEO-6.6 | Наступна сесія | Footer headings H4: звірити ранг у повних сторінках, зберегти typography; SSR/links/keyboard/mobile QA. Ministry detail headings — наступний окремий юніт, далі свіжий heading crawl |
+| SEO-6.6 | Завершено локально 2026-10-26 | Footer groups H4 → H2, незмінний `footer-title`; 6 SSR fixtures, 16 GET, exact typography/keyboard/mobile/desktop, build/typecheck/lint/регресії PASS. [Докази](../../docs/seo/audit.md#seo-66-заголовки-футера--2026-10-26) |
+| SEO-6.7 | Наступна сесія | Ministry detail sidebar H5/CTA H6/leader H4 (single/multiple): повна сторінка, typography, SSR/links/keyboard/mobile; потім окремий свіжий heading crawl |
 | SEO-7 | Не розпочато | Вимірювання → один пріоритетний дефект |
 | SEO-L | Відкладено | Реальний контент/домен і окреме рішення користувача про запуск |
 

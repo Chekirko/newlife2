@@ -70,7 +70,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
 
           {/* Quick Links */}
           <div>
-            <h4 className="footer-title">Швидкі посилання</h4>
+            <h2 className="footer-title">Швидкі посилання</h2>
             <ul className="footer-links">
               {quickLinks.map((link, idx) => (
                 <li key={idx}>
@@ -85,7 +85,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
 
           {/* Ministry Links */}
           <div>
-            <h4 className="footer-title">Служіння</h4>
+            <h2 className="footer-title">Служіння</h2>
             <ul className="footer-links">
               {ministries.length > 0 ? (
                 ministries.map((m) =>
@@ -111,7 +111,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
 
           {/* Contact Info */}
           <div>
-            <h4 className="footer-title">Контакти</h4>
+            <h2 className="footer-title">Контакти</h2>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
                 <i className="fas fa-map-marker-alt text-primary mt-1"></i>
