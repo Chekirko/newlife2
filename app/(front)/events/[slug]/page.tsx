@@ -30,6 +30,7 @@ export async function generateMetadata({
     (typeof event.body === 'string' ? event.body : event.body ? toPlainText(event.body) : '')
 
   return getPageMetadata(`/events/${slug}`, {
+    documentId: event._id,
     title: `${event.title || 'Подія'} | Події | Церква «Нове Життя»`,
     description: plainDescription.slice(0, 160),
     alternates: { canonical: `/events/${slug}` },

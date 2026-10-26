@@ -1,10 +1,12 @@
 import type { Metadata } from 'next'
 import { getSiteSettings } from '@/lib/site-settings'
 import { SITE_URL } from '@/lib/site'
+import { isPageIndexable } from '@/lib/seo-readiness'
 
 type PageMetadata = Pick<Metadata, 'alternates' | 'robots'> & {
   title?: string
   description?: string
+  documentId?: string
   image?: { url: string; width: number; height: number; alt: string }
 }
 
@@ -14,7 +16,7 @@ function plainText(value?: string | null): string {
 
 /** Complete social objects: Next.js replaces nested metadata rather than merging it. */
 export async function getPageMetadata(path: string, page: PageMetadata = {}): Promise<Metadata> {
-  const { image: pageImage, ...metadata } = page
+  const { image: pageImage, documentId, ...metadata } = page
   const settings = await getSiteSettings()
   const title = plainText(page.title) || 'Церква «Нове Життя» | Євангельська церква в Бориславі'
   const description = plainText(page.description) || plainText(settings.defaultDescription) ||
@@ -28,6 +30,9 @@ export async function getPageMetadata(path: string, page: PageMetadata = {}): Pr
 
   return {
     ...metadata,
+    robots: isPageIndexable(path, documentId)
+      ? page.robots ?? { index: true, follow: true }
+      : { index: false, follow: true },
     title,
     description,
     openGraph: {

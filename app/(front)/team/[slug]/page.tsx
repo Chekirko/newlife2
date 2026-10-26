@@ -30,6 +30,7 @@ export async function generateMetadata({
   if (!member) return { title: 'Служитель не знайдений' }
   const plainBio = typeof member.bio === 'string' ? member.bio : member.bio ? toPlainText(member.bio) : ''
   return getPageMetadata(`/team/${slug}`, {
+    documentId: member._id,
     title: `${member.name || 'Служитель'} | Церква «Нове Життя»`,
     description: plainBio.trim().slice(0, 160) || `${member.name || 'Служитель'} — служитель церкви «Нове Життя»`,
     alternates: { canonical: `/team/${slug}` },

@@ -43,6 +43,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       ministry.fullDescription ? toPlainText(ministry.fullDescription) : '')
 
   return getPageMetadata(`/ministries/${slug}`, {
+    documentId: ministry._id,
     title: `${ministry.title || 'Служіння'} | Церква «Нове Життя»`,
     description: description.slice(0, 160),
     alternates: { canonical: `/ministries/${slug}` },

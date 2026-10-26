@@ -55,6 +55,7 @@ export async function generateMetadata({
     (typeof news.body === 'string' ? news.body : news.body ? toPlainText(news.body) : '')
 
   return getPageMetadata(`/news/${slug}`, {
+    documentId: news._id,
     title: `${news.title || 'Новина'} | Новини | Церква «Нове Життя»`,
     description: description.slice(0, 160),
     alternates: { canonical: `/news/${slug}` },

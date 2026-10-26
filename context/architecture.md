@@ -76,6 +76,7 @@
 ## Auth and Access Model
 
 - Публічний сайт — авторизація користувачів відсутня
+- SEO-4.1: `lib/seo-readiness.ts` — єдиний реєстр `SEO_APPROVAL` (launch origin/date + pages path/date/опційний CMS `_id`), початково `launch: null, pages: []`. `isPageIndexable()` спільний для `getPageMetadata()` і sitemap: лише Production із погодженим `SITE_URL`, відомий canonical маршрут та явне схвалення; detail додатково звіряє published `_id` і slug у шляху. Privacy/Studio/невідомі/query URL виключені. Metadata передає `documentId` як службовий вхід helper; CMS-схеми/контент не змінені. Sitemap читає `perspective: 'published'`, підхоплює схвалені наявні документи через ISR 60s, прибирає дублікати; статичні URL без lastmod, CMS — лише валідний `_updatedAt`, без fallback «зараз». Поточний sitemap порожній; це не контроль доступу. Root/header noindex й Disallow збережено, повне відкриття — окрема скоординована дія SEO-L.
 - Pre-launch SEO-2.2: root metadata `noindex, follow` та `X-Robots-Tag: noindex` у чинному `next.config.ts#headers` на всіх шляхах/ресурсах; `robots.ts` зберігає `Disallow: /`. Це пошукові сигнали, не контроль доступу й не гарантія виключення URL за заблокованого crawling. Privacy/Studio зберігають свої robots. Production platform protection (F01) лишається окремою зовнішньою дією; перед SEO-L узгоджено переглянути root/header/page-specific правила. Докази — `docs/seo/audit.md`, SEO-2.2.
 - Sanity Studio (`/studio`) — доступ через Sanity Dashboard (окремий логін)
 - Контент-менеджер оновлює дані через Studio без участі розробника

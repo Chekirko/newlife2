@@ -1,35 +1,29 @@
 import type { MetadataRoute } from 'next'
 import { defineQuery } from 'next-sanity'
 import { SITE_URL } from '@/lib/site'
+import { isPageIndexable, STATIC_SEO_ROUTES } from '@/lib/seo-readiness'
 import { client } from '@/sanity/lib/client'
 
-// Regenerate alongside ISR so new CMS content appears in the sitemap.
+// Regenerate alongside ISR so approved published content appears automatically.
 export const revalidate = 60
 
-// Static routes that hold real, indexable content.
-// NOTE: /privacy is intentionally excluded while it is a `noindex`
-// placeholder — add it here once it becomes a real page.
-const STATIC_ROUTES = ['', '/about', '/history', '/team', '/ministries', '/news', '/events', '/media', '/media/photos', '/contact'] as const
-
 const SITEMAP_QUERY = defineQuery(`{
-  "news": *[_type == "news" && defined(slug.current)]{ "slug": slug.current, _updatedAt },
-  "ministries": *[_type == "ministry" && defined(slug.current)]{ "slug": slug.current, _updatedAt },
-  "team": *[_type == "teamMember" && defined(slug.current)]{ "slug": slug.current, _updatedAt },
-  "events": *[_type == "event" && defined(slug.current) && defined(startDate)]{ "slug": slug.current, _updatedAt }
+  "news": *[_type == "news" && defined(slug.current)]{ _id, "slug": slug.current, _updatedAt },
+  "ministries": *[_type == "ministry" && defined(slug.current)]{ _id, "slug": slug.current, _updatedAt },
+  "team": *[_type == "teamMember" && defined(slug.current)]{ _id, "slug": slug.current, _updatedAt },
+  "events": *[_type == "event" && defined(slug.current)]{ _id, "slug": slug.current, _updatedAt }
 }`)
 
-type SlugDoc = { slug: string | null; _updatedAt: string }
+type SlugDoc = { _id: string; slug: string | null; _updatedAt: string | null }
 type SitemapData = { news: SlugDoc[]; ministries: SlugDoc[]; team: SlugDoc[]; events: SlugDoc[] }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const data = await client.fetch<SitemapData>(SITEMAP_QUERY)
-  const now = new Date()
+  const data = await client.fetch<SitemapData>(SITEMAP_QUERY, {}, { perspective: 'published' })
 
-  const staticEntries: MetadataRoute.Sitemap = STATIC_ROUTES.map((route) => ({
-    url: `${SITE_URL}${route}`,
-    lastModified: now,
+  const staticEntries: MetadataRoute.Sitemap = STATIC_SEO_ROUTES.filter((route) => isPageIndexable(route)).map((route) => ({
+    url: `${SITE_URL}${route === '/' ? '' : route}`,
     changeFrequency: 'weekly',
-    priority: route === '' ? 1 : 0.7,
+    priority: route === '/' ? 1 : 0.7,
   }))
 
   const dynamicEntries: MetadataRoute.Sitemap = [
@@ -38,13 +32,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...data.team.map((d) => ({ base: '/team', ...d })),
     ...data.events.map((d) => ({ base: '/events', ...d })),
   ]
-    .filter((d) => d.slug)
+    .filter((d) => d.slug && isPageIndexable(`${d.base}/${d.slug}`, d._id))
     .map((d) => ({
       url: `${SITE_URL}${d.base}/${d.slug}`,
-      lastModified: d._updatedAt ? new Date(d._updatedAt) : now,
+      ...(d._updatedAt && Number.isFinite(Date.parse(d._updatedAt))
+        ? { lastModified: new Date(d._updatedAt) } : {}),
       changeFrequency: 'weekly',
       priority: 0.6,
     }))
 
-  return [...staticEntries, ...dynamicEntries]
+  return [...new Map([...staticEntries, ...dynamicEntries].map((entry) => [entry.url, entry])).values()]
 }
