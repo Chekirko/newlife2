@@ -7,6 +7,7 @@ import { client } from '@/sanity/lib/client'
 import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import { PhotoViewer, PortableTextBody } from '@/components'
 import { getSiteSettings } from '@/lib/site-settings'
+import { getPageMetadata } from '@/lib/metadata'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
 import { formatEventDate, jsonLdHtml } from '@/lib/utils'
@@ -25,13 +26,20 @@ export async function generateMetadata({
   if (!event) return { title: 'Подію не знайдено' }
 
   const plainDescription =
-    event.description || (event.body ? toPlainText(event.body) : undefined)
+    event.description?.trim() ||
+    (typeof event.body === 'string' ? event.body : event.body ? toPlainText(event.body) : '')
 
-  return {
-    title: `${event.title} | Події | Церква «Нове Життя»`,
-    description: plainDescription?.substring(0, 160),
+  return getPageMetadata(`/events/${slug}`, {
+    title: `${event.title || 'Подія'} | Події | Церква «Нове Життя»`,
+    description: plainDescription.slice(0, 160),
     alternates: { canonical: `/events/${slug}` },
-  }
+    image: event.image ? {
+      url: urlFor(event.image).width(1200).height(630).fit('crop').url(),
+      width: 1200,
+      height: 630,
+      alt: event.title,
+    } : undefined,
+  })
 }
 
 export default async function EventDetailPage({

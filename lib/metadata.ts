@@ -5,6 +5,7 @@ import { SITE_URL } from '@/lib/site'
 type PageMetadata = Pick<Metadata, 'alternates' | 'robots'> & {
   title?: string
   description?: string
+  image?: { url: string; width: number; height: number; alt: string }
 }
 
 function plainText(value?: string | null): string {
@@ -13,14 +14,20 @@ function plainText(value?: string | null): string {
 
 /** Complete social objects: Next.js replaces nested metadata rather than merging it. */
 export async function getPageMetadata(path: string, page: PageMetadata = {}): Promise<Metadata> {
+  const { image: pageImage, ...metadata } = page
   const settings = await getSiteSettings()
   const title = plainText(page.title) || 'Церква «Нове Життя» | Євангельська церква в Бориславі'
   const description = plainText(page.description) || plainText(settings.defaultDescription) ||
     "Ласкаво просимо до церкви «Нове Життя»! Ми — спільнота віруючих людей, які прагнуть жити за Божим Словом та ділитися любов'ю Христа."
-  const image = settings.ogImage ?? '/images/hero-church-1.jpg'
+  const image = pageImage ? { ...pageImage, alt: plainText(pageImage.alt) } : {
+    url: settings.ogImage ?? '/images/hero-church-1.jpg',
+    width: settings.ogImage ? 1200 : 1920,
+    height: settings.ogImage ? 630 : 1080,
+    alt: `${settings.name}, ${settings.city}`,
+  }
 
   return {
-    ...page,
+    ...metadata,
     title,
     description,
     openGraph: {
@@ -30,18 +37,13 @@ export async function getPageMetadata(path: string, page: PageMetadata = {}): Pr
       siteName: settings.name,
       locale: 'uk_UA',
       type: 'website',
-      images: [{
-        url: image,
-        width: settings.ogImage ? 1200 : 1920,
-        height: settings.ogImage ? 630 : 1080,
-        alt: `${settings.name}, ${settings.city}`,
-      }],
+      images: [image],
     },
     twitter: {
       card: 'summary_large_image',
       title,
       description,
-      images: [image],
+      images: [image.url],
     },
   }
 }

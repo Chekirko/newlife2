@@ -5,6 +5,7 @@ import { toPlainText } from '@portabletext/react'
 import { PageHero, PhotoViewer, PortableTextBody } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { getPageHeroes } from '@/lib/page-heroes'
+import { getPageMetadata } from '@/lib/metadata'
 import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
@@ -27,12 +28,18 @@ export async function generateMetadata({
     TEAM_MEMBER_BY_SLUG_QUERY, { slug }
   )
   if (!member) return { title: 'Служитель не знайдений' }
-  const plainBio = member.bio ? toPlainText(member.bio) : ''
-  return {
-    title: `${member.name} | Церква «Нове Життя»`,
-    description: plainBio.slice(0, 160) || `${member.name} — служитель церкви «Нове Життя»`,
+  const plainBio = typeof member.bio === 'string' ? member.bio : member.bio ? toPlainText(member.bio) : ''
+  return getPageMetadata(`/team/${slug}`, {
+    title: `${member.name || 'Служитель'} | Церква «Нове Життя»`,
+    description: plainBio.trim().slice(0, 160) || `${member.name || 'Служитель'} — служитель церкви «Нове Життя»`,
     alternates: { canonical: `/team/${slug}` },
-  }
+    image: member.photo ? {
+      url: urlFor(member.photo).width(1200).height(630).fit('crop').url(),
+      width: 1200,
+      height: 630,
+      alt: member.name,
+    } : undefined,
+  })
 }
 
 export default async function TeamMemberPage({

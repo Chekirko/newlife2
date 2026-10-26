@@ -1,6 +1,6 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1, SEO-2.1, SEO-2.2 і SEO-3.1 завершено; наступна сесія — SEO-3.2 (metadata динамічних detail-шаблонів). F01/platform protection залишається відкритим.
+Дата: 2026-10-26. Статус: SEO-1, SEO-2.1, SEO-2.2, SEO-3.1 і SEO-3.2 завершено локально; наступна сесія — SEO-4.1 (готовність metadata/sitemap та lastmod). F01/platform protection залишається відкритим.
 
 ## Мета та погоджений задум
 
@@ -66,7 +66,9 @@
 
 **SEO-3.1 виконано 2026-10-26:** root defaults і 11 статичних маршрутів споживають `getPageMetadata()`; підключено чинні CMS `defaultDescription`/`ogImage` із fallback, повні OG/Twitter та правильний social URL, відновлено OG image `/about`, додано опис призначення `/ministries`. [Перевірки та межі](../../docs/seo/audit.md#seo-31-загальні-defaults-і-статичні-metadata--2026-10-26): production build/lint/typecheck/3 регресії PASS, 57 HTTP GET та локальні CMS fixtures. Root/header noindex й Disallow збережено. Після QA користувач прямо погодив commit+push SEO-3.1 у `codex/seo-1-audit` 2026-10-26; результат — у git history та фінальному повідомленні. Live deployment окремо не перевірений.
 
-**Наступний юніт — SEO-3.2:** лише динамічні detail-шаблони `/news/[slug]`, `/events/[slug]`, `/ministries/[slug]`, `/team/[slug]`: F07 (власні OG/Twitter URL/title/description, наявне фото або спільний fallback) та залишок F10 (відсутній description оголошення). Використати наявний helper/defaults, перетворення rich text — `toPlainText()`, не вигадувати факти/остаточні описи й не додавати SEO-поля/OG-генератор. Перевірити production HTML, відсутній slug та неповні дані без live mutations. Зберегти root/header noindex, page-specific robots і Disallow; canonical/readiness/sitemap/query-валідація — SEO-4, JSON-LD/null-ref — SEO-5. Скіли: seo-audit, karpathy-coder, senior-frontend; grill-with-docs/handoff для контексту. F08/F09 закриті локально, F07/F10 — лише в статичному scope. Platform protection лишається окремою зовнішньою дією; не блокує SEO-3.2.
+**SEO-3.2 виконано 2026-10-26:** 4 dynamic detail families споживають чинний helper: власні OG/Twitter URL/title/description, фото матеріалу 1200×630 або спільний fallback; rich text через `toPlainText()`, legacy string підтриманий у metadata. Неповне оголошення має загальний description fallback без нових фактів. [Докази й межі](../../docs/seo/audit.md#seo-32-metadata-динамічних-detail-шаблонів--2026-10-26): 54 GET реальних/службових/відсутніх URL + 8 HTTP fixtures, 32 ізольовані metadata cases; build/lint/typecheck/3 регресії PASS. F07/F10 технічно закриті локально, редакційні тексти не погоджені. Root/header noindex, page-specific robots і Disallow збережено. Після QA користувач прямо погодив commit+push SEO-3.2 у `codex/seo-1-audit` 2026-10-26; результат — у git history та фінальному повідомленні. Live deployment окремо не перевірений; CMS/settings не змінені.
+
+**Наступний юніт — SEO-4.1:** F02/F03 — спільний критерій готовності для metadata/sitemap за [контрактом SEO-2.1](../../docs/seo/audit.md#політика-готовності-для-seo-4-і-seo-l) і чесний `lastModified` статичних URL. Початковий перелік launch approval порожній; published/slug/body не є схваленням. Не додавати CMS flags і не знімати root/header/page-specific noindex або Disallow. Підтвердити відбір/порожній approval локальними fixtures та production HTTP; зберегти правильні canonical/404. Скіли: seo-audit, karpathy-coder, senior-frontend; senior-fullstack за спільним потоком даних, grill-with-docs/handoff для контексту. F05/F06 (query-валідація/пагінація/canonical) — окремий SEO-4.2; JSON-LD/null-ref — SEO-5. Platform protection лишається окремою зовнішньою дією й не блокує SEO-4.1.
 
 ## Передача між сесіями та Definition of Done
 
@@ -92,8 +94,10 @@
 | SEO-2 | Локальні юніти завершено; F01 відкритий | SEO-2.1/2.2 виконано; platform protection Production потребує окремої дії, F02 передано SEO-4 |
 | SEO-2.1 | Завершено 2026-10-26 | 4 origins × 7 GET, auth/robots/meta/header; контракт готовності; без змін застосунку/settings |
 | SEO-2.2 | Завершено 2026-10-26 | Root metadata + header noindex; 66 локальних GET, build/lint/typecheck/test PASS; Disallow збережено |
-| SEO-3 | Наступна сесія: SEO-3.1 | Defaults/static спочатку; dynamic у SEO-3.2. Усі pre-launch обмеження зберегти |
-| SEO-4 | Не розпочато | Використати результати SEO-1–3 |
+| SEO-3 | Завершено локально 2026-10-26 | SEO-3.1 defaults/static + SEO-3.2 detail; F07–F10 технічно закриті, контент/launch відкладені |
+| SEO-3.1 | Завершено 2026-10-26 | Defaults і 11 static routes, 57 GET; опублікований commit 51cf0f3 |
+| SEO-3.2 | Завершено локально 2026-10-26 | 4 detail families, 62 GET і 32 metadata fixtures; commit/push прямо погоджені |
+| SEO-4 | Наступна сесія: SEO-4.1 | F02/F03: готовність metadata/sitemap і lastmod; F05/F06 — окремий SEO-4.2 |
 | SEO-5 | Не розпочато | Використати узгоджені URL/metadata |
 | SEO-6 | Не розпочато | Лише підтверджені дефекти шаблонів |
 | SEO-7 | Не розпочато | Вимірювання → один пріоритетний дефект |

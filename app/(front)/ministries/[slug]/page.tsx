@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import { toPlainText } from '@portabletext/react'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
 import { ImagePlaceholder, NewsSlider, PageHero, PhotoViewer, PortableTextBody, type PhotoItem } from '@/components'
@@ -15,6 +16,7 @@ import {
   MINISTRY_NEWS_QUERY,
 } from './queries'
 import { getPageHeroes } from '@/lib/page-heroes'
+import { getPageMetadata } from '@/lib/metadata'
 import { SITE_URL } from '@/lib/site'
 import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/lib/types'
 
@@ -36,11 +38,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const ministry = await client.fetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug })
   if (!ministry) return { title: 'Служіння не знайдено' }
 
-  return {
-    title: `${ministry.title} | Церква «Нове Життя»`,
-    description: ministry.shortDescription,
+  const description = ministry.shortDescription?.trim() ||
+    (typeof ministry.fullDescription === 'string' ? ministry.fullDescription :
+      ministry.fullDescription ? toPlainText(ministry.fullDescription) : '')
+
+  return getPageMetadata(`/ministries/${slug}`, {
+    title: `${ministry.title || 'Служіння'} | Церква «Нове Життя»`,
+    description: description.slice(0, 160),
     alternates: { canonical: `/ministries/${slug}` },
-  }
+    image: ministry.image ? {
+      url: urlFor(ministry.image).width(1200).height(630).fit('crop').url(),
+      width: 1200,
+      height: 630,
+      alt: ministry.title,
+    } : undefined,
+  })
 }
 
 import { formatDate, jsonLdHtml } from '@/lib/utils'

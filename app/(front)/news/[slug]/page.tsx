@@ -7,6 +7,7 @@ import { client } from '@/sanity/lib/client'
 import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
+import { getPageMetadata } from '@/lib/metadata'
 import { SITE_URL } from '@/lib/site'
 import { PhotoViewer, PortableTextBody, type PhotoItem } from '@/components'
 import type { SanityNews } from '@/sanity/lib/types'
@@ -50,11 +51,20 @@ export async function generateMetadata({
   const news = await client.fetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug })
   if (!news) return { title: 'Новину не знайдено' }
 
-  return {
-    title: `${news.title} | Новини | Церква «Нове Життя»`,
-    description: news.text?.substring(0, 160),
+  const description = news.text?.trim() ||
+    (typeof news.body === 'string' ? news.body : news.body ? toPlainText(news.body) : '')
+
+  return getPageMetadata(`/news/${slug}`, {
+    title: `${news.title || 'Новина'} | Новини | Церква «Нове Життя»`,
+    description: description.slice(0, 160),
     alternates: { canonical: `/news/${slug}` },
-  }
+    image: news.image ? {
+      url: urlFor(news.image).width(1200).height(630).fit('crop').url(),
+      width: 1200,
+      height: 630,
+      alt: news.title,
+    } : undefined,
+  })
 }
 
 export default async function NewsDetailPage({
