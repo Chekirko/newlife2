@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
@@ -18,10 +19,12 @@ import Link from 'next/link'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
-export const metadata: Metadata = {
-  title: 'Новини | Церква «Нове Життя»',
-  description: 'Останні новини та оновлення церкви «Нове Життя» у Бориславі.',
-  alternates: { canonical: '/news' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/news', {
+    title: 'Новини | Церква «Нове Життя»',
+    description: 'Останні новини та оновлення церкви «Нове Життя» у Бориславі.',
+    alternates: { canonical: '/news' },
+  })
 }
 
 const ITEMS_PER_PAGE = 6

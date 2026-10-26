@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import { LiveBanner, PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
@@ -18,11 +19,13 @@ import { MediaGallery } from './components/MediaGallery'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
-export const metadata: Metadata = {
-  title: 'Медіа | Церква «Нове Життя»',
-  description:
-    'Проповіді, трансляції богослужінь, пісні та відео церкви «Нове Життя» у Бориславі.',
-  alternates: { canonical: '/media' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/media', {
+    title: 'Медіа | Церква «Нове Життя»',
+    description:
+      'Проповіді, трансляції богослужінь, пісні та відео церкви «Нове Життя» у Бориславі.',
+    alternates: { canonical: '/media' },
+  })
 }
 
 export default async function MediaPage({

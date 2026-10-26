@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import {
@@ -13,10 +14,12 @@ import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
 import { jsonLdHtml } from '@/lib/utils'
 
-export const metadata: Metadata = {
-  title: 'Команда | Церква «Нове Життя»',
-  description: 'Наші служителі — пастори, диякони та відповідальні за різні напрями церковного служіння.',
-  alternates: { canonical: '/team' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/team', {
+    title: 'Команда | Церква «Нове Життя»',
+    description: 'Наші служителі — пастори, диякони та відповідальні за різні напрями церковного служіння.',
+    alternates: { canonical: '/team' },
+  })
 }
 
 export const revalidate = 60 // Revalidate page every 60 seconds

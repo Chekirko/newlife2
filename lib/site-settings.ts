@@ -15,6 +15,7 @@ import { SITE_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import type { SITE_SETTINGS_QUERYResult } from '@/sanity/lib/sanity.types'
 import { CHURCH } from '@/lib/church'
 import { resolveSocialLink, type SocialLink } from '@/lib/social'
+import { urlFor } from '@/sanity/lib/image'
 
 export interface SiteSettings {
   name: string
@@ -41,6 +42,7 @@ export interface SiteSettings {
    *  Liveness is resolved at request time via lib/live-stream.ts. */
   liveStream: { channelId: string; label: string } | null
   defaultDescription: string | null
+  ogImage: string | null
   /** Flat list of social URLs for JSON-LD `sameAs` (empty ones dropped). */
   sameAs: string[]
 }
@@ -125,6 +127,9 @@ export async function getSiteSettings(): Promise<SiteSettings> {
         }
       : null,
     defaultDescription: data?.defaultDescription ?? null,
+    ogImage: data?.ogImage?.asset?._ref
+      ? urlFor(data.ogImage).width(1200).height(630).fit('crop').url()
+      : null,
     sameAs: social.map((s) => s.url).filter(Boolean),
   }
 }

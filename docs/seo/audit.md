@@ -1,12 +1,12 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-1, SEO-2.1 і SEO-2.2 завершено; загальний noindex реалізовано й перевірено локально.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Матриця середовищ і контракт готовності — у розділі «SEO-2.1», результати нового коду — у «SEO-2.2»; початкові докази SEO-1 збережені як baseline.
+Дата: 2026-10-26. **SEO-1, SEO-2.1, SEO-2.2 і SEO-3.1 завершено; наступний юніт — SEO-3.2.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Матриця середовищ і контракт готовності — у «SEO-2.1», noindex — у «SEO-2.2», поточні metadata-перевірки — у «SEO-3.1»; початкові докази SEO-1 збережені як baseline.
 
 ## Висновки
 
 - Основа вже працює: 44/44 адреси локального sitemap відповідають HTTP 200, мають різні title та canonical із правильним шляхом; 5 перевірених відсутніх адрес повертають 404 із noindex. Переписувати ці механізми з нуля не потрібно.
 - Pre-launch crawling заблоковано. За останньою live-перевіркою SEO-2.1 Production alias публічний без meta/header noindex. SEO-2.2 додає обидва сигнали в локальному коді; deployment цього diff не виконано. Сам `Disallow: /` і noindex, який crawler може не прочитати, не гарантують відсутності адрес у пошуку; F01 залишається відкритим.
-- 42/44 сторінки sitemap успадковують OG URL головної. `/about` має власний OG URL, але втрачає OG-зображення. SEO-поля CMS не підключені до metadata.
+- SEO-3.1 виправив соціальні metadata 11 статичних маршрутів, включно з OG image `/about`, та підключив наявні CMS defaults: F08/F09 закриті локально. F07/F10 закриті лише в статичному scope; динамічні detail-шаблони ще очікують SEO-3.2.
 - Виявлено відтворювані дефекти: 500 на некоректному номері сторінки новин/подій; падіння ministry-шаблону з нерозв’язаним weak-reference; відсутній H1 головної, дубльовані H1 служителів і пропуски рівнів заголовків.
 - Редакційна готовність не встановлена: заповнені поля не підтверджують факти. Є оголошення без тексту/опису, відома суперечність історії та непогоджений набір готових сторінок. Найменші технічні виправлення: OG defaults, null-guard, перевірка page та чесний lastmod; порядок визначає план нижче.
 
@@ -63,6 +63,8 @@ P1 — високий вплив до запуску або ризик недо�
 [Google пояснює обмеження noindex за заблокованого crawling](https://developers.google.com/search/docs/crawling-indexing/block-indexing). [Вимоги sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap) рекомендують canonical URL і достовірний lastmod; priority/changefreq Google ігнорує. [Рекомендації пагінації](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading) розрізняють власні canonical сторінок і політику фільтрів. Джерела звірено 2026-10-26.
 
 ## Metadata, social і семантика
+
+Нижче — початкові findings SEO-1; статус виправлень F07–F10 та нові докази — у розділі SEO-3.1.
 
 | ID / проблема | Доказ | Вплив | Рекомендація | Пріоритет / етап |
 |---|---|---|---|---|
@@ -224,10 +226,51 @@ Origin `http://127.0.0.1:3004`, Next.js 16.1.6; старт із чистого `
 - До SEO-L разом переглянути root robots, загальний HTTP header і page-specific обмеження за спільною політикою SEO-4. Просте зняття Disallow не відкриє індексацію, поки діє загальний header. F01/settings залишаються зовнішньою дією за окремим дорученням; F02 — реалізація SEO-4.
 - **Наступна сесія — SEO-3.1:** наявні загальні metadata defaults та статичні сторінки (F07–F10 за scope), включно з підключенням CMS SEO defaults і OG `/about`; динамічні шаблони — окремий SEO-3.2. Зберегти root/header noindex й Disallow. Скіли: seo-audit, karpathy-coder, senior-frontend; grill-with-docs/handoff для контексту. Нових SEO-полів/OG-генератора не додавати.
 
+## SEO-3.1: загальні defaults і статичні metadata — 2026-10-26
+
+### Реалізація та статус findings
+
+- Старт: чисте дерево `codex/seo-1-audit`, HEAD `f4b58a8`; пряме доручення користувача «Роби Наступний крок — SEO-3.1». [Спільний helper](../../lib/metadata.ts) формує повні OpenGraph/Twitter з title/description відповідної сторінки, URL через `SITE_URL`, siteName, `uk_UA`, type website та image. Root тепер `generateMetadata`, збережено metadataBase/keywords і `noindex, follow`; глобального canonical немає.
+- [Чинний запит](../../sanity/lib/queries.ts) вибирає наявне `siteSettings.ogImage`; [getSiteSettings](../../lib/site-settings.ts) повертає URL 1200×630 лише за наявного asset ref, інакше null. Опис: власний непорожній → CMS defaultDescription → попередній кодовий; image: CMS → попередній `/images/hero-church-1.jpg` 1920×1080. Title/description очищаються від HTML-тегів та зайвих пробілів. Схеми, live CMS та залежності не змінені; TypeGen згенеровано штатно.
+- 11 статичних маршрутів використовують helper: `/`, `/about`, `/history`, `/contact`, `/ministries`, `/team`, `/news`, `/events`, `/media`, `/media/photos`, `/privacy`. Чинні title/description збережено, лише `/ministries` отримав опис призначення списку. OG/Twitter `/about` тепер відповідають власним title/description і мають спільне зображення. Візуальний UI та JSON-LD не змінені.
+
+| Finding | Локальний стан після SEO-3.1 | Залишок |
+|---|---|---|
+| F07 | Статичні маршрути: власні OG URL/title/description та Twitter — PASS | Dynamic detail-шаблони — SEO-3.2; загальний finding відкритий |
+| F08 | `/about`: OG image/siteName/locale разом із власним URL — PASS, закрито локально | Live deployment/social crawler не перевірені |
+| F09 | Чинні CMS defaultDescription/ogImage підключені з fallback — PASS, закрито локально | Published SEO-поля порожні; заповнений сценарій перевірений локально, без CMS mutations |
+| F10 | `/ministries`: власний опис призначення — PASS | Неповний event/announcement — SEO-3.2; загальний finding відкритий |
+
+### Production-build HTML/HTTP та fixtures
+
+57 анонімних GET на `127.0.0.1:3004` через `next start`, без оцінки дизайну або platform changes:
+
+| Вибірка | Кількість | Результат |
+|---|---:|---|
+| Усі URL sitemap (10 static + 34 detail) | 44 | Усі 200, meta/header noindex; sitemap лишився з 44 унікальними URL |
+| Privacy та Studio | 2 | 200, власні noindex збережені; privacy canonical як раніше відсутній |
+| Missing base/news/event/ministry/team | 5 | Усі 404, meta/header noindex |
+| `/media?q=test`, `/news?category=test`, `/events?page=1` | 3 | 200, static metadata базового маршруту, meta/header noindex; політика query не змінена |
+| robots, sitemap, fallback JPEG | 3 | 200, header noindex; `Disallow: /`, без Allow; fallback image доступний |
+
+Усього 54 HTML + 3 не-HTML. Для 11 статичних базових маршрутів автоматично перевірено одиничні непорожні title/description/OG/Twitter, 11 різних title, рівність social title/description із metadata сторінки, URL правильного шляху, image/siteName/uk_UA/website/summary_large_image. Чинні canonical 10 статичних URL sitemap збережені; privacy без canonical. Descriptions без undefined/HTML; header noindex присутній на всіх 57 відповідях. Динамічні OG не оголошуються виправленими.
+
+Локальна підстановка `client.fetch` без мережі/mutations: відсутній settings singleton; null/порожній/whitespace/HTML-порожній опис; відсутній asset ref; заповнений CMS defaultDescription та image; власний опис поверх defaults; очищення HTML/whitespace; збереження явного canonical/robots; повні OG/Twitter — PASS. Тимчасові fixtures/probe/JSON — ignored `.next/seo-3.1/`; наступна сесія використовує звіт, не тимчасові файли.
+
+`cmd /c "pnpm run build"`, `pnpm run lint`, `pnpm run typecheck`, `pnpm test` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 static-generation tasks, три наявні регресії. Початковий sandbox build зупинився на Sanity config EPERM; дозволений повтор пройшов. Sandbox loopback дав WinError 10013; сервер і HTTP probe повторені з потрібним доступом. Перший probe помилково рахував порожній pathname головної як окремий від `/`; виправлено лише перевірочний скрипт, повний повтор 57 GET — PASS. Старі Node/Browserslist warnings залишилися. Mock contact test не надсилає email/Redis.
+
+[Next.js generateMetadata та merging](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging) звірено 2026-10-26: вкладені metadata замінюються; поведінку перевірено на встановленому Next.js 16.1.6. ISR 60s збережено. Root/header noindex, Disallow, privacy/studio, security headers і CSP збережені; noindex не є контролем доступу. Немає змін env/DNS/platform settings/live CMS чи перевірки Google index. Після QA користувач прямо погодив commit+push SEO-3.1 у `codex/seo-1-audit` 2026-10-26. Свіжий fetch підтвердив HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Результат публікації — у git history та фінальному повідомленні; новий live deployment окремо не перевірений.
+
+### Передача SEO-3.2
+
+Завершальні перевірки: 6 UTF-8 документів, 23 унікальні локальні посилання, звірка 57 HTTP-рядків і `git diff --check` — PASS. Локальний сервер зупинено, порт 3004 без listener. Diff: 15 файлів застосунку (включно з новим helper) і 6 документів; robots/sitemap/next.config/package/lockfile без змін.
+
+Наступний юніт — F07/F10 для `/news/[slug]`, `/events/[slug]`, `/ministries/[slug]`, `/team/[slug]`: узгодити OG/Twitter із конкретними даними, власним image або чинним fallback, без вигаданого опису неповного оголошення. Використати helper за потреби, rich text через `toPlainText`, перевірити missing slug/порожні поля та production HTML. Canonical/readiness/sitemap/query — SEO-4, JSON-LD/null-ref — SEO-5; зберегти всі pre-launch обмеження. Скіли — seo-audit, karpathy-coder, senior-frontend, grill-with-docs/handoff для контексту.
+
 ## Порядок дій
 
 1. **SEO-2 — локальні юніти завершено:** SEO-2.1 — матриця/політика, SEO-2.2 — noindex metadata/header та 66 локальних GET. F01: Production alias публічний за останнім live-аудитом, settings не перевірені; F02: контракт передано SEO-4. Новий diff ще не опублікований; усі обмеження збережено.
-2. **SEO-3 — невеликі metadata-виправлення:** F07–F10; спочатку defaults/static, потім dynamic. OG `/about` і підключення наявних SEO-полів — окремі малі результати, не SEO-платформа.
+2. **SEO-3.1 завершено; наступний SEO-3.2:** defaults/static, OG `/about` і CMS SEO-поля перевірені; F08/F09 закриті локально. F07/F10 для динамічних detail-шаблонів залишаються наступним юнітом.
 3. **SEO-4 — URL/sitemap:** F02/F03/F05/F06; lastmod і page-валідація — невеликі підтверджені правки. Зберегти робочі canonical та 404, застосувати політику SEO-2.
 4. **SEO-5 — JSON-LD і неповні дані:** почати з F04, далі звірити шаблони Event/VideoObject/Person/NewsArticle з видимими даними й актуальними вимогами. Не обіцяти rich results.
 5. **SEO-6 — семантика:** F11, почати з homepage hero + team detail; ширший аудит лишити D8. **SEO-7 — вимірювання:** production baseline і лише підтверджена оптимізація; зараз performance-дефект не заявляється.

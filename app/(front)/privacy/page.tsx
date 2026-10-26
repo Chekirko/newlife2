@@ -1,12 +1,15 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import { PlaceholderPage } from '@/components'
 import { getPageHeroes } from '@/lib/page-heroes'
 
-export const metadata: Metadata = {
-  title: 'Політика конфіденційності | Церква «Нове Життя»',
-  description: 'Політика конфіденційності вебсайту церкви «Нове Життя». Документ готується.',
-  // Placeholder content — keep out of the search index until it is real.
-  robots: { index: false, follow: true },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/privacy', {
+    title: 'Політика конфіденційності | Церква «Нове Життя»',
+    description: 'Політика конфіденційності вебсайту церкви «Нове Життя». Документ готується.',
+    // Placeholder content — keep out of the search index until it is real.
+    robots: { index: false, follow: true },
+  })
 }
 
 export const revalidate = 60 // Revalidate page every 60 seconds

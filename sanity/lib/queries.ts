@@ -40,7 +40,8 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
     social[]{ platform, url, label },
     services[]{ label, day, time, endTime },
     liveStream{ channelId, label },
-    defaultDescription
+    defaultDescription,
+    ogImage
   }
 `)
 

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
@@ -17,10 +18,12 @@ import { SidebarRecentEvents } from './components/SidebarRecentEvents'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
-export const metadata: Metadata = {
-  title: 'Події | Церква «Нове Життя»',
-  description: 'Події, заходи та оголошення церкви «Нове Життя» у Бориславі.',
-  alternates: { canonical: '/events' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/events', {
+    title: 'Події | Церква «Нове Життя»',
+    description: 'Події, заходи та оголошення церкви «Нове Життя» у Бориславі.',
+    alternates: { canonical: '/events' },
+  })
 }
 
 const ITEMS_PER_PAGE = 6

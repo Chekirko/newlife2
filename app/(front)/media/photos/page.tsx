@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
@@ -9,11 +10,13 @@ import { PhotoGallery, type PhotoItem } from './components/PhotoGallery'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
-export const metadata: Metadata = {
-  title: 'Фото | Церква «Нове Життя»',
-  description:
-    'Фотогалерея церкви «Нове Життя» у Бориславі — світлини зі служінь, подій та життя спільноти.',
-  alternates: { canonical: '/media/photos' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/media/photos', {
+    title: 'Фото | Церква «Нове Життя»',
+    description:
+      'Фотогалерея церкви «Нове Життя» у Бориславі — світлини зі служінь, подій та життя спільноти.',
+    alternates: { canonical: '/media/photos' },
+  })
 }
 
 interface RawGalleryImage {

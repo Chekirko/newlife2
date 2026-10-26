@@ -5,10 +5,14 @@ import { getPageHeroes } from '@/lib/page-heroes'
 import { MINISTRIES_QUERY } from './queries'
 import type { SanityMinistryCard } from '@/sanity/lib/types'
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 
-export const metadata: Metadata = {
-  title: 'Служіння | Церква «Нове Життя»',
-  alternates: { canonical: '/ministries' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/ministries', {
+    title: 'Служіння | Церква «Нове Життя»',
+    description: 'Напрями служіння церкви «Нове Життя» у Бориславі та інформація про кожне служіння.',
+    alternates: { canonical: '/ministries' },
+  })
 }
 
 export const revalidate = 60 // Revalidate page every 60 seconds

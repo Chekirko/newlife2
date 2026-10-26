@@ -1,13 +1,16 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import { PageHero, PhotoViewer } from '@/components'
 import { getPageHeroes } from '@/lib/page-heroes'
 
-export const metadata: Metadata = {
-  title: 'Історія | Церква «Нове Життя»',
-  description: 'Дізнайтеся більше про історію та пройдений шлях нашої церкви.',
-  alternates: { canonical: '/history' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/history', {
+    title: 'Історія | Церква «Нове Життя»',
+    description: 'Дізнайтеся більше про історію та пройдений шлях нашої церкви.',
+    alternates: { canonical: '/history' },
+  })
 }
 
 export const revalidate = 60 // Revalidate page every 60 seconds

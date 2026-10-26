@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import {
   HeroSlider,
   HeroGradientImage,
@@ -34,8 +35,10 @@ import { getLiveVideoId } from '@/lib/live-stream'
 
 import { formatDate, formatEventDate, jsonLdHtml } from '@/lib/utils'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/' },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/', {
+    alternates: { canonical: '/' },
+  })
 }
 
 export const revalidate = 60 // Revalidate page every 60 seconds

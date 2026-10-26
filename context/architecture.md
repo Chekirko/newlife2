@@ -1,5 +1,9 @@
 # Architecture Context
 
+## Metadata defaults SEO-3.1 (2026-10-26)
+
+`lib/metadata.ts:getPageMetadata(path, page)` читає чинний `getSiteSettings()` (ISR 60s) і повертає повні OG/Twitter objects для root та 11 статичних маршрутів. Пріоритет description: власний непорожній опис → `siteSettings.defaultDescription` → попередній кодовий fallback; title зберігає чинні тексти, HTML/зайві пробіли в title/description прибираються. `SITE_SETTINGS_QUERY` тепер вибирає наявне `ogImage`; `SiteSettings.ogImage` — URL Sanity 1200×630 або null за відсутнього asset ref, fallback — чинне hero-фото. Нових схем/полів/інтеграцій немає. Helper задає social URL через `SITE_URL`, але canonical лише явно переданий сторінкою; глобального canonical немає. Root `generateMetadata` зберігає metadataBase/keywords/noindex. Динамічні detail-шаблони ще очікують SEO-3.2; UI/JSON-LD/robots/sitemap не змінені.
+
 ## Контактна форма C1 (2026-10-25)
 
 `/contact/components/ContactForm` → page-local `actions.ts` (Server Action) → Zod-validation/honeypot → адреса одержувача з серверного env або `getSiteSettings()` → `delivery.ts` (server-only) → Upstash REST EVAL (атомарні ліміти між instances) → Resend HTTP API. Ключі тільки в server env, plain-text лист, visitor email лише Reply-To. Звернення не зберігаються у CMS/browser/application logs; Redis має тільки HMAC keys/counts із TTL. Конфігурація відсутня/сервіс не відповідає → помилка, без удаваного успіху. Докладно: `docs/contact-form.md`; реальний email/Redis QA потребує конфігурації. Нових Sanity-схем або API routes немає.

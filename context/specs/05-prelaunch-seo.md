@@ -1,6 +1,6 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1, SEO-2.1 і SEO-2.2 завершено; наступна сесія — SEO-3.1 (загальні metadata defaults та статичні сторінки). F01/platform protection залишається відкритим.
+Дата: 2026-10-26. Статус: SEO-1, SEO-2.1, SEO-2.2 і SEO-3.1 завершено; наступна сесія — SEO-3.2 (metadata динамічних detail-шаблонів). F01/platform protection залишається відкритим.
 
 ## Мета та погоджений задум
 
@@ -64,7 +64,9 @@
 
 Після локального QA користувач прямо погодив commit+push SEO-2.2 у `codex/seo-1-audit` 2026-10-26; результат публікації — у git history та фінальному повідомленні. Live deployment нового коду окремо не засвідчений; Production settings/env/DNS/CMS не змінюються.
 
-**Наступний юніт — SEO-3.1:** загальні title/description/social defaults і статичні сторінки за F07–F10, зокрема наявні CMS SEO defaults та OG `/about`; динамічні шаблони лишити окремому SEO-3.2. Перевіряти реальний production HTML, не вигадувати остаточні тексти й не додавати SEO-поля про запас. Зберегти загальний root/header noindex та Disallow. Скіли: seo-audit, karpathy-coder, senior-frontend; grill-with-docs/handoff для контексту. Platform protection лишається зовнішньою дією за окремим дорученням; не блокує SEO-3.
+**SEO-3.1 виконано 2026-10-26:** root defaults і 11 статичних маршрутів споживають `getPageMetadata()`; підключено чинні CMS `defaultDescription`/`ogImage` із fallback, повні OG/Twitter та правильний social URL, відновлено OG image `/about`, додано опис призначення `/ministries`. [Перевірки та межі](../../docs/seo/audit.md#seo-31-загальні-defaults-і-статичні-metadata--2026-10-26): production build/lint/typecheck/3 регресії PASS, 57 HTTP GET та локальні CMS fixtures. Root/header noindex й Disallow збережено. Після QA користувач прямо погодив commit+push SEO-3.1 у `codex/seo-1-audit` 2026-10-26; результат — у git history та фінальному повідомленні. Live deployment окремо не перевірений.
+
+**Наступний юніт — SEO-3.2:** лише динамічні detail-шаблони `/news/[slug]`, `/events/[slug]`, `/ministries/[slug]`, `/team/[slug]`: F07 (власні OG/Twitter URL/title/description, наявне фото або спільний fallback) та залишок F10 (відсутній description оголошення). Використати наявний helper/defaults, перетворення rich text — `toPlainText()`, не вигадувати факти/остаточні описи й не додавати SEO-поля/OG-генератор. Перевірити production HTML, відсутній slug та неповні дані без live mutations. Зберегти root/header noindex, page-specific robots і Disallow; canonical/readiness/sitemap/query-валідація — SEO-4, JSON-LD/null-ref — SEO-5. Скіли: seo-audit, karpathy-coder, senior-frontend; grill-with-docs/handoff для контексту. F08/F09 закриті локально, F07/F10 — лише в статичному scope. Platform protection лишається окремою зовнішньою дією; не блокує SEO-3.2.
 
 ## Передача між сесіями та Definition of Done
 

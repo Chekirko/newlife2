@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { getPageMetadata } from '@/lib/metadata'
 import type { ReactNode } from 'react'
 import Link from 'next/link'
 import { PageHero } from '@/components'
@@ -39,17 +40,13 @@ function ValueCard({ value }: { value: AboutValue }) {
   )
 }
 
-export const metadata: Metadata = {
-  title: 'Про нас | Церква «Нове Життя»',
-  description:
-    'Історія, місія, цінності та віровчення церкви «Нове Життя» у Бориславі — частини УЦХВЄ. Дізнайтеся, у що ми віримо і чого очікувати на богослужінні.',
-  alternates: { canonical: '/about' },
-  openGraph: {
-    title: 'Про нас — Церква «Нове Життя»',
-    description: 'Хто ми, наша історія, цінності та у що ми віримо.',
-    url: `${SITE_URL}/about`,
-    type: 'website',
-  },
+export async function generateMetadata(): Promise<Metadata> {
+  return getPageMetadata('/about', {
+    title: 'Про нас | Церква «Нове Життя»',
+    description:
+      'Історія, місія, цінності та віровчення церкви «Нове Життя» у Бориславі — частини УЦХВЄ. Дізнайтеся, у що ми віримо і чого очікувати на богослужінні.',
+    alternates: { canonical: '/about' },
+  })
 }
 
 export const revalidate = 60
