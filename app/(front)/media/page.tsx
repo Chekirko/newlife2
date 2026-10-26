@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { cache } from 'react'
+import { normalizeListingParams, type ListingSearchParams } from '@/lib/listing-params'
 import { getPageMetadata } from '@/lib/metadata'
 import { LiveBanner, PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
@@ -19,21 +21,21 @@ import { MediaGallery } from './components/MediaGallery'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
-export async function generateMetadata(): Promise<Metadata> {
+type Props = { searchParams: Promise<ListingSearchParams> }
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { filtered, filters: { category, speaker, q } } = normalizeListingParams('/media', await searchParams)
+  const { itemsRaw } = await getMediaListing(category, speaker, q)
   return getPageMetadata('/media', {
     title: 'Медіа | Церква «Нове Життя»',
     description:
       'Проповіді, трансляції богослужінь, пісні та відео церкви «Нове Життя» у Бориславі.',
     alternates: { canonical: '/media' },
+    ...(filtered || itemsRaw.length === 0 ? { robots: { index: false, follow: true } } : {}),
   })
 }
 
-export default async function MediaPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ category?: string; speaker?: string; q?: string }>
-}) {
-  const { category = '', speaker = '', q = '' } = await searchParams
+const getMediaListing = cache(async (category: string, speaker: string, q: string) => {
   const params = {
     category,
     speaker,
@@ -42,9 +44,19 @@ export default async function MediaPage({
     end: MEDIA_PER_PAGE,
   }
 
-  const [itemsRaw, total, speakers, heroes, settings] = await Promise.all([
+  const [itemsRaw, total] = await Promise.all([
     client.fetch<RawMediaItem[]>(MEDIA_SEARCH_QUERY, params),
     client.fetch<number>(MEDIA_COUNT_QUERY, { category, speaker, q: params.q }),
+  ])
+  return { itemsRaw, total }
+})
+
+export default async function MediaPage({
+  searchParams,
+}: Props) {
+  const { filters: { category, speaker, q } } = normalizeListingParams('/media', await searchParams)
+  const [{ itemsRaw, total }, speakers, heroes, settings] = await Promise.all([
+    getMediaListing(category, speaker, q),
     client.fetch<string[]>(MEDIA_SPEAKERS_QUERY),
     getPageHeroes(),
     getSiteSettings(),

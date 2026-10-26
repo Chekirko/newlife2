@@ -1,6 +1,6 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1, SEO-2.1, SEO-2.2, SEO-3.1, SEO-3.2 і SEO-4.1 завершено локально; наступна сесія — SEO-4.2 (query/page/canonical). F01/platform protection залишається відкритим.
+Дата: 2026-10-26. Статус: SEO-1–SEO-4 завершено локальними юнітами включно з SEO-4.2; наступна сесія — SEO-5 (JSON-LD/null-ref). F01/platform protection залишається відкритим.
 
 ## Мета та погоджений задум
 
@@ -70,11 +70,15 @@
 
 **SEO-4.1 виконано локально 2026-10-26:** [реалізація та докази](../../docs/seo/audit.md#seo-41-спільна-готовність-metadatasitemap-та-lastmod--2026-10-26). Спільний `lib/seo-readiness.ts` — launch origin/date + page path/date/CMS `_id`, початково `launch: null, pages: []`; той самий критерій у metadata й sitemap, Production та погоджений `SITE_URL`. Sitemap 0 URL, published-перспектива, автоматичний відбір схвалених наявних документів і дедуплікація; статичні lastmod пропущені, CMS лише з валідного `_updatedAt`. F02/F03 технічно закриті локально. 58 production-build GET та 103 ізольовані fixture-перевірки, build/lint/typecheck/3 регресії — PASS. Root/header/page-specific noindex й Disallow збережено, schema/UI/JSON-LD/CMS/env/settings не змінені. Commit/push не виконано; deployment не перевірений.
 
-**Наступний юніт — SEO-4.2:** F05/F06 за [контрактом SEO-2.1](../../docs/seo/audit.md#політика-готовності-для-seo-4-і-seo-l): query/page-валідація, нормалізація canonical, redirect невалідного page, 404 для коректного N поза діапазоном. Search/filter noindex із базовим canonical; непорожня пагінація без filter — власний canonical та перевірка схвалення списку/видимої порції; query URL поза початковим sitemap. Metadata фактичних query-сторінок зараз ще отримує базовий path, не вважати цей scope закритим SEO-4.1. Не заповнювати launch approval, не додавати CMS flags і не знімати root/header/page-specific noindex або Disallow. Перевірити production HTML/HTTP та fixtures без CMS mutations. Скіли: seo-audit, karpathy-coder, senior-frontend, security-guidance для user input; grill-with-docs/handoff для контексту. JSON-LD/null-ref — SEO-5; platform protection і SEO-L окремо.
+**SEO-4.2 виконано локально 2026-10-26:** [реалізація, матриця та регресія](../../docs/seo/audit.md#seo-42-query-пагінація-та-canonical--2026-10-26). F05/F06 технічно закриті: спільна query/page-нормалізація, 307 для невалідних/повторених/небезпечних значень, 404 для коректного N поза count/порожньої порції. Непорожня пагінація має власний canonical/OG URL, filter/search — noindex із базовим canonical. Metadata та sitemap однаково перевіряють схвалення списку й видимої порції; порожні списки не indexable, query URL поза sitemap. 154 production-build GET, ізольована регресія реальних helper/page/metadata/SSR/sitemap, build/lint/typecheck/3 наявні регресії — PASS. Непорожня друга сторінка — синтетична fixture без CMS mutations. Approval порожній, noindex/Disallow збережені; commit/push не виконано, deployment не перевірений.
+
+**Наступний юніт — SEO-5:** наявні JSON-LD і неповні referenced-дані (почати з F04), узгоджені URL/ID, безпечна серіалізація, відповідність видимому контенту; непідтверджені факти залишити SEO-L. Не розширювати schema.org-типи без потреби, не обіцяти rich results. Скіли: schema-markup, karpathy-coder; senior-frontend/security-guidance/seo-audit за фактичними змінами, grill-with-docs/handoff для контексту. Зберегти всі pre-launch обмеження, не починати SEO-6/7 або launch у цій сесії.
 
 Після локального QA користувач прямо погодив commit+push SEO-4.1 у `codex/seo-1-audit` 2026-10-26. Попередня згадка про невиконану публікацію — стан до цієї згоди; результат — у git history та фінальному повідомленні. Новий live deployment окремо не перевірений; наступний юніт — SEO-4.2.
 
 ## Передача між сесіями та Definition of Done
+
+Після локального QA користувач прямо погодив commit+push SEO-4.2 у `codex/seo-1-audit` 2026-10-26, відповівши «Так». Попередні згадки про невиконану публікацію описують стан до цієї згоди; результат — у git history та фінальному повідомленні. Новий live deployment окремо не перевірений; наступний юніт — SEO-5.
 
 - Початок кожної SEO-сесії: tracker → цей spec → лише потрібні доменні context-файли й скіли. Історію старих чатів читати не потрібно.
 - Перед реалізацією перевіряти актуальний код та документацію бібліотек; попередній аудит не замінює перевірку після змін контенту.
@@ -101,10 +105,10 @@
 | SEO-3 | Завершено локально 2026-10-26 | SEO-3.1 defaults/static + SEO-3.2 detail; F07–F10 технічно закриті, контент/launch відкладені |
 | SEO-3.1 | Завершено 2026-10-26 | Defaults і 11 static routes, 57 GET; опублікований commit 51cf0f3 |
 | SEO-3.2 | Завершено локально 2026-10-26 | 4 detail families, 62 GET і 32 metadata fixtures; commit/push прямо погоджені |
-| SEO-4 | Частково: SEO-4.1 завершено локально | F02/F03 технічно закриті; наступний SEO-4.2 — F05/F06 |
+| SEO-4 | Завершено локально 2026-10-26 | SEO-4.1/4.2: F02/F03/F05/F06 технічно закриті; launch окремо |
 | SEO-4.1 | Завершено локально 2026-10-26 | Спільна готовність metadata/sitemap, порожній approval, чесний lastmod; 58 GET/103 fixture-перевірки |
-| SEO-4.2 | Наступна сесія | Query/page-валідація, canonical, redirect/404, noindex filter та схвалення видимої порції |
-| SEO-5 | Не розпочато | Використати узгоджені URL/metadata |
+| SEO-4.2 | Завершено локально 2026-10-26 | 154 GET + ізольована регресія; query/page, canonical, redirect/404, noindex filter, схвалення видимої порції metadata/sitemap |
+| SEO-5 | Наступна сесія | JSON-LD/null-ref, почати з F04; використати узгоджені URL/metadata |
 | SEO-6 | Не розпочато | Лише підтверджені дефекти шаблонів |
 | SEO-7 | Не розпочато | Вимірювання → один пріоритетний дефект |
 | SEO-L | Відкладено | Реальний контент/домен і окреме рішення користувача про запуск |

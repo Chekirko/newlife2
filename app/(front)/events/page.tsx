@@ -1,4 +1,7 @@
 import type { Metadata } from 'next'
+import { cache } from 'react'
+import { notFound } from 'next/navigation'
+import { LISTING_PER_PAGE as ITEMS_PER_PAGE, normalizeListingParams, type ListingSearchParams } from '@/lib/listing-params'
 import { getPageMetadata } from '@/lib/metadata'
 import Link from 'next/link'
 import { PageHero } from '@/components'
@@ -18,15 +21,29 @@ import { SidebarRecentEvents } from './components/SidebarRecentEvents'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
-export async function generateMetadata(): Promise<Metadata> {
-  return getPageMetadata('/events', {
+type Props = { searchParams: Promise<ListingSearchParams> }
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { page, canonical } = normalizeListingParams('/events', await searchParams, ITEMS_PER_PAGE)
+  const { items } = await getEventsListing(page)
+  return getPageMetadata(canonical, {
     title: 'Події | Церква «Нове Життя»',
     description: 'Події, заходи та оголошення церкви «Нове Життя» у Бориславі.',
-    alternates: { canonical: '/events' },
+    alternates: { canonical },
+    listingItems: items,
   })
 }
 
-const ITEMS_PER_PAGE = 6
+const getEventsListing = cache(async (page: number) => {
+  const totalCount = await client.fetch<number>(EVENTS_COUNT_QUERY)
+  if (page > 1 && page > Math.ceil(totalCount / ITEMS_PER_PAGE)) notFound()
+  const start = (page - 1) * ITEMS_PER_PAGE
+  const items = await client.fetch<SanityEvent[]>(EVENTS_PAGINATED_QUERY, {
+    start, end: start + ITEMS_PER_PAGE,
+  })
+  if (page > 1 && items.length === 0) notFound()
+  return { items, totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE) }
+})
 
 interface RecentEventTransformed {
   _id: string
@@ -38,24 +55,16 @@ interface RecentEventTransformed {
 
 export default async function EventsPage({
   searchParams,
-}: {
-  searchParams: Promise<{ page?: string }>
-}) {
-  const { page: pageStr } = await searchParams
-  const currentPage = Math.max(1, parseInt(pageStr || '1', 10))
-  const start = (currentPage - 1) * ITEMS_PER_PAGE
-  const end = start + ITEMS_PER_PAGE
+}: Props) {
+  const { page: currentPage } = normalizeListingParams('/events', await searchParams, ITEMS_PER_PAGE)
 
-  const [eventsRaw, totalCount, recentRaw, heroes] = await Promise.all([
-    client.fetch<SanityEvent[]>(EVENTS_PAGINATED_QUERY, { start, end }),
-    client.fetch<number>(EVENTS_COUNT_QUERY),
+  const [{ items: eventsRaw, totalPages }, recentRaw, heroes] = await Promise.all([
+    getEventsListing(currentPage),
     client.fetch<
       Array<{ _id: string; title: string; slug: string; startDate: string; image: unknown }>
     >(EVENTS_RECENT_QUERY),
     getPageHeroes(),
   ])
-
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
 
   const recentEvents: RecentEventTransformed[] = recentRaw.map((e) => ({
     _id: e._id,

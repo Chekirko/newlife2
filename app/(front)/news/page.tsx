@@ -1,9 +1,13 @@
 import type { Metadata } from 'next'
+import { cache } from 'react'
+import { notFound } from 'next/navigation'
+import { LISTING_PER_PAGE as ITEMS_PER_PAGE, normalizeListingParams, type ListingSearchParams } from '@/lib/listing-params'
 import { getPageMetadata } from '@/lib/metadata'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
+import { formatDate } from '@/lib/utils'
 import {
   NEWS_PAGINATED_QUERY,
   NEWS_COUNT_QUERY,
@@ -19,19 +23,30 @@ import Link from 'next/link'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
 
-export async function generateMetadata(): Promise<Metadata> {
-  return getPageMetadata('/news', {
+type Props = { searchParams: Promise<ListingSearchParams> }
+
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+  const { page, filters, filtered, canonical } = normalizeListingParams('/news', await searchParams, ITEMS_PER_PAGE)
+  const { items } = await getNewsListing(page, filters.category)
+  return getPageMetadata(canonical, {
     title: 'Новини | Церква «Нове Життя»',
     description: 'Останні новини та оновлення церкви «Нове Життя» у Бориславі.',
-    alternates: { canonical: '/news' },
+    alternates: { canonical },
+    listingItems: items,
+    ...(filtered ? { robots: { index: false, follow: true } } : {}),
   })
 }
 
-const ITEMS_PER_PAGE = 6
-
-
-
-import { formatDate } from '@/lib/utils'
+const getNewsListing = cache(async (page: number, category: string) => {
+  const totalCount = await client.fetch<number>(NEWS_COUNT_QUERY, { category })
+  if (page > 1 && page > Math.ceil(totalCount / ITEMS_PER_PAGE)) notFound()
+  const start = (page - 1) * ITEMS_PER_PAGE
+  const items = await client.fetch<SanityNews[]>(NEWS_PAGINATED_QUERY, {
+    start, end: start + ITEMS_PER_PAGE, category,
+  })
+  if (page > 1 && items.length === 0) notFound()
+  return { items, totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE) }
+})
 
 // Sidebar recent post shape (after urlFor transform)
 interface RecentPostTransformed {
@@ -44,24 +59,12 @@ interface RecentPostTransformed {
 
 export default async function NewsPage({
   searchParams,
-}: {
-  searchParams: Promise<{ page?: string; category?: string }>
-}) {
-  const { page: pageStr, category } = await searchParams
-  const currentPage = Math.max(1, parseInt(pageStr || '1', 10))
-  const start = (currentPage - 1) * ITEMS_PER_PAGE
-  const end = start + ITEMS_PER_PAGE
+}: Props) {
+  const { page: currentPage, filters: { category } } = normalizeListingParams('/news', await searchParams, ITEMS_PER_PAGE)
 
   // Parallel fetches
-  const [newsRaw, totalCount, recentRaw, categories, heroes] = await Promise.all([
-    client.fetch<SanityNews[]>(NEWS_PAGINATED_QUERY, {
-      start,
-      end,
-      category: category || '',
-    }),
-    client.fetch<number>(NEWS_COUNT_QUERY, {
-      category: category || '',
-    }),
+  const [{ items: newsRaw, totalPages }, recentRaw, categories, heroes] = await Promise.all([
+    getNewsListing(currentPage, category),
     client.fetch<Array<{
       _id: string
       title: string
@@ -72,8 +75,6 @@ export default async function NewsPage({
     client.fetch<string[]>(NEWS_CATEGORIES_QUERY),
     getPageHeroes(),
   ])
-
-  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE)
 
   // Transform recent posts for sidebar
   const recentPosts: RecentPostTransformed[] = recentRaw.map((p) => ({

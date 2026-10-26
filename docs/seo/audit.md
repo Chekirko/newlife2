@@ -1,14 +1,14 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-1, SEO-2.1, SEO-2.2, SEO-3.1, SEO-3.2 і SEO-4.1 завершено локально; наступний юніт — SEO-4.2.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Матриця середовищ і контракт готовності — у «SEO-2.1», noindex — у «SEO-2.2», metadata — у «SEO-3», готовність/sitemap/lastmod — у «SEO-4.1»; початкові докази SEO-1 збережені як baseline.
+Дата: 2026-10-26. **SEO-1–SEO-4 завершено локальними юнітами включно з SEO-4.2; наступний юніт — SEO-5.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Матриця середовищ і контракт готовності — у «SEO-2.1», noindex — у «SEO-2.2», metadata — у «SEO-3», готовність/sitemap/lastmod — у «SEO-4.1», query/canonical — у «SEO-4.2»; початкові докази SEO-1 збережені як baseline.
 
 ## Висновки
 
 - Основа працює: 44/44 початкові адреси sitemap у SEO-1 відповідали HTTP 200 із canonical правильного шляху; доступність і canonical повторно підтверджені у SEO-4.1, 5 відсутніх адрес — 404/noindex. Нинішній sitemap навмисно порожній: запуск і жодна сторінка не схвалені.
 - Pre-launch crawling заблоковано. За останньою live-перевіркою SEO-2.1 Production alias публічний без meta/header noindex. SEO-2.2 додав обидва сигнали в коді; актуальний live deployment окремо не перевірений. Сам `Disallow: /` і noindex, який crawler може не прочитати, не гарантують відсутності адрес у пошуку; F01 залишається відкритим.
 - SEO-3.1 виправив соціальні metadata 11 статичних маршрутів, OG image `/about` і CMS defaults; SEO-3.2 — чотири detail families, фото матеріалу та description fallback оголошення. F07–F10 технічно закриті локально: 62 GET і 32 metadata fixtures SEO-3.2 — PASS. Остаточні тексти/редакційна готовність та live social preview не засвідчені.
-- Виявлено відтворювані дефекти: 500 на некоректному номері сторінки новин/подій; падіння ministry-шаблону з нерозв’язаним weak-reference; відсутній H1 головної, дубльовані H1 служителів і пропуски рівнів заголовків.
-- SEO-4.1 технічно закрив F02/F03 локально: спільний критерій metadata/sitemap, порожній launch approval і чесний lastmod; 58 GET та 103 fixture-перевірки. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Наступні виправлення — query/page/canonical (SEO-4.2), потім JSON-LD/null-guard (SEO-5).
+- Відкриті дефекти: падіння ministry-шаблону з нерозв’язаним weak-reference; відсутній H1 головної, дубльовані H1 служителів і пропуски рівнів заголовків. Початкові 500 на page новин/подій виправлені локально у SEO-4.2.
+- SEO-4.1/4.2 технічно закрили F02/F03/F05/F06 локально: спільна готовність metadata/sitemap, порожній launch approval, чесний lastmod, валідація query/page та canonical пагінації. Фінальні 154 GET і регресія реальних metadata/SSR/sitemap — PASS. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Наступний SEO-5 — JSON-LD/null-guard.
 
 ## Межі й метод перевірки
 
@@ -353,11 +353,55 @@ Root/header noindex, privacy/studio robots і Disallow збережено. Env/D
 
 Після локального QA користувач прямо погодив commit+push SEO-4.1 у `codex/seo-1-audit` 2026-10-26. Згадки про непогоджений commit вище описують попередній локальний стан. Свіжий fetch: HEAD/origin 0/0, Git Credential Manager — `Chekirko`; результат публікації — у git history та фінальному повідомленні. Merge, Production settings, env/DNS/CMS не змінюються; новий live deployment окремо не перевірений.
 
+## SEO-4.2: query, пагінація та canonical — 2026-10-26
+
+### Результат F05/F06
+
+Старт — чисте дерево `codex/seo-1-audit`, HEAD `ee4f15e`; пряме доручення «Роби Наступний крок — SEO-4.2». 7 файлів застосунку + нова регресія, без залежностей, нових маршрутів або CMS-полів.
+
+- [Нормалізація](../../lib/listing-params.ts) працює перед fetch у page та generateMetadata news/events/media. Нечисловий/нецілий/повторений/≤0/небезпечний page → 307 на базовий список із валідними скалярними filters. Page=1 видаляється; `002` → `2`; whitespace/empty scalar filter нормалізується, повторений filter відкидається з 307. Redirect збирається через URLSearchParams на фіксованому локальному path. Media має «Завантажити ще», тому її `page` видаляється зі збереженням filter. Невідомі tracking-параметри не йдуть у canonical або GROQ, самі по собі не запускають redirect.
+- News/events спочатку читають count: коректний N поза діапазоном → 404/noindex без довільного slice; порожня порція N≥2 також → 404. Порожній базовий список → 200/noindex. `LISTING_PER_PAGE=6` спільний; page-local React cache зі скалярними аргументами узгоджує порцію metadata/UI. NaN та небезпечні endpoints не надходять у GROQ.
+- Непорожня пагінація без filter має власний canonical і OG URL `/news?page=N` / `/events?page=N`; filter/search завжди noindex з базовим canonical. Наявні crawlable pagination links і дизайн збережені.
+- [Готовність](../../lib/seo-readiness.ts) `isListingIndexable()` перевіряє launch і схвалення базового списку та кожного `_id`+slug видимої непорожньої порції news/events. [Metadata](../../lib/metadata.ts) приймає `listingItems` лише на вході. [Sitemap](../../app/sitemap.ts) застосовує той самий критерій для першої порції, включає для перевірки документи без slug, повторює порядок і умову наявного startDate для events. Порожній `/media` також не indexable й не в sitemap. У початковому sitemap немає query URL; `isPageIndexable()` їх далі відкидає.
+
+**F05/F06 технічно закриті локально.** Approval лишається `{ launch: null, pages: [] }`, sitemap — 0 URL. Схвалення нової видимої порції не виводиться зі схвалення першої; зміна порядку/складу матеріалів автоматично перераховує готовність під час наступного рендера/ISR.
+
+### Production HTTP та ізольована регресія
+
+Фінальний `next start` на `127.0.0.1:3004`, Next.js 16.1.6: **154 анонімні GET — 67×200, 68×307, 19×404, жодного 500**. Усі 154 мають header noindex; усі 83 HTML-відповіді 200/404 — meta noindex. Серед 200 є 3 не-HTML ресурси.
+
+| Вибірка | GET | Результат |
+|---|---:|---|
+| News/events/media: базові URL, invalid/повторені/небезпечні page/filter, leading zeros, out-of-range, tracking, search/filter; кожен зі звичайним UA та `facebookexternalhit/1.1` | 100 | 307 із правильним Location, 404 для коректних out-of-range, 200 із базовим canonical для filter/search/tracking; жодного NaN/GROQ error |
+| Усі поточні details: 5 news / 3 event / 15 ministry / 11 team | 34 | 200, власний canonical, noindex |
+| Інші базові/службові URL, включно з privacy і вкладеним Studio tool | 10 | 200, чинні canonical/noindex збережені |
+| Наявна категорія news та `media?category=проповідь` | 2 | 200, базовий canonical, noindex |
+| Відсутні details чотирьох families і невідомий маршрут | 5 | 404/noindex |
+| robots.txt / sitemap.xml / fallback JPEG | 3 | 200/header noindex; Disallow: /, sitemap 0 URL |
+
+[Регресія](../../scripts/check-listing-seo.mjs): `cmd /c "pnpm exec node scripts/check-listing-seo.mjs"` — PASS. Реальні TypeScript helper/metadata/page/sitemap завантажуються через transpile/VM з target ES2022; mocked navigation/CMS, нуль мережевих запитів і CMS writes. Синтетичні 7 news/events перевіряють другу непорожню порцію, її власні canonical/OG URL, SSR сьомої картки без першої та реальні pagination links на базову сторінку. Окремо: порожня база/порція, count до slice, максимальне безпечне число, filters/повторення/Unicode encoding, поточний порожній register, схвалення списку/кожного видимого документа, missing slug, sitemap↔metadata узгодженість, event без startDate та порожній media. Позитивне approval існує лише в пам’яті fixture.
+
+У поточній CMS досі немає другої непорожньої сторінки news/events: її canonical/SSR перевірено синтетично, а HTTP `page=2` закономірно дає 404. Browser hydration/інтерактивні Server Actions та live deployment не перевірялись; UI-компоненти/стилі/Actions не змінювались. Повний JSON-LD/null-ref аудит — SEO-5.
+
+`cmd /c "pnpm run build"`, lint, typecheck та 3 наявні регресії — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 static-generation tasks. Перший sandbox build зупинився на Sanity config EPERM; повтор із потрібним доступом і фінальний build успішні. Старі Node/localStorage/Browserslist warnings лишаються. Тимчасовий HTTP-runner/лог/JSON — ignored `.next/seo-4.2/`; довготривалий доказ — ця матриця та tracked regression.
+
+[Google про canonical пагінації й filters](https://developers.google.com/search/docs/specialty/ecommerce/pagination-and-incremental-page-loading), [Next.js generateMetadata/searchParams/cache](https://nextjs.org/docs/app/api-reference/functions/generate-metadata) і [redirect](https://nextjs.org/docs/app/api-reference/functions/redirect) звірено 2026-10-26; фактичні status і HTML засвідчені на встановленій Next.js 16.1.6.
+
+Root/header noindex, privacy/studio robots і Disallow збережено. CMS/schema/production env/DNS/platform settings, JSON-LD та дизайн не змінені; generated types лише оновлені штатним TypeGen і ignored. F01/platform protection відкритий, launch не погоджено. Commit/push SEO-4.2 не виконано — гейт [ai-workflow-rules.md §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Наступний **SEO-5** — F04, наявні JSON-LD/null-ref та відповідність видимим фактам; schema-markup, karpathy-coder, решта скілів за фактичним scope.
+
+Завершальні перевірки: 6 UTF-8 документів, 55 локальних file/anchor targets і `git diff --check` — PASS. Сервер зупинено, порт 3004 без listener. Фінальний diff: 7 файлів застосунку + 1 regression + 6 документів; root layout/robots/next.config/schema sources/package/lockfile без змін.
+
+### Погоджена публікація SEO-4.2
+
+Перед комітом повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 static-generation tasks; старі Node/Browserslist warnings. SEO-регресія повторно PASS, UTF-8 6 документів — PASS. Lint/typecheck/3 наявні регресії та 154 GET уже пройшли на цьому коді; staged diff перевіряється перед комітом.
+
+Після локального QA користувач прямо погодив commit+push SEO-4.2 у `codex/seo-1-audit` 2026-10-26, відповівши «Так». Попередні згадки про непогоджену публікацію — стан до цієї відповіді. Свіжий fetch підтвердив HEAD/origin 0/0, Git Credential Manager — `Chekirko`; публікація охоплює 7 файлів застосунку, 1 regression і 6 документів. Точний SHA, remote SHA й чистота дерева перевіряються після push і наводяться у фінальному повідомленні. Merge, Production settings/env/DNS/CMS не змінюються; новий live deployment не засвідчений. Наступний юніт — SEO-5.
+
 ## Порядок дій
 
 1. **SEO-2 — локальні юніти завершено:** SEO-2.1 — матриця/політика, SEO-2.2 — noindex metadata/header та 66 локальних GET. F01: Production alias публічний за останнім live-аудитом, settings не перевірені; F02 реалізовано у SEO-4.1. Усі обмеження збережено.
 2. **SEO-3 завершено локально:** defaults/static та чотири detail families перевірені; F07–F10 технічно закриті. Commit+push SEO-3.2 прямо погоджено користувачем; результат — у git history та фінальному повідомленні. Контентна готовність/live social preview не засвідчені.
-3. **SEO-4.1 завершено локально; наступний SEO-4.2:** F02/F03 технічно закриті, 58 GET/103 fixture-перевірки. F05/F06 — page-валідація/пагінація/canonical. Зберегти робочі canonical/404 та noindex/Disallow.
+3. **SEO-4 завершено локально:** SEO-4.1/4.2 технічно закрили F02/F03/F05/F06. Фінальні 154 GET і регресія helper/metadata/SSR/sitemap — PASS; approval порожній, noindex/Disallow збережено. Commit/push SEO-4.2 не виконано.
 4. **SEO-5 — JSON-LD і неповні дані:** почати з F04, далі звірити шаблони Event/VideoObject/Person/NewsArticle з видимими даними й актуальними вимогами. Не обіцяти rich results.
 5. **SEO-6 — семантика:** F11, почати з homepage hero + team detail; ширший аудит лишити D8. **SEO-7 — вимірювання:** production baseline і лише підтверджена оптимізація; зараз performance-дефект не заявляється.
 6. **Редакційні залежності / SEO-L:** власник підтверджує факти й перелік готових сторінок; домен/Search Console/відкриття індексації — окреме фінальне рішення. До нього не прирівнювати технічний PASS до готовності контенту.
