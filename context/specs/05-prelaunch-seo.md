@@ -1,6 +1,8 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1–SEO-5 завершено локальними юнітами; наступна сесія — SEO-6 (заголовки/посилання, вузький mobile/a11y QA). F01/platform protection залишається відкритим.
+Дата: 2026-10-26. Статус: SEO-1–SEO-5 і SEO-6.1 завершено локальними юнітами; наступна сесія — SEO-6.2 (news card/sidebar, залишок F11). Весь SEO-6/D8 ще не закрито; F01/platform protection залишається відкритим.
+
+**Публікація SEO-6.1 погоджена 2026-10-26:** після локального QA користувач відповів «Так» на commit + push у `codex/seo-1-audit`. Нижчі згадки про ще потрібну згоду — історичний стан. Результат — у git history та фінальному повідомленні; merge/Production settings без змін, live deployment окремо не засвідчений. Наступний юніт — SEO-6.2.
 
 **Публікація SEO-5 погоджена 2026-10-26:** після QA користувач відповів «Так» на commit + push у `codex/seo-1-audit`. Попередні згадки про потрібну згоду — стан до цієї відповіді. Результат — у git history та фінальному повідомленні; merge/Production settings без змін, live deployment не засвідчений.
 
@@ -111,11 +113,15 @@
 | SEO-4.1 | Завершено локально 2026-10-26 | Спільна готовність metadata/sitemap, порожній approval, чесний lastmod; 58 GET/103 fixture-перевірки |
 | SEO-4.2 | Завершено локально 2026-10-26 | 154 GET + ізольована регресія; query/page, canonical, redirect/404, noindex filter, схвалення видимої порції metadata/sitemap |
 | SEO-5 | Завершено локально 2026-10-26 | F04/null-photo, JSON-LD за видимим контентом, 57 GET + tracked regression; Schema.org synthetic 0 errors/0 warnings; Google test вимагає login, eligibility не засвідчена |
-| SEO-6 | Наступна сесія | F11: актуальні H1–H6, crawlable links, 1–2 підтверджені шаблони та вузький mobile/keyboard QA |
+| SEO-6 | Частково виконано | H1-частина F11 закрита у SEO-6.1; інші H1–H6 у наступних вузьких юнітах |
+| SEO-6.1 | Завершено локально 2026-10-26 | Головний hero + team detail, pause/inert/keyboard, target #map; 53 GET, 51 fragments, mobile/desktop і регресії PASS |
+| SEO-6.2 | Наступна сесія | Почати з `/news` card/sidebar: heading structure, назви links, keyboard/mobile QA; решту F11 виконувати окремими юнітами за лімітом 1–2 шаблони |
 | SEO-7 | Не розпочато | Вимірювання → один пріоритетний дефект |
 | SEO-L | Відкладено | Реальний контент/домен і окреме рішення користувача про запуск |
 
 ## Офіційні джерела
+
+SEO-6.1: [результат, докази та точний залишок](../../docs/seo/audit.md#seo-61-заголовки-hero-і-служителя--2026-10-26), [hero регресія](../../scripts/check-heading-seo.mjs). Один H1 головної/11 team details, pause/focus/hover/reduced-motion gates, `inert` прихованих slides, реальний target `/contact#map`. 53 production GET / 51 fragments, browser 320/390/1280px, build/lint/typecheck/наявні та SEO-регресії PASS. Інші heading templates — SEO-6.2+; повний D8/SEO-7/SEO-L не закрито. Порожній approval/noindex/Disallow збережено, CMS/settings без змін. Commit/push цього юніту потребують окремої згоди за workflow §3. SEO-5 уже в HEAD `89fb6ec`; його нижчі згадки «не виконано» — історичний стан. Окремого handoff-документа не створювати: передача тут і у звіті.
 
 SEO-5: [результат і межі](../../docs/seo/audit.md#seo-5-json-ld-і-null-посилання--2026-10-26), [регресія](../../scripts/check-jsonld-seo.mjs). F04 закритий локально, null refs фільтруються до count, фото має guard. JSON-LD без непідтверджених author/dateModified/uploadDate/church venue/Scheduled; media script синхронний із cards state й SSR. Порожній approval та noindex/Disallow збережено, CMS/env/settings без змін. Контентні факти/eligibility — SEO-L. Commit/push не виконано, потрібна згода за workflow §3; наступний SEO-6 описаний у звіті. Окремий handoff не потрібен.
 

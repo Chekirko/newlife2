@@ -96,6 +96,7 @@ for (const leaders of [
 }
 for (const photo of [null, image]) {
   const { html, json: [person] } = await render('team', { ...base, photo, responsibility: ['Visible role'] })
+  assert.equal([...html.matchAll(/<h1\b/g)].length, 1, 'Team detail must keep only the PageHero H1')
   assert.equal(person['@id'], `${origin}/team/route-slug#person`)
   assert.equal(person.memberOf.name, 'Fixture Church')
   assert.equal(person.memberOf['@id'], `${origin}/#church`)

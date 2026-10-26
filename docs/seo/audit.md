@@ -1,14 +1,14 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-1–SEO-5 завершено локальними юнітами; наступний юніт — SEO-6.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Поточний JSON-LD/null-ref результат — у «SEO-5» нижче; початкові докази й карта SEO-1 збережені як baseline, а не опис нинішнього коду.
+Дата: 2026-10-26. **SEO-1–SEO-5 і SEO-6.1 завершено локальними юнітами; наступний юніт — SEO-6.2.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Поточний результат — у «SEO-6.1» нижче; початкові докази й карта SEO-1 збережені як baseline, а не опис нинішнього коду. F11 виправлено частково, весь SEO-6/D8 не закрито.
 
 ## Висновки
 
 - Основа працює: 44/44 початкові адреси sitemap у SEO-1 відповідали HTTP 200 із canonical правильного шляху; доступність і canonical повторно підтверджені у SEO-4.1, 5 відсутніх адрес — 404/noindex. Нинішній sitemap навмисно порожній: запуск і жодна сторінка не схвалені.
 - Pre-launch crawling заблоковано. За останньою live-перевіркою SEO-2.1 Production alias публічний без meta/header noindex. SEO-2.2 додав обидва сигнали в коді; актуальний live deployment окремо не перевірений. Сам `Disallow: /` і noindex, який crawler може не прочитати, не гарантують відсутності адрес у пошуку; F01 залишається відкритим.
 - SEO-3.1 виправив соціальні metadata 11 статичних маршрутів, OG image `/about` і CMS defaults; SEO-3.2 — чотири detail families, фото матеріалу та description fallback оголошення. F07–F10 технічно закриті локально: 62 GET і 32 metadata fixtures SEO-3.2 — PASS. Остаточні тексти/редакційна готовність та live social preview не засвідчені.
-- F04 (падіння ministry-шаблону з нерозв’язаним weak-reference) технічно закритий у SEO-5. Відсутній H1 головної, дубльовані H1 служителів і пропуски рівнів заголовків — SEO-6. Початкові 500 на page новин/подій виправлені локально у SEO-4.2.
-- SEO-4.1/4.2 технічно закрили F02/F03/F05/F06 локально. SEO-5: null-guards і JSON-LD без непідтверджених адрес/дат/авторів, 57 GET і tracked регресія PASS. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Наступний SEO-6 — заголовки/посилання та вузька mobile/a11y перевірка.
+- F04 технічно закритий у SEO-5. SEO-6.1 виправив H1 головної й дубль H1 служителів, ізоляцію прихованих hero CTA, керування ротацією та битий `/contact#map`. 53 production GET, keyboard/mobile/desktop QA і регресії пройшли; інші пропуски рівнів заголовків — SEO-6.2+. Початкові 500 на page новин/подій виправлені у SEO-4.2.
+- SEO-4.1/4.2 технічно закрили F02/F03/F05/F06 локально; SEO-5 — null-guards і JSON-LD за видимими даними. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Noindex/Disallow та порожній approval збережено; F01 відкритий.
 
 ## Межі й метод перевірки
 
@@ -72,7 +72,7 @@ P1 — високий вплив до запуску або ризик недо�
 | F08. `/about` втрачає `og:image` | `/about` має власний openGraph object без images. HTML: OG URL `/about`, og:image відсутній; Twitter image залишається root | Середній: неповне соціальне прев’ю | Явно зберегти спільне зображення при перевизначенні OG. Повторно перевірити image/siteName/locale разом, не покладатися на deep merge | P2 / SEO-3, мале виправлення |
 | F09. CMS SEO/OG-поля не впливають на metadata | [siteSettings schema](../../sanity/schemaTypes/siteSettings.ts):221–234 визначає ogImage/defaultDescription. [query](../../sanity/lib/queries.ts):30–44 не вибирає ogImage; [helper](../../lib/site-settings.ts):127 повертає defaultDescription, але `rg` не знаходить його споживача в app. Root metadata статичні. Published settings зараз **без обох значень** | Середній для редактора: майбутнє заповнення не дасть очікуваного результату; зараз втрати конкретного заповненого значення не виявлено | Підключити наявні поля до defaults з fallback або уточнити контракт. Не створювати дублікати полів; порожній CMS не має прибирати metadata | P2 / SEO-3 |
 | F10. Неповні description | `/ministries` повторює description головної. `/events/obid-dlya-rodin-zagiblikh-zakhisnikiv` → 200, але description немає: немає ні CMS description, ні body. 43/44 URL sitemap мають description | Середній: загальний або відсутній анонс не описує сторінку | Для списку — опис лише підтвердженого призначення; для detail — безпечний fallback/правило відкладення за SEO-2. Остаточний зміст оголошення надає власник | P2 / SEO-3 + SEO-L |
-| F11. H1 і рівні heading неузгоджені | `/` → 0 H1, HeroSlider використовує h2. Усі 11 `/team/[slug]` мають 2 однакові H1: PageHero + ім’я в body. `/ministries` → H1,H2,H6; `/news` → H1,H4; `/team` → H2,H5 | Середній для семантики/навігації; це не доказ санкцій або втрати конкретних позицій | SEO-6 почати з головного hero й team detail (1–2 шаблони), зберегти візуальні класи; картки/sidebar перенести в наступний під’юніт за потреби | P2 / SEO-6 |
+| F11. H1 і рівні heading неузгоджені | Baseline: `/` → 0 H1; 11 team details → 2 H1. SEO-6.1: головна й усі 11 details → 1 H1. Залишок: `/ministries` → H1,H2,H6; `/news` → H1,H4; `/team` → H2,H5; pre-titles/імена/FAQ головної та footer | Середній для семантики/навігації; це не доказ санкцій або втрати конкретних позицій | H1 частина виправлена у SEO-6.1, решту heading templates виконувати окремими юнітами, почати з `/news` card/sidebar | P2 / частково закрито; SEO-6.2+ |
 
 Поведінка `/about` відповідає [документації Next.js про shallow metadata merge](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging); джерелом істини для встановленої 16.1.6 тут слугує перевірений HTML. Довжина title/description сама по собі не використана як жорсткий критерій дефекту.
 
@@ -429,6 +429,50 @@ Build, lint, typecheck, 3 наявні регресії та `scripts/check-list
 До SEO-L власник підтверджує NAP/legalName/geo/соцмережі та їхні fallback, справжній розклад і його endTime, FAQ/свідчення/біографії/ролі, дати матеріалів та авторство. Event потребує точної адреси/статусу/організатора за кожною подією; video — справжньої uploadDate, назв/описів і готовності watch experience. У цій сесії відсутні факти пропущені або записані як залежності, а не вигадані. Історія й readiness approval лишаються непогодженими.
 
 Pre-launch root/header/page noindex, Disallow та порожній approval збережені. Schema/GROQ sources, package/lockfile, CMS/env/DNS/platform settings не змінені; TypeGen лише штатний ignored output. Live deployment/Search Console/Google index та mobile/desktop layout не перевірені: in-app browser localhost timeout, HTTP через локальний процес успішний. F01 лишається відкритим. Commit/push SEO-5 не виконано — [проєктний гейт §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19).
+
+## SEO-6.1: заголовки hero і служителя — 2026-10-26
+
+**Публікація погоджена 2026-10-26:** після локального QA користувач відповів «Так» на commit + push SEO-6.1 у `codex/seo-1-audit`. Нижчі згадки про ще потрібну згоду описують попередній стан. Результат — у git history та фінальному повідомленні; merge/Production settings без змін, live deployment окремо не засвідчений.
+
+### Результат і обсяг
+
+- Виправлена H1-частина F11: один видимий H1 на головній у кожному стані слайдера, один H1 у всіх 11 team details. Рівні інших секцій/card/sidebar/footer ще потребують окремих юнітів; весь SEO-6 та D8 не закрито.
+- У двох погоджених шаблонах збережено текст, фото та типографіку. Керування hero стало доступним клавіатурою: приховані CTA не отримують фокус, є pause/play і підписані кнопки. Окремий однорядковий target fix карти усунув знайдений битий fragment.
+- Фінальний production build, lint, typecheck, 3 наявні регресії й 3 SEO-регресії — PASS. HTTP: 50 HTML 200, robots/sitemap 200, missing team 404; усі з header noindex, увесь HTML із meta noindex. 51 перевірка fragment-цілей — PASS.
+
+Пряме доручення — «Роби Наступний крок — SEO-6». Старт із чистого `89fb6ec` (`codex/seo-1-audit`), який містить опублікований SEO-5. Обсяг розбитий за лімітом spec: SEO-6.1 — головний hero та team detail; SEO-6.2+ — залишкові шаблони. Скіли seo-audit/a11y-audit/senior-frontend/karpathy-coder, grill-with-docs/handoff для контексту. Нових маршрутів, схем, dependencies або live CMS mutations немає.
+
+### Дефекти, докази та реалізація
+
+| Проблема | Вплив / доказ | Виправлення / пріоритет |
+|---|---|---|
+| Головна без H1; pre-title помилково h3 | Серверний HTML baseline: 0 H1. Декоративний надпис потрапляв у heading navigation перед основним заголовком | [Hero.tsx](../../components/sections/Hero.tsx): лише активний title — H1, неактивні titles — абзаци; pre-title — абзац із тими самими шрифтом/розміром/line-height. Після SSR і browser transitions — 1 H1. P2, виправлено |
+| Team detail дублює H1 | PageHero та body повторювали ім’я як два H1 | [Шаблон](../../app/(front)/team/[slug]/page.tsx): повторне ім’я — абзац, візуальні класи збережено; rich-text headings не зсуваються штучно під зайвий H2. 11/11 HTTP details — один H1, photo/null fixtures теж. P2, виправлено |
+| Невидимі слайди доступні через Tab; ротація без паузи; dots без назв | `opacity-0`/pointer-events не вилучали посилання з клавіатурного порядку. Прокручування могло прибрати CTA з-під фокусу | `inert` + `aria-hidden`, видимий pause/play перед контентом, focus stop до явного play, hover pause, reduced-motion default. Українські назви, aria-current для dots; 44×48px цілі dots, 48px arrows. Ручне перемикання зберігає фокус. Pointer-down ref усуває перевірений конфлікт focus stop → click toggle. P1 для keyboard use, виправлено |
+| Стрілки на mobile проходили через центр тексту | На 320px контент займає більшу ширину; controls мають окрему нижню смугу | Лише mobile arrows перенесено вниз; темна підкладка controls, видимий global focus. Три слайди перевірено на 320px, CTA не перетинають нижні controls. P2, виправлено |
+| `/contact#map` не має fragment-цілі | Local crawl: href на головній є, `id=map` у `/contact` відсутній | [Наявний wrapper карти](../../app/(front)/contact/page.tsx): `id="map"` та responsive scroll-margin під fixed header. Browser navigation → саме wrapper із iframe; desktop top=180px, mobile margin=140px. Нових embed/полів немає. P2, виправлено |
+
+HeroGradientImage у тому самому файлі також замінює pre-title h6 на абзац; решта цього компонента не переписана. CTA слайдера без href не породжує фальшивого `href="#"`. CMS CTA-дані й slug не змінювалися.
+
+Механіка ротації звірена з [W3C Carousel Pattern](https://www.w3.org/WAI/ARIA/apg/patterns/carousel/) і [W3C Carousel Animations](https://www.w3.org/WAI/tutorials/carousels/animations/): керування ротацією, stop при фокусі, hover pause та приховування неактивного вмісту. Це застосування патерну, не твердження про повну WCAG відповідність.
+
+### Перевірки й межі
+
+**Production HTTP:** read-only crawl HTML-посилань, старт із 11 базових маршрутів та prerendered ministry/team details; 45 унікальних pathname + 5 query URL = 50 HTML GET 200. Обхід охопив усі 34 details, crawlable anchors header/footer/карток/Portable Text і query links, знайдені в цій вибірці. Усі цілі віддали 200; 51 fragment-посилання (включно зі skip-links і map) мають id у цільовому HTML. Додатково robots/sitemap 200 і `/team/seo-6-missing` 404 — **53 GET, 52×200/1×404**. Header noindex на всіх, meta noindex на 51 HTML; Disallow збережено, sitemap 0 URL. Тимчасові runner/results — ignored `.next/seo-6/`; довготривалі висновки тут. Це не обхід усіх можливих query-комбінацій, CMS revisions або зовнішніх адрес.
+
+**Browser:** in-app browser, локальний production server на loopback; після sandbox timeout сервер перезапущено дозволеним способом. Desktop 1280×900, mobile 390×844 і 320×812. На головній перевірено один H1 після Enter/dot/arrow, pause click, keyboard play, focus stop, Tab/Shift+Tab без прихованих CTA, видимий focus; три mobile slides — без горизонтального переповнення/перетину CTA та controls. Після паузи слайд залишається тим самим між перевірками. Team detail: desktop дві колонки, mobile одна; один H1, Enter відкриває фото, після відкриття фокус на «Закрити», Escape закриває й повертає фокус до тригера. Tab після єдиної кнопки дає activeElement BODY, наступний Tab повертається на «Закрити»; фонові page links у цій послідовності фокусу не отримали. Повний modal focus audit лишається D8. В inspected home/team flows console errors не виявлено. Map href доводить target/scroll offset, не доступність стороннього Google iframe. Reduced-motion preference і synthetic empty/missing-href cases перевірені VM, не браузерною емуляцією; screen reader/zoom/всі devices не перевірялися.
+
+**Регресії:** [check-heading-seo.mjs](../../scripts/check-heading-seo.mjs) виконує справжній HeroSlider через transpile/VM зі state/effects mocks та React SSR: єдиний H1, inert slides, CTA без href, ручні переходи й wrap, focus/hover/reduced-motion timer gates, cleanup, pointer-focus pause race, один/нуль slides. Це не заміна browser React scheduler; pointer/keyboard flows окремо пройшли в браузері. [check-jsonld-seo.mjs](../../scripts/check-jsonld-seo.mjs) тепер також перевіряє один team H1 із photo/null. Listing regression та 3 наявні `pnpm run test` перевірки — PASS.
+
+**Інструменти навичок:** `seo_checker.py --url … --json` для `/` і team detail незалежно підтвердив 1 H1; залишкові heading skips не приховані. Його score/довжини metadata не є рейтингом Google, empty alt декоративного hero не є помилкою. `a11y_scanner.py` запущено на обох змінених UI-файлах: статичний regex не бачить dynamic Heading і layout main/nav/skip-link, тому його 4/3 повідомлення переглянуто як component-level false positives, а не названо чистим WCAG scan. `diff_surgeon.py --diff HEAD --json` — CLEAN на перевіреному diff.
+
+Фінальний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 queries, TypeScript, 42/42 static-generation tasks. Lint/typecheck/3 наявні регресії/listing/jsonld/heading — PASS; старі Node localStorage/module.register і Browserslist warnings. Initial sandbox Sanity config EPERM та loopback timeout усунені дозволеними повторами. Root/header/page noindex, Disallow та порожній approval збережені; schemas/GROQ/package/lockfile/env/DNS/CMS/platform settings не змінені. Live deployment/Google index не засвідчені; F01 залишається відкритим. Commit/push SEO-6.1 не виконано — потрібна окрема згода за workflow §3.
+
+### Наступні дії
+
+1. **SEO-6.2:** наступний вузький юніт F11 — `/news` card/sidebar: актуальна ієрархія під PageHero, зрозумілі назви detail links (зокрема повторні «Читати далі»), keyboard/mobile/desktop QA. Спершу перевірити поточний код; не змінювати дизайн або CMS-контент заради тега.
+2. **Залишок SEO-6:** team/ministry card headings, pre-titles OurVision/PastorGreeting, імена TestimonialsGrid, FAQ contact block і footer. Виконувати по 1–2 пов’язаних шаблони, додавати підетапи за потреби. Зелений H1 не закриває всі H1–H6. Видимий контраст breadcrumbs PageHero потребує окремої D8 перевірки.
+3. **Окремо:** SEO-7 — виміряна швидкодія; повний D8; F01/platform access; реальний контент, домен, Search Console й запуск SEO-L. Placeholder біографії служителя з чужим ім’ям лишається редакційною залежністю, технічний H1 її не виправляє.
 
 **Наступний SEO-6:** F11 — спочатку звірити актуальні H1/H2–H6 та crawlable links, потім 1–2 пов’язані підтверджені шаблони і вузький keyboard/mobile QA. Не оголошувати весь D8 завершеним і не починати performance SEO-7. Скіли seo-audit, a11y-audit, senior-frontend, karpathy-coder; grill-with-docs/handoff для контексту.
 

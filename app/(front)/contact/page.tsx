@@ -125,7 +125,7 @@ export default async function ContactPage() {
             </div>
 
             {/* Google Map */}
-            <div className="md:col-span-3">
+            <div id="map" className="md:col-span-3 scroll-mt-[140px] lg:scroll-mt-[180px]">
               <MapEmbed
                 src={googleMapsEmbed}
                 className="h-full min-h-[400px] md:min-h-0"

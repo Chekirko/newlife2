@@ -126,6 +126,8 @@ Whenever a new public page or a new Sanity content type with a public detail rou
 
 ## Accessibility (WCAG 2.2 AA)
 
+- **Heading/links SEO-6.1:** рівень heading визначається структурою, а розмір — CSS; pre-title і повторне ім’я не потребують heading. `HeroSlider` залишає один H1 активного слайда, неактивні групи — `inert` + `aria-hidden`. Autoplay має видиме pause/play, focus stop, hover pause і reduced-motion default; pointer-down стан кнопки зберігається до click, щоб focus stop не перетворював pause click на play. CTA без href не підмінювати `#`; внутрішні fragments перевіряти на реальний id цілі та відступ під fixed header. `scripts/check-heading-seo.mjs` перевіряє справжній компонент через VM state/SSR; browser keyboard/mobile QA лишається окремою перевіркою. Інші heading templates ще не уніфіковані (F11/SEO-6.2+).
+
 - **Color contrast**: text on white must be ≥4.5:1. Use `text-gray-600`/`text-gray-800` for readable body text — `--color-gray-500`/`-600` are tuned to pass AA. Verify new color pairs with `.agents/skills/a11y-audit/scripts/contrast_checker.py "<fg>" "<bg>"`.
 - **White text on gradients** goes only on the darker `--gradient-btn-*` (`.btn-grad` / `.bg-grad-readable`), never the bright decorative `--gradient-start/end`. Keep normal copy opaque; do not lower the opacity of enabled buttons on hover. `.gradient-text` uses dark stops on light surfaces. White-button labels must remain dark inside `.all-text-white`.
 - **Focus**: rely on the global `:focus-visible` outline; never set `outline:none`/`ring-0` without an equally visible replacement.

@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { clsx } from 'clsx'
 import Image, { StaticImageData } from 'next/image'
+import { useReducedMotion } from 'motion/react'
 
 // =========================================
 // HERO VARIANT 1: Basic Slider
@@ -41,7 +42,11 @@ export const HeroSlider = ({
   className,
 }: HeroSliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(0)
-  const timerRef = useRef<NodeJS.Timeout | null>(null)
+  const [rotationRequested, setRotationRequested] = useState<boolean | null>(null)
+  const [hovered, setHovered] = useState(false)
+  const reducedMotion = useReducedMotion()
+  const rotationEnabled = autoplay && (rotationRequested ?? !reducedMotion)
+  const pointerRotation = useRef<boolean | null>(null)
 
   const nextSlide = useCallback(() => {
     setCurrentSlide((prev) => (prev + 1) % slides.length)
@@ -52,19 +57,45 @@ export const HeroSlider = ({
   }, [slides.length])
 
   useEffect(() => {
-    if (!autoplay) return
-    timerRef.current = setInterval(nextSlide, autoplaySpeed)
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current)
-    }
-  }, [autoplay, autoplaySpeed, nextSlide])
+    if (!rotationEnabled || hovered || slides.length < 2) return
+    const timer = setInterval(nextSlide, autoplaySpeed)
+    return () => clearInterval(timer)
+  }, [rotationEnabled, hovered, slides.length, autoplaySpeed, nextSlide])
 
   return (
-    <section className={clsx('relative overflow-hidden p-0', className)}>
-      <div className="relative">
-        {slides.map((slide, idx) => (
+    <section
+      className={clsx('relative overflow-hidden p-0', className)}
+      aria-label="Вітання церкви"
+      aria-roledescription="карусель"
+      onFocusCapture={() => setRotationRequested(false)}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      {autoplay && slides.length > 1 && (
+        <button
+          type="button"
+          onPointerDown={() => { pointerRotation.current = rotationEnabled }}
+          onPointerCancel={() => { pointerRotation.current = null }}
+          onClick={() => {
+            setRotationRequested(!(pointerRotation.current ?? rotationEnabled))
+            pointerRotation.current = null
+          }}
+          className="absolute right-4 top-4 min-h-11 px-4 bg-black/70 text-white rounded-full text-sm z-10"
+        >
+          {rotationEnabled ? 'Зупинити слайди' : 'Відтворити слайди'}
+        </button>
+      )}
+      <div className="relative" aria-live={rotationEnabled ? 'off' : 'polite'} aria-atomic="true">
+        {slides.map((slide, idx) => {
+          const Heading = idx === currentSlide ? 'h1' : 'p'
+          return (
           <div
             key={slide.id}
+            role="group"
+            aria-roledescription="слайд"
+            aria-label={`${idx + 1} з ${slides.length}`}
+            aria-hidden={idx !== currentSlide}
+            inert={idx !== currentSlide}
             className={clsx(
               height,
               'bg-cover bg-center transition-opacity duration-500',
@@ -90,13 +121,13 @@ export const HeroSlider = ({
                 slide.align === 'right' && 'ml-auto text-right'
               )}>
                 {slide.preTitle && (
-                  <h3 className="text-white font-alt italic text-xl lg:text-2xl mb-2 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]">
+                  <p className="text-white font-alt italic font-medium leading-[1.2] text-xl lg:text-2xl mb-2 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]">
                     {slide.preTitle}
-                  </h3>
+                  </p>
                 )}
-                <h2 className="text-white font-bold text-3xl lg:text-5xl xl:text-6xl mb-4 [text-shadow:0_2px_16px_rgba(0,0,0,0.5)]">
+                <Heading className="text-white font-heading leading-[1.2] font-bold text-3xl lg:text-5xl xl:text-6xl mb-4 [text-shadow:0_2px_16px_rgba(0,0,0,0.5)]">
                   {slide.title}
-                </h2>
+                </Heading>
                 {slide.subtitle && (
                   <p className="text-white text-lg lg:text-xl mb-6 [text-shadow:0_1px_8px_rgba(0,0,0,0.55)]">
                     {slide.subtitle}
@@ -107,13 +138,13 @@ export const HeroSlider = ({
                   slide.align === 'center' && 'justify-center',
                   slide.align === 'right' && 'justify-end'
                 )}>
-                  {slide.buttonText && (
-                    <a href={slide.buttonHref || '#'} className="btn btn-grad">
+                  {slide.buttonText && slide.buttonHref && (
+                    <a href={slide.buttonHref} className="btn btn-grad">
                       {slide.buttonText}
                     </a>
                   )}
-                  {slide.secondaryButtonText && (
-                    <a href={slide.secondaryButtonHref || '#'} className="btn btn-outline-white">
+                  {slide.secondaryButtonText && slide.secondaryButtonHref && (
+                    <a href={slide.secondaryButtonHref} className="btn btn-outline-white">
                       {slide.secondaryButtonText}
                     </a>
                   )}
@@ -121,26 +152,29 @@ export const HeroSlider = ({
               </div>
             </div>
           </div>
-        ))}
+          )
+        })}
       </div>
 
       {showArrows && slides.length > 1 && (
         <>
           <button
+            type="button"
             onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center transition-colors z-10"
-            aria-label="Previous"
+            className="absolute left-4 bottom-5 lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 w-12 h-12 bg-black/70 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors z-10"
+            aria-label="Попередній слайд"
           >
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button
+            type="button"
             onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 w-12 h-12 bg-white/20 hover:bg-white/40 rounded-full flex items-center justify-center transition-colors z-10"
-            aria-label="Next"
+            className="absolute right-4 bottom-5 lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 w-12 h-12 bg-black/70 hover:bg-black/80 rounded-full flex items-center justify-center transition-colors z-10"
+            aria-label="Наступний слайд"
           >
-            <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg aria-hidden="true" className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </button>
@@ -148,16 +182,18 @@ export const HeroSlider = ({
       )}
 
       {showDots && slides.length > 1 && (
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-10">
+        <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex z-10">
           {slides.map((_, idx) => (
             <button
               key={idx}
+              type="button"
+              aria-label={`Перейти до слайда ${idx + 1}`}
+              aria-current={idx === currentSlide ? 'true' : undefined}
               onClick={() => setCurrentSlide(idx)}
-              className={clsx(
-                'w-3 h-3 rounded-full transition-colors',
-                idx === currentSlide ? 'bg-white' : 'bg-white/50'
-              )}
-            />
+              className="w-11 h-12 flex items-center justify-center"
+            >
+              <span aria-hidden="true" className={clsx('w-3 h-3 rounded-full transition-colors', idx === currentSlide ? 'bg-white' : 'bg-white/50')} />
+            </button>
           ))}
         </div>
       )}
@@ -203,7 +239,7 @@ export const HeroGradientImage = ({
           {/* Content */}
           <div className="w-full lg:w-1/2 all-text-white my-10 md:mt-0 relative">
             <div className="text-left py-0 md:py-10 my-10">
-              {preTitle && <h6>{preTitle}</h6>}
+              {preTitle && <p className="font-heading font-medium text-[length:var(--text-h6)] leading-[1.2] mb-2">{preTitle}</p>}
               <h2 className="text-4xl font-normal">{title}</h2>
               {subtitle && <p className="mb-4 text-lg">{subtitle}</p>}
               {primaryButtonText && (
