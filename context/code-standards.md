@@ -4,6 +4,8 @@
 
 ## General
 
+- **Testimonials/FAQ headings SEO-6.5:** ім’я після цитати — підпис авторства в p, а не новий розділ H6. При заміні heading на p зберігати не лише font-family/size, а й line-height/color/margins; тут `font-heading text-h6 leading-heading text-gray-800 m-0 font-bold`. Контактний підрозділ FAQ має H3 під H2 з `text-h4` для попереднього розміру. Звіряти DOM/SSR та computed styles із baseline на desktop/mobile. Вузький heading QA не засвідчує повну доступність accordion або layout; FAQ disclosure semantics і nav landmark залишаються D8.
+
 - **Section pre-titles SEO-6.4:** OurVision/PastorGreeting використовують абзаци для коротких надзаголовків перед H2; H3 місії лишається вкладеним у OurVision. При заміні heading на p явно зберігати успадкований `font-heading`, решту typography — чинними класами; перевіряти computed styles до/після на desktop/mobile, оскільки один лише незмінний `text-sm` не зберігає font family. Перевіряти повну SSR-сторінку й реальний CTA, не додавати H1/main/nav до section-компонентів за regex-попередженнями. Решта F11 — SEO-6.5+.
 
 - **Card headings/links SEO-6.3:** картки під секційним H2 у `/team` та `/ministries` використовують H3 зі збереженою типографікою. Цілісне посилання вже назване видимим heading; вкладене фото має порожній alt, щоб не повторювати ім’я/назву. Це правило для цих карток, не для самостійних фото detail/lightbox. Перевіряти повний SSR із PageHero/layout, а не додавати H1/main у компоненти через regex scanner warnings. Crawl має охоплювати всі distinct href карток, keyboard/mobile QA — звичайні й почесні картки та ministry grid. Інші section/footer/detail headings лишаються F11/SEO-6.4+.

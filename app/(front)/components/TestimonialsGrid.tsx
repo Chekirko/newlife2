@@ -84,7 +84,7 @@ export const TestimonialsGrid = ({
                     />
                   )}
                   <div>
-                    <h6 className="m-0 font-bold">{testimonial.name}</h6>
+                    <p className="m-0 font-heading text-h6 leading-heading text-gray-800 font-bold">{testimonial.name}</p>
                     {testimonial.position && (
                       <small className="text-gray-500">{testimonial.position}</small>
                     )}
