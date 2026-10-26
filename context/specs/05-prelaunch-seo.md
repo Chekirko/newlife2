@@ -1,6 +1,6 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1 завершено; наступна сесія — SEO-2.1 (перевірка pre-launch захисту та політика готовності).
+Дата: 2026-10-26. Статус: SEO-1 і SEO-2.1 завершено; наступна сесія — SEO-2.2 (додатковий загальний pre-launch noindex).
 
 ## Мета та погоджений задум
 
@@ -58,7 +58,9 @@
 
 **Виконано 2026-10-26:** [єдиний звіт аудиту](../../docs/seo/audit.md) містить карту всіх route families, findings F01–F11, контентні залежності, HTTP/fixture-докази та порядок дій. 44/44 URL sitemap локально віддали 200 з canonical відповідного шляху; 5 відсутніх URL — 404/noindex. Окремо перевірено 5 публічних Production URL, без ототожнення deployment SHA з локальним HEAD. Build — PASS (21 schema type / 34 queries, TypeScript, 42/42 static-generation tasks). Код застосунку та live CMS не змінені; жодного SEO-виправлення в цій сесії не виконано.
 
-**Наступний юніт — SEO-2.1:** актуальна матриця local / Preview / Production (HTTP/auth, robots.txt, meta robots, X-Robots-Tag), доступний platform protection та політика майбутньої готовності сторінок. Початкові докази F01/F02 і критерій завершення — у розділі «Уточнений обсяг SEO-2» звіту. Preview/platform settings ще не перевірені; неможливість гарантувати захист явно записувати. Disallow/noindex не знімати, Production env/DNS/settings не змінювати. За потреби локальне посилення виділити в SEO-2.2; OG, sitemap і null-ref fixes не додавати до SEO-2.
+**SEO-2.1 виконано 2026-10-26:** [матриця, докази та контракт готовності](../../docs/seo/audit.md#seo-21-захист-середовищ-і-контракт-готовності--2026-10-26) — у тому самому звіті. 28 анонімних GET на 4 origins: local / Production alias / актуальний Preview / generated Production. Два generated URLs захищені SSO (302 + X-Robots-Tag noindex), Production alias публічний, без noindex на головній/історії. Dashboard settings недоступні без авторизованої сесії; SHA generated URLs встановлено через GitHub Deployments API, прив’язку Production alias до SHA незалежно не засвідчено. Контракт передано SEO-4: жодного поточного launch approval; майбутній спільний критерій metadata/sitemap за схваленими маршрутами/CMS-документами, окремі правила unfinished/privacy/studio/search/filter/page. Нових CMS-полів/коду немає, F01/F02 ще не закриті. Build PASS: 21 schema type / 34 queries, TypeScript, 42/42 static-generation tasks.
+
+**Наступний юніт — SEO-2.2:** додати загальний pre-launch noindex через наявні root metadata та HTTP headers, без нового env-перемикача. Перевірити production-build HTML/HTTP static/dynamic/privacy/studio/404 та headers не-HTML ресурсів; зберегти Disallow й чинні page-specific обмеження. Noindex — додатковий сигнал, а не гарантія за Disallow і не контроль доступу. Production env/DNS/settings не змінювати; platform protection лишається відкритою зовнішньою дією за окремим дорученням. OG, sitemap, query-валідацію і null-ref fixes сюди не додавати. Скіли: seo-audit, karpathy-coder; senior-frontend для metadata boundary, security-guidance для header-зміни за scope; grill-with-docs/handoff для контексту.
 
 ## Передача між сесіями та Definition of Done
 
@@ -81,7 +83,9 @@
 |---|---|---|
 | SEO-0 | Завершено 2026-10-26 | Збережено задум і порядок окремих сесій; код застосунку не змінено |
 | SEO-1 | Завершено 2026-10-26 | `docs/seo/audit.md`: маршрути, F01–F11, HTTP/fixture-перевірки, редакційні залежності; без змін коду |
-| SEO-2 | Наступна сесія | SEO-2.1: матриця захисту середовищ + політика готовності за F01/F02; без відкриття crawling |
+| SEO-2 | Частково завершено | SEO-2.1 завершено; наступний SEO-2.2 — додатковий загальний noindex. F01/settings відкриті; контракт F02 передано SEO-4 |
+| SEO-2.1 | Завершено 2026-10-26 | 4 origins × 7 GET, auth/robots/meta/header; контракт готовності; без змін застосунку/settings |
+| SEO-2.2 | Наступна сесія | Root metadata + header noindex, production-build HTTP-перевірки; Disallow збережено |
 | SEO-3 | Не розпочато | Після політики SEO-2 |
 | SEO-4 | Не розпочато | Використати результати SEO-1–3 |
 | SEO-5 | Не розпочато | Використати узгоджені URL/metadata |

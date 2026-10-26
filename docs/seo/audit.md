@@ -1,6 +1,6 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-1 завершено; виправлення ще не виконані.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Звіт доповнюється в наступних SEO-сесіях.
+Дата: 2026-10-26. **SEO-1 та SEO-2.1 завершено; кодові виправлення ще не виконані.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Свіжа матриця захисту й контракт готовності — у розділі «SEO-2.1» нижче; початкові докази SEO-1 збережені як baseline.
 
 ## Висновки
 
@@ -131,9 +131,65 @@ curl.exe -sS -i https://newlife2.vercel.app/
 
 Скіли: seo-audit; grill-with-docs/handoff для контексту; security-guidance/env-secrets-manager лише за потрібного scope; karpathy-coder за змінами коду. Початок: [tracker](../../context/progress-tracker.md) → [spec](../../context/specs/05-prelaunch-seo.md) → цей звіт. Рішень про нову архітектуру/UI на SEO-1 не прийнято.
 
+## SEO-2.1: захист середовищ і контракт готовності — 2026-10-26
+
+**Результат:** актуальний Preview і згенерований Production URL вимагають Vercel SSO; основний Production alias публічний. F01 залишається відкритим. Контракт F02 визначено для SEO-4, але відбір у коді ще не реалізовано. Жодну сторінку не погоджено до індексації.
+
+### Ідентифікація deployment і межі доступу
+
+- Локальна гілка `codex/seo-1-audit`, HEAD `0ed0dc715f9955fd8e614150726b9a0569c7d11d`; дерево на старті чисте. Публічний GitHub Deployments API на момент перевірки повернув найновіші записи: Preview [7327594288](https://api.github.com/repos/Chekirko/newlife2/deployments/7327594288) для цього HEAD; Production [7319354679](https://api.github.com/repos/Chekirko/newlife2/deployments/7319354679) для `827dc3cbed9ee4f3c98a66e7f8bfac83e4bed844`. Обидва мають status success; точні URL взято з їхніх `/statuses`, а не вгадано за назвою гілки.
+- GitHub connector підтвердив Vercel success поточного HEAD і [dashboard deployment](https://vercel.com/chekirkos-projects/newlife2/337W8EFqpfVvin4D3QCYYT7WfMeU). Deployments endpoint прочитано публічним HTTPS GET, бо connector його не підтримує. Production alias `https://newlife2.vercel.app` перевірено окремо: без авторизованого dashboard немає незалежного підтвердження, до якого SHA він зараз прив’язаний.
+- Dashboard у доступному in-app браузері показав `404 / Log In to Vercel`. Це обмеження доступу до налаштувань, **не доказ відсутності deployment**. WebMCP не надав доступного інструмента перевірки settings. Точний protection scope, винятки, share/bypass links, усі старі deployments/aliases і тариф акаунта не перевірені. Cookies, токени, env values та bypass не використовувалися.
+
+### Анонімна HTTP-матриця
+
+GET без cookies/Authorization, redirects не слідували; перевірка remote о 08:50:48–08:50:50 UTC, local о 08:52:56 UTC. Однакова вибірка: `/`, `/history`, `/privacy`, `/studio`, `/seo-2-1-missing`, `/robots.txt`, `/sitemap.xml`.
+
+| Середовище / точний origin | HTTP / доступ | robots.txt | Meta robots у HTML | X-Robots-Tag | Висновок |
+|---|---|---|---|---|---|
+| Local production build `http://127.0.0.1:3004` | 200 для наявних; missing 404. Сервер прив’язаний лише до loopback | 200, `User-Agent: *`, `Disallow: /`; sitemap origin = fallback `https://newlife.church` | `/` і `/history`: немає; privacy `noindex, follow`; studio і missing `noindex` | Відсутній на всіх 7 | Мережева доступність обмежена localhost; загального noindex у застосунку немає. Домен fallback не підтверджено |
+| Production alias `https://newlife2.vercel.app` | 200 для наявних; missing 404; auth redirect/challenge немає | 200, `Disallow: /`; sitemap origin = alias | `/` і `/history`: немає; privacy `noindex, follow`; studio і missing `noindex` | Відсутній на всіх 7 | Публічний pre-launch сайт; захист від індексації не гарантований |
+| Preview `https://newlife2-a0tkjkml6-chekirkos-projects.vercel.app` | Усі 7 → 302 на `https://vercel.com/sso-api` | 302: тіло robots застосунку недоступне анонімно | HTML застосунку не отримано; не позначати як «немає noindex» | `noindex` на всіх 7 redirect-відповідях | У перевіреній вибірці platform auth працює; не доказ усіх aliases/винятків |
+| Generated Production `https://newlife2-jubzinhjm-chekirkos-projects.vercel.app` | Усі 7 → 302 на Vercel SSO | 302: недоступне анонімно | Недоступне за auth | `noindex` на всіх 7 | Захист цієї адреси не поширюється автоматично на публічний Production alias |
+
+Local і Production alias віддають sitemap із 44 URL; зміст відбору не змінювали. `/studio` віддає публічну оболонку з noindex; Sanity login не є захистом решти сайту. URL SSO з query-параметрами не зберігалися у звіті. Тимчасовий probe і компактні результати — ignored `.next/seo-2.1/`; довготривалий доказ — ця матриця.
+
+Спостережувана різниця між alias і generated URL **сумісна зі Standard Protection**, але налаштування не засвідчене. За [Vercel Deployment Protection](https://vercel.com/docs/deployment-protection), Standard Protection виключає production domains; All Deployments із Vercel Authentication охоплює також їх. Тому для закриття доступу до всього pre-launch сайту рекомендовано окремим дорученням перевірити й застосувати захист, що охоплює **Production alias, Preview та generated URLs**, а потім повторити анонімні GET. Налаштування акаунта в SEO-2.1 не змінювалися.
+
+[Google noindex](https://developers.google.com/search/docs/crawling-indexing/block-indexing) потребує доступного crawling: за `Disallow: /` додатковий meta/header може лишитися непрочитаним. Ні чинний Disallow, ні майбутнє його поєднання з noindex не засвідчують відсутності вже відомих URL у Google. Search Console/index coverage не перевіряли. Чинний Disallow збережено; відкривати crawling для читання noindex цим етапом не дозволено. Офіційні джерела повторно звірено 2026-10-26.
+
+### Політика готовності для SEO-4 і SEO-L
+
+**Поточний стан:** запуск не погоджений, набір схвалених до індексації маршрутів порожній. Published, slug, фото, body/bio, успішний build та наявність URL у sitemap окремо чи разом не є редакційним схваленням. Політика нижче — контракт майбутньої реалізації; вона ще не змінює metadata/sitemap/доступність.
+
+1. **Схвалення стосується конкретної сторінки.** Власник перевіряє реальні факти, текст, медіа/права на них, дати/контакти та пов’язані дані; результат записується з canonical pathname і датою, для CMS — також `_id` та поточним slug. Непідтверджені fallback-тексти не вважаються перевіреними. Зміна slug потребує нового запису маршруту й окремого рішення щодо redirect; суттєві зміни фактів — повторної редакційної перевірки.
+2. **Єдиний критерій для metadata та sitemap.** Майбутній дозвіл = окреме погодження SEO-L + Production на погодженому canonical host + схвалена сторінка + реальний published-документ/маршрут із валідною 200-відповіддю. Службові/пошукові варіанти виключаються правилами нижче. Неузгоджена, відсутня або невідома сторінка за замовчуванням не indexable. Sitemap включає лише canonical 200 URL, що проходять той самий критерій; видалення URL із sitemap не замінює noindex/контроль доступу.
+3. **Наявних механізмів достатньо для початкового явного переліку.** У схемах немає per-document approval/noindex-поля; siteSettings SEO — загальні title/description, не готовність. У SEO-4 використати мінімальний спільний перелік схвалених маршрутів/CMS `_id` із чинним slug для metadata і sitemap, початково порожній; не дублювати правила у двох місцях. Published-запити й ISR уже є: схвалені нові CMS-документи мають підхоплюватися автоматично без ручної правки `SITEMAP_QUERY` на кожен документ. Додавання до переліку схвалення — окрема редакційна дія, а не ручне написання sitemap. Нові матеріали без схвалення автоматично не відкривати. Якщо власнику знадобиться самостійне схвалення зі Studio без кодових змін, обґрунтувати окремий юніт моделі/workflow; нову CMS-схему зараз не створювати.
+
+| Клас URL | До запуску | Контракт після окремого погодження SEO-L |
+|---|---|---|
+| Статичні й базові списки (`/`, about/history/contact, ministries/team/news/events/media/photos) | Загальний Disallow; жодного launch approval | Кожен canonical маршрут окремо проходить схвалення. Схвалення списку не схвалює всі details; відомі незавершені матеріали не просувати через crawlable links схваленого списку |
+| Незавершені ministry/team/news/event details | Поточну доступність не змінювати; готовність не вгадувати | Поза sitemap, noindex; залишати доступними crawler лише в межах окремо погодженої launch-політики, інакше обмежити доступ. Не додавати Disallow для цих URL поверх noindex як «гарантію». Деталь можна схвалити без очікування всіх інших |
+| `/privacy` | Зберегти `noindex, follow`, поза sitemap | Поки заглушка — без змін; реальний текст і окреме схвалення потрібні перед переглядом SEO-режиму |
+| `/studio` та вкладені tools | Службова оболонка noindex, поза sitemap | Залишається службовою/noindex незалежно від готовності контенту. CMS authentication і platform protection перевіряються окремо |
+| Search/filter (`media?q/category/speaker`, `news?category`, їх комбінації) | Жодного дозволу на індексацію | Початково noindex і поза sitemap, без окремих SEO landing pages; canonical нормалізується до базового списку. Canonical не замінює noindex і не обходить launch gate |
+| Пагінація без search/filter (`news/events?page=N`) | Наявні дефекти F05/F06 ще не виправлено | `page=1`/відсутній → базовий URL; валідний N≥2 з непорожньою порцією → власний canonical із page. Дозвіл лише для схваленого списку й схваленої видимої порції; в іншому разі noindex. Query-сторінки не включати до початкового sitemap. З filter діє попередній рядок |
+| Невалідний page / порожня порція | F05: можливий 500 | SEO-4: неціле, повторене, нечислове, ≤0 або небезпечне число → redirect на нормалізований базовий URL зі збереженням валідного filter; коректне N поза діапазоном → 404/noindex. Порожній базовий список → 200/noindex до появи схваленого вмісту. Підтвердити поведінку HTTP-тестами, не передавати NaN у GROQ |
+| Відсутній документ/slug | Поточний 404/noindex зберегти | 404/noindex, поза sitemap; не перетворювати на 200 заглушку |
+
+Це мінімальна початкова політика, без дозволу на майбутні filter landing pages чи автоматичне схвалення всього типу документів. До SEO-L потрібно перевірити її на конкретному launch-наборі, включно з видимими картками/внутрішніми посиланнями.
+
+### Перевірки й передача
+
+- `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 static-generation tasks. Перший sandbox-запуск: EPERM конфігурації Sanity CLI; дозволений повтор успішний, старі Node/Browserslist warnings лишилися. Локальний sandbox-сервер був недоступний HTTP-клієнту; повторний запуск із потрібним доступом дав наведені 7 результатів.
+- 28 анонімних GET (4 origins × 7 шляхів), без форм, CMS mutations, env/DNS/settings змін. Код застосунку/залежності/robots залишилися незмінними. Сервісні redirects перевірені до першої відповіді, авторизований контент Preview не перевірявся.
+- UTF-8 усіх 5 змінених документів, 25 локальних посилань і автоматична звірка 28 результатів із матрицею — PASS; `git diff --check` — PASS. Локальний сервер зупинено, порт 3004 без listener. Runtime-тести застосунку не розширювалися для документаційного diff.
+- **Наступний юніт — SEO-2.2:** додатковий загальний pre-launch noindex у наявних metadata/header-механізмах, без нового env-перемикача, без зняття Disallow і без змін Production settings; перевірити production-build HTML/HTTP для static/dynamic/privacy/studio/404 і headers для не-HTML відповідей. Це посилення сигналів, не виправлення публічного доступу F01. Read-only перевірка platform settings і рішення власника про захист Production лишаються відкритими; не блокують локальний кодовий юніт.
+- SEO-3 → SEO-7 та окремий SEO-L залишаються за spec. F02 закривається лише після реалізації спільного відбору й перевірок SEO-4; F01 — після фактичного захисту потрібних публічних адрес, а не лише додавання noindex.
+
 ## Порядок дій
 
-1. **SEO-2 — захист до запуску:** F01 і контракт F02; перевірити Preview/platform access, зберегти всі обмеження. Це найвищий пріоритет, не відкриття індексації.
+1. **SEO-2 — захист до запуску:** SEO-2.1 завершено; наступний SEO-2.2 — додатковий загальний pre-launch noindex. F01: Production alias публічний, settings не перевірені; F02: контракт готовності вище передано SEO-4. Зберегти всі обмеження.
 2. **SEO-3 — невеликі metadata-виправлення:** F07–F10; спочатку defaults/static, потім dynamic. OG `/about` і підключення наявних SEO-полів — окремі малі результати, не SEO-платформа.
 3. **SEO-4 — URL/sitemap:** F02/F03/F05/F06; lastmod і page-валідація — невеликі підтверджені правки. Зберегти робочі canonical та 404, застосувати політику SEO-2.
 4. **SEO-5 — JSON-LD і неповні дані:** почати з F04, далі звірити шаблони Event/VideoObject/Person/NewsArticle з видимими даними й актуальними вимогами. Не обіцяти rich results.
