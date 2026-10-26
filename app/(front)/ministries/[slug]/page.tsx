@@ -145,9 +145,9 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
             <aside className="w-full md:w-1/4 px-4 order-last md:order-first">
               {/* All Ministries List */}
               <div className="mb-8">
-                <h5 className="text-lg font-bold text-gray-800 mb-4 pb-3 border-b-2 border-primary">
+                <h2 className="text-lg font-bold text-gray-800 mb-4 pb-3 border-b-2 border-primary">
                   Інші служіння
-                </h5>
+                </h2>
                 <ul className="space-y-1">
                   {otherMinistries.map((m) => (
                     <li key={m._id}>
@@ -167,7 +167,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
 
               {/* Quick Contact CTA */}
               <div className="bg-grad-readable rounded-xl p-6 text-white text-center">
-                <h6 className="text-white font-bold text-lg mb-2">Хочете долучитися?</h6>
+                <h2 className="text-white font-bold text-lg mb-2">Хочете долучитися?</h2>
                 <p className="text-white text-sm mb-4">
                   Зв&apos;яжіться з нами, щоб дізнатися, як приєднатися до цього служіння.
                 </p>
@@ -235,7 +235,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                   <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
                     {leaders[0].photo && <Image
                       src={urlFor(leaders[0].photo).width(160).height(160).url()}
-                      alt={leaders[0].name}
+                      alt=""
                       fill
                       sizes="80px"
                       className="object-cover"
@@ -243,16 +243,16 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
-                    <h4 className="text-lg font-bold text-gray-800 m-0 group-hover:text-primary-text transition-colors">
+                    <h3 className="text-lg font-bold text-gray-800 m-0 group-hover:text-primary-text transition-colors">
                       {leaders[0].name}
-                    </h4>
+                    </h3>
                   </div>
                 </Link>
               )}
 
               {leaders.length > 1 && (
                 <div className="bg-gray-50 rounded-xl p-6 mt-8">
-                  <p className="text-lg lg:text-xl font-bold text-gray-800 mb-5">Відповідальні за служіння</p>
+                  <h3 className="font-base text-lg lg:text-xl font-bold text-gray-800 mb-5">Відповідальні за служіння</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {leaders.map((leader) => (
                       <Link
@@ -263,7 +263,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                         <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
                           {leader.photo && <Image
                             src={urlFor(leader.photo).width(160).height(160).url()}
-                            alt={leader.name}
+                            alt=""
                             fill
                             sizes="80px"
                             className="object-cover"

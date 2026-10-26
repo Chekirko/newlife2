@@ -2,7 +2,20 @@
 
 Update this file after every meaningful implementation change.
 
-## Поточний юніт — SEO-6.6, 2026-10-26
+## Поточний юніт — SEO-6.7, 2026-10-26
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. UTF-8 6 документів / 55 унікальних локальних file+anchor targets та staged diff-check — PASS; review одного файла застосунку й Diff Surgeon — CLEAN. Код і попередній QA не розширено.
+
+**SEO-6.7 локально завершено.** [Результат і докази](../docs/seo/audit.md#seo-67-заголовки-детальної-сторінки-служіння--2026-10-26), [spec](specs/05-prelaunch-seo.md). Ministry detail sidebar/CTA → H2, single leader → H3, multiple group p → H3 із `font-base`, імена H4 збережено. Фото в leader links мають `alt=""`, щоб не дублювати ім’я. 8 змінених рядків одного файла застосунку. Старт із чистого `4272e9b`, гілка `codex/seo-1-audit`; SEO-6.6 уже в HEAD.
+
+- Фінальний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 tasks. Lint, усі стадії typecheck (Sanity/Next typegen + tsc), 3 штатні та 3 SEO-регресії — PASS. 10 SSR fixtures + notFound: exact remaining markup до HEAD, optional data/null refs/photo/single/multiple/long name — PASS. 26 GET (25×200/1×404): усі 15 ministry details, sidebar та 7 distinct leader targets, контакт/robots/sitemap. Один H1, H2 sidebar/CTA, noindex/Disallow/порожній sitemap збережено.
+- Browser 1280/390/320px: 12/12 exact typography/розміри baseline/current після font load; без overflow. Tab/Shift+Tab/видимий focus та Enter → інше служіння/contact/team PASS; multiple fixture keyboard/AX names PASS. Desktop/mobile screenshots оглянуто, console errors — 0. Зайвий `leading-base`, виявлений QA, прибрано до фінальної збірки. UTF-8/локальні посилання/diff-check і Diff Surgeon застосунку PASS. QA-сервери зупинено, viewport скинуто, вкладку закрито. Тимчасові артефакти — ignored `node_modules/.cache/seo-6.7/`.
+
+**Далі SEO-6.8 — окремий свіжий heading crawl F11:** усі публічні шаблони й actual CMS rich text, тоді оцінити закриття F11/SEO-6. Цей юніт ще не починали. Повний D8 (FAQ disclosure semantics/nav landmark/breadcrumbs contrast/порядок sidebar), SEO-7, F01 і SEO-L відкриті. Скіли: seo-audit, a11y-audit, karpathy-coder; senior-frontend за потреби, grill-with-docs для контексту.
+
+CMS/env/DNS/platform settings та SEO approval без змін; live deployment/Google index не засвідчені. **Commit + push SEO-6.7 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA; погоджено 1 файл застосунку та 6 документів у `codex/seo-1-audit` за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Результат публікації — у git history та фінальному повідомленні. Далі SEO-6.8; нижчі записи — історичний стан.
+
+## Попередній юніт — SEO-6.6, 2026-10-26
 
 **Commit + push SEO-6.6 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA. Погоджено 1 файл застосунку та 6 документів у `codex/seo-1-audit`. Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижча згадка про ще потрібну згоду — попередній стан. Результат публікації — у git history та фінальному повідомленні. Далі SEO-6.7; merge/Production settings без змін, live deployment окремо не засвідчений.
 
