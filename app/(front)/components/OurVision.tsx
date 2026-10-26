@@ -36,9 +36,9 @@ export const OurVision = ({
         {/* Header */}
         <div className="mb-12 max-w-3xl">
           {preTitle && (
-            <h6 className="text-primary-text font-semibold tracking-wide uppercase text-sm mb-3">
+            <p className="text-primary-text font-heading font-semibold tracking-wide uppercase text-sm mb-3">
               {preTitle}
-            </h6>
+            </p>
           )}
           <h2 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4 leading-tight">
             {title}

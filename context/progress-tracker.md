@@ -4,6 +4,19 @@ Update this file after every meaningful implementation change.
 
 ## Активний задум: SEO до завершення контенту — старт кожної наступної SEO-сесії тут
 
+**Commit + push SEO-6.4 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA. Погоджено публікацію 2 файлів застосунку та 6 документів у `codex/seo-1-audit`; нижчі згадки про ще потрібну згоду — історичний стан. Свіжий fetch — HEAD/origin 0/0, Git Credential Manager — `Chekirko`. Фінальні SHA/remote SHA/чистота дерева — у git history та фінальному повідомленні після push. Наступний юніт — SEO-6.5; merge/Production settings без змін, live deployment окремо не засвідчений.
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. UTF-8 6 документів / 100 локальних file+anchor targets і staged diff-check PASS; review двох файлів застосунку — CLEAN. Попередній QA не розширено, код після нього не змінювався.
+
+**Актуально — SEO-6.4 локально завершено 2026-10-26; наступний юніт — SEO-6.5.** [Результат і докази](../docs/seo/audit.md#seo-64-надзаголовки-ourvision-і-pastorgreeting--2026-10-26), [специфікація](specs/05-prelaunch-seo.md). У OurVision/PastorGreeting надзаголовки H6 → абзаци; `font-heading` явно зберігає попередній шрифт. Секційні H2, вкладений H3 місії, контент і посилання збережено. Старт — чистий `8fc6bea`, гілка `codex/seo-1-audit`; SEO-6.3 уже в HEAD.
+
+- 2 файли застосунку, без нових залежностей/схем/запитів. Build (21 schema type / 34 GROQ queries, 42/42 tasks), lint, повний typecheck, 3 штатні та 3 SEO-регресії — PASS. 6 SSR fixtures зі звіркою до HEAD (повний/без pre-title/мінімальний варіанти), 6 production GET — PASS. Browser 1280/390/320px: точний збіг computed typography/розмірів надзаголовків до/після, без overflow; Tab/Shift+Tab, видимий focus, Enter → `/about`, console без errors у перевірених flows. Тимчасовий QA — ignored `.next/seo-6.4/`.
+- **Далі SEO-6.5:** `TestimonialsGrid` names H6 та `FAQSplit` contact H4 — два пов’язані section templates. Звірити семантику в повній сторінці, зберегти typography, перевірити SSR і keyboard/mobile QA. Footer та ministry detail headings (sidebar H5/CTA H6/leader H4) — подальші окремі юніти. F11 частково закрито; повний D8, breadcrumbs contrast, SEO-7, F01 і SEO-L відкриті.
+- Noindex/Disallow/порожній approval збережено; CMS/env/DNS/settings/package/lockfile без змін. Commit/push SEO-6.4 не виконано — потрібна окрема згода за workflow §3. Live deployment/Google index не засвідчені. Нижчі блоки SEO-6.3 та раніших юнітів — історичний стан.
+- Фінальний diff — 2 файли застосунку + 6 документів. UTF-8 / 100 локальних file+anchor targets і diff-check PASS. QA-сервер зупинено, viewport скинуто, робочу browser-вкладку закрито.
+
+### Попередній стан SEO-6.3
+
 **Commit + push SEO-6.3 прямо погоджені 2026-10-26:** після локального QA користувач відповів «так». Публікація 3 файлів застосунку та 6 документів у `codex/seo-1-audit` погоджена; нижчі згадки про потрібну згоду — попередній стан. Результат — у git history та фінальному повідомленні. Merge/Production settings без змін, live deployment окремо не засвідчений. Наступний юніт — SEO-6.4.
 
 - Перед погодженим commit + push повторний `cmd /c "pnpm run build"` PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Свіжий fetch — HEAD/origin 0/0; Git Credential Manager — `Chekirko`. UTF-8 6 документів / 92 локальні file+anchor targets та diff-check PASS; код і попередній QA не розширені. Точний SHA/remote SHA/чистота дерева — у фінальному повідомленні після push.

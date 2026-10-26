@@ -4,6 +4,8 @@
 
 ## General
 
+- **Section pre-titles SEO-6.4:** OurVision/PastorGreeting використовують абзаци для коротких надзаголовків перед H2; H3 місії лишається вкладеним у OurVision. При заміні heading на p явно зберігати успадкований `font-heading`, решту typography — чинними класами; перевіряти computed styles до/після на desktop/mobile, оскільки один лише незмінний `text-sm` не зберігає font family. Перевіряти повну SSR-сторінку й реальний CTA, не додавати H1/main/nav до section-компонентів за regex-попередженнями. Решта F11 — SEO-6.5+.
+
 - **Card headings/links SEO-6.3:** картки під секційним H2 у `/team` та `/ministries` використовують H3 зі збереженою типографікою. Цілісне посилання вже назване видимим heading; вкладене фото має порожній alt, щоб не повторювати ім’я/назву. Це правило для цих карток, не для самостійних фото detail/lightbox. Перевіряти повний SSR із PageHero/layout, а не додавати H1/main у компоненти через regex scanner warnings. Crawl має охоплювати всі distinct href карток, keyboard/mobile QA — звичайні й почесні картки та ministry grid. Інші section/footer/detail headings лишаються F11/SEO-6.4+.
 
 - Package manager: `pnpm@11.5.1`, pinned in `package.json#packageManager`. Vercel enables Corepack through `vercel.json#build.env.ENABLE_EXPERIMENTAL_COREPACK=1` so local and deployment installs use the same version. Do not infer pnpm's major from `lockfileVersion: 9.0`: pnpm 10 rejects the pnpm 11 string-form `patchedDependencies` metadata with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`. Validate dependency/patch changes with a clean `pnpm install --frozen-lockfile` in addition to `pnpm run build`.
