@@ -1,6 +1,8 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1–SEO-5 і SEO-6.1 завершено локальними юнітами; наступна сесія — SEO-6.2 (news card/sidebar, залишок F11). Весь SEO-6/D8 ще не закрито; F01/platform protection залишається відкритим.
+Дата: 2026-10-26. Статус: SEO-1–SEO-5 і SEO-6.1/6.2 завершено локальними юнітами; наступна сесія — SEO-6.3 (team/ministry card headings, залишок F11). Весь SEO-6/D8 ще не закрито; F01/platform protection залишається відкритим.
+
+**SEO-6.2 локально завершено:** [результат і докази](../../docs/seo/audit.md#seo-62-картки-новин-і-sidebar--2026-10-26). 4 файли застосунку: `/news` cards/sidebar/empty-state — H2, конкретні accessible names «Читати далі», фото-focus й `aria-current` категорій. 16 GET, SSR fixtures, browser 1280/390/320px, build/lint/tsc/3 наявні та 3 SEO-регресії PASS. Commit + push цього юніту прямо погоджені 2026-10-26 відповіддю «так» після QA; результат — у git history та фінальному повідомленні. SEO-6.1 уже в HEAD `66a13a5`; нижчі згадки про його ще непогоджену публікацію — історичний стан. Обмеження індексації збережено.
 
 **Публікація SEO-6.1 погоджена 2026-10-26:** після локального QA користувач відповів «Так» на commit + push у `codex/seo-1-audit`. Нижчі згадки про ще потрібну згоду — історичний стан. Результат — у git history та фінальному повідомленні; merge/Production settings без змін, live deployment окремо не засвідчений. Наступний юніт — SEO-6.2.
 
@@ -113,9 +115,10 @@
 | SEO-4.1 | Завершено локально 2026-10-26 | Спільна готовність metadata/sitemap, порожній approval, чесний lastmod; 58 GET/103 fixture-перевірки |
 | SEO-4.2 | Завершено локально 2026-10-26 | 154 GET + ізольована регресія; query/page, canonical, redirect/404, noindex filter, схвалення видимої порції metadata/sitemap |
 | SEO-5 | Завершено локально 2026-10-26 | F04/null-photo, JSON-LD за видимим контентом, 57 GET + tracked regression; Schema.org synthetic 0 errors/0 warnings; Google test вимагає login, eligibility не засвідчена |
-| SEO-6 | Частково виконано | H1-частина F11 закрита у SEO-6.1; інші H1–H6 у наступних вузьких юнітах |
+| SEO-6 | Частково виконано | H1-частина F11 закрита у SEO-6.1, news card/sidebar — у SEO-6.2; інші H1–H6 у наступних вузьких юнітах |
 | SEO-6.1 | Завершено локально 2026-10-26 | Головний hero + team detail, pause/inert/keyboard, target #map; 53 GET, 51 fragments, mobile/desktop і регресії PASS |
-| SEO-6.2 | Наступна сесія | Почати з `/news` card/sidebar: heading structure, назви links, keyboard/mobile QA; решту F11 виконувати окремими юнітами за лімітом 1–2 шаблони |
+| SEO-6.2 | Завершено локально 2026-10-26 | `/news` card/sidebar/empty H2, конкретні detail link names, фото-focus й current category; 16 GET, SSR fixtures, keyboard/mobile/desktop QA PASS |
+| SEO-6.3 | Наступна сесія | Team/ministry card headings: перевірити актуальні шаблони, виправити підтверджені skips, crawlable links і keyboard/mobile QA; решту section/footer F11 — окремими юнітами |
 | SEO-7 | Не розпочато | Вимірювання → один пріоритетний дефект |
 | SEO-L | Відкладено | Реальний контент/домен і окреме рішення користувача про запуск |
 

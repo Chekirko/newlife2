@@ -4,6 +4,17 @@ Update this file after every meaningful implementation change.
 
 ## Активний задум: SEO до завершення контенту — старт кожної наступної SEO-сесії тут
 
+**Актуально — SEO-6.2 локально завершено 2026-10-26; наступний юніт — SEO-6.3.** [Результат і докази](../docs/seo/audit.md#seo-62-картки-новин-і-sidebar--2026-10-26), [специфікація](specs/05-prelaunch-seo.md). `/news`: H1 → H2 для карток, sidebar CTA і порожнього стану; доступна назва «Читати далі» містить назву новини, фото-посилання має повну площу та inset focus, активна категорія — `aria-current`. 4 файли застосунку, без нових залежностей/схем/запитів. Build/lint/tsc/3 наявні та 3 SEO-регресії, SSR fixtures і 16 production GET — PASS. Browser 1280/390/320px: без overflow, Tab/Shift+Tab/Enter, detail/category/reset transitions, console без errors у перевірених flows. Temporary QA — ignored `.next/seo-6.2/`.
+
+- **Далі SEO-6.3:** team/ministry card headings як 1–2 пов’язані шаблони, з актуальним SSR/crawl і keyboard/mobile QA. Після них окремо OurVision/PastorGreeting pre-titles, Testimonials names, FAQ contact block і footer. F11 закрито частково; повний D8, breadcrumbs contrast, SEO-7, F01 і launch SEO-L лишаються відкритими.
+- Noindex/Disallow/порожній approval збережено; CMS/env/DNS/settings/package/lockfile без змін. Старт — чистий `66a13a5`, гілка `codex/seo-1-audit`. SEO-6.1 уже в HEAD. **Commit + push SEO-6.2 прямо погоджені 2026-10-26:** після локального QA користувач відповів «так». Результат публікації — у git history та фінальному повідомленні. Live deployment/Google index не засвідчені. Нижчі блоки SEO-6.1/5 описують попередні сесії; поточний стан — цей блок.
+
+## SEO-6.2: погоджена публікація — 2026-10-26
+
+- Перед комітом повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. UTF-8 6 документів / 83 file+anchor targets і staged diff-check — PASS. Свіжий fetch — HEAD/origin 0/0, Git Credential Manager — `Chekirko`. Commit + push 4 файлів застосунку та 6 документів прямо погоджені користувачем. Результат — у git history та фінальному повідомленні. Merge/Production settings без змін; live deployment окремо не засвідчений. Наступний юніт — SEO-6.3.
+
+### Попередній стан після SEO-6.1
+
 **Публікація SEO-6.1 прямо погоджена 2026-10-26:** після локального QA користувач відповів «Так» на commit + push у `codex/seo-1-audit`. Нижчі згадки про ще потрібну згоду описують стан до цієї відповіді. Публікація охоплює 3 файли застосунку + 2 regression scripts + 6 документів; точний SHA, remote SHA й чистота перевіряються після push і наводяться у фінальному повідомленні. Merge/Production settings без змін, live deployment окремо не засвідчений. Наступний юніт — SEO-6.2.
 
 **Актуальний результат — SEO-6.1 локально завершено 2026-10-26; наступний юніт — SEO-6.2.** [Докази й точний залишок F11](../docs/seo/audit.md#seo-61-заголовки-hero-і-служителя--2026-10-26). SEO-5 уже в HEAD `89fb6ec`; нижчі згадки про ще потрібну згоду на SEO-5 описують історичний стан. Commit/push SEO-6.1 не виконано, потрібна окрема згода за workflow §3. Merge/Production settings без змін, live deployment не засвідчений.

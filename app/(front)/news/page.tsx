@@ -117,7 +117,7 @@ export default async function NewsPage({
                     className="text-sm text-gray-500 hover:text-red-500 transition-colors"
                     title="Скинути фільтр"
                   >
-                    <i className="fas fa-times" /> Скинути
+                    <i className="fas fa-times" aria-hidden="true" /> Скинути
                   </Link>
                 </div>
               )}
@@ -143,10 +143,10 @@ export default async function NewsPage({
                 </div>
               ) : (
                 <div className="text-center py-20">
-                  <i className="far fa-newspaper text-5xl text-gray-300 mb-4 block" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  <i className="far fa-newspaper text-5xl text-gray-300 mb-4 block" aria-hidden="true" />
+                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
                     Новин не знайдено
-                  </h3>
+                  </h2>
                   <p className="text-gray-500">
                     {category
                       ? `Немає новин у категорії «${category}».`
@@ -178,7 +178,7 @@ export default async function NewsPage({
               <div
                 className="bg-grad-readable rounded-xl p-6 text-white text-center"
               >
-                <h6 className="text-white font-bold text-lg mb-2">Маєте новину?</h6>
+                <h2 className="text-white font-bold text-lg mb-2">Маєте новину?</h2>
                 <p className="text-white text-sm mb-4">
                   Якщо у вас є цікава новина або свідчення — напишіть нам!
                 </p>

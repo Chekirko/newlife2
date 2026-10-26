@@ -1,5 +1,7 @@
 # Master Plan — сайт церкви «Нове Життя»
 
+**Актуально 2026-10-26 — SEO-6.2 локально завершено.** [Результат, QA та передача](../docs/seo/audit.md#seo-62-картки-новин-і-sidebar--2026-10-26), [spec](specs/05-prelaunch-seo.md). `/news` card/sidebar/empty-state H2, конкретні назви detail links, фото-focus та active-category semantics; 16 GET, SSR fixtures, browser 1280/390/320px, build/lint/tsc/наявні та SEO-регресії PASS. **Наступний SEO-6.3 — team/ministry card headings** у межах 1–2 шаблонів. Решта section/footer F11, повний D8/SEO-7/F01/SEO-L відкриті. Noindex/Disallow/порожній approval збережено. Старт `66a13a5` містить SEO-6.1; commit + push SEO-6.2 прямо погоджені відповіддю «так» після QA. Результат — у git history та фінальному повідомленні. Нижчі блоки — попередній стан, live deployment не засвідчений.
+
 ## Активна SEO-ініціатива до завершення контенту — 2026-10-26
 
 **Публікація SEO-6.1 погоджена:** користувач відповів «Так» на commit + push у `codex/seo-1-audit` після локального QA 2026-10-26. Нижчі згадки про потрібну згоду — попередній стан. Результат — у git history та фінальному повідомленні; merge/Production settings без змін, live deployment окремо не засвідчений. Наступний юніт — SEO-6.2.

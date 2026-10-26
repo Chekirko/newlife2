@@ -15,7 +15,7 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
     <article className="h-full rounded-xl overflow-hidden bg-white shadow-card transition-shadow duration-300 hover:shadow-hover-lg">
       {/* Image */}
       <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
-        <Link href={`/news/${slug}`}>
+        <Link href={`/news/${slug}`} className="absolute inset-0 focus-visible:outline-offset-[-4px]">
           <Image
             src={imageUrl}
             alt={title}
@@ -36,20 +36,20 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
         {/* Meta */}
         <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
           <span className="flex items-center gap-1.5">
-            <i className="far fa-calendar-alt" />
+            <i className="far fa-calendar-alt" aria-hidden="true" />
             {date}
           </span>
         </div>
 
         {/* Title */}
-        <h4 className="text-lg font-semibold mb-3 leading-snug">
+        <h2 className="text-lg font-semibold mb-3 leading-snug">
           <Link
             href={`/news/${slug}`}
             className="text-gray-800 hover:text-primary-text transition-colors"
           >
             {title}
           </Link>
-        </h4>
+        </h2>
 
         {/* Excerpt */}
         <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-3">
@@ -62,7 +62,9 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
           className="inline-flex items-center gap-2 text-sm font-semibold text-primary-text hover:text-primary-text transition-colors group"
         >
           Читати далі
+          <span className="sr-only">: {title}</span>
           <svg
+            aria-hidden="true"
             className="w-4 h-4 transition-transform group-hover:translate-x-1"
             fill="none"
             stroke="currentColor"

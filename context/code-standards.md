@@ -126,6 +126,8 @@ Whenever a new public page or a new Sanity content type with a public detail rou
 
 ## Accessibility (WCAG 2.2 AA)
 
+- **News heading/links SEO-6.2:** у `/news` картки та незалежні sidebar-блоки мають H2 під єдиним PageHero H1; empty-state також H2. Візуальний розмір визначають чинні класи. Повторне «Читати далі» доповнювати `sr-only` назвою конкретного матеріалу, залишаючи видимі слова в accessible name. Для фото-посилання з absolutely positioned Image задавати ненульову площу (`absolute inset-0`) і inset outline в overflow wrapper; перевіряти actual browser focus. Sidebar category links позначають поточний вибір через `aria-current`. Footer/решта карток і секцій ще не уніфіковані (F11/SEO-6.3+).
+
 - **Heading/links SEO-6.1:** рівень heading визначається структурою, а розмір — CSS; pre-title і повторне ім’я не потребують heading. `HeroSlider` залишає один H1 активного слайда, неактивні групи — `inert` + `aria-hidden`. Autoplay має видиме pause/play, focus stop, hover pause і reduced-motion default; pointer-down стан кнопки зберігається до click, щоб focus stop не перетворював pause click на play. CTA без href не підмінювати `#`; внутрішні fragments перевіряти на реальний id цілі та відступ під fixed header. `scripts/check-heading-seo.mjs` перевіряє справжній компонент через VM state/SSR; browser keyboard/mobile QA лишається окремою перевіркою. Інші heading templates ще не уніфіковані (F11/SEO-6.2+).
 
 - **Color contrast**: text on white must be ≥4.5:1. Use `text-gray-600`/`text-gray-800` for readable body text — `--color-gray-500`/`-600` are tuned to pass AA. Verify new color pairs with `.agents/skills/a11y-audit/scripts/contrast_checker.py "<fg>" "<bg>"`.
