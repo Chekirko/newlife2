@@ -2,7 +2,24 @@
 
 Update this file after every meaningful implementation change.
 
-## Поточний юніт — SEO-6.9, 2026-10-26
+## Поточний юніт — SEO-6.10, 2026-10-26
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 1 файла застосунку / 6 документів, UTF-8 / 64 унікальні локальні file+anchor targets, staged diff-check та Diff Surgeon застосунку — PASS. Код і попередній QA не розширено.
+
+**Commit + push SEO-6.10 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA. Погоджено 1 файл застосунку та 6 документів у `codex/seo-1-audit` за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижча згадка про ще потрібну згоду — попередній стан. Результат публікації — у git history та фінальному повідомленні; далі SEO-6.11. Live deployment окремо не засвідчений.
+
+**SEO-6.10 локально завершено.** [History timeline/CTA і QA](../docs/seo/audit.md#seo-610-заголовки-хронології-та-cta-історії--2026-10-26), [spec](specs/05-prelaunch-seo.md). Етапи хронології H4 → H3 під чинним H2, окремий CTA H4 → H2. Два замінених рядки одного файла застосунку; всі класи/layout/контент/href збережено. Старт чистий `3dcdd83`, гілка `codex/seo-1-audit`; SEO-6.9 уже в HEAD.
+
+- `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Lint, повний typecheck, 3 штатні та 3 SEO-регресії — PASS. Sanity config EPERM і HTTP loopback EACCES усунено дозволеними запусками поза sandbox.
+- 14 before/after SSR fixtures: 3 full-page hero cases та 11 timeline cases (list/image/video/accordion/text, відсутні/порожні optional arrays і media, довга назва). Після нормалізації лише heading tags решта HTML точно збігається з HEAD. 6 production GET (5×200/1×404), усі 2 main internal targets — 200; H1/H2/H3, noindex/header/Disallow/порожній sitemap збережено.
+- Browser: 21/21 exact computed typography/розмірів усіх main headings до/після на 1280/390/320px після font load, без overflow. Enter/Space details, Tab/Shift+Tab, CTA Enter → contact та photo Enter/Escape/focus restore перевірені; screenshots оглянуто, console errors — 0. **D8:** наявний `summary.outline-none` приховує keyboard focus; CTA/photo мають видимий focus. Scanner прибрав `heading-skipped`; решта 6 regex warnings не змінилась. Це не повний a11y PASS.
+- Spec/master-plan/audit/UI/code standards синхронізовано. Тимчасовий QA — ignored `node_modules/.cache/seo-6.10/`. CMS/env/settings/package/lockfile та індексація без змін. F11/SEO-6, повний D8, SEO-7, F01 і SEO-L відкриті; live deployment/Google index не засвідчені.
+
+**Далі SEO-6.11 — contact headings:** визначити ранги в повній сторінці, зберегти typography та поведінку форми, SSR/optional settings/links/keyboard/1280–390–320px і build. Скіли seo-audit/a11y-audit/senior-frontend/karpathy-coder, grill-with-docs для контексту; security-guidance лише за фактичних змін форми/input. Потім media/photos → погоджений CMS event H4 fix → fresh crawl. D8 зберігає FAQ disclosure/nav landmark/breadcrumbs contrast/sidebar order/невідтворений #418 та focus history summary.
+
+Фінальний diff — 1 файл застосунку + 6 документів. UTF-8 / 64 унікальні локальні file+anchor targets, diff-check та Diff Surgeon застосунку — PASS. QA-сервери зупинено, viewport скинуто, робочу browser-вкладку закрито. Commit/push SEO-6.10 не виконано — окрема згода за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Нижчі блоки — історичний стан.
+
+## Попередній юніт — SEO-6.9, 2026-10-26
 
 - Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 2 файлів застосунку / 6 документів, UTF-8 / 63 унікальні локальні file+anchor targets, staged diff-check та Diff Surgeon застосунку — PASS. Код і попередній QA не розширено.
 

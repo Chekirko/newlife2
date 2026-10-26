@@ -127,7 +127,7 @@ export default async function HistoryPage() {
       {/* Call to action */}
       <section className="py-12 bg-white">
         <div className="container-larexa text-center max-w-3xl mx-auto">
-          <h4 className="text-2xl font-bold mb-6">Додайте свою історію до нашого шляху!</h4>
+          <h2 className="text-2xl font-bold mb-6">Додайте свою історію до нашого шляху!</h2>
           <Link href="/contact" className="btn btn-grad px-8 py-3 rounded hover:shadow-lg transition-shadow">
             Давайте познайомимось
           </Link>
@@ -144,7 +144,7 @@ function TimelineCard({ item }: { item: (typeof timelineEvents)[number] }) {
         <div className="text-sm font-bold text-primary-text mb-3 float-right bg-primary/10 px-3 py-1 rounded-full">
           {item.date}
         </div>
-        <h4 className="text-xl md:text-2xl font-bold mb-3 text-gray-800 clear-none">{item.title}</h4>
+        <h3 className="text-xl md:text-2xl font-bold mb-3 text-gray-800 clear-none">{item.title}</h3>
         <p className={`text-gray-600 ${item.type !== 'text' ? 'mb-6' : 'mb-0'}`}>
           {item.description}
         </p>
