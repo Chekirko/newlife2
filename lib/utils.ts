@@ -28,3 +28,11 @@ export function formatEventDate(isoDate: string): string {
 export function jsonLdHtml(data: unknown): string {
   return JSON.stringify(data).replace(/</g, '\\u003c')
 }
+
+/** Preserve a real ISO date/time; never synthesize missing editorial dates. */
+export function schemaDate(value: string | null | undefined): string | undefined {
+  if (!value || !/^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2}))?$/.test(value)) return undefined
+  const day = new Date(value.slice(0, 10))
+  if (!Number.isFinite(Date.parse(value)) || !Number.isFinite(day.getTime())) return undefined
+  return day.toISOString().slice(0, 10) === value.slice(0, 10) ? value : undefined
+}

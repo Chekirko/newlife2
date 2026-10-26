@@ -73,7 +73,9 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
 
   if (!ministry) notFound()
 
-  const leaders = ministry.leaders ?? []
+  const leaders = (ministry.leaders ?? []).filter(
+    (leader): leader is NonNullable<typeof leader> => Boolean(leader?.slug && leader.name),
+  )
 
   // Transform news for NewsSlider
   const newsData = newsRaw.map((n) => ({
@@ -129,7 +131,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
             itemListElement: [
               { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
               { '@type': 'ListItem', position: 2, name: 'Служіння', item: `${SITE_URL}/ministries` },
-              { '@type': 'ListItem', position: 3, name: ministry.title, item: `${SITE_URL}/ministries/${ministry.slug}` },
+              { '@type': 'ListItem', position: 3, name: ministry.title, item: `${SITE_URL}/ministries/${slug}` },
             ],
           }),
         }}
@@ -231,13 +233,13 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                   className="flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8 group hover:bg-gray-100 transition-colors no-underline"
                 >
                   <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
-                    <Image
+                    {leaders[0].photo && <Image
                       src={urlFor(leaders[0].photo).width(160).height(160).url()}
                       alt={leaders[0].name}
                       fill
                       sizes="80px"
                       className="object-cover"
-                    />
+                    />}
                   </div>
                   <div>
                     <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
@@ -259,13 +261,13 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                         className="flex items-center gap-4 group no-underline"
                       >
                         <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
-                          <Image
+                          {leader.photo && <Image
                             src={urlFor(leader.photo).width(160).height(160).url()}
                             alt={leader.name}
                             fill
                             sizes="80px"
                             className="object-cover"
-                          />
+                          />}
                         </div>
                         <h4 className="text-base font-bold text-gray-800 m-0 group-hover:text-primary-text transition-colors">
                           {leader.name}

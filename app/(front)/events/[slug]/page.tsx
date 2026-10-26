@@ -6,11 +6,10 @@ import { toPlainText } from '@portabletext/react'
 import { client } from '@/sanity/lib/client'
 import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import { PhotoViewer, PortableTextBody } from '@/components'
-import { getSiteSettings } from '@/lib/site-settings'
 import { getPageMetadata } from '@/lib/metadata'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
-import { formatEventDate, jsonLdHtml } from '@/lib/utils'
+import { formatEventDate, jsonLdHtml, schemaDate } from '@/lib/utils'
 import type { SanityEvent } from '@/sanity/lib/types'
 import { EVENT_BY_SLUG_QUERY } from '../queries'
 
@@ -49,9 +48,8 @@ export default async function EventDetailPage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const [event, settings, heroes] = await Promise.all([
+  const [event, heroes] = await Promise.all([
     client.fetch<SanityEvent | null>(EVENT_BY_SLUG_QUERY, { slug }),
-    getSiteSettings(),
     getPageHeroes(),
   ])
 
@@ -59,35 +57,28 @@ export default async function EventDetailPage({
 
   const imageUrl = event.image ? urlFor(event.image).width(1600).height(900).url() : null
 
-  // Event JSON-LD — only for actual events (not announcements).
+  const visibleBody = event.body ?? event.description
+  const description = typeof visibleBody === 'string'
+    ? visibleBody.trim()
+    : visibleBody ? toPlainText(visibleBody).trim() : undefined
+  const startDate = schemaDate(event.startDate)
+
+  // Missing date/venue does not establish an event or a church address.
   const eventJsonLd =
-    event.type === 'подія'
+    event.type === 'подія' && event.title?.trim() && startDate && event.location?.trim()
       ? {
           '@context': 'https://schema.org',
           '@type': 'Event',
+          '@id': `${SITE_URL}/events/${slug}#event`,
+          url: `${SITE_URL}/events/${slug}`,
           name: event.title,
-          startDate: event.startDate,
-          eventStatus: 'https://schema.org/EventScheduled',
+          startDate,
           location: {
             '@type': 'Place',
-            name: event.location || settings.name,
-            address: {
-              '@type': 'PostalAddress',
-              streetAddress: settings.address.street,
-              addressLocality: settings.address.city,
-              addressRegion: settings.address.region,
-              postalCode: settings.address.postalCode,
-              addressCountry: settings.address.country,
-            },
+            name: event.location,
           },
-          ...(event.description || event.body
-            ? {
-                description:
-                  event.description || (event.body ? toPlainText(event.body) : undefined),
-              }
-            : {}),
+          ...(description ? { description } : {}),
           ...(imageUrl ? { image: imageUrl } : {}),
-          organizer: { '@type': 'Organization', name: settings.name, url: SITE_URL },
         }
       : null
 
@@ -153,10 +144,10 @@ export default async function EventDetailPage({
           <div className="max-w-3xl mx-auto">
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-4 mb-8">
-              <span className="flex items-center gap-1.5 text-sm text-gray-500">
+              {startDate && <span className="flex items-center gap-1.5 text-sm text-gray-500">
                 <i className="far fa-calendar-alt" />
                 {formatEventDate(event.startDate)}
-              </span>
+              </span>}
               <span className="bg-grad-readable text-white text-xs font-semibold px-3 py-1 rounded">
                 {badge}
               </span>

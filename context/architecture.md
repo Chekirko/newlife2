@@ -1,5 +1,13 @@
 # Architecture Context
 
+## JSON-LD та неповні дані SEO-5 (2026-10-26)
+
+Detail JSON-LD використовує фактичний route slug та стабільні `#article`/`#event`/`#person`; посилання на церкву — єдиний `SITE_URL/#church`. Homepage описує цю сутність сумісними типами `Church` + `Organization` (юридичні/контактні поля належать Organization). Person бере назву через `getSiteSettings()` і `memberOf`, без твердження про працевлаштування. Ministry відкидає null/incomplete leaders до вибору singular/grid; відсутнє фото не передається image builder. Detail team без фото використовує чинний `ImagePlaceholder`.
+
+`schemaDate()` у `lib/utils.ts` пропускає лише справжні ISO dates/дату-час із timezone, без синтезу дат. NewsArticle має видимий `datePublished`, без автоматичних author/dateModified із publisher/технічного `_updatedAt`; description походить із того самого body/fallback, що рендериться. Event лише для події з назвою, датою та видимим location: без автоматичного church address, Scheduled або organizer. Місце з одного текстового поля не засвідчує повну адресу чи eligibility Google.
+
+`MediaGallery` SSR-рендерить ItemList з поточних playable cards і оновлює його тим самим React state після search/filter/load-more; порожній список не емітується. Title/description/thumbnail збігаються з card transformer. YouTube watch URL — `url`, privacy embed — `embedUrl`; `contentUrl` відсутній без прямого відеофайлу, `uploadDate` відсутній без підтвердження дати завантаження. Факти та eligibility лишаються SEO-L; без нових CMS-полів/залежностей. Регресія: `pnpm exec node scripts/check-jsonld-seo.mjs` (VM/SSR і handlers з mocked state/actions; не browser hydration).
+
 ## URL списків SEO-4.2 (2026-10-26)
 
 `lib/listing-params.ts` нормалізує серверні searchParams для `/news`, `/events`, `/media` перед metadata та CMS-запитами. `LISTING_PER_PAGE=6` спільний для news/events і sitemap. Невалідний/повторений/небезпечний page → 307 на першу сторінку зі збереженням скалярного filter; page=1 видаляється, leading zeros нормалізуються. Коректний N поза count або порожня порція N≥2 → `notFound()`, базовий порожній список → 200/noindex. Page-local React `cache()` зі скалярними аргументами дає metadata і UI однакову порцію в межах запиту; count перевіряється до slice. Непорожня пагінація без filter має власний canonical/OG URL, search/filter — noindex з базовим canonical. Повторені filter відкидаються з redirect, scalar trim/empty нормалізуються; невідомі параметри не потрапляють у canonical чи GROQ. Media не має номерної пагінації, її page видаляється зі збереженням фільтрів; Server Actions/shallow URL і дизайн не змінені.

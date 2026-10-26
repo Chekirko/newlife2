@@ -4,11 +4,8 @@ import { normalizeListingParams, type ListingSearchParams } from '@/lib/listing-
 import { getPageMetadata } from '@/lib/metadata'
 import { LiveBanner, PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
-import { urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
-import { jsonLdHtml } from '@/lib/utils'
-import { getYouTubeId, getYouTubeThumbnail, getYouTubeEmbedUrl } from '@/lib/youtube'
 import { toMediaCard, toMatchQuery, type RawMediaItem } from '@/lib/media'
 import {
   MEDIA_SEARCH_QUERY,
@@ -69,40 +66,8 @@ export default async function MediaPage({
 
   const cards = itemsRaw.map(toMediaCard)
 
-  // ItemList of VideoObject JSON-LD (schema-markup skill) — only the first batch
-  // of playable items; the full archive can run to thousands.
-  const itemListJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    itemListElement: itemsRaw
-      .map((m) => ({ m, id: getYouTubeId(m.youtubeUrl) }))
-      .filter((x): x is { m: RawMediaItem; id: string } => Boolean(x.id))
-      .map(({ m, id }, idx) => ({
-        '@type': 'ListItem',
-        position: idx + 1,
-        item: {
-          '@type': 'VideoObject',
-          name: m.title ?? 'Відео',
-          ...(m.description ? { description: m.description } : {}),
-          thumbnailUrl: m.image
-            ? urlFor(m.image).width(800).height(450).url()
-            : getYouTubeThumbnail(id),
-          ...(m.date ? { uploadDate: m.date } : {}),
-          embedUrl: getYouTubeEmbedUrl(id),
-          contentUrl: `https://www.youtube.com/watch?v=${id}`,
-        },
-      })),
-  }
-
   return (
     <>
-      {itemListJsonLd.itemListElement.length > 0 && (
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: jsonLdHtml(itemListJsonLd) }}
-        />
-      )}
-
       <PageHero
         title="Медіа"
         backgroundImage={heroes.mediaHero}

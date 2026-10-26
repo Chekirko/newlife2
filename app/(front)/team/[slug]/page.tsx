@@ -2,10 +2,12 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
-import { PageHero, PhotoViewer, PortableTextBody } from '@/components'
+import { ImagePlaceholder, PageHero, PhotoViewer, PortableTextBody } from '@/components'
 import { client } from '@/sanity/lib/client'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getPageMetadata } from '@/lib/metadata'
+import { getSiteSettings } from '@/lib/site-settings'
+import { SITE_URL } from '@/lib/site'
 import { originalImageUrl, urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
@@ -47,13 +49,14 @@ export default async function TeamMemberPage({
   params,
 }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [member, heroes] = await Promise.all([
+  const [member, heroes, settings] = await Promise.all([
     client.fetch<SanityTeamMember | null>(TEAM_MEMBER_BY_SLUG_QUERY, { slug }),
     getPageHeroes(),
+    getSiteSettings(),
   ])
   if (!member) notFound()
 
-  const photoUrl = urlFor(member.photo).width(800).height(1000).url()
+  const photoUrl = member.photo ? urlFor(member.photo).width(800).height(1000).url() : undefined
   const roles: string[] = []
   if (member.title) roles.push(member.title)
   if (member.candidateTitle) roles.push(member.candidateTitle)
@@ -68,13 +71,15 @@ export default async function TeamMemberPage({
           __html: jsonLdHtml({
             '@context': 'https://schema.org',
             '@type': 'Person',
+            '@id': `${SITE_URL}/team/${slug}#person`,
+            url: `${SITE_URL}/team/${slug}`,
             name: member.name,
             jobTitle: roles.join(', ') || undefined,
             image: photoUrl,
-            worksFor: {
+            memberOf: {
               '@type': 'Organization',
-              name: 'Церква «Нове Життя»',
-              address: { '@type': 'PostalAddress', addressLocality: 'Борислав' },
+              '@id': `${SITE_URL}/#church`,
+              name: settings.name,
             },
           }),
         }}
@@ -96,7 +101,7 @@ export default async function TeamMemberPage({
             {/* Photo */}
             <div className="w-full md:w-1/3 px-4 mb-8 md:mb-0">
               <div className="relative rounded-xl overflow-hidden bg-gray-100" style={{ aspectRatio: '3/4' }}>
-                <PhotoViewer photos={[{
+                {member.photo ? <PhotoViewer photos={[{
                   id: member._id,
                   thumbUrl: originalImageUrl(member.photo),
                   fullUrl: originalImageUrl(member.photo),
@@ -113,7 +118,7 @@ export default async function TeamMemberPage({
                   className="object-cover"
                   priority
                 />
-                </PhotoViewer>
+                </PhotoViewer> : <ImagePlaceholder className="absolute inset-0" />}
               </div>
             </div>
 

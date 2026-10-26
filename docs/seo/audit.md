@@ -1,14 +1,14 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-1–SEO-4 завершено локальними юнітами включно з SEO-4.2; наступний юніт — SEO-5.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Матриця середовищ і контракт готовності — у «SEO-2.1», noindex — у «SEO-2.2», metadata — у «SEO-3», готовність/sitemap/lastmod — у «SEO-4.1», query/canonical — у «SEO-4.2»; початкові докази SEO-1 збережені як baseline.
+Дата: 2026-10-26. **SEO-1–SEO-5 завершено локальними юнітами; наступний юніт — SEO-6.** Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Поточний JSON-LD/null-ref результат — у «SEO-5» нижче; початкові докази й карта SEO-1 збережені як baseline, а не опис нинішнього коду.
 
 ## Висновки
 
 - Основа працює: 44/44 початкові адреси sitemap у SEO-1 відповідали HTTP 200 із canonical правильного шляху; доступність і canonical повторно підтверджені у SEO-4.1, 5 відсутніх адрес — 404/noindex. Нинішній sitemap навмисно порожній: запуск і жодна сторінка не схвалені.
 - Pre-launch crawling заблоковано. За останньою live-перевіркою SEO-2.1 Production alias публічний без meta/header noindex. SEO-2.2 додав обидва сигнали в коді; актуальний live deployment окремо не перевірений. Сам `Disallow: /` і noindex, який crawler може не прочитати, не гарантують відсутності адрес у пошуку; F01 залишається відкритим.
 - SEO-3.1 виправив соціальні metadata 11 статичних маршрутів, OG image `/about` і CMS defaults; SEO-3.2 — чотири detail families, фото матеріалу та description fallback оголошення. F07–F10 технічно закриті локально: 62 GET і 32 metadata fixtures SEO-3.2 — PASS. Остаточні тексти/редакційна готовність та live social preview не засвідчені.
-- Відкриті дефекти: падіння ministry-шаблону з нерозв’язаним weak-reference; відсутній H1 головної, дубльовані H1 служителів і пропуски рівнів заголовків. Початкові 500 на page новин/подій виправлені локально у SEO-4.2.
-- SEO-4.1/4.2 технічно закрили F02/F03/F05/F06 локально: спільна готовність metadata/sitemap, порожній launch approval, чесний lastmod, валідація query/page та canonical пагінації. Фінальні 154 GET і регресія реальних metadata/SSR/sitemap — PASS. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Наступний SEO-5 — JSON-LD/null-guard.
+- F04 (падіння ministry-шаблону з нерозв’язаним weak-reference) технічно закритий у SEO-5. Відсутній H1 головної, дубльовані H1 служителів і пропуски рівнів заголовків — SEO-6. Початкові 500 на page новин/подій виправлені локально у SEO-4.2.
+- SEO-4.1/4.2 технічно закрили F02/F03/F05/F06 локально. SEO-5: null-guards і JSON-LD без непідтверджених адрес/дат/авторів, 57 GET і tracked регресія PASS. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Наступний SEO-6 — заголовки/посилання та вузька mobile/a11y перевірка.
 
 ## Межі й метод перевірки
 
@@ -397,11 +397,54 @@ Root/header noindex, privacy/studio robots і Disallow збережено. CMS/s
 
 Після локального QA користувач прямо погодив commit+push SEO-4.2 у `codex/seo-1-audit` 2026-10-26, відповівши «Так». Попередні згадки про непогоджену публікацію — стан до цієї відповіді. Свіжий fetch підтвердив HEAD/origin 0/0, Git Credential Manager — `Chekirko`; публікація охоплює 7 файлів застосунку, 1 regression і 6 документів. Точний SHA, remote SHA й чистота дерева перевіряються після push і наводяться у фінальному повідомленні. Merge, Production settings/env/DNS/CMS не змінюються; новий live deployment не засвідчений. Наступний юніт — SEO-5.
 
+## SEO-5: JSON-LD і null-посилання — 2026-10-26
+
+### Реалізація та межі
+
+Старт — чистий `codex/seo-1-audit`, HEAD `124687d`; пряме доручення «Робимо Наступний крок — SEO-5». Два пов’язані юніти: F04/неповні detail-дані та чинні JSON-LD шаблони. 9 файлів застосунку + [tracked regression](../../scripts/check-jsonld-seo.mjs), без нових залежностей, CMS-схем, полів або mutations.
+
+- **F04 закритий локально:** [ministry detail](../../app/(front)/ministries/[slug]/page.tsx) відкидає null та refs без name/slug до підрахунку 0/1/2+ відповідальних. Фото кожної особи має guard; тип масиву моделює null-елементи. Team detail без фото має чинний декоративний placeholder і не викликає image builder; валідні фото/UI зберігаються.
+- **NewsArticle:** URL/ID і breadcrumb використовують route slug; description — видимий body або той самий fallback, підтримано legacy string. Дата публікації — лише валідний ISO; некоректна дата не показується й не потрапляє в JSON. Прибрано припущення author=publisher та dateModified=`_updatedAt`: visible byline/редакційної дати немає. Publisher лишається сайтом церкви зі спільним `#church`.
+- **Event:** лише `подія` з назвою, валідною датою та видимим location. Оголошення/неповна подія не створюють Event; недійсна дата не дає NaN у detail UI. Location бере саме текст матеріалу, без автоматичного church NAP. Scheduled/organizer прибрані без підтверджених полів; description збігається з видимим body/fallback, URL/ID стабільні. «Головний зал» не перетворюється на вигадану повну адресу.
+- **Person / Church:** `memberOf` замість непідтвердженого employment-твердження worksFor; назва церкви із `getSiteSettings()`, єдиний `#church`, власні URL/ID. Homepage та сама сутність має сумісні типи `Church` + `Organization`: Church належить до Place, юридичні/контактні поля підтримує Organization. AboutPage/WebSite refs узгоджені. FAQ JSON-LD вже використовує ті самі FAQ, що UI; переписування не потрібне. Розклад/гео/соцмережі походять із чинного settings helper; за поточної CMS `openingHours` порожній, непорожню гілку HTTP-вибірка не засвідчує.
+- **VideoObject:** JSON-LD у [MediaGallery](../../app/(front)/media/components/MediaGallery.tsx) SSR-рендериться з тих самих cards і слідує state після search/filter/load-more; порожня вибірка прибирає script. Лише playable items, послідовні position, однакові name/thumbnail/description. YouTube watch — `url`, player — `embedUrl`; `contentUrl` прибрано, бо це не прямий файл. `uploadDate` прибрано: наявна date описує матеріал/служіння і не доводить дату завантаження. Нових полів про запас немає.
+- **Серіалізація:** всі insertions зберігають `jsonLdHtml()`; round-trip hostile `</script>`, quotes, ampersand та Unicode PASS. [schemaDate](../../lib/utils.ts) зберігає справжню ISO дату/дату-час із timezone, відкидає missing/non-ISO/неможливий день; не підставляє «зараз».
+
+### Перевірки
+
+Фінальні **57 production-build GET** через `next start`, 127.0.0.1:3004: **51×200 / 6×404**. Усі 57 мають `X-Robots-Tag: noindex`, усі 54 HTML-відповіді — meta noindex. 46 базових HTML: 12 статичних/службових і 34 detail (15 ministry / 11 team / 5 news / 3 events). Додатково 5 missing URL → 404, `/events?page=2` → 404, news category/media q → 200, robots/sitemap/чинний fallback JPEG → 200. Robots зберігає Disallow, sitemap — 0 URL.
+
+JSON.parse всіх знайдених blocks успішний; абсолютні URL/ID перевірені. У реальній вибірці 11 Person, 5 NewsArticle, 1 Event, 12 вкладених VideoObject, 22 BreadcrumbList, Church/Organization + WebSite, FAQPage (5 Q&A), AboutPage. NewsArticle без author/dateModified, VideoObject без contentUrl/uploadDate, Event без Scheduled/church-address. Усі 34 реальні detail лишаються 200. Повний query-регресійний HTTP scope SEO-4.2 не повторювався: збережена його tracked regression.
+
+`pnpm exec node scripts/check-jsonld-seo.mjs` — **PASS**: 22 detail renders, 4 missing docs, 2 media SSR, 4 gallery states (initial/filter/append/empty), ISO dates і безпечне escaping. Виконуються справжні сторінки/MediaGallery/helpers через transpile/VM і React SSR із synthetic CMS та mocked state/actions, без мережі. Перевірено null/empty/mixed 0/1/2+ leaders, missing slug/name/photo, team photo null, rich/legacy/fallback body, оголошення й неповні події, invalid/missing dates, hostile text. Це перевірка реальних handlers і результату state, **не browser hydration/React scheduler або live Server Actions**.
+
+Build, lint, typecheck, 3 наявні регресії та `scripts/check-listing-seo.mjs` — **PASS**: 21 schema type / 34 GROQ queries, 42/42 static-generation tasks. Sanity config EPERM та sandbox loopback EACCES/ETIMEDOUT усунені дозволеним build/QA-server/GET поза sandbox; application/network protections не послаблювались. Старі Node/localStorage/Browserslist warnings лишаються. HTTP-runner, HTML/JSON і synthetic outputs — ignored `.next/seo-5/`; довготривалі докази тут, наступна сесія не залежить від цих файлів.
+
+**Зовнішня валідація:** Schema.org Validator, code mode, synthetic outputs справжніх шаблонів Person/Event/NewsArticle/BreadcrumbList/ItemList→VideoObject: **5 root elements, 0 errors / 0 warnings**. Живий CMS-контент до валідатора не передавався. Google Rich Results Test прийняв code, але повернув «Увійдіть в обліковий запис і повторіть спробу»; перевірка **не завершена**, eligibility не засвідчена. Локальний skill `schema_validator.py` запущено з `python -X utf8` (без цього Windows cp1251 error): JSON розпізнаний, breadcrumb 100; synthetic incomplete article отримує 40/100 через stale required image/author/date. Це евристика, не нормативний verdict: актуальна Google Article doc не має required properties. Вигадане авторство заради бала не додається.
+
+### Офіційні джерела та відкладені факти
+
+Звірено 2026-10-26: [Google Article — applicable recommended properties](https://developers.google.com/search/docs/appearance/structured-data/article), [VideoObject — contentUrl означає bytes, uploadDate дату завантаження](https://developers.google.com/search/docs/appearance/structured-data/video), [Event — назва/час/реальне місце](https://developers.google.com/search/docs/appearance/structured-data/event), [Schema.org Church — Place hierarchy](https://schema.org/Church). Валідність Schema.org не обіцяє rich results; missing video uploadDate та повна event address залишаються контентними обмеженнями.
+
+До SEO-L власник підтверджує NAP/legalName/geo/соцмережі та їхні fallback, справжній розклад і його endTime, FAQ/свідчення/біографії/ролі, дати матеріалів та авторство. Event потребує точної адреси/статусу/організатора за кожною подією; video — справжньої uploadDate, назв/описів і готовності watch experience. У цій сесії відсутні факти пропущені або записані як залежності, а не вигадані. Історія й readiness approval лишаються непогодженими.
+
+Pre-launch root/header/page noindex, Disallow та порожній approval збережені. Schema/GROQ sources, package/lockfile, CMS/env/DNS/platform settings не змінені; TypeGen лише штатний ignored output. Live deployment/Search Console/Google index та mobile/desktop layout не перевірені: in-app browser localhost timeout, HTTP через локальний процес успішний. F01 лишається відкритим. Commit/push SEO-5 не виконано — [проєктний гейт §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19).
+
+**Наступний SEO-6:** F11 — спочатку звірити актуальні H1/H2–H6 та crawlable links, потім 1–2 пов’язані підтверджені шаблони і вузький keyboard/mobile QA. Не оголошувати весь D8 завершеним і не починати performance SEO-7. Скіли seo-audit, a11y-audit, senior-frontend, karpathy-coder; grill-with-docs/handoff для контексту.
+
+Завершальні перевірки: 7 UTF-8 документів, 64 локальні file/anchor targets і `git diff --check` — PASS. QA-сервер зупинено, порт 3004 без listener. Diff: 9 файлів застосунку + 1 regression + 7 документів; layout/robots/sitemap/next.config/readiness approval/schema sources/package/lockfile без змін.
+
+### Погоджена публікація SEO-5
+
+Перед комітом повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 static-generation tasks; старі Node/Browserslist warnings. UTF-8 7 документів і staged diff-check PASS; попередні lint/typecheck/3 регресії, обидві SEO-регресії й 57 GET уже пройшли на цьому коді.
+
+Після локального QA користувач відповів «Так» на commit + push SEO-5 у `codex/seo-1-audit` 2026-10-26. Публікація охоплює 9 файлів застосунку, 1 regression та 7 документів; попередні згадки про відсутність згоди — стан до цієї відповіді. Свіжий fetch підтвердив HEAD/origin 0/0, Git Credential Manager — `Chekirko`. Точний SHA, remote SHA й чистота дерева перевіряються після push і наводяться у фінальному повідомленні. Merge/Production settings/env/DNS/CMS без змін; новий live deployment окремо не засвідчений. Наступний юніт — SEO-6.
+
 ## Порядок дій
 
 1. **SEO-2 — локальні юніти завершено:** SEO-2.1 — матриця/політика, SEO-2.2 — noindex metadata/header та 66 локальних GET. F01: Production alias публічний за останнім live-аудитом, settings не перевірені; F02 реалізовано у SEO-4.1. Усі обмеження збережено.
 2. **SEO-3 завершено локально:** defaults/static та чотири detail families перевірені; F07–F10 технічно закриті. Commit+push SEO-3.2 прямо погоджено користувачем; результат — у git history та фінальному повідомленні. Контентна готовність/live social preview не засвідчені.
 3. **SEO-4 завершено локально:** SEO-4.1/4.2 технічно закрили F02/F03/F05/F06. Фінальні 154 GET і регресія helper/metadata/SSR/sitemap — PASS; approval порожній, noindex/Disallow збережено. Commit/push SEO-4.2 не виконано.
-4. **SEO-5 — JSON-LD і неповні дані:** почати з F04, далі звірити шаблони Event/VideoObject/Person/NewsArticle з видимими даними й актуальними вимогами. Не обіцяти rich results.
+4. **SEO-5 завершено локально:** F04/null-photo та JSON-LD виправлені; 57 GET, tracked regression і Schema.org synthetic validation PASS. Google Rich Results Test заблокований вимогою login; факти/eligibility лишаються SEO-L.
 5. **SEO-6 — семантика:** F11, почати з homepage hero + team detail; ширший аудит лишити D8. **SEO-7 — вимірювання:** production baseline і лише підтверджена оптимізація; зараз performance-дефект не заявляється.
 6. **Редакційні залежності / SEO-L:** власник підтверджує факти й перелік готових сторінок; домен/Search Console/відкриття індексації — окреме фінальне рішення. До нього не прирівнювати технічний PASS до готовності контенту.

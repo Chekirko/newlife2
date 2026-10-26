@@ -28,12 +28,12 @@ export interface SanityGalleryImage {
 export interface SanityMinistry extends SanityMinistryCard {
   imageDimensions?: { width: number; height: number } | null
   fullDescription: PortableTextBlock[] | null
-  leaders: {
+  leaders: ({
     _id: string
     name: string
     slug: string
-    photo: SanityImageSource
-  }[] | null
+    photo: SanityImageSource | null
+  } | null)[] | null
   gallery: SanityGalleryImage[] | null
   bibleQuoteText: string | null
   bibleQuoteReference: string | null
@@ -93,7 +93,8 @@ export interface SanityTeamMemberCard {
 }
 
 /** Team member — full detail page */
-export interface SanityTeamMember extends SanityTeamMemberCard {
+export interface SanityTeamMember extends Omit<SanityTeamMemberCard, 'photo'> {
+  photo: SanityImageSource | null
   photoDimensions?: { width: number; height: number } | null
   bio: PortableTextBlock[] | null
 }

@@ -99,7 +99,7 @@ export default async function HomePage() {
     '@context': 'https://schema.org',
     '@graph': [
       {
-        '@type': 'Church',
+        '@type': ['Church', 'Organization'],
         '@id': `${SITE_URL}/#church`,
         name: settings.name,
         legalName: settings.legalName,

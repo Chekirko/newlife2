@@ -12,7 +12,7 @@ import { SITE_URL } from '@/lib/site'
 import { PhotoViewer, PortableTextBody, type PhotoItem } from '@/components'
 import type { SanityNews } from '@/sanity/lib/types'
 import { defineQuery } from 'next-sanity'
-import { jsonLdHtml } from '@/lib/utils'
+import { jsonLdHtml, schemaDate } from '@/lib/utils'
 import { NewsPhotoGallery } from './components/NewsPhotoGallery'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
@@ -106,25 +106,28 @@ export default async function NewsDetailPage({
   } : null
   const photos = mainPhoto ? [mainPhoto, ...galleryPhotos] : galleryPhotos
 
-  const articleUrl = `${SITE_URL}/news/${news.slug}`
+  const articleUrl = `${SITE_URL}/news/${slug}`
   const articleImage = news.image
     ? urlFor(news.image).width(1200).height(675).url()
     : undefined
-  const articleDescription =
-    news.text?.trim() || (news.body ? toPlainText(news.body).slice(0, 160) : undefined)
+  const visibleBody = news.body ?? news.text
+  const articleDescription = typeof visibleBody === 'string'
+    ? visibleBody.trim().slice(0, 160)
+    : visibleBody ? toPlainText(visibleBody).trim().slice(0, 160) : undefined
+  const publishedAt = schemaDate(news.publishedAt)
 
   // NewsArticle JSON-LD (schema-markup skill)
   const newsArticleJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'NewsArticle',
+    '@id': `${articleUrl}#article`,
+    url: articleUrl,
     headline: news.title,
-    datePublished: news.publishedAt,
-    dateModified: news._updatedAt || news.publishedAt,
+    datePublished: publishedAt,
     ...(articleImage ? { image: [articleImage] } : {}),
     ...(articleDescription ? { description: articleDescription } : {}),
     ...(news.mainCategory ? { articleSection: news.mainCategory } : {}),
-    author: { '@type': 'Organization', name: settings.name, url: SITE_URL },
-    publisher: { '@type': 'Organization', name: settings.name, url: SITE_URL },
+    publisher: { '@type': 'Organization', '@id': `${SITE_URL}/#church`, name: settings.name, url: SITE_URL },
     mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
   }
 
@@ -201,10 +204,10 @@ export default async function NewsDetailPage({
           <div className="max-w-3xl mx-auto">
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-4 mb-8">
-              <span className="flex items-center gap-1.5 text-sm text-gray-500">
+              {publishedAt && <span className="flex items-center gap-1.5 text-sm text-gray-500">
                 <i className="far fa-calendar-alt" />
                 {formatDate(news.publishedAt)}
-              </span>
+              </span>}
               {news.mainCategory && (
                 <Link
                   href={`/news?category=${encodeURIComponent(news.mainCategory)}`}

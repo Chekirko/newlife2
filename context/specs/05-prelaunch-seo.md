@@ -1,6 +1,8 @@
 # SEO до завершення реального контенту
 
-Дата: 2026-10-26. Статус: SEO-1–SEO-4 завершено локальними юнітами включно з SEO-4.2; наступна сесія — SEO-5 (JSON-LD/null-ref). F01/platform protection залишається відкритим.
+Дата: 2026-10-26. Статус: SEO-1–SEO-5 завершено локальними юнітами; наступна сесія — SEO-6 (заголовки/посилання, вузький mobile/a11y QA). F01/platform protection залишається відкритим.
+
+**Публікація SEO-5 погоджена 2026-10-26:** після QA користувач відповів «Так» на commit + push у `codex/seo-1-audit`. Попередні згадки про потрібну згоду — стан до цієї відповіді. Результат — у git history та фінальному повідомленні; merge/Production settings без змін, live deployment не засвідчений.
 
 ## Мета та погоджений задум
 
@@ -108,12 +110,14 @@
 | SEO-4 | Завершено локально 2026-10-26 | SEO-4.1/4.2: F02/F03/F05/F06 технічно закриті; launch окремо |
 | SEO-4.1 | Завершено локально 2026-10-26 | Спільна готовність metadata/sitemap, порожній approval, чесний lastmod; 58 GET/103 fixture-перевірки |
 | SEO-4.2 | Завершено локально 2026-10-26 | 154 GET + ізольована регресія; query/page, canonical, redirect/404, noindex filter, схвалення видимої порції metadata/sitemap |
-| SEO-5 | Наступна сесія | JSON-LD/null-ref, почати з F04; використати узгоджені URL/metadata |
-| SEO-6 | Не розпочато | Лише підтверджені дефекти шаблонів |
+| SEO-5 | Завершено локально 2026-10-26 | F04/null-photo, JSON-LD за видимим контентом, 57 GET + tracked regression; Schema.org synthetic 0 errors/0 warnings; Google test вимагає login, eligibility не засвідчена |
+| SEO-6 | Наступна сесія | F11: актуальні H1–H6, crawlable links, 1–2 підтверджені шаблони та вузький mobile/keyboard QA |
 | SEO-7 | Не розпочато | Вимірювання → один пріоритетний дефект |
 | SEO-L | Відкладено | Реальний контент/домен і окреме рішення користувача про запуск |
 
 ## Офіційні джерела
+
+SEO-5: [результат і межі](../../docs/seo/audit.md#seo-5-json-ld-і-null-посилання--2026-10-26), [регресія](../../scripts/check-jsonld-seo.mjs). F04 закритий локально, null refs фільтруються до count, фото має guard. JSON-LD без непідтверджених author/dateModified/uploadDate/church venue/Scheduled; media script синхронний із cards state й SSR. Порожній approval та noindex/Disallow збережено, CMS/env/settings без змін. Контентні факти/eligibility — SEO-L. Commit/push не виконано, потрібна згода за workflow §3; наступний SEO-6 описаний у звіті. Окремий handoff не потрібен.
 
 - [Google: SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide).
 - [Google: noindex та взаємодія з robots.txt](https://developers.google.com/search/docs/crawling-indexing/block-indexing).
