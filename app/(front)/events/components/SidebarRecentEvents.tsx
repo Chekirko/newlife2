@@ -19,9 +19,9 @@ export function SidebarRecentEvents({ events }: SidebarRecentEventsProps) {
 
   return (
     <div className="mb-8">
-      <h5 className="text-lg font-bold text-gray-800 mb-4 pb-3 border-b-2 border-primary">
+      <h2 className="text-lg font-bold text-gray-800 mb-4 pb-3 border-b-2 border-primary">
         Інші події
-      </h5>
+      </h2>
       <div className="space-y-4">
         {events.map((event) => (
           <div key={event._id} className="flex gap-3 group">

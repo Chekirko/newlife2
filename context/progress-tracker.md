@@ -2,7 +2,24 @@
 
 Update this file after every meaningful implementation change.
 
-## Поточний юніт — SEO-6.8, 2026-10-26
+## Поточний юніт — SEO-6.9, 2026-10-26
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 2 файлів застосунку / 6 документів, UTF-8 / 63 унікальні локальні file+anchor targets, staged diff-check та Diff Surgeon застосунку — PASS. Код і попередній QA не розширено.
+
+**Commit + push SEO-6.9 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA. Погоджено 2 файли застосунку та 6 документів у `codex/seo-1-audit` за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижча згадка про ще потрібну згоду — попередній стан. Результат публікації — у git history та фінальному повідомленні; далі SEO-6.10. Live deployment окремо не засвідчений.
+
+**SEO-6.9 локально завершено.** [Заголовки списку подій і QA](../docs/seo/audit.md#seo-69-заголовки-списку-подій--2026-10-26), [spec](specs/05-prelaunch-seo.md). «Інші події» H5, CTA H6 та empty-state H3 → H2. Лише 5 замінених рядків у двох файлах застосунку; класи typography, layout, контент, href та дані збережено. Старт із чистого `6a48b17`, гілка `codex/seo-1-audit`.
+
+- Build — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Lint, повний typecheck, 3 штатні та 3 SEO-регресії — PASS. Службові Sanity config EPERM і localhost EACCES/timeout усунені дозволеним запуском поза sandbox.
+- 5 SSR before/after fixtures (0/1/many та незалежно порожні main/sidebar), page 2 і notFound — PASS; після нормалізації лише heading tags решта HTML точно збігається з HEAD. 9 production GET (8×200/1×404), усі 5 внутрішніх цілей із main — 200; один H1, решта headings списку H2, noindex/header/Disallow/порожній sitemap збережено.
+- Browser: 12/12 точних збігів computed typography/розмірів headings у empty/many на 1280/390/320px після font load, без overflow. На повній сторінці фактичні innerWidth підтверджено; Tab/Shift+Tab, видимий focus, Enter → sidebar event/contact PASS. Desktop/mobile screenshots оглянуто, console errors — 0. Scanner прибрав `heading-skipped`; решта 11 regex-попереджень не змінилась, це не повний a11y PASS.
+- UI/code standards, spec, master-plan і audit синхронізовано. QA-файли лише ignored `node_modules/.cache/seo-6.9/`; CMS/env/settings/package/lockfile та індексація без змін. Повний F11/SEO-6, D8, SEO-7, F01 і SEO-L лишаються відкритими; live deployment/Google index не засвідчені.
+
+**Далі SEO-6.10 — history timeline/CTA headings:** визначити ранги в повній сторінці, зберегти typography, перевірити SSR/optional data/links/keyboard/1280–390–320px і build. Скіли seo-audit, a11y-audit, senior-frontend, karpathy-coder; grill-with-docs для контексту. Потім окремо contact → media/photos → погоджений CMS event H4 fix → повторний fresh crawl. D8 також зберігає FAQ disclosure/nav landmark/breadcrumbs contrast/sidebar order і невідтворений #418.
+
+Фінальний diff — 2 файли застосунку + 6 документів; UTF-8 / 63 унікальні локальні file+anchor targets, diff-check і Diff Surgeon застосунку PASS. QA-сервери зупинено, viewport скинуто, тимчасові вкладки закрито. Commit/push SEO-6.9 не виконано: окрема згода за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Нижчі блоки — історичний стан.
+
+## Попередній юніт — SEO-6.8, 2026-10-26
 
 - Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 4 документів, UTF-8 / 61 унікальна локальна file+anchor ціль і staged diff-check — PASS. Код і попередній QA не розширено.
 

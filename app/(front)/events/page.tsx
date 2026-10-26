@@ -117,9 +117,9 @@ export default async function EventsPage({
               ) : (
                 <div className="text-center py-20">
                   <i className="far fa-calendar-alt text-5xl text-gray-300 mb-4 block" />
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
+                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
                     Подій не знайдено
-                  </h3>
+                  </h2>
                   <p className="text-gray-500">Скоро тут зʼявляться нові події та оголошення.</p>
                 </div>
               )}
@@ -135,7 +135,7 @@ export default async function EventsPage({
               <div
                 className="bg-grad-readable rounded-xl p-6 text-white text-center"
               >
-                <h6 className="text-white font-bold text-lg mb-2">Запрошуєте на подію?</h6>
+                <h2 className="text-white font-bold text-lg mb-2">Запрошуєте на подію?</h2>
                 <p className="text-white text-sm mb-4">
                   Хочете додати подію чи оголошення — напишіть нам!
                 </p>
