@@ -2,7 +2,24 @@
 
 Update this file after every meaningful implementation change.
 
-## Поточний юніт — SEO-6.7, 2026-10-26
+## Поточний юніт — SEO-6.8, 2026-10-26
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 4 документів, UTF-8 / 61 унікальна локальна file+anchor ціль і staged diff-check — PASS. Код і попередній QA не розширено.
+
+**SEO-6.8 локально завершено — аудит, без змін застосунку.** [Свіжий heading crawl та залишок F11](../docs/seo/audit.md#seo-68-свіжий-heading-crawl-f11--2026-10-26), [spec](specs/05-prelaunch-seo.md). Старт із чистого `945e744`, гілка `codex/seo-1-audit`; SEO-6.7 уже в HEAD. Оновлено лише 4 документи: звіт, spec, master-plan і tracker.
+
+- 50 HTML-сторінок = 45 pathname + 5 query URL; усі 34 published details (5 news/3 events/15 ministries/11 team), 202 текстові CMS blocks (196 normal/5 blockquote/1 h4). Один CMS event body починається H4 «Запрошуємо на День батька!», підтверджено API/HTTP/DOM. CMS не змінювалися.
+- Загалом 60 GET (54×200/6×404), один H1 на всіх 52 успішних HTML, 51 fragment-ціль валідна; битих внутрішніх HTML-цілей первинного crawl немає. Noindex/Disallow/порожній approval/sitemap без URL збережено.
+- **F11/SEO-6 не закрито:** history timeline/CTA H4, contact blocks H5, events sidebar H5/CTA H6, media cards/empty H3 після H1; один CMS event H4. Умовні empty branches events/photos також потребують виправлення (source-only). Весь залишок і докази — у звіті.
+- Build — PASS (21 schema type/34 GROQ queries, TypeScript, 42/42 tasks; після початкового sandbox Sanity-config EPERM), lint, повний typecheck, 3 штатні та 3 SEO-регресії — PASS. A11y scanner на всіх 50 HTML і SEO checker на history підтвердили heading warnings; ширші regex-евристики не трактувалися як нові доведені дефекти.
+- Browser history/contact/events/event detail/media на 1280/390/320px: ті самі ranks, без overflow. Реальний media empty search, Tab/Shift+Tab та видимий focus перевірені. Один початковий React hydration #418 не відтворився при повторній навігації на всі п'ять сторінок; причина не встановлена, follow-up D8. Це не повний a11y PASS.
+- UTF-8/локальні посилання/diff-check перевірено; viewport скинуто, вкладку закрито, QA-сервер зупинено. Тимчасовий QA — ignored `node_modules/.cache/seo-6.8/`. Нових UI/архітектурних конвенцій немає; CMS/env/DNS/platform settings/package/lockfile без змін, live deployment/Google index не засвідчені.
+
+**Далі SEO-6.9 — events sidebar/CTA/empty-state:** H5/H6/H3 → узгоджені H2 зі збереженням typography, 0/1/many SSR fixtures, повна сторінка/links/keyboard/mobile/desktop. Скіли seo-audit, a11y-audit, senior-frontend, karpathy-coder; grill-with-docs для контексту. Далі окремо history → contact → media/photos та погоджений CMS heading fix, потім повторний fresh crawl. Повний D8 (FAQ disclosure/nav landmark/breadcrumbs contrast/sidebar order і відтворення #418), SEO-7, F01 та SEO-L відкриті.
+
+**Commit + push SEO-6.8 прямо погоджені 2026-10-26:** користувач відповів «так» після локального QA. Погоджено 4 документи у `codex/seo-1-audit` за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19). Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Результат публікації — у git history та фінальному повідомленні; далі SEO-6.9. Нижчі блоки — історичний стан; live deployment окремо не засвідчений.
+
+## Попередній юніт — SEO-6.7, 2026-10-26
 
 - Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. UTF-8 6 документів / 55 унікальних локальних file+anchor targets та staged diff-check — PASS; review одного файла застосунку й Diff Surgeon — CLEAN. Код і попередній QA не розширено.
 
