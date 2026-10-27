@@ -1,13 +1,13 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-6.10 завершено локально:** [заголовки хронології та CTA історії і QA](#seo-610-заголовки-хронології-та-cta-історії--2026-10-26). Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Timeline — H3 під H2, CTA — H2; F11/SEO-6 залишаються частково відкритими. Наступний юніт — SEO-6.11: contact headings. [SEO-6.8 crawl](#seo-68-свіжий-heading-crawl-f11--2026-10-26) та нижчі секції зберігають історичні докази. Повний D8, включно з наявним невидимим focus history summary, не закрито.
+Дата: 2026-10-26. **SEO-6 завершено локально, F11 технічно закрито:** [фінальні зміни й докази](#seo-6-final--2026-10-26). Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Fresh crawl 50 HTML: один H1, без heading skips, битих HTML/fragment цілей. Далі SEO-7; повний D8, F01 та SEO-L відкриті. Нижчі секції SEO-6.1–6.10 зберігають історичні докази й попередні статуси.
 
 ## Висновки
 
 - Основа працює: 44/44 початкові адреси sitemap у SEO-1 відповідали HTTP 200 із canonical правильного шляху; доступність і canonical повторно підтверджені у SEO-4.1, 5 відсутніх адрес — 404/noindex. Нинішній sitemap навмисно порожній: запуск і жодна сторінка не схвалені.
 - Pre-launch crawling заблоковано. За останньою live-перевіркою SEO-2.1 Production alias публічний без meta/header noindex. SEO-2.2 додав обидва сигнали в коді; актуальний live deployment окремо не перевірений. Сам `Disallow: /` і noindex, який crawler може не прочитати, не гарантують відсутності адрес у пошуку; F01 залишається відкритим.
 - SEO-3.1 виправив соціальні metadata 11 статичних маршрутів, OG image `/about` і CMS defaults; SEO-3.2 — чотири detail families, фото матеріалу та description fallback оголошення. F07–F10 технічно закриті локально: 62 GET і 32 metadata fixtures SEO-3.2 — PASS. Остаточні тексти/редакційна готовність та live social preview не засвідчені.
-- F04 технічно закритий у SEO-5. SEO-6.1–6.7 виправили відомі hero/news/team/ministry/section/footer headings і доступні назви цільових посилань. SEO-6.8 підтвердив один H1 на 50 сторінках; SEO-6.9 виправив events sidebar/CTA/empty-state, SEO-6.10 — history timeline/CTA. Залишок contact/media/photos та одного CMS event body зберігає F11/SEO-6 відкритими. Далі SEO-6.11 — contact headings. Початкові 500 на page новин/подій виправлені у SEO-4.2.
+- F04 технічно закритий у SEO-5; F11 — у SEO-6 final після contact/media/photos і CMS heading correction. Повторний crawl 50 HTML/34 details/202 blocks: один H1, жодного heading skip або битої HTML/fragment цілі. Вузький browser/keyboard/mobile QA пройшов; повний D8 залишається окремим. Початкові 500 на page новин/подій виправлені у SEO-4.2.
 - SEO-4.1/4.2 технічно закрили F02/F03/F05/F06 локально; SEO-5 — null-guards і JSON-LD за видимими даними. Редакційна готовність не встановлена: оголошення без тексту, суперечність історії та непогоджені факти лишаються SEO-L. Noindex/Disallow та порожній approval збережено; F01 відкритий.
 
 ## Межі й метод перевірки
@@ -72,7 +72,7 @@ P1 — високий вплив до запуску або ризик недо�
 | F08. `/about` втрачає `og:image` | `/about` має власний openGraph object без images. HTML: OG URL `/about`, og:image відсутній; Twitter image залишається root | Середній: неповне соціальне прев’ю | Явно зберегти спільне зображення при перевизначенні OG. Повторно перевірити image/siteName/locale разом, не покладатися на deep merge | P2 / SEO-3, мале виправлення |
 | F09. CMS SEO/OG-поля не впливають на metadata | [siteSettings schema](../../sanity/schemaTypes/siteSettings.ts):221–234 визначає ogImage/defaultDescription. [query](../../sanity/lib/queries.ts):30–44 не вибирає ogImage; [helper](../../lib/site-settings.ts):127 повертає defaultDescription, але `rg` не знаходить його споживача в app. Root metadata статичні. Published settings зараз **без обох значень** | Середній для редактора: майбутнє заповнення не дасть очікуваного результату; зараз втрати конкретного заповненого значення не виявлено | Підключити наявні поля до defaults з fallback або уточнити контракт. Не створювати дублікати полів; порожній CMS не має прибирати metadata | P2 / SEO-3 |
 | F10. Неповні description | `/ministries` повторює description головної. `/events/obid-dlya-rodin-zagiblikh-zakhisnikiv` → 200, але description немає: немає ні CMS description, ні body. 43/44 URL sitemap мають description | Середній: загальний або відсутній анонс не описує сторінку | Для списку — опис лише підтвердженого призначення; для detail — безпечний fallback/правило відкладення за SEO-2. Остаточний зміст оголошення надає власник | P2 / SEO-3 + SEO-L |
-| F11. H1 і рівні heading неузгоджені | SEO-6.1–6.10 завершено локально; 50 HTML crawl мали один H1. Events/history headings виправлені. Залишок: contact H5, media H3 після H1/empty photos; CMS event body починається H4 | Середній для семантики/навігації; це не доказ санкцій або втрати конкретних позицій | [History QA](#seo-610-заголовки-хронології-та-cta-історії--2026-10-26), [залишок crawl](#seo-68-свіжий-heading-crawl-f11--2026-10-26); наступний вузький юніт — contact headings | P2 / частково закрито; SEO-6.11 далі |
+| F11. H1 і рівні heading неузгоджені | Виправлено contact/media/photos та єдиний CMS H4; fresh crawl 50 HTML, усі 34 details/202 blocks — один H1, без heading skips. Умовні empty branches перевірені SSR | Поліпшено семантику/навігацію; зміна позицій у пошуку не вимірювалася | [SEO-6 final: код, CMS, crawl і browser QA](#seo-6-final--2026-10-26) | P2 / технічно закрито локально; повний D8 окремо |
 
 Поведінка `/about` відповідає [документації Next.js про shallow metadata merge](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging); джерелом істини для встановленої 16.1.6 тут слугує перевірений HTML. Довжина title/description сама по собі не використана як жорсткий критерій дефекту.
 
@@ -429,6 +429,45 @@ Build, lint, typecheck, 3 наявні регресії та `scripts/check-list
 До SEO-L власник підтверджує NAP/legalName/geo/соцмережі та їхні fallback, справжній розклад і його endTime, FAQ/свідчення/біографії/ролі, дати матеріалів та авторство. Event потребує точної адреси/статусу/організатора за кожною подією; video — справжньої uploadDate, назв/описів і готовності watch experience. У цій сесії відсутні факти пропущені або записані як залежності, а не вигадані. Історія й readiness approval лишаються непогодженими.
 
 Pre-launch root/header/page noindex, Disallow та порожній approval збережені. Schema/GROQ sources, package/lockfile, CMS/env/DNS/platform settings не змінені; TypeGen лише штатний ignored output. Live deployment/Search Console/Google index та mobile/desktop layout не перевірені: in-app browser localhost timeout, HTTP через локальний процес успішний. F01 лишається відкритим. Commit/push SEO-5 не виконано — [проєктний гейт §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19).
+
+## SEO-6 final — 2026-10-26
+
+**Публікація прямо погоджена 2026-10-27:** користувач відповів «Так» після підсумкового QA; погоджено commit + push 5 файлів застосунку, 1 CMS-скрипта та 6 документів у `codex/seo-1-audit`. Свіжий fetch HEAD/origin 0/0, Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду описують попередній стан. Результат — у git history та фінальному повідомленні; live deployment окремо не засвідчений.
+
+Перед публікацією повторний build — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 12 файлів, UTF-8 / 66 унікальних локальних file+anchor targets і staged diff-check PASS; застосунок і попередній QA не розширені.
+
+**Результат:** F11/SEO-6 технічно закрито в локальному production build після виправлення всього підтвердженого залишку. Пряме доручення користувача «Завершити SEO-6 — все роби в цій сесії» розширило попередній ліміт сесії. Старт із чистого `a2963eb`, гілка `codex/seo-1-audit`; попередні SEO-6.1–6.10 збережені в git. Скіли seo-audit, a11y-audit, senior-frontend, karpathy-coder, grill-with-docs; env-secrets-manager для безпечної діагностики CLI.
+
+### Виправлення
+
+| Проблема / вплив | Доказ | Виправлення / пріоритет |
+|---|---|---|
+| Contact H5 пропускав рівні; допоміжні секції також H5 | Повна сторінка має PageHero H1 та основний H2 | ContactInfoCard → H3; незалежні «Молитовна підтримка»/«Загальні питання» → H2 із `text-h5`. Форма й дані без змін. P2, виправлено |
+| Media cards/empty та photo empty починалися H3 після H1 | Production DOM та 0/1/13 SSR fixtures | H2 зі збереженими класами/поведінкою. P2, виправлено |
+| Published event body починався H4 після H1 | `den-batka-2026`, block `_key=a1709dcd9a33`, «Запрошуємо на День батька!» | Лише `style` H4 → H2 через [скрипт](../../scripts/fix-event-heading.mjs), dry-run → revision-guarded write → read-only idempotency PASS. P2, виправлено |
+
+П’ять файлів застосунку, сім замінених рядків; окремий відтворюваний CMS-скрипт. Для CMS H2 використано чинний PortableTextBody H2: більший розмір/відступ відповідає новому рангу; спільний renderer не змінювався. Скрипт перевіряє id/slug/key/text, відсутність draft, початковий rank і ревізію; перед write зберігає локальний backup, після write звіряє всі поля, крім `_rev`/`_updatedAt`. Повторний запуск не записує даних. Інші CMS-дані, schema, queries, package/lockfile/env/platform settings не змінювалися.
+
+Рівні звірено з [W3C WAI: Headings](https://www.w3.org/WAI/tutorials/page-structure/headings/): ранг відповідає структурі; CSS окремо визначає вигляд.
+
+### Перевірки
+
+- `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Перший sandbox-запуск мав службовий Sanity-config EPERM, дозволений повтор поза sandbox пройшов. Lint, Next typegen + повний tsc, 3 штатні та 3 SEO-регресії PASS.
+- **9 before/after SSR fixtures:** contact із 0/1/2 services та undefined/null/image hero; media/photos 0/1/13, optional speaker/tags/description та довга назва. Після нормалізації лише heading tags і очікуваного `text-h5` решта HTML точно збігається з HEAD. ContactForm рендериться реальним компонентом із mocked action; production keyboard/native validation перевірені окремо.
+- **Fresh crawl: 50 HTML = 45 pathname + 5 query URL**, усі 34 published details (5 news / 3 events / 15 ministries / 11 team), 202 текстові CMS blocks (196 normal / 5 blockquote / 1 H2). 57 первинних GET + 3 додаткові controls = **60 GET: 54×200 / 6×404**. Усі 52 успішні HTML мають один H1; жодного порожнього heading, skip, битої внутрішньої HTML-цілі або fragment. 51/51 fragment targets валідні. Усі 50 HTML також пройшли a11y scanner без heading findings; інші regex-евристики не трактуються як повний WCAG аудит.
+- Header/meta noindex, `Disallow: /`, sitemap без URL та порожній approval збережено. Filtered news/media — 200 з H2 empty-state; events page 2 і п’ять missing controls — 404. CMS H2 підтверджено API, HTTP та browser DOM.
+- **Browser 1280/390/320px:** 75/75 exact computed typography/size comparisons після font load для всіх main headings contact/media/media empty та photo empty fixture. Photos і CMS event на всіх трьох ширинах також без overflow, один H1. Desktop/mobile screenshots оглянуто; console errors — 0, попередній #418 у цьому QA не відтворився.
+- Contact Tab/Shift+Tab, видимий focus, empty submit зупинено native validation на `contact-name`; листи не надсилалися. Video Enter/Space → lightbox, Escape → початкова картка з видимим focus. Media append 12 → 24 та реальний empty search підтверджені. Photo Enter/ArrowRight (1 → 2)/Escape/focus restore/Tab/Shift+Tab PASS.
+
+**Межі:** повний D8 не закрито. До попередніх FAQ disclosure/nav landmark/breadcrumbs contrast/sidebar order/#418/history summary focus додано фактично спостережену наявну втрату фокусу до body після disabled media load-more button. Ці взаємодії не змінювалися в цьому юніті. Server log має upstream YouTube `maxresdefault.jpg` 404; у компоненті вже є `sddefault` fallback, його код не змінено. Це не биті внутрішні HTML-цілі; повний аудит зовнішніх assets не проводився. Технічний PASS не засвідчує редакційну готовність, live deployment або Google index. QA-артефакти та CMS backup — ignored `node_modules/.cache/seo-6-final/`.
+
+Фінальний review п’яти файлів застосунку — 7 замінених рядків; Diff Surgeon застосунку CLEAN, 0 noise. UTF-8 12 змінених/нових файлів, 6 документів / 66 унікальних file+anchor targets і `git diff --check` PASS. Changed-file secret scan позначив лише env-reference до SANITY_API_WRITE_TOKEN як generic assignment (перевірений false positive); фактичних env secret values у tracked результаті немає. Сирий початковий network error вивів credential у технічний журнал; діагностику CLI санітизовано, власнику повідомлено про потрібну ротацію. Env/permissions не змінювалися. Обидва QA-сервери зупинено, viewport скинуто й робочу вкладку закрито.
+
+### Наступні дії
+
+1. SEO-7: production performance baseline і лише виміряні виправлення.
+2. Повний D8 та F01 лишаються відкритими; SEO-L — редакційна готовність/домен/Search Console/окреме рішення про індексацію.
+3. Commit/push цього завершеного результату — лише за окремою згодою workflow §3; у цій сесії ще не виконано.
 
 ## SEO-6.10: заголовки хронології та CTA історії — 2026-10-26
 
@@ -805,5 +844,5 @@ HeroGradientImage у тому самому файлі також замінює 
 2. **SEO-3 завершено локально:** defaults/static та чотири detail families перевірені; F07–F10 технічно закриті. Commit+push SEO-3.2 прямо погоджено користувачем; результат — у git history та фінальному повідомленні. Контентна готовність/live social preview не засвідчені.
 3. **SEO-4 завершено локально:** SEO-4.1/4.2 технічно закрили F02/F03/F05/F06. Фінальні 154 GET і регресія helper/metadata/SSR/sitemap — PASS; approval порожній, noindex/Disallow збережено. Commit/push SEO-4.2 не виконано.
 4. **SEO-5 завершено локально:** F04/null-photo та JSON-LD виправлені; 57 GET, tracked regression і Schema.org synthetic validation PASS. Google Rich Results Test заблокований вимогою login; факти/eligibility лишаються SEO-L.
-5. **SEO-6 — семантика:** SEO-6.1–6.10 завершено локальними юнітами; events/history headings виправлені. Далі SEO-6.11 — contact headings, потім media/photos та CMS heading; повторний crawl після виправлень. Ширший аудит, включно з focus timeline summary, лишити D8. **SEO-7 — вимірювання:** production baseline і лише підтверджена оптимізація, після SEO-6; зараз performance-дефект не заявляється.
+5. **SEO-6 завершено локально, F11 технічно закрито:** усі відомі headings виправлені; fresh crawl, SSR і browser/keyboard PASS. Повний D8 окремо. **Далі SEO-7 — вимірювання:** production baseline і лише підтверджена оптимізація; зараз performance-дефект не заявляється.
 6. **Редакційні залежності / SEO-L:** власник підтверджує факти й перелік готових сторінок; домен/Search Console/відкриття індексації — окреме фінальне рішення. До нього не прирівнювати технічний PASS до готовності контенту.

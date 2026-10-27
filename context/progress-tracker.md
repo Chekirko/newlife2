@@ -2,6 +2,24 @@
 
 Update this file after every meaningful implementation change.
 
+## Поточний стан — SEO-6 завершено локально, 2026-10-26
+
+**Commit + push SEO-6 final прямо погоджені 2026-10-27:** користувач відповів «Так» після підсумкового QA. Погоджено 5 файлів застосунку, 1 CMS-скрипт та 6 документів у `codex/seo-1-audit` за workflow §3. Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду — стан до цієї відповіді. Результат публікації — у git history та фінальному повідомленні; далі SEO-7. Live deployment окремо не засвідчений; ротація токена лишається потрібною.
+
+- Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review погоджених 12 файлів, UTF-8 / 66 унікальних file+anchor targets та staged diff-check PASS. Застосунок і попередній QA не розширені.
+
+Пряме доручення користувача: «Завершити SEO-6 — все роби в цій сесії». Це розширює попередній ліміт 1–2 юніти на весь залишок SEO-6. Послідовність: contact headings → media/photos headings → точковий CMS event H4 → fresh crawl та browser QA. Commit/push окремо не доручено.
+
+- ContactInfoCard H5 → H3 під H2 секції; незалежні блоки допомоги H5 → H2 з `text-h5`. MediaCard та media/photos empty-state H3 → H2, решта класів збережена.
+- `scripts/fix-event-heading.mjs`: dry-run та revision-guarded write виконано; у published `den-batka-2026` лише `body[_key=="a1709dcd9a33"].style` H4 → H2. Перед/після backup у ignored `node_modules/.cache/seo-6-final/`; read-only idempotent rerun PASS. CMS H2 підтверджено API/HTTP/browser. Це єдина CMS mutation; типографіка цього заголовка — штатна H2 PortableTextBody.
+- **F11/SEO-6 технічно закрито.** [Підсумковий звіт](../docs/seo/audit.md#seo-6-final--2026-10-26): fresh crawl 50 HTML/45 pathname + 5 query, усі 34 published details/202 blocks; 60 GET (54×200/6×404), 51/51 fragment targets. Один H1 на всіх 52 успішних HTML, жодного heading skip/порожнього heading/битої HTML-цілі; a11y scanner 50 HTML без heading findings. Noindex/header/Disallow/порожній sitemap та approval збережено.
+- Build PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks, старі Node/Browserslist warnings. Початковий Sanity-config EPERM усунено дозволеним повтором поза sandbox. Lint, Next typegen + повний tsc, 3 штатні + 3 SEO-регресії PASS. 9 before/after SSR fixtures із optional schedule/hero, media/photos 0/1/13 та exact remaining markup PASS.
+- Browser: 75/75 exact computed typography/розмірів на 1280/390/320px; contact/media/empty states/photos/CMS event без overflow, console errors 0. Contact keyboard/native empty validation, video Enter/Space/Escape/focus restore, append 12→24/empty search, photo Enter/ArrowRight/Escape/focus restore перевірені; screenshots оглянуто. Листів/QA-даних у CMS не надсилали.
+- **D8 лишається відкритим:** FAQ disclosure/nav landmark/breadcrumbs contrast/sidebar order/#418/history summary focus; додано наявну втрату фокусу до body після disabled media load-more. Нових регресій заголовків немає; повний WCAG PASS не заявляється.
+- Інцидент QA: сирий Sanity network error вивів write token у технічний журнал. Новий CLI санітизує помилки; значення не копіюється в tracked artifacts. Власнику потрібна ротація цього токена. Env/permissions не змінено.
+
+Spec/master-plan/audit/UI/code standards синхронізовано. П’ять файлів застосунку (7 замінених рядків), один CMS-скрипт та 6 документів; schema/GROQ/env/settings/package/lockfile не змінені. Review/Diff Surgeon застосунку CLEAN; UTF-8 усіх 12 файлів / 66 унікальних file+anchor targets / diff-check PASS. Secret scan має лише перевірений false positive env-reference, фактичних secret values у результаті немає. Server log upstream YouTube maxres 404 і чинний fallback без змін, повний asset audit не проводився. Обидва QA-сервери зупинено, viewport скинуто, вкладку закрито. **Далі SEO-7** — виміряна швидкодія; F01 та SEO-L відкриті. Commit/push не виконано — окрема згода за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19); live deployment/Google index не засвідчені. Нижчі блоки — історія попередніх юнітів.
+
 ## Поточний юніт — SEO-6.10, 2026-10-26
 
 - Перед погодженим commit + push повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 1 файла застосунку / 6 документів, UTF-8 / 64 унікальні локальні file+anchor targets, staged diff-check та Diff Surgeon застосунку — PASS. Код і попередній QA не розширено.

@@ -147,7 +147,7 @@ export default async function ContactPage() {
         <div className="container-larexa">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto text-center">
             <div>
-              <h5 className="font-heading font-semibold text-gray-800 mb-2">Молитовна підтримка</h5>
+              <h2 className="font-heading font-semibold text-h5 text-gray-800 mb-2">Молитовна підтримка</h2>
               <p className="text-gray-500 text-sm">
                 Якщо вам потрібна молитва, напишіть на{' '}
                 <a href={`mailto:${email}`} className="text-primary-text hover:underline">
@@ -156,7 +156,7 @@ export default async function ContactPage() {
               </p>
             </div>
             <div>
-              <h5 className="font-heading font-semibold text-gray-800 mb-2">Загальні питання</h5>
+              <h2 className="font-heading font-semibold text-h5 text-gray-800 mb-2">Загальні питання</h2>
               <p className="text-gray-500 text-sm">
                 Для загальних запитань або пропозицій{' '}
                 <a href={`mailto:${email}`} className="text-primary-text hover:underline">

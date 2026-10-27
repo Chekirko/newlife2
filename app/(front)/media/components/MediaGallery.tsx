@@ -206,7 +206,7 @@ export function MediaGallery({
         ) : (
           <div className="py-20 text-center">
             <i className="far fa-play-circle mb-4 block text-5xl text-gray-300" />
-            <h3 className="mb-2 text-xl font-semibold text-gray-700">Нічого не знайдено</h3>
+            <h2 className="mb-2 text-xl font-semibold text-gray-700">Нічого не знайдено</h2>
             <p className="text-gray-500">Спробуйте інший запит або категорію.</p>
           </div>
         )}

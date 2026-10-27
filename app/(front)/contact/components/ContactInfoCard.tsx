@@ -20,7 +20,7 @@ export function ContactInfoCard({ icon, title, children }: ContactInfoCardProps)
       >
         {icon}
       </div>
-      <h5 className="text-white font-heading font-semibold text-lg mb-2">{title}</h5>
+      <h3 className="text-white font-heading font-semibold text-lg mb-2">{title}</h3>
       <div className="text-white/80 text-sm leading-relaxed">{children}</div>
     </div>
   )

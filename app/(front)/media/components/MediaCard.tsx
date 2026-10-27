@@ -79,9 +79,9 @@ export function MediaCard({ item, onPlay }: MediaCardProps) {
             </span>
           )}
         </div>
-        <h3 className="mb-2 line-clamp-2 h-14 text-lg font-bold leading-snug text-gray-800 transition-colors group-hover:text-primary-text">
+        <h2 className="mb-2 line-clamp-2 h-14 text-lg font-bold leading-snug text-gray-800 transition-colors group-hover:text-primary-text">
           {item.title}
-        </h3>
+        </h2>
         <p className="line-clamp-2 h-11 text-sm text-gray-600">{item.description}</p>
         {item.tags && item.tags.length > 0 && (
           <div className="mt-3 flex flex-wrap gap-1.5">

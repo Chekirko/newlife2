@@ -33,7 +33,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
     return (
       <div className="py-20 text-center">
         <i className="far fa-images mb-4 block text-5xl text-gray-300" />
-        <h3 className="mb-2 text-xl font-semibold text-gray-700">Поки немає фото</h3>
+        <h2 className="mb-2 text-xl font-semibold text-gray-700">Поки немає фото</h2>
         <p className="text-gray-500">Незабаром тут зʼявляться світлини зі служінь.</p>
       </div>
     )

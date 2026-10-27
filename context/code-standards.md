@@ -1,5 +1,7 @@
 # Code Standards
 
+- **Contact/media headings SEO-6 final:** contact info H3 вкладені в H2 основної секції; допоміжні незалежні блоки H2 з `text-h5`, бо колишній H5 отримував розмір із base CSS. Media cards і empty media/photos — сталі H2 під PageHero H1. Під час заміни тегів звіряти не тільки класи, а computed typography/розміри після font load на 1280/390/320px; optional schedule та 0/1/many galleries перевіряти без запису fixture-даних у CMS. CMS rich-text rank виправляти в конкретному block за `_key`, з перевіркою тексту, draft/revision guard, dry-run, backup та звіркою незмінності інших полів; не перенумеровувати всі заголовки глобально. Помилки Sanity CLI-скриптів можуть містити request credentials: виводити лише безпечні code/status, не сирий error. [QA](../docs/seo/audit.md#seo-6-final--2026-10-26).
+
 - Contact form: page-local Server Action validates FormData with Zod and honeypot before delivery. Mail/Redis modules use `server-only`; all credentials stay in server env, recipient comes from server config/CMS, visitor address is Reply-To only, payload is plain text. Use durable atomic Redis limits with TTL; fail closed if limiter/config is unavailable. Keep form values on error and announce statuses accessibly. Regression `tsx --conditions=react-server scripts/check-contact-form.ts` uses mocked HTTP and no live mail/Redis. See `docs/contact-form.md` for config and test boundaries.
 
 ## General
