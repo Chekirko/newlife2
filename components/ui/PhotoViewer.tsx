@@ -1,7 +1,10 @@
 'use client'
 
 import { useState, type ReactNode } from 'react'
-import { ImageLightbox, type PhotoItem } from './ImageLightbox'
+import dynamic from 'next/dynamic'
+import type { PhotoItem } from './ImageLightbox'
+
+const ImageLightbox = dynamic(() => import('./ImageLightbox'), { ssr: false })
 
 interface PhotoViewerProps {
   photos: PhotoItem[]

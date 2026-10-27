@@ -1,3 +1,4 @@
+import Image from '@/components/ui/SiteImage'
 import type { Metadata } from 'next'
 import { getPageMetadata } from '@/lib/metadata'
 import { PageHero } from '@/components'
@@ -80,12 +81,8 @@ export default async function ContactPage() {
             <div className="md:col-span-3">
               <div
                 className="relative h-full rounded-xl overflow-hidden px-5 py-7 flex flex-col justify-between"
-                style={{
-                  backgroundImage: 'url(/images/hero-church-1.jpg)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                }}
               >
+                <Image src="/images/hero-church-1.jpg" alt="" fill sizes="(max-width: 767px) 100vw, 300px" className="object-cover" />
                 {/* Dark overlay */}
                 <div className="absolute inset-0 bg-black/70 z-0" />
 

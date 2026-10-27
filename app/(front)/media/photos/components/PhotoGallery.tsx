@@ -1,9 +1,13 @@
 'use client'
 
+import { ControlIcon as Icon } from '@/components/ui/ControlIcon'
+
 import { useState } from 'react'
 import { clsx } from 'clsx'
-import { ImageLightbox, type PhotoItem } from '@/components'
-import { DeferredGalleryImage } from '@/components/ui/DeferredGalleryImage'
+import dynamic from 'next/dynamic'
+import type { PhotoItem } from '@/components/ui/ImageLightbox'
+const ImageLightbox = dynamic(() => import('@/components/ui/ImageLightbox'), { ssr: false })
+import Image from '@/components/ui/SiteImage'
 
 // =========================================
 // PhotoGallery — bento mosaic of all ministry photos. Fixed-height cells +
@@ -32,7 +36,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
   if (photos.length === 0) {
     return (
       <div className="py-20 text-center">
-        <i className="far fa-images mb-4 block text-5xl text-gray-300" />
+        <Icon className="far fa-images mb-4 block text-5xl text-gray-300" />
         <h2 className="mb-2 text-xl font-semibold text-gray-700">Поки немає фото</h2>
         <p className="text-gray-500">Незабаром тут зʼявляться світлини зі служінь.</p>
       </div>
@@ -58,9 +62,11 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
               idx % 12 === 6 && 'lg:col-start-2', // …and every other large tile hugs the right
             )}
           >
-            <DeferredGalleryImage
-              photo={photo}
-              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
+            <Image
+              src={photo.thumbUrl} alt={photo.alt} fill
+              placeholder={photo.lqip ? 'blur' : 'empty'} blurDataURL={photo.lqip}
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes={idx % 6 === 0 ? "(max-width: 991px) 50vw, 800px" : "(max-width: 991px) 50vw, 400px"}
             />
             <span className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/15" />
           </button>
@@ -74,7 +80,7 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
             onClick={() => setVisible((v) => v + PER_PAGE)}
             className="bg-grad-readable inline-flex items-center gap-2 rounded-full px-8 py-3 text-sm font-semibold text-white shadow-sm transition-[background-position] duration-300"
           >
-            <i className="fas fa-arrow-down" /> Завантажити ще
+            <Icon className="fas fa-arrow-down" /> Завантажити ще
           </button>
         </div>
       )}

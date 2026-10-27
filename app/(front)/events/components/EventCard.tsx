@@ -1,4 +1,7 @@
-import Image from 'next/image'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
+
+import { Icon } from '@/components/ui/Icon'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 
 interface EventCardProps {
@@ -8,7 +11,7 @@ interface EventCardProps {
   type: string
   tag: string | null
   description: string | null
-  imageUrl: string
+  imageUrl: string | null
   imageDimensions?: { width: number; height: number } | null
 }
 
@@ -20,14 +23,14 @@ export function EventCard({ title, slug, date, type, tag, description, imageUrl,
       {/* Image */}
       <div className="bg-gray-100">
         <Link href={`/events/${slug}`} className="block">
-          <Image
+          {imageUrl ? <Image
             src={imageUrl}
             alt={title}
             width={imageDimensions?.width || 1200}
             height={imageDimensions?.height || 675}
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 37vw"
             className="w-full h-auto"
-          />
+          /> : <ImagePlaceholder className="h-full min-h-48 w-full" />}
         </Link>
       </div>
 
@@ -39,7 +42,7 @@ export function EventCard({ title, slug, date, type, tag, description, imageUrl,
         {/* Meta */}
         <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
           <span className="flex items-center gap-1.5">
-            <i className="far fa-calendar-alt" />
+            <Icon className="far fa-calendar-alt" />
             {date}
           </span>
         </div>

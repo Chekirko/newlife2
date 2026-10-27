@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 
 // =========================================
@@ -33,8 +33,8 @@ export function PageHero({
         src={backgroundImage}
         alt=""
         fill
-        priority
-        sizes="100vw"
+        preload
+        sizes="(max-width: 991px) max(100vw, 623px), max(100vw, 800px)"
         className="object-cover -z-10"
       />
       {/* Dark overlay */}

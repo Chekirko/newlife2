@@ -2,22 +2,30 @@
 // Shared utility functions
 // ============================================
 
-const MONTHS_UK = [
-  'січня', 'лютого', 'березня', 'квітня', 'травня', 'червня',
-  'липня', 'серпня', 'вересня', 'жовтня', 'листопада', 'грудня',
-]
+const timeZone = 'Europe/Kyiv'
+const dateFormatter = new Intl.DateTimeFormat('uk-UA', { timeZone, day: 'numeric', month: 'long', year: 'numeric' })
+const timeFormatter = new Intl.DateTimeFormat('uk-UA', { timeZone, hour: '2-digit', minute: '2-digit' })
 
 /** Format ISO date string to Ukrainian readable format: "25 грудня 2025" */
 export function formatDate(isoDate: string): string {
-  const d = new Date(isoDate)
-  return `${d.getDate()} ${MONTHS_UK[d.getMonth()]} ${d.getFullYear()}`
+  return dateFormatter.format(new Date(isoDate)).replace(/\s*р\.$/, '')
 }
 
 /** Like formatDate but adds the time: "25 грудня 2025, 18:00" (events carry a time). */
 export function formatEventDate(isoDate: string): string {
-  const d = new Date(isoDate)
-  const time = d.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' })
-  return `${formatDate(isoDate)}, ${time}`
+  return `${formatDate(isoDate)}, ${timeFormatter.format(new Date(isoDate))}`
+}
+
+/** UTC instant at Kyiv midnight, including days when the UTC offset changes. */
+export function startOfKyivDay(now: Date): string {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone, year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(now)
+  const part = (name: string) => parts.find(value => value.type === name)!.value
+  const midnight = Date.parse(`${part('year')}-${part('month')}-${part('day')}T00:00:00Z`)
+  const offsetParts = new Intl.DateTimeFormat('en', { timeZone, timeZoneName: 'longOffset' })
+    .formatToParts(new Date(midnight)).find(value => value.type === 'timeZoneName')!.value
+  const match = offsetParts.match(/GMT([+-])(\d{2}):(\d{2})/)
+  const offset = match ? (match[1] === '+' ? 1 : -1) * (Number(match[2]) * 60 + Number(match[3])) : 0
+  return new Date(midnight - offset * 60_000).toISOString()
 }
 
 /**

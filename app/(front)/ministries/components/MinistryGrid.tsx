@@ -1,5 +1,3 @@
-'use client'
-
 import { clsx } from 'clsx'
 import { MinistryCard, MinistryCardGrid } from '@/components/ui/MinistryCard'
 import type { SanityMinistryCard } from '@/sanity/lib/types'

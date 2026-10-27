@@ -1,4 +1,4 @@
-'use client'
+import { Icon } from '@/components/ui/Icon'
 
 import Link from 'next/link'
 
@@ -45,11 +45,11 @@ export function NewsPagination({ currentPage, totalPages, category }: NewsPagina
               href={buildHref(currentPage - 1)}
               className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary hover:text-primary-text transition-all duration-200"
             >
-              <i className="fas fa-chevron-left text-xs" />
+              <Icon className="fas fa-chevron-left text-xs" />
             </Link>
           ) : (
             <span className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed">
-              <i className="fas fa-chevron-left text-xs" />
+              <Icon className="fas fa-chevron-left text-xs" />
             </span>
           )}
         </li>
@@ -79,11 +79,11 @@ export function NewsPagination({ currentPage, totalPages, category }: NewsPagina
               href={buildHref(currentPage + 1)}
               className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary hover:text-primary-text transition-all duration-200"
             >
-              <i className="fas fa-chevron-right text-xs" />
+              <Icon className="fas fa-chevron-right text-xs" />
             </Link>
           ) : (
             <span className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-medium text-gray-400 bg-gray-100 border border-gray-200 cursor-not-allowed">
-              <i className="fas fa-chevron-right text-xs" />
+              <Icon className="fas fa-chevron-right text-xs" />
             </span>
           )}
         </li>

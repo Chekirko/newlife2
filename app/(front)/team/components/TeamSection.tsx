@@ -43,7 +43,7 @@ export function TeamSection({ preTitle, title, members, subtitleField, bgClass =
                 photoUrl={
                   member.photo
                     ? urlFor(member.photo).width(600).height(800).url()
-                    : '/images/placeholder.jpg'
+                    : null
                 }
               />
               )

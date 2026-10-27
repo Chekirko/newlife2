@@ -1,10 +1,11 @@
-import Image from 'next/image'
+import { Icon } from '@/components/ui/Icon'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
 import { client } from '@/sanity/lib/client'
-import { originalImageUrl, urlFor } from '@/sanity/lib/image'
+import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { PhotoViewer, PortableTextBody } from '@/components'
 import { getPageMetadata } from '@/lib/metadata'
 import { getPageHeroes } from '@/lib/page-heroes'
@@ -97,10 +98,10 @@ export default async function EventDetailPage({
       <section className="relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden">
         <Image
           src={heroes.eventsHero}
+          preload
           alt=""
           fill
-          priority
-          sizes="100vw"
+          sizes="(max-width: 991px) max(100vw, 623px), max(100vw, 800px)"
           className="object-cover -z-10"
         />
         <div className="absolute inset-0 bg-black/55" />
@@ -145,7 +146,7 @@ export default async function EventDetailPage({
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-4 mb-8">
               {startDate && <span className="flex items-center gap-1.5 text-sm text-gray-500">
-                <i className="far fa-calendar-alt" />
+                <Icon className="far fa-calendar-alt" />
                 {formatEventDate(event.startDate)}
               </span>}
               <span className="bg-grad-readable text-white text-xs font-semibold px-3 py-1 rounded">
@@ -153,7 +154,7 @@ export default async function EventDetailPage({
               </span>
               {event.location && (
                 <span className="flex items-center gap-1.5 text-sm text-gray-500">
-                  <i className="fas fa-map-marker-alt" />
+                  <Icon className="fas fa-map-marker-alt" />
                   {event.location}
                 </span>
               )}
@@ -161,25 +162,21 @@ export default async function EventDetailPage({
 
             {/* Image */}
             {imageUrl && (
-              <PhotoViewer photos={[{
+              <PhotoViewer photos={[toPhotoItem(event.image!, {
                 id: event._id,
-                thumbUrl: originalImageUrl(event.image!),
-                fullUrl: originalImageUrl(event.image!),
                 alt: event.title,
                 width: event.imageDimensions?.width || 1200,
                 height: event.imageDimensions?.height || 675,
-              }]}
+              })]}
                 className="relative rounded-xl overflow-hidden mb-8"
               >
                 <Image
-                  src={originalImageUrl(event.image!)}
-                  unoptimized
+                  src={urlFor(event.image!).width(1600).url()}
                   alt={event.title}
                   width={event.imageDimensions?.width || 1200}
                   height={event.imageDimensions?.height || 675}
                   sizes="(max-width: 768px) 100vw, 800px"
                   className="w-full h-auto"
-                  priority
                 />
               </PhotoViewer>
             )}

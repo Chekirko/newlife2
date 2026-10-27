@@ -2,7 +2,8 @@
 
 import { client } from '@/sanity/lib/client'
 import { toMediaCard, toMatchQuery, type RawMediaItem } from '@/lib/media'
-import type { MediaCardItem } from './components/MediaCard'
+import { renderMediaCards, type MediaCardItem } from './components/MediaCard'
+import type { ReactNode } from 'react'
 import { MEDIA_SEARCH_QUERY, MEDIA_COUNT_QUERY, MEDIA_PER_PAGE } from './queries'
 
 // =========================================
@@ -24,7 +25,7 @@ export async function loadMoreMedia({
   speaker,
   q,
   start,
-}: LoadMoreParams): Promise<MediaCardItem[]> {
+}: LoadMoreParams): Promise<{ cards: MediaCardItem[]; views: ReactNode[] }> {
   const raw = await client.fetch<RawMediaItem[]>(MEDIA_SEARCH_QUERY, {
     category: category || '',
     speaker: speaker || '',
@@ -32,7 +33,8 @@ export async function loadMoreMedia({
     start,
     end: start + MEDIA_PER_PAGE,
   })
-  return raw.map(toMediaCard)
+  const cards = raw.map(toMediaCard)
+  return { cards, views: renderMediaCards(cards) }
 }
 
 // searchMedia — first page + total for a filter change (tab / speaker / search),
@@ -47,7 +49,7 @@ export async function searchMedia({
   category,
   speaker,
   q,
-}: SearchParams): Promise<{ cards: MediaCardItem[]; total: number }> {
+}: SearchParams): Promise<{ cards: MediaCardItem[]; views: ReactNode[]; total: number }> {
   const params = {
     category: category || '',
     speaker: speaker || '',
@@ -57,5 +59,6 @@ export async function searchMedia({
     client.fetch<RawMediaItem[]>(MEDIA_SEARCH_QUERY, { ...params, start: 0, end: MEDIA_PER_PAGE }),
     client.fetch<number>(MEDIA_COUNT_QUERY, params),
   ])
-  return { cards: raw.map(toMediaCard), total }
+  const cards = raw.map(toMediaCard)
+  return { cards, views: renderMediaCards(cards), total }
 }

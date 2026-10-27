@@ -1,4 +1,7 @@
-import Image from 'next/image'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
+
+import { Icon } from '@/components/ui/Icon'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 
 interface NewsCardProps {
@@ -7,7 +10,7 @@ interface NewsCardProps {
   date: string
   mainCategory: string
   text: string
-  imageUrl: string
+  imageUrl: string | null
 }
 
 export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: NewsCardProps) {
@@ -16,13 +19,13 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
       {/* Image */}
       <div className="relative overflow-hidden" style={{ aspectRatio: '16 / 9' }}>
         <Link href={`/news/${slug}`} className="absolute inset-0 focus-visible:outline-offset-[-4px]">
-          <Image
+          {imageUrl ? <Image
             src={imageUrl}
             alt={title}
             fill
             sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 37vw"
             className="object-cover transition-transform duration-500 hover:scale-105"
-          />
+          /> : <ImagePlaceholder className="h-full min-h-48 w-full" />}
         </Link>
         {mainCategory && (
           <span className="absolute top-4 left-4 bg-grad-readable text-white text-xs font-semibold px-3 py-1.5 rounded">
@@ -36,7 +39,7 @@ export function NewsCard({ title, slug, date, mainCategory, text, imageUrl }: Ne
         {/* Meta */}
         <div className="flex items-center gap-3 text-xs text-gray-500 mb-3">
           <span className="flex items-center gap-1.5">
-            <i className="far fa-calendar-alt" aria-hidden="true" />
+            <Icon className="far fa-calendar-alt" aria-hidden="true" />
             {date}
           </span>
         </div>

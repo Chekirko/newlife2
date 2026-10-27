@@ -14,6 +14,7 @@ import {
   MEDIA_PER_PAGE,
 } from './queries'
 import { getLiveVideoId } from '@/lib/live-stream'
+import { renderMediaCards } from './components/MediaCard'
 import { MediaGallery } from './components/MediaGallery'
 
 export const revalidate = 60 // Revalidate page every 60 seconds
@@ -82,6 +83,7 @@ export default async function MediaPage({
         <div className="container-larexa">
           <MediaGallery
             initialCards={cards}
+            initialViews={renderMediaCards(cards)}
             total={total}
             speakers={speakers}
             category={category}

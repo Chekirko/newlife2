@@ -1,18 +1,31 @@
 import ChurchHeader from "@/components/ChurchHeader";
 import ChurchFooter from "@/components/ChurchFooter";
 import { getSiteSettings } from "@/lib/site-settings";
+import type { Metadata } from 'next';
+import { SITE_URL } from '@/lib/site';
+import { getPageMetadata } from '@/lib/metadata';
+import { bodyFont, headingFont, accentFont } from '../site-fonts';
+import '../globals.css';
+
+export async function generateMetadata(): Promise<Metadata> {
+  return {
+    ...await getPageMetadata('/'),
+    metadataBase: new URL(SITE_URL),
+    robots: { index: false, follow: true },
+    keywords: ['церква', 'євангельська церква', 'Борислав', 'Нове Життя', 'богослужіння'],
+  };
+}
 
 export default async function FrontLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Fetch the church settings once here (server) and pass down — ChurchHeader is
-  // a client component and cannot fetch, ChurchFooter avoids a second round-trip.
   const settings = await getSiteSettings();
 
   return (
-    <>
+    <html lang="uk" className={`${bodyFont.variable} ${headingFont.variable} ${accentFont.variable}`}>
+    <body className="antialiased">
       {/* Skip-link — first focusable element, lets keyboard users jump past the header */}
       <a
         href="#main-content"
@@ -21,11 +34,11 @@ export default async function FrontLayout({
         Перейти до вмісту
       </a>
       <ChurchHeader settings={settings} />
-      {/* Top bar (44px) + header: logo (56px) / desktop nav (96px) + vertical padding (24px). */}
-      <main id="main-content" tabIndex={-1} className="pt-[124px] lg:pt-[164px]">
+      <main id="main-content" tabIndex={-1}>
         {children}
       </main>
       <ChurchFooter settings={settings} />
-    </>
+    </body>
+    </html>
   );
 }

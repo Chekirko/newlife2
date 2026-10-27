@@ -28,9 +28,9 @@
 ## Styling and Images
 
 - Tailwind v4 + tokens із `app/globals.css`; дизайн — [spec 08](specs/08-larexa-redesign.md), не скляні hero/великі радіуси.
-- B4: локальні Montserrat (heading, кирилиця), Roboto (body), Playfair italic (accent), через `next/font/local` у Фазі 1. Зберігати ліцензії; не повертати remote font CSS.
-- B3: inline SVG через CMS-сумісний реєстр у Фазі 1. Поки FA локальний; повний CSS не додавати повторно.
-- B1 скасовує вимогу оригіналів всюди: адаптивні Sanity CDN прев’ю з коректними `sizes`/LQIP, оригінал у viewer/завантаженні. **Код ще використовує q=100/unoptimized до Фази 1**; не вважати міграцію завершеною.
+- B4 реалізовано: локальні Montserrat (heading, кирилиця), Roboto (body), Playfair italic (accent), через `app/site-fonts.ts`/`next/font/local`. Зберігати ліцензії й sources.json; не повертати remote font CSS.
+- B3 реалізовано: серверний `Icon` (`server-only`) + `lib/icons.ts`, inline SVG і CMS-сумісні FA-назви. Client controls використовують малий `ControlIcon`, спільна розмітка — `SvgIcon`; CMS-реєстр не потрапляє в браузер. Декоративні іконки aria-hidden; icon-font CSS не додавати.
+- B1 реалізовано: використовувати `SiteImage` для Sanity CDN прев’ю (власний loader, q=75/auto=format, `sizes`/LQIP). `toPhotoItem()` відділяє thumbUrl від fullUrl; оригінал/unoptimized дозволений лише у viewer та завантаженні. Не повертати deferred-original компонент.
 - `next/image` замість важких CSS-фонів; `preload` лише для LCP. `sizes` враховує фактичний cover-crop, а не лише viewport.
 - Немає asset → `ImagePlaceholder`, а не посилання на неіснуючий файл. У gallery пропускати assets без необхідних dimensions.
 

@@ -1,8 +1,8 @@
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock } from '@portabletext/types'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
-import { originalImageUrl } from '@/sanity/lib/image'
+import { toPhotoItem } from '@/sanity/lib/image'
 import { PhotoViewer } from './ui/PhotoViewer'
 import type { PhotoItem } from './ui/ImageLightbox'
 
@@ -99,16 +99,13 @@ export function PortableTextBody({
 
   const photos: PhotoItem[] = (value.filter((block) => block._type === 'image') as unknown as InlineImage[])
     .flatMap((image) => {
-      if (!image.asset?._ref) return []
-      const original = originalImageUrl(image as SanityImageSource)
-      return [{
+      if (!image.asset?._ref || !image.dimensions?.width || !image.dimensions?.height) return []
+      return [toPhotoItem(image as SanityImageSource, {
         id: image._key ?? image.asset._ref,
-        thumbUrl: original,
-        fullUrl: original,
         alt: image.alt?.trim() || 'Фотографія',
         width: image.dimensions?.width ?? 1200,
         height: image.dimensions?.height ?? 800,
-      }]
+      })]
     })
 
   return <PortableText value={value} components={{
@@ -120,7 +117,7 @@ export function PortableTextBody({
         if (!photo) return null
         return (
           <PhotoViewer photos={photos} index={index} className="my-6 overflow-hidden rounded-xl">
-            <Image src={photo.fullUrl} alt={photo.alt} width={photo.width} height={photo.height} unoptimized className="w-full h-auto" />
+            <Image src={photo.thumbUrl} alt={photo.alt} width={photo.width} height={photo.height} sizes="(max-width: 800px) 100vw, 800px" className="w-full h-auto" />
           </PhotoViewer>
         )
       },

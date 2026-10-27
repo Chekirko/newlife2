@@ -86,7 +86,7 @@ export async function getHomepage(): Promise<{
       description: w.description!,
       image: w.image
         ? urlFor(w.image).width(600).height(400).url()
-        : '/images/placeholder.jpg',
+        : null,
     }))
 
   return {

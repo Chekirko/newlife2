@@ -1,4 +1,5 @@
 ﻿import Link from 'next/link'
+import Image from '@/components/ui/SiteImage'
 
 // =========================================
 // OUR VISION - Church vision section
@@ -24,8 +25,8 @@ export const OurVision = ({
   subtitle,
   visionText,
   visionHighlight,
-  image1 = '/images/church-worship.jpg',
-  image2 = '/images/church-community.jpg',
+  image1 = '/images/vision1.jpg',
+  image2 = '/images/vision2.jpg',
   ctaText,
   ctaHref,
   className,
@@ -65,24 +66,16 @@ export const OurVision = ({
         <div className="grid grid-cols-1 md:grid-cols-12 gap-4 md:gap-6">
           {/* Image 1 */}
           <div className="md:col-span-3">
-            <div 
-              className="h-48 md:h-full w-full rounded-lg overflow-hidden bg-cover bg-center bg-gray-200"
-              style={{ 
-                backgroundImage: `url(${image1})`,
-                minHeight: '220px'
-              }}
-            />
+            <div className="relative h-48 min-h-[220px] w-full overflow-hidden rounded-lg bg-gray-200 md:h-full">
+              <Image src={image1} alt="" fill sizes="(max-width: 767px) 100vw, 300px" className="object-cover" />
+            </div>
           </div>
 
           {/* Image 2 */}
           <div className="md:col-span-3">
-            <div 
-              className="h-48 md:h-full w-full rounded-lg overflow-hidden bg-cover bg-center bg-gray-200"
-              style={{ 
-                backgroundImage: `url(${image2})`,
-                minHeight: '220px'
-              }}
-            />
+            <div className="relative h-48 min-h-[220px] w-full overflow-hidden rounded-lg bg-gray-200 md:h-full">
+              <Image src={image2} alt="" fill sizes="(max-width: 767px) 100vw, 300px" className="object-cover" />
+            </div>
           </div>
 
           {/* Vision block with gradient */}

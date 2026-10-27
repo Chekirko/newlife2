@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 import { urlFor } from '@/sanity/lib/image'
 import type { SanityTeamMemberCard } from '@/sanity/lib/types'
@@ -29,7 +30,7 @@ export function HonorarySection({ members, bgClass = 'bg-gray-50' }: HonorarySec
           {members.map((member) => {
             const photoUrl = member.photo
               ? urlFor(member.photo).width(352).height(352).url()
-              : '/images/placeholder.jpg'
+              : null
 
             return (
               <Link
@@ -39,13 +40,13 @@ export function HonorarySection({ members, bgClass = 'bg-gray-50' }: HonorarySec
               >
                 {/* Rounded photo with hover ring effect */}
                 <div className="relative w-36 h-36 lg:w-44 lg:h-44 mx-auto mb-5 rounded-full overflow-hidden ring-2 ring-primary/30 group-hover:ring-primary group-hover:ring-4 transition-all duration-300">
-                  <Image
+                  {photoUrl ? <Image
                     src={photoUrl}
                     alt=""
                     fill
                     sizes="(max-width: 1024px) 144px, 176px"
                     className="object-cover transition-transform duration-500 group-hover:scale-105"
-                  />
+                  /> : <ImagePlaceholder className="h-full min-h-48 w-full" />}
                 </div>
 
                 {/* Name */}

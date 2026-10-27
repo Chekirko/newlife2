@@ -2,9 +2,7 @@ import Link from 'next/link'
 
 // =========================================
 // NotFoundView — shared 404 body
-// Reused by app/(front)/not-found.tsx (in-site bad slugs, gets chrome
-// from the front layout) and app/not-found.tsx (unmatched URLs, which
-// wraps it with header/footer manually).
+// Both unknown routes and missing content use the public root layout.
 // =========================================
 
 const quickLinks = [

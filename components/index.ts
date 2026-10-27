@@ -12,10 +12,8 @@ export { PhotoViewer } from './ui/PhotoViewer'
 // Section Components - Hero (only used variants)
 export {
   HeroSlider,
-  HeroGradientImage,
   type HeroSliderProps,
   type HeroSlide,
-  type HeroGradientImageProps,
 } from './sections/Hero'
 
 // Section Components - NewsSlider (shared: homepage + ministry detail)
@@ -35,3 +33,5 @@ export { PlaceholderPage, type PlaceholderPageProps } from './PlaceholderPage'
 
 // 404 body (shared: app/not-found + app/(front)/not-found)
 export { NotFoundView } from './NotFoundView'
+
+export { HeroGradientImage, type HeroGradientImageProps } from './sections/HeroGradientImage'

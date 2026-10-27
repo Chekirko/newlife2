@@ -25,15 +25,10 @@ export function getYouTubeId(url: string | null | undefined): string | null {
   return null
 }
 
-/** YouTube-hosted thumbnail for a video id.
- *  - `max` → maxresdefault (1280×720, true 16:9) — sharpest, but may 404.
- *  - `sd`  → sddefault (640×480) — always exists; a 4:3 frame whose letterbox
- *            bars get cropped away by `object-cover` in a 16:9 box, so it stays
- *            sharp. Use as the maxres fallback (much crisper than mqdefault).
- *  - `mq`  → mqdefault (320×180, true 16:9) — always exists, low-res. */
-export function getYouTubeThumbnail(id: string, quality: 'mq' | 'sd' | 'max' = 'mq'): string {
+/** Use the standard HQ thumbnail; optional high-resolution frames may be absent. */
+export function getYouTubeThumbnail(id: string, quality: 'mq' | 'sd' | 'hq' = 'hq'): string {
   const file =
-    quality === 'max' ? 'maxresdefault' : quality === 'sd' ? 'sddefault' : 'mqdefault'
+    quality === 'sd' ? 'sddefault' : quality === 'mq' ? 'mqdefault' : 'hqdefault'
   return `https://img.youtube.com/vi/${id}/${file}.jpg`
 }
 

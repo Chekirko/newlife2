@@ -76,7 +76,7 @@
 
 ### Фаза 0 — Гігієна репо і документації
 
-Статус 2026-10-27: **завершено локально** — lint, typecheck, test, build PASS; application source без змін. Результат і наступний гейт — у [tracker](progress-tracker.md). Нижче збережено погоджений checklist фази; назви видалених файлів тут та в архівах — історичні, не runtime-посилання.
+Статус 2026-10-27: **завершено** — lint, typecheck, test, build PASS; application source без змін. Результат і наступний гейт — у [tracker](progress-tracker.md). Нижче збережено погоджений checklist фази; назви видалених файлів тут та в архівах — історичні, не runtime-посилання.
 Без змін логіки й дизайну.
 1. **Архів/стиснення документації** (`git mv`, історія зберігається):
    - старий `progress-tracker.md` → `archive/2026-10-27/progress-tracker.md`; новий tracker ≤8 КБ (поточний стан, наступна фаза, правило: ≤10 рядків на фазу, без абзаців «commit погоджено» — журнал у git);
@@ -98,6 +98,8 @@
 **Приймання:** build/lint/test PASS; у чинному коді/конфігурації немає залежностей від видалених файлів; відносні посилання в `context/*.md`, `AGENTS.md`, `README.md` валідні. Без runtime-змін Lighthouse/скриншоти не повторюються; перевіряються незмінність application source і відсутність зламаних ресурсних залежностей.
 
 ### Фаза 1 — Фундамент швидкодії
+Статус 2026-10-27: **завершено** — реалізовано всі 7 пунктів; quality gates і browser QA PASS. [Lighthouse до/після](../docs/phase1-performance.md), поточний стан — [tracker](progress-tracker.md). Загальні Performance/a11y цілі ще потребують наступних фаз.
+
 Візуально без змін, крім шрифту заголовків.
 1. **Іконки (B3):** `components/ui/Icon.tsx` (серверний) + `lib/icons.ts` (SVG path з `@fortawesome/free-{solid,regular,brands}-svg-icons`, лише ~50 використаних); приймає рядки CMS (`'fas fa-music'`) і `aria-hidden` за замовчуванням. Видалити `@fortawesome/fontawesome-free`, `app/icon-fonts.css`, імпорт у `app/layout.tsx`.
 2. **Шрифти (B4):** `next/font/local` — Roboto, Montserrat (cyrillic + latin, 500/600/700), Playfair Display italic; CSS-змінні `--font-base/--font-heading/--font-alt`; видалити `@font-face` з `app/fonts.css`, ручні `<link rel="preload">`, файли Poppins.

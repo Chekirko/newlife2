@@ -1,7 +1,9 @@
 'use client'
 
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
+
 import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 import { clsx } from 'clsx'
 
@@ -14,7 +16,7 @@ import { clsx } from 'clsx'
 export interface EventItem {
   _id: string
   title: string
-  image: string
+  image: string | null
   date: string
   description: string
   slug: string
@@ -119,13 +121,13 @@ export const EventsSlider = ({
             <div className="grid md:grid-cols-2 gap-0">
               {/* Image */}
               <div className="relative aspect-[3/2]">
-                <Image
+                {event.image ? <Image
                   src={event.image}
                   alt={event.title}
                   fill
                   sizes="(max-width: 768px) 100vw, 50vw"
                   className="object-cover"
-                />
+                /> : <ImagePlaceholder className="h-full min-h-48 w-full" />}
                 {event.tag && (
                   <span className="absolute top-4 left-4 bg-grad-readable text-white px-4 py-2 rounded-full text-sm font-medium">
                     {event.tag}
@@ -208,13 +210,13 @@ export const EventsSlider = ({
                   <div className="bg-white rounded-xl shadow-md overflow-hidden h-full hover:shadow-xl transition-shadow">
                     {/* Image */}
                     <div className="relative aspect-[3/2]">
-                      <Image
+                      {event.image ? <Image
                         src={event.image}
                         alt={event.title}
                         fill
                         sizes="(max-width: 768px) 100vw, 50vw"
                         className="object-cover"
-                      />
+                      /> : <ImagePlaceholder className="h-full min-h-48 w-full" />}
                       {event.tag && (
                         <span className="absolute top-4 left-4 bg-grad-readable text-white px-3 py-1 rounded-full text-sm font-medium">
                           {event.tag}

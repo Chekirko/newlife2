@@ -29,13 +29,13 @@
 
 «Актуальне слово» використовує weak reference з homepage або найновішу проповідь. Live-банер на головній під hero та на media потребує channel ID у Studio + `YOUTUBE_API_KEY`. Без конфігурації секція схована.
 
-Контентні фото відкриваються у спільному viewer, включно з rich text/history/team photo. Поточна доставка — full-resolution q=100/unoptimized; B1 вже скасував цю вимогу на майбутнє: Фаза 1 переведе сторінки на адаптивні прев’ю, оригінали залишаться на вимогу.
+Контентні фото відкриваються у спільному відкладеному native viewer, включно з rich text/history/team photo. Сторінки показують адаптивні CDN-прев’ю; оригінали доступні у viewer та для завантаження. Відео має native dialog, карта — фасад із кнопкою й зовнішнім посиланням. Публічний сайт і Studio мають окремі root layouts.
 
 ## Scope and Planned Changes
 
 Зараз CMS має singletons siteSettings/homepage/pageHeroes/aboutPage та колекції ministry/news/event/teamMember/mediaItem. NAP, розклад, соцмережі й defaults — siteSettings; статистика — aboutPage. Фолбеки забезпечують неповні CMS-дані; контентні факти потребують перевірки редактором.
 
-Затверджені зміни: фундамент швидкодії (Фаза 1), static-first/cache/webhook (2), єдиний indexing-механізм і SEO (3), Larexa components/редизайн сторінок зі статичним hero (4–5), доступність (6), browser/unit/CI перевірки та CSP (7), контент/дії власника (8), окремо погоджений запуск (9).
+Фундамент швидкодії Фази 1 реалізовано. Далі: static-first/cache/webhook (2), єдиний indexing-механізм і SEO (3), Larexa components/редизайн сторінок зі статичним hero (4–5), доступність (6), browser/unit/CI перевірки та CSP (7), контент/дії власника (8), окремо погоджений запуск (9).
 
 Рекомендації master-plan §E — backlog, не автоматично дозволений scope: «Я тут уперше», sermon detail pages, календар, give, молитовні потреби тощо. Авторизація публічних відвідувачів, processing платежів, newsletter, коментарі й мультимовність не входять у поточну реалізацію.
 

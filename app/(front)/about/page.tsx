@@ -1,3 +1,4 @@
+import { Icon } from '@/components/ui/Icon'
 import type { Metadata } from 'next'
 import { getPageMetadata } from '@/lib/metadata'
 import type { ReactNode } from 'react'
@@ -249,7 +250,7 @@ export default async function AboutPage() {
             {about.whatToExpect.items.map((item) => (
               <div key={item.title} className="flex gap-4 items-start">
                 <div className="shrink-0 w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                  <i className={`${item.icon} text-primary-text text-lg`} aria-hidden="true" />
+                  <Icon className={`${item.icon} text-primary-text text-lg`} aria-hidden="true" />
                 </div>
                 <div>
                   <h3 className="text-xl font-bold text-gray-800 mb-1">{item.title}</h3>

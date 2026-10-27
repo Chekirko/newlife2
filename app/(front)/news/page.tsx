@@ -1,3 +1,4 @@
+import { Icon } from '@/components/ui/Icon'
 import type { Metadata } from 'next'
 import { cache } from 'react'
 import { notFound } from 'next/navigation'
@@ -54,7 +55,7 @@ interface RecentPostTransformed {
   title: string
   slug: string
   publishedAt: string
-  imageUrl: string
+  imageUrl: string | null
 }
 
 export default async function NewsPage({
@@ -84,7 +85,7 @@ export default async function NewsPage({
     publishedAt: p.publishedAt,
     imageUrl: p.image
       ? urlFor(p.image).width(140).height(140).url()
-      : '/images/placeholder.jpg',
+      : null,
   }))
 
   return (
@@ -117,7 +118,7 @@ export default async function NewsPage({
                     className="text-sm text-gray-500 hover:text-red-500 transition-colors"
                     title="Скинути фільтр"
                   >
-                    <i className="fas fa-times" aria-hidden="true" /> Скинути
+                    <Icon className="fas fa-times" aria-hidden="true" /> Скинути
                   </Link>
                 </div>
               )}
@@ -136,14 +137,14 @@ export default async function NewsPage({
                     imageUrl={
                       n.image
                       ? urlFor(n.image).width(1200).height(675).url()
-                        : '/images/placeholder.jpg'
+                        : null
                     }
                   />
                 ))}
                 </div>
               ) : (
                 <div className="text-center py-20">
-                  <i className="far fa-newspaper text-5xl text-gray-300 mb-4 block" aria-hidden="true" />
+                  <Icon className="far fa-newspaper text-5xl text-gray-300 mb-4 block" aria-hidden="true" />
                   <h2 className="text-xl font-semibold text-gray-700 mb-2">
                     Новин не знайдено
                   </h2>

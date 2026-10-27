@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import { PhotoViewer, type PhotoItem } from '@/components'
 
 interface NewsPhotoGalleryProps {
@@ -26,9 +26,8 @@ export function NewsPhotoGallery({ photos, startIndex }: NewsPhotoGalleryProps) 
         {gallery.map((photo, index) => (
           <PhotoViewer key={photo.id} photos={photos} index={startIndex + index} className="mb-4 break-inside-avoid overflow-hidden rounded-xl bg-gray-100">
             <Image
-              src={photo.fullUrl}
+              src={photo.thumbUrl}
               alt={photo.alt}
-              unoptimized
               width={photo.width}
               height={photo.height}
               sizes={gallery.length === 1

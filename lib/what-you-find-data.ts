@@ -15,7 +15,7 @@ export const WHAT_YOU_FIND_FALLBACK: MinistryItem[] = [
     title: 'Проповідь Слова Божого',
     description:
       'Зрозуміле викладання Біблії, яке допомагає застосувати біблійні принципи у повсякденному житті та дає відповіді на важливі питання.',
-    image: '/images/action1.jpg',
+    image: '/images/ministries-hero.jpg',
   },
   {
     icon: 'fas fa-music',

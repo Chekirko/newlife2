@@ -1,7 +1,5 @@
-'use client'
+import { Icon } from '@/components/ui/Icon'
 
-import { useState } from 'react'
-import { clsx } from 'clsx'
 import Link from 'next/link'
 
 // =========================================
@@ -39,8 +37,6 @@ export const FAQSplit = ({
   contactButtonHref,
   className,
 }: FAQSplitProps) => {
-  const [openIndex, setOpenIndex] = useState(0)
-
   return (
     <section className={className}>
       <div className="container-larexa">
@@ -52,26 +48,17 @@ export const FAQSplit = ({
             
             <div className="accordion">
               {items.map((item, idx) => (
-                <div key={item.id} className="accordion-item border-b border-gray-200">
-                  <button
-                    className="accordion-header w-full text-left py-4 flex justify-between items-center font-bold"
-                    onClick={() => setOpenIndex(openIndex === idx ? -1 : idx)}
-                  >
+                <details key={item.id} name="faq" open={idx === 0} className="group accordion-item border-b border-gray-200">
+                  <summary className="accordion-header w-full cursor-pointer list-none text-left py-4 flex justify-between items-center gap-4 font-bold">
                     {item.question}
-                    <span className={clsx(
-                      'transition-transform',
-                      openIndex === idx && 'rotate-180'
-                    )}>
-                      <i className="fas fa-chevron-down" />
+                    <span className="transition-transform group-open:rotate-180">
+                      <Icon className="fas fa-chevron-down" />
                     </span>
-                  </button>
-                  <div className={clsx(
-                    'accordion-body overflow-hidden transition-all duration-300',
-                    openIndex === idx ? 'max-h-96 pb-4' : 'max-h-0'
-                  )}>
+                  </summary>
+                  <div className="accordion-body pb-4">
                     <p className="text-gray-600">{item.answer}</p>
                   </div>
-                </div>
+                </details>
               ))}
             </div>
           </div>

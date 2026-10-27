@@ -1,5 +1,7 @@
 'use client'
 
+import { ControlIcon as Icon } from '@/components/ui/ControlIcon'
+
 import { useEffect } from 'react'
 import Link from 'next/link'
 
@@ -22,7 +24,7 @@ export default function Error({
       <div className="container-larexa">
         <div className="max-w-xl mx-auto text-center">
           <span className="bg-grad-readable inline-flex w-16 h-16 rounded-full items-center justify-center mb-6">
-            <i className="fas fa-triangle-exclamation text-white text-2xl" aria-hidden="true" />
+            <Icon className="fas fa-triangle-exclamation text-white text-2xl" aria-hidden="true" />
           </span>
           <h1 className="font-heading font-bold text-2xl lg:text-3xl text-gray-800 mb-3">
             Щось пішло не так

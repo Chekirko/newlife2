@@ -1,3 +1,4 @@
+import { Icon } from '@/components/ui/Icon'
 import type { Metadata } from 'next'
 import { cache } from 'react'
 import { notFound } from 'next/navigation'
@@ -50,7 +51,7 @@ interface RecentEventTransformed {
   title: string
   slug: string
   startDate: string
-  imageUrl: string
+  imageUrl: string | null
 }
 
 export default async function EventsPage({
@@ -73,7 +74,7 @@ export default async function EventsPage({
     startDate: e.startDate,
     imageUrl: e.image
       ? urlFor(e.image).width(140).height(140).url()
-      : '/images/placeholder.jpg',
+      : null,
   }))
 
   return (
@@ -108,7 +109,7 @@ export default async function EventsPage({
                     imageUrl={
                       e.image
                         ? urlFor(e.image).ignoreImageParams().width(900).fit('max').auto('format').url()
-                        : '/images/placeholder.jpg'
+                        : null
                     }
                     imageDimensions={e.imageDimensions}
                   />
@@ -116,7 +117,7 @@ export default async function EventsPage({
                 </div>
               ) : (
                 <div className="text-center py-20">
-                  <i className="far fa-calendar-alt text-5xl text-gray-300 mb-4 block" />
+                  <Icon className="far fa-calendar-alt text-5xl text-gray-300 mb-4 block" />
                   <h2 className="text-xl font-semibold text-gray-700 mb-2">
                     Подій не знайдено
                   </h2>

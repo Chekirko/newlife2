@@ -1,6 +1,6 @@
 # UI Context
 
-Дизайн-система — **Larexa**, [spec 08](specs/08-larexa-redesign.md). Це затверджена ціль; міграція компонентів — Фази 4–5 [master-plan](master-plan.md). Фаза 0 змінює документацію, не вигляд застосунку.
+Дизайн-система — **Larexa**, [spec 08](specs/08-larexa-redesign.md). Це затверджена ціль; міграція компонентів — Фази 4–5 [master-plan](master-plan.md). Фаза 1 реалізує технічний фундамент і Montserrat, не редизайн сторінок.
 
 ## Colors
 
@@ -25,7 +25,7 @@
 | Body | Roboto, 14px / 1.6 | `--font-base` |
 | Pre-title | Playfair Display italic, 24px | `--font-alt` |
 
-У Фазі 1 шрифти переходять на `next/font/local`; поточний код ще має Poppins і `app/fonts.css`. Локальні assets та OFL зберігати, remote font CSS не додавати. Базові H1–H6: 35/28/24.5/21/17.5/14px, line-height 1.2; `.title h2` — 36px/600. Heading rank визначається структурою, а не бажаним розміром.
+Шрифти підключені через `next/font/local` у public root, із хешуванням і metric fallback; body/heading preload, accent на вимогу. Poppins і `app/fonts.css` видалено. Локальні assets та OFL зберігати, remote font CSS не додавати. Базові H1–H6: 35/28/24.5/21/17.5/14px, line-height 1.2; `.title h2` — 36px/600. Heading rank визначається структурою, а не бажаним розміром.
 
 ## Shape and Layout
 
@@ -40,7 +40,7 @@
 
 Оригінальні SVG `public/images/logo-dark.svg` / `logo-white.svg`: зберігати мальований знак, хрест і напис «церква м. Борислав». Header — темний на білому, 56px; footer — білий, 224px з max-width. Обидва home links мають accessible name.
 
-**Поточний стан:** fixed header і відступ main 124/164px, клієнтський header із dropdown/mobile меню. **Ціль Фаз 1/4:** server shell, компактна sticky nav, top bar прокручується, закрите меню inert. Media dropdown — Відео `/media` і Фото `/media/photos`; «Про нас» групує about/history/team.
+**Поточний стан:** серверний header, top bar 44px у звичайному потоці, CSS sticky nav (80px mobile / 120px desktop), без ручного відступу main. NavLink/Dropdown/MobileMenu — острівці, закриті меню hidden/inert, nav має label, активне посилання aria-current. Компактний редизайн nav — Фаза 4. Media dropdown — Відео `/media` і Фото `/media/photos`; «Про нас» групує about/history/team.
 
 ## Page Patterns and Content
 
@@ -54,9 +54,9 @@
 
 ## Photos and Viewers
 
-**B1:** адаптивні Sanity CDN прев’ю + оригінал на вимогу у lightbox/завантаженні. Стару вимогу «q=100 всюди» скасовано; її код змінюється у Фазі 1. Пропорції з asset metadata, LQIP і коректні sizes; без неіснуючих placeholder URL.
+**B1 реалізовано:** адаптивні Sanity CDN прев’ю + оригінал на вимогу у lightbox/завантаженні. Пропорції з asset metadata, LQIP і коректні sizes; без неіснуючих placeholder URL. Статичні фото й колишні CSS-фони — Next Image; групове фото без bg-fixed.
 
-Спільний `PhotoViewer` → native `ImageLightbox`: повний кадр object-contain, Esc/бекдроп/←→/межі групи, 48px controls, лічильник, scroll lock/focus restore. Індекс усередині viewer; ширина фото враховує dialog padding на 320px. Використовується на detail, rich-text, history/team photo і media/ministry galleries. Для відео native dialog заплановано у Фазі 1.
+Спільний `PhotoViewer` → відкладений native `ImageLightbox`: повний кадр object-contain, Esc/бекдроп/←→/межі групи, 48px controls, лічильник і «Завантажити оригінал», scroll lock/focus restore. Індекс усередині viewer; ширина фото враховує dialog padding на 320px. Використовується на detail, rich-text, history/team photo і media/ministry galleries. Відео відкривається через VideoPlayButton у відкладеному native dialog. Google Maps має фото-фасад, кнопку відкриття iframe й постійне зовнішнє посилання; Live iframe lazy.
 
 ## Contact and Studio
 

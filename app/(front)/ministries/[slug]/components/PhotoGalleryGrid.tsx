@@ -1,7 +1,5 @@
-'use client'
-
 import { PhotoViewer, type PhotoItem } from '@/components'
-import { DeferredGalleryImage } from '@/components/ui/DeferredGalleryImage'
+import Image from '@/components/ui/SiteImage'
 
 /**
  * PhotoGalleryGrid — Creative mosaic photo grid for HORIZONTAL images.
@@ -57,9 +55,11 @@ export function PhotoGalleryGrid({ photos, viewerPhotos = photos, title, classNa
             index={viewerPhotos.findIndex((item) => item.id === photo.id)}
             className={`relative rounded-2xl overflow-hidden group shadow-sm bg-gray-100 ${SPANS[idx] ?? ''}`}
           >
-            <DeferredGalleryImage
-              photo={photo}
-              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 66vw"
+            <Image
+              src={photo.thumbUrl} alt={photo.alt} fill
+              placeholder={photo.lqip ? 'blur' : 'empty'} blurDataURL={photo.lqip}
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
+              sizes={idx === 0 || idx === 3 ? "(max-width: 575px) 100vw, (max-width: 991px) 75vw, 600px" : "(max-width: 575px) 100vw, (max-width: 991px) 40vw, 300px"}
             />
             {/* Subtle darkening on hover */}
             <span className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-500 ease-out z-10 pointer-events-none" />

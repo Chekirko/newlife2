@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useState, useTransition } from 'react'
+import { ControlIcon as Icon } from '@/components/ui/ControlIcon'
+
+import { useEffect, useState, useTransition, type ReactNode } from 'react'
 import { clsx } from 'clsx'
-import { MediaCard, type MediaCardItem } from './MediaCard'
-import { Lightbox } from './Lightbox'
+import type { MediaCardItem } from './MediaCard'
 import { loadMoreMedia, searchMedia } from '../actions'
 import { jsonLdHtml } from '@/lib/utils'
 import { getYouTubeEmbedUrl } from '@/lib/youtube'
@@ -31,6 +32,7 @@ const TABS = [
 
 interface MediaGalleryProps {
   initialCards: MediaCardItem[]
+  initialViews: ReactNode[]
   total: number
   speakers: string[]
   category: string
@@ -40,6 +42,7 @@ interface MediaGalleryProps {
 
 export function MediaGallery({
   initialCards,
+  initialViews,
   total: initialTotal,
   speakers,
   category: initialCategory,
@@ -56,7 +59,7 @@ export function MediaGallery({
 
   const [cards, setCards] = useState(initialCards)
   const [total, setTotal] = useState(initialTotal)
-  const [active, setActive] = useState<MediaCardItem | null>(null)
+  const [views, setViews] = useState(initialViews)
 
   // Apply a new filter: update state, sync the URL shallowly, fetch the first page.
   const applyFilter = (next: { category: string; speaker: string; q: string }) => {
@@ -67,6 +70,7 @@ export function MediaGallery({
     startTransition(async () => {
       const res = await searchMedia(next)
       setCards(res.cards)
+      setViews(res.views)
       setTotal(res.total)
     })
   }
@@ -89,7 +93,8 @@ export function MediaGallery({
   const loadMore = () => {
     startTransition(async () => {
       const more = await loadMoreMedia({ category, speaker, q, start: cards.length })
-      setCards((prev) => [...prev, ...more])
+      setCards((prev) => [...prev, ...more.cards])
+      setViews((prev) => [...prev, ...more.views])
     })
   }
 
@@ -121,7 +126,7 @@ export function MediaGallery({
           Пошук по медіатеці
         </label>
         <div className="relative">
-          <i className="fas fa-search pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <Icon className="fas fa-search pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
           <input
             id="media-search"
             type="search"
@@ -199,13 +204,11 @@ export function MediaGallery({
       >
         {cards.length > 0 ? (
           <div className="grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {cards.map((item) => (
-              <MediaCard key={item._id} item={item} onPlay={setActive} />
-            ))}
+            {views}
           </div>
         ) : (
           <div className="py-20 text-center">
-            <i className="far fa-play-circle mb-4 block text-5xl text-gray-300" />
+            <Icon className="far fa-play-circle mb-4 block text-5xl text-gray-300" />
             <h2 className="mb-2 text-xl font-semibold text-gray-700">Нічого не знайдено</h2>
             <p className="text-gray-500">Спробуйте інший запит або категорію.</p>
           </div>
@@ -223,21 +226,17 @@ export function MediaGallery({
           >
             {isPending ? (
               <>
-                <i className="fas fa-spinner fa-spin" /> Завантаження…
+                <Icon className="fas fa-spinner fa-spin" /> Завантаження…
               </>
             ) : (
               <>
-                <i className="fas fa-arrow-down" /> Завантажити ще
+                <Icon className="fas fa-arrow-down" /> Завантажити ще
               </>
             )}
           </button>
         </div>
       )}
 
-      {/* Lightbox */}
-      {active?.youtubeId && (
-        <Lightbox youtubeId={active.youtubeId} title={active.title} onClose={() => setActive(null)} />
-      )}
     </>
   )
 }

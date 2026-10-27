@@ -10,12 +10,20 @@ if (!label || !/^[a-z0-9-]+$/.test(label)) {
 }
 const directory = `node_modules/.cache/seo-7/${label}`
 mkdirSync(directory, { recursive: true })
+async function detailPath(listing, prefix) {
+  const response = await fetch(`http://localhost:3004${listing}`)
+  const html = await response.text()
+  const path = [...html.matchAll(/href="([^"]+)"/g)].map(match => match[1])
+    .find(path => path.startsWith(prefix) && !path.includes('?'))
+  if (!path) throw new Error(`No detail link on ${listing}`)
+  return path
+}
 const cases = [
   { name: 'home', path: '/' },
-  { name: 'news', path: '/news' },
-  { name: 'media', path: '/media' },
+  { name: 'news-detail', path: await detailPath('/news', '/news/') },
+  { name: 'ministry-detail', path: await detailPath('/ministries', '/ministries/') },
   { name: 'photos', path: '/media/photos' },
-  { name: 'home-desktop', path: '/', desktop: true },
+  { name: 'contact', path: '/contact' },
 ]
 const results = []
 async function warm(url) {
@@ -40,7 +48,7 @@ for (const test of cases) {
     const output = `${directory}/${test.name}-${run}`
     const args = [
       'dlx', 'lighthouse@13.5.0', `http://localhost:3004${test.path}`,
-      '--only-categories=performance', '--output=json', '--output=html',
+      '--only-categories=performance,accessibility,best-practices,seo', '--output=json', '--output=html',
       `--output-path=${output}`, '--save-assets', '--quiet',
       '--no-enable-error-reporting', '--disable-full-page-screenshot',
       '--chrome-flags="--headless=new --disable-gpu"',
@@ -58,7 +66,7 @@ for (const test of cases) {
     if (report.runtimeError) throw new Error(`${test.name}-${run}: ${report.runtimeError.code}`)
     const metric = id => report.audits[id]?.numericValue ?? null
     const result = {
-      name: test.name, run, fetchTime: report.fetchTime,
+      name: test.name, path: test.path, run, fetchTime: report.fetchTime,
       lighthouseVersion: report.lighthouseVersion,
       userAgent: report.environment.hostUserAgent,
       settings: {
@@ -68,6 +76,7 @@ for (const test of cases) {
         throttling: report.configSettings.throttling,
       },
       score: report.categories.performance.score * 100,
+      categories: Object.fromEntries(Object.entries(report.categories).map(([name, category]) => [name, category.score * 100])),
       fcpMs: metric('first-contentful-paint'), lcpMs: metric('largest-contentful-paint'),
       tbtMs: metric('total-blocking-time'), cls: metric('cumulative-layout-shift'),
       speedIndexMs: metric('speed-index'), bytes: metric('total-byte-weight'),

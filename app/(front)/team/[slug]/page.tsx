@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
@@ -8,7 +8,7 @@ import { getPageHeroes } from '@/lib/page-heroes'
 import { getPageMetadata } from '@/lib/metadata'
 import { getSiteSettings } from '@/lib/site-settings'
 import { SITE_URL } from '@/lib/site'
-import { originalImageUrl, urlFor } from '@/sanity/lib/image'
+import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
 import { jsonLdHtml } from '@/lib/utils'
@@ -101,22 +101,18 @@ export default async function TeamMemberPage({
             {/* Photo */}
             <div className="w-full md:w-1/3 px-4 mb-8 md:mb-0">
               <div className="relative rounded-xl overflow-hidden bg-gray-100" style={{ aspectRatio: '3/4' }}>
-                {member.photo ? <PhotoViewer photos={[{
+                {member.photo ? <PhotoViewer photos={[toPhotoItem(member.photo, {
                   id: member._id,
-                  thumbUrl: originalImageUrl(member.photo),
-                  fullUrl: originalImageUrl(member.photo),
                   alt: member.name,
                   width: member.photoDimensions?.width ?? 800,
                   height: member.photoDimensions?.height ?? 1000,
-                }]} className="absolute inset-0 h-full">
+                })]} className="absolute inset-0 h-full">
                 <Image
-                  src={originalImageUrl(member.photo)}
-                  unoptimized
+                  src={urlFor(member.photo).width(1600).url()}
                   alt={member.name}
                   fill
                   sizes="(max-width: 768px) 100vw, 33vw"
                   className="object-cover"
-                  priority
                 />
                 </PhotoViewer> : <ImagePlaceholder className="absolute inset-0" />}
               </div>

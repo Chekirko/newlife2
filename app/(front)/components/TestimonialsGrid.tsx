@@ -1,7 +1,7 @@
-'use client'
+import { Icon } from '@/components/ui/Icon'
 
 import { clsx } from 'clsx'
-import Image, { StaticImageData } from 'next/image'
+import Image, { StaticImageData } from '@/components/ui/SiteImage'
 
 // =========================================
 // TESTIMONIAL DATA INTERFACE
@@ -62,7 +62,7 @@ export const TestimonialsGrid = ({
                 {testimonial.rating && (
                   <div className="flex gap-1 mb-3 text-yellow-400">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <i 
+                      <Icon
                         key={i} 
                         className={clsx(
                           'fas fa-star',
@@ -80,6 +80,7 @@ export const TestimonialsGrid = ({
                       alt={testimonial.name}
                       width={50}
                       height={50}
+                      sizes="50px"
                       className="w-12 h-12 rounded-full mr-3"
                     />
                   )}

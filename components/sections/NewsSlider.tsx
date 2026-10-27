@@ -1,7 +1,11 @@
 'use client'
 
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
+
+import { ControlIcon as Icon } from '@/components/ui/ControlIcon'
+
 import { useState, useEffect, useCallback } from 'react'
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 import { clsx } from 'clsx'
 
@@ -19,7 +23,7 @@ export interface NewsItem {
   /** Optional ministry name shown compactly next to the date */
   ministry?: string | null
   text: string
-  image: string
+  image: string | null
   slug: string
 }
 
@@ -143,13 +147,13 @@ export const NewsSlider = ({
                     <div className="bg-white rounded-xl shadow-md overflow-hidden h-full hover:shadow-xl transition-shadow duration-300">
                       {/* Image */}
                       <div className="relative h-48 lg:h-52 overflow-hidden">
-                        <Image
+                        {item.image ? <Image
                           src={item.image}
                           alt={item.title}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                           className="object-cover transition-transform duration-500 group-hover:scale-105"
-                        />
+                        /> : <ImagePlaceholder className="h-full min-h-48 w-full" />}
                         {/* Main category badge */}
                         <span className="absolute top-3 left-3 bg-grad-readable text-white px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide">
                           {item.mainCategory}
@@ -161,7 +165,7 @@ export const NewsSlider = ({
                         {/* Date & ministry */}
                         <div className="flex items-center gap-2 mb-2 text-sm text-gray-500 min-w-0">
                           <time className="flex items-center gap-1 shrink-0">
-                            <i className="far fa-calendar-alt text-primary-text text-xs" />
+                            <Icon className="far fa-calendar-alt text-primary-text text-xs" />
                             {item.date}
                           </time>
                           {item.ministry && (

@@ -3,7 +3,7 @@ import { getPageMetadata } from '@/lib/metadata'
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import { PageHero } from '@/components'
 import { client } from '@/sanity/lib/client'
-import { originalImageUrl } from '@/sanity/lib/image'
+import { toPhotoItem } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { MINISTRY_GALLERIES_QUERY } from './queries'
 import { PhotoGallery, type PhotoItem } from './components/PhotoGallery'
@@ -39,10 +39,8 @@ export default async function PhotosPage() {
 
   // Flatten every ministry gallery into one photo list (with ministry → alt).
   const photos: PhotoItem[] = data.flatMap((group) =>
-    (group.gallery ?? []).filter((img) => img.asset?._ref).map((img, i) => ({
+    (group.gallery ?? []).filter((img) => img.asset?._ref && img.dimensions?.width && img.dimensions?.height).map((img, i) => toPhotoItem(img as SanityImageSource, {
       id: img._key ?? `${group.ministry}-${i}`,
-      thumbUrl: originalImageUrl(img as SanityImageSource),
-      fullUrl: originalImageUrl(img as SanityImageSource),
       lqip: img.lqip ?? undefined,
       alt: group.ministry ? `Фото — ${group.ministry}` : 'Фото служіння',
       width: img.dimensions?.width ?? 1600,

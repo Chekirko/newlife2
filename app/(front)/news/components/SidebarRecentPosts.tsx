@@ -1,4 +1,5 @@
-import Image from 'next/image'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 
 interface RecentPost {
@@ -6,7 +7,7 @@ interface RecentPost {
   title: string
   slug: string
   publishedAt: string
-  imageUrl: string
+  imageUrl: string | null
 }
 
 interface SidebarRecentPostsProps {
@@ -28,13 +29,13 @@ export function SidebarRecentPosts({ posts }: SidebarRecentPostsProps) {
           <div key={post._id} className="flex gap-3 group">
             {/* Thumbnail */}
             <div className="relative w-[70px] h-[70px] flex-shrink-0 rounded-lg overflow-hidden">
-              <Image
+              {post.imageUrl ? <Image
                 src={post.imageUrl}
                 alt={post.title}
                 fill
                 sizes="70px"
                 className="object-cover transition-transform duration-300 group-hover:scale-110"
-              />
+              /> : <ImagePlaceholder className="absolute inset-0" />}
             </div>
             {/* Details */}
             <div className="flex-1 min-w-0">

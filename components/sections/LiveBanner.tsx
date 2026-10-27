@@ -27,6 +27,7 @@ export function LiveBanner({ videoId, label }: LiveBannerProps) {
         </div>
         <div className="mx-auto aspect-video w-full max-w-2xl overflow-hidden rounded-2xl bg-black shadow-card">
           <iframe
+            loading="lazy"
             src={getYouTubeEmbedUrl(videoId)}
             title={label}
             className="h-full w-full"

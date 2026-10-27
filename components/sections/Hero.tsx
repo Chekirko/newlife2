@@ -1,9 +1,17 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
+
+import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from 'react'
 import { clsx } from 'clsx'
-import Image, { StaticImageData } from 'next/image'
-import { useReducedMotion } from 'motion/react'
+import Image, { StaticImageData } from '@/components/ui/SiteImage'
+const motionQuery = '(prefers-reduced-motion: reduce)'
+const subscribeMotion = (listener: () => void) => {
+  const query = window.matchMedia(motionQuery)
+  query.addEventListener('change', listener)
+  return () => query.removeEventListener('change', listener)
+}
+const getMotion = () => window.matchMedia(motionQuery).matches
+const serverMotion = () => false
 
 // =========================================
 // HERO VARIANT 1: Basic Slider
@@ -35,26 +43,31 @@ export interface HeroSliderProps {
 export const HeroSlider = ({
   slides,
   height = 'h-[400px] lg:h-[700px]',
-  autoplay = true,
+  autoplay = false,
   autoplaySpeed = 5000,
   showArrows = true,
   showDots = false,
   className,
 }: HeroSliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [visited, setVisited] = useState<Set<number>>(() => new Set([0]))
+  const selectSlide = useCallback((index: number) => {
+    setVisited(previous => new Set(previous).add(index))
+    setCurrentSlide(index)
+  }, [])
   const [rotationRequested, setRotationRequested] = useState<boolean | null>(null)
   const [hovered, setHovered] = useState(false)
-  const reducedMotion = useReducedMotion()
+  const reducedMotion = useSyncExternalStore(subscribeMotion, getMotion, serverMotion)
   const rotationEnabled = autoplay && (rotationRequested ?? !reducedMotion)
   const pointerRotation = useRef<boolean | null>(null)
 
   const nextSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev + 1) % slides.length)
-  }, [slides.length])
+    selectSlide((currentSlide + 1) % slides.length)
+  }, [currentSlide, slides.length, selectSlide])
 
   const prevSlide = useCallback(() => {
-    setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length)
-  }, [slides.length])
+    selectSlide((currentSlide - 1 + slides.length) % slides.length)
+  }, [currentSlide, slides.length, selectSlide])
 
   useEffect(() => {
     if (!rotationEnabled || hovered || slides.length < 2) return
@@ -105,15 +118,15 @@ export const HeroSlider = ({
             )}
           >
             {/* Cover needs at least height × 16/9, even on narrow screens. */}
-            <Image
+            {visited.has(idx) && <Image
               src={slide.backgroundImage}
               alt=""
               fill
               preload={idx === 0}
               fetchPriority={idx === 0 ? 'high' : undefined}
-              sizes="(max-width: 1023px) max(100vw, 889px), max(100vw, 1334px)"
+              sizes="(max-width: 991px) max(100vw, 889px), max(100vw, 1334px)"
               className="object-cover object-center"
-            />
+            />}
             {/* Gradient scrim — keeps the photo visible while guaranteeing text contrast */}
             <div
               className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/30 pointer-events-none"
@@ -194,7 +207,7 @@ export const HeroSlider = ({
               type="button"
               aria-label={`Перейти до слайда ${idx + 1}`}
               aria-current={idx === currentSlide ? 'true' : undefined}
-              onClick={() => setCurrentSlide(idx)}
+              onClick={() => selectSlide(idx)}
               className="w-11 h-12 flex items-center justify-center"
             >
               <span aria-hidden="true" className={clsx('w-3 h-3 rounded-full transition-colors', idx === currentSlide ? 'bg-white' : 'bg-white/50')} />
@@ -206,95 +219,4 @@ export const HeroSlider = ({
   )
 }
 
-// =========================================
-// HERO VARIANT 6: Gradient with Pattern + Image
-// (agency-startUp demo style) — used on Homepage
-// =========================================
-export interface HeroGradientImageProps {
-  preTitle?: string
-  title: string
-  subtitle?: string
-  primaryButtonText?: string
-  primaryButtonHref?: string
-  secondaryButtonText?: string
-  secondaryButtonHref?: string
-  image?: string | StaticImageData
-  videoUrl?: string
-  showWaveDivider?: boolean
-  className?: string
-}
-
-export const HeroGradientImage = ({
-  preTitle,
-  title,
-  subtitle,
-  primaryButtonText,
-  primaryButtonHref,
-  secondaryButtonText,
-  secondaryButtonHref,
-  image,
-  videoUrl,
-  showWaveDivider = true,
-  className,
-}: HeroGradientImageProps) => {
-  return (
-    <section className={clsx('p-0 py-10 bg-grad-readable pattern-overlay-2 relative', className)}>
-      <div className="container-larexa">
-        <div className="flex flex-wrap py-0 md:py-10 items-center">
-          {/* Content */}
-          <div className="w-full lg:w-1/2 all-text-white my-10 md:mt-0 relative">
-            <div className="text-left py-0 md:py-10 my-10">
-              {preTitle && <p className="font-heading font-medium text-[length:var(--text-h6)] leading-[1.2] mb-2">{preTitle}</p>}
-              <h2 className="text-4xl font-normal">{title}</h2>
-              {subtitle && <p className="mb-4 text-lg">{subtitle}</p>}
-              {primaryButtonText && (
-                <a href={primaryButtonHref || '#'} className="btn btn-white mr-4">
-                  {primaryButtonText}
-                </a>
-              )}
-              {secondaryButtonText && (
-                <a href={secondaryButtonHref || '#'} className="btn btn-outline-white">
-                  {secondaryButtonText}
-                </a>
-              )}
-            </div>
-          </div>
-          
-          {/* Image with video button */}
-          {image && (
-            <div className="w-full lg:w-1/2 hidden lg:block relative">
-              <Image 
-                src={image} 
-                alt=""
-                width={600}
-                height={400}
-                className="rounded shadow"
-              />
-              {videoUrl && (
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <a href={videoUrl} className="btn btn-grad btn-round btn-lg zoom-on-hover">
-                    <i className="fa fa-play" />
-                  </a>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      </div>
-      
-      {/* Wave divider */}
-      {showWaveDivider && (
-        <div className="absolute bottom-0 left-0 w-full hidden md:block -mb-1">
-          <svg width="100%" height="150" viewBox="0 0 500 150" preserveAspectRatio="none">
-            <path d="M0,150 L0,40 Q250,150 500,40 L580,150 Z" fill="white" />
-          </svg>
-        </div>
-      )}
-    </section>
-  )
-}
-
-// =========================================
-// Default export (alias for HeroSlider)
-// =========================================
 export default HeroSlider

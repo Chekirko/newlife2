@@ -1,7 +1,6 @@
-'use client'
-
 import { clsx } from 'clsx'
-import { StaticImageData } from 'next/image'
+import Image, { type StaticImageData } from '@/components/ui/SiteImage'
+import Link from 'next/link'
 
 // =========================================
 // ActionBoxFullWidth - Full Width Background CTA
@@ -35,31 +34,29 @@ export const ActionBoxFullWidth = ({
   return (
     <section 
       className={clsx(
-        'py-16',
+        'relative isolate py-16',
         isGradient && 'bg-grad-readable',
-        backgroundImage && `bg-overlay-dark-${overlayDark} bg-cover bg-center`,
         'all-text-white',
         className
       )}
-      style={backgroundImage ? {
-        backgroundImage: typeof backgroundImage === 'string' 
-          ? `url(${backgroundImage})` 
-          : `url(${backgroundImage.src})`
-      } : undefined}
     >
+      {backgroundImage && <>
+        <Image src={backgroundImage} alt="" fill sizes="100vw" className="-z-20 object-cover" />
+        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-black" style={{ opacity: overlayDark / 10 }} />
+      </>}
       <div className="container-larexa text-center">
         <h2 className="text-white">{title}</h2>
         {subtitle && <p className="text-white/80 mb-6">{subtitle}</p>}
         <div className="flex justify-center gap-4 flex-wrap">
           {buttonText && (
-            <a href={buttonHref || '#'} className="btn btn-white">
+            <Link href={buttonHref || '#'} className="btn btn-white">
               {buttonText}
-            </a>
+            </Link>
           )}
           {secondaryButtonText && (
-            <a href={secondaryButtonHref || '#'} className="btn btn-outline-white">
+            <Link href={secondaryButtonHref || '#'} className="btn btn-outline-white">
               {secondaryButtonText}
-            </a>
+            </Link>
           )}
         </div>
       </div>

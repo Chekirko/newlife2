@@ -1,7 +1,9 @@
 'use client'
 
+import { ControlIcon as Icon } from '@/components/ui/ControlIcon'
+
 import { useEffect, useRef, useState } from 'react'
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 
 // =========================================
 // Shared full-screen viewer. A native modal dialog keeps controls and focus
@@ -53,6 +55,9 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
 
   const photo = photos[index]
   if (!photo) return null
+  const downloadUrl = photo.fullUrl.startsWith('https://cdn.sanity.io/')
+    ? `${photo.fullUrl}${photo.fullUrl.includes('?') ? '&' : '?'}dl=${encodeURIComponent(new URL(photo.fullUrl).pathname.split('/').pop()!)}`
+    : photo.fullUrl
 
   const hasPrev = index > 0
   const hasNext = index < count - 1
@@ -83,7 +88,7 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
         aria-label="Закрити"
         className="absolute right-4 top-4 z-10 flex h-12 w-12 items-center justify-center rounded-full bg-black/60 text-2xl text-white"
       >
-        <i className="fas fa-times" aria-hidden="true" />
+        <Icon className="fas fa-times" aria-hidden="true" />
       </button>
 
       {count > 1 && (
@@ -97,7 +102,7 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
           disabled={!hasPrev}
           className="absolute left-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white disabled:opacity-40"
         >
-          <i className="fas fa-chevron-left" aria-hidden="true" />
+          <Icon className="fas fa-chevron-left" aria-hidden="true" />
         </button>
       )}
       {count > 1 && (
@@ -111,7 +116,7 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
           disabled={!hasNext}
           className="absolute right-4 top-1/2 z-10 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-xl text-white disabled:opacity-40"
         >
-          <i className="fas fa-chevron-right" aria-hidden="true" />
+          <Icon className="fas fa-chevron-right" aria-hidden="true" />
         </button>
       )}
 
@@ -127,13 +132,19 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
           height={photo.height}
           sizes="90vw"
           unoptimized
-          priority
+          loading="eager"
           onLoad={() => setLoadedIndex(index)}
           placeholder={photo.lqip ? 'blur' : 'empty'}
           blurDataURL={photo.lqip}
           className="h-auto max-h-[88vh] w-auto max-w-[min(92vw,calc(100dvw-2rem))] rounded-lg object-contain"
         />
       </div>
+
+      <a href={downloadUrl}
+        download target="_blank" rel="noopener noreferrer"
+        className="absolute bottom-16 left-1/2 -translate-x-1/2 rounded bg-black/80 px-4 py-2 text-sm text-white">
+        Завантажити оригінал
+      </a>
 
       <p aria-live="polite" className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/60 px-4 py-2 text-sm text-white">
         {index + 1} / {count}

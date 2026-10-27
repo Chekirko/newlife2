@@ -1,4 +1,7 @@
+import { Icon } from '@/components/ui/Icon'
 import Link from 'next/link'
+import Image from '@/components/ui/SiteImage'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 import { clsx } from 'clsx'
 
 // =========================================
@@ -10,7 +13,7 @@ export interface MinistryItem {
   icon: string
   title: string
   description: string
-  image: string
+  image: string | null
   link?: string
   linkText?: string
 }
@@ -69,17 +72,14 @@ export const Ministries = ({
                 {/* Icon - slides in from left on hover */}
                 <div className="absolute top-4 -left-14 group-hover:left-4 z-10 transition-all duration-300 ease-out">
                   <div className="w-12 h-12 rounded-full bg-grad flex items-center justify-center shadow-lg">
-                    <i className={clsx(item.icon, 'text-white text-lg')} />
+                    <Icon className={clsx(item.icon, 'text-white text-lg')} />
                   </div>
                 </div>
 
                 {/* Image container */}
                 <div className="relative h-48 overflow-hidden">
                   {/* Image with zoom effect */}
-                  <div 
-                    className="absolute inset-0 bg-cover bg-center transition-transform duration-500 ease-out group-hover:scale-110"
-                    style={{ backgroundImage: `url(${item.image})` }}
-                  />
+                  {item.image ? <Image src={item.image} alt="" fill sizes="(max-width: 575px) 100vw, (max-width: 991px) 50vw, 400px" className="object-cover transition-transform duration-500 group-hover:scale-110" /> : <ImagePlaceholder className="absolute inset-0" />}
                   {/* Green overlay - fades out on hover */}
                   <div className="absolute inset-0 bg-gradient-to-br from-[var(--gradient-start)]/30 to-[var(--gradient-end)]/30 transition-opacity duration-300 group-hover:opacity-0" />
                 </div>

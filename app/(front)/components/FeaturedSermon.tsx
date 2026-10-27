@@ -1,10 +1,9 @@
-'use client'
+import { Icon } from '@/components/ui/Icon'
 
-import { useState } from 'react'
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
-import { getYouTubeThumbnail } from '@/lib/youtube'
-import { Lightbox } from '../media/components/Lightbox'
+import { VideoPlayButton } from '@/components/ui/VideoPlayButton'
+import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
 import type { MediaCardItem } from '../media/components/MediaCard'
 
 // =========================================
@@ -19,9 +18,6 @@ interface FeaturedSermonProps {
 }
 
 export function FeaturedSermon({ sermon }: FeaturedSermonProps) {
-  const [open, setOpen] = useState(false)
-  const [src, setSrc] = useState(sermon.thumbnailUrl)
-
   return (
     <section className="py-16 lg:py-20">
       <div className="container-larexa">
@@ -34,53 +30,44 @@ export function FeaturedSermon({ sermon }: FeaturedSermonProps) {
 
         <div className="mx-auto grid max-w-5xl items-center gap-8 overflow-hidden rounded-3xl bg-white shadow-card ring-1 ring-gray-100 lg:grid-cols-2">
           {/* Cover — opens the player */}
-          <button
-            type="button"
-            onClick={() => setOpen(true)}
-            disabled={!sermon.youtubeId}
-            aria-label={`Дивитися проповідь: ${sermon.title}`}
+          <VideoPlayButton youtubeId={sermon.youtubeId} title={sermon.title}
             className="group relative aspect-video w-full overflow-hidden bg-gray-100 disabled:cursor-default"
           >
-            <Image
-              src={src}
+            {sermon.thumbnailUrl ? <Image
+              src={sermon.thumbnailUrl!}
               alt={sermon.title}
               fill
               sizes="(max-width: 1024px) 100vw, 50vw"
               quality={90}
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
-              onError={() => {
-                if (sermon.youtubeId && src.includes('maxresdefault')) {
-                  setSrc(getYouTubeThumbnail(sermon.youtubeId, 'sd'))
-                }
-              }}
-            />
+            /> : <ImagePlaceholder className="absolute inset-0" />}
             {sermon.youtubeId && (
               <span className="absolute inset-0 flex items-center justify-center bg-black/15 transition-colors group-hover:bg-black/30">
                 <span className="text-primary-text flex h-16 w-16 items-center justify-center rounded-full bg-white/90 shadow-md transition-transform group-hover:scale-110">
-                  <i className="fas fa-play ml-1 text-2xl" />
+                  <Icon className="fas fa-play ml-1 text-2xl" />
                 </span>
               </span>
             )}
-          </button>
+          </VideoPlayButton>
 
           {/* Details */}
           <div className="p-8 lg:p-10">
             <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-gray-500">
               {sermon.date && (
                 <span className="flex items-center gap-1.5">
-                  <i className="far fa-calendar-alt" />
+                  <Icon className="far fa-calendar-alt" />
                   {sermon.date}
                 </span>
               )}
               {sermon.speaker && (
                 <span className="flex items-center gap-1.5">
-                  <i className="far fa-user" />
+                  <Icon className="far fa-user" />
                   {sermon.speaker}
                 </span>
               )}
               {sermon.scripture && (
                 <span className="flex items-center gap-1.5">
-                  <i className="far fa-bookmark" />
+                  <Icon className="far fa-bookmark" />
                   {sermon.scripture}
                 </span>
               )}
@@ -94,28 +81,23 @@ export function FeaturedSermon({ sermon }: FeaturedSermonProps) {
 
             <div className="flex flex-wrap items-center gap-4">
               {sermon.youtubeId && (
-                <button
-                  type="button"
-                  onClick={() => setOpen(true)}
+                <VideoPlayButton youtubeId={sermon.youtubeId} title={sermon.title}
                   className="bg-grad-readable inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white shadow-sm transition-[background-position] duration-300"
                 >
-                  <i className="fas fa-play" /> Дивитися проповідь
-                </button>
+                  <Icon className="fas fa-play" /> Дивитися проповідь
+                </VideoPlayButton>
               )}
               <Link
                 href="/media?category=проповідь"
                 className="text-primary-text inline-flex items-center gap-2 text-sm font-semibold hover:underline"
               >
-                Усі проповіді <i className="fas fa-arrow-right text-xs" />
+                Усі проповіді <Icon className="fas fa-arrow-right text-xs" />
               </Link>
             </div>
           </div>
         </div>
       </div>
 
-      {open && sermon.youtubeId && (
-        <Lightbox youtubeId={sermon.youtubeId} title={sermon.title} onClose={() => setOpen(false)} />
-      )}
     </section>
   )
 }

@@ -1,7 +1,5 @@
-'use client'
-
 import { clsx } from 'clsx'
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 import { ImagePlaceholder } from './ImagePlaceholder'
 
@@ -34,6 +32,7 @@ export const MinistryCard = ({
             alt=""
             width={600}
             height={450}
+            sizes="(max-width: 575px) 100vw, (max-width: 991px) 50vw, 400px"
             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
         ) : (

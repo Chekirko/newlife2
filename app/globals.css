@@ -1,5 +1,3 @@
-@import "./fonts.css";
-
 @import "tailwindcss";
 
 /* =========================================
@@ -47,9 +45,7 @@
   --color-grad-end: #2ab9a5;
 
   /* ===== FONTS ===== */
-  --font-base: 'Roboto', sans-serif;
-  --font-heading: 'Poppins', sans-serif;
-  --font-alt: 'Playfair Display', serif;
+
 
   /* ===== FONT SIZES ===== */
   --text-xs: 0.8125rem;

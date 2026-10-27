@@ -1,5 +1,6 @@
+import { Icon } from '@/components/ui/Icon'
 import Link from 'next/link'
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import { defineQuery } from 'next-sanity'
 import { client } from '@/sanity/lib/client'
 import type { SiteSettings } from '@/lib/site-settings'
@@ -60,7 +61,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
                       style={{ backgroundColor: s.color }}
                       className="social-icons-link rounded-full text-white"
                     >
-                      <i className={s.icon}></i>
+                      <Icon className={s.icon}></Icon>
                     </a>
                   </li>
                 ))}
@@ -75,7 +76,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
               {quickLinks.map((link, idx) => (
                 <li key={idx}>
                   <Link href={link.href} className="hover:text-white transition-colors">
-                    <i className="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                    <Icon className="fas fa-chevron-right text-xs mr-2 text-primary"></Icon>
                     {link.label}
                   </Link>
                 </li>
@@ -92,7 +93,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
                   m.slug ? (
                     <li key={m._id}>
                       <Link href={`/ministries/${m.slug}`} className="hover:text-white transition-colors">
-                        <i className="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                        <Icon className="fas fa-chevron-right text-xs mr-2 text-primary"></Icon>
                         {m.title}
                       </Link>
                     </li>
@@ -101,7 +102,7 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
               ) : (
                 <li>
                   <Link href="/ministries" className="hover:text-white transition-colors">
-                    <i className="fas fa-chevron-right text-xs mr-2 text-primary"></i>
+                    <Icon className="fas fa-chevron-right text-xs mr-2 text-primary"></Icon>
                     Усі служіння
                   </Link>
                 </li>
@@ -114,27 +115,27 @@ export default async function ChurchFooter({ settings }: { settings: SiteSetting
             <h2 className="footer-title">Контакти</h2>
             <ul className="space-y-4">
               <li className="flex items-start gap-3">
-                <i className="fas fa-map-marker-alt text-primary mt-1"></i>
+                <Icon className="fas fa-map-marker-alt text-primary mt-1"></Icon>
                 <span>
                   {address.street},<br />
                   {address.city}, {address.postalCode}
                 </span>
               </li>
               <li className="flex items-center gap-3">
-                <i className="fas fa-phone text-primary"></i>
+                <Icon className="fas fa-phone text-primary"></Icon>
                 <a href={`tel:${phone}`} className="hover:text-white">
                   {phoneDisplay}
                 </a>
               </li>
               <li className="flex items-center gap-3">
-                <i className="fas fa-envelope text-primary"></i>
+                <Icon className="fas fa-envelope text-primary"></Icon>
                 <a href={`mailto:${email}`} className="hover:text-white">
                   {email}
                 </a>
               </li>
               {services.length > 0 && (
                 <li className="flex items-start gap-3">
-                  <i className="far fa-clock text-primary mt-1"></i>
+                  <Icon className="far fa-clock text-primary mt-1"></Icon>
                   <span>
                     {services.map((s, idx) => (
                       <span key={idx}>

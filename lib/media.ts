@@ -44,8 +44,8 @@ export function toMediaCard(m: RawMediaItem): MediaCardItem {
   const thumbnailUrl = m.image
     ? urlFor(m.image).width(800).height(450).url()
     : youtubeId
-      ? getYouTubeThumbnail(youtubeId, 'max')
-      : '/images/placeholder.jpg'
+      ? getYouTubeThumbnail(youtubeId)
+      : null
   return {
     _id: m._id,
     title: m.title ?? 'Без назви',

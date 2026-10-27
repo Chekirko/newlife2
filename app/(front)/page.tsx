@@ -6,10 +6,9 @@ import {
   NewsSlider,
   LiveBanner,
 } from '@/components'
-import dynamic from 'next/dynamic'
-const TestimonialsGrid = dynamic(() => import('./components/TestimonialsGrid').then(m => m.TestimonialsGrid))
-const FAQSplit = dynamic(() => import('./components/FAQSplit').then(m => m.FAQSplit))
-const ActionBoxFullWidth = dynamic(() => import('./components/ActionBoxFullWidth').then(m => m.ActionBoxFullWidth))
+import { TestimonialsGrid } from './components/TestimonialsGrid'
+import { FAQSplit } from './components/FAQSplit'
+import { ActionBoxFullWidth } from './components/ActionBoxFullWidth'
 import { PastorGreeting } from './components/PastorGreeting'
 import { OurVision } from './components/OurVision'
 import { Ministries } from './components/Ministries'
@@ -33,7 +32,7 @@ import { getLiveVideoId } from '@/lib/live-stream'
 // Using actual Larexa components
 // ============================================
 
-import { formatDate, formatEventDate, jsonLdHtml } from '@/lib/utils'
+import { formatDate, formatEventDate, jsonLdHtml, startOfKyivDay } from '@/lib/utils'
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata('/', {
@@ -50,7 +49,7 @@ export default async function HomePage() {
   const _now = new Date()
   const eventParams = {
     now: _now.toISOString(),
-    today: new Date(_now.getFullYear(), _now.getMonth(), _now.getDate()).toISOString(),
+    today: startOfKyivDay(_now),
   }
   const [newsRaw, eventsRaw, settings, homepage, pastor, latestSermonRaw] = await Promise.all([
     client.fetch<SanityNews[]>(NEWS_QUERY),
@@ -82,14 +81,14 @@ export default async function HomePage() {
     mainCategory: n.mainCategory,
     ministry: n.ministry ?? null,
     text: n.text,
-    image: n.image ? urlFor(n.image).width(600).height(400).url() : '/images/placeholder.jpg',
+    image: n.image ? urlFor(n.image).width(600).height(400).url() : null,
   }))
 
   const eventsData = eventsRaw.map((e) => ({
     _id: e._id,
     title: e.title,
     slug: e.slug,
-    image: e.image ? urlFor(e.image).width(800).height(533).url() : '/images/placeholder.jpg',
+    image: e.image ? urlFor(e.image).width(800).height(533).url() : null,
     date: formatEventDate(e.startDate),
     tag: e.tag,
     description: e.description ?? '',

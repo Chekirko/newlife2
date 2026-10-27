@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 import type { Metadata } from 'next'
 import { getPageMetadata } from '@/lib/metadata'
@@ -38,8 +38,7 @@ const timelineEvents = [
     date: '2005',
     title: 'Розширення місії',
     description: 'Відкриття нових інноваційних підходів для служіння людям. Впровадження нових соціальних ініціатив та допомога сім\'ям у кризі.',
-    type: 'video',
-    videoId: '167434033',
+    type: 'text',
   },
   {
     date: 'Поточний час',
@@ -190,23 +189,12 @@ function TimelineCard({ item }: { item: (typeof timelineEvents)[number] }) {
               alt={item.title} 
               fill 
               className="object-cover" 
-              unoptimized
+              sizes="(max-width: 767px) 100vw, 500px"
             />
             </PhotoViewer>
           </div>
         )}
 
-      {item.type === 'video' && item.videoId && (
-        <div className="w-full relative pt-[56.25%]">
-          <iframe 
-            src={`https://player.vimeo.com/video/${item.videoId}?title=0&byline=0&portrait=0`}
-            className="absolute top-0 left-0 w-full h-full"
-            frameBorder="0"
-            allow="autoplay; fullscreen; picture-in-picture"
-            allowFullScreen
-          ></iframe>
-        </div>
-      )}
     </div>
   )
 }

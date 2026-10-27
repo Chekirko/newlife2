@@ -1,10 +1,11 @@
-import Image from 'next/image'
+import { Icon } from '@/components/ui/Icon'
+import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
 import { client } from '@/sanity/lib/client'
-import { originalImageUrl, urlFor } from '@/sanity/lib/image'
+import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
 import { getPageMetadata } from '@/lib/metadata'
@@ -85,25 +86,20 @@ export default async function NewsDetailPage({
   const galleryPhotos: PhotoItem[] = (news.gallery ?? []).flatMap((photo, index) => {
     const { width, height } = photo.dimensions ?? {}
     if (!photo.asset?._ref || !width || !height) return []
-    const original = originalImageUrl(photo)
-    return [{
+    return [toPhotoItem(photo, {
       id: photo._key ?? `gallery-${index}`,
-      thumbUrl: original,
-      fullUrl: original,
       alt: photo.alt?.trim() || `${news.title} — фото ${index + 1}`,
       width,
       height,
       lqip: photo.lqip ?? undefined,
-    }]
+    })]
   }).slice(0, 10)
-  const mainPhoto: PhotoItem | null = news.image ? {
+  const mainPhoto: PhotoItem | null = news.image ? toPhotoItem(news.image, {
     id: 'main',
-    thumbUrl: originalImageUrl(news.image),
-    fullUrl: originalImageUrl(news.image),
     alt: news.title,
     width: news.imageDimensions?.width ?? 1200,
     height: news.imageDimensions?.height ?? 675,
-  } : null
+  }) : null
   const photos = mainPhoto ? [mainPhoto, ...galleryPhotos] : galleryPhotos
 
   const articleUrl = `${SITE_URL}/news/${slug}`
@@ -157,10 +153,10 @@ export default async function NewsDetailPage({
       <section className="relative h-[350px] lg:h-[450px] flex items-center justify-center overflow-hidden">
         <Image
           src={heroes.newsHero}
+          preload
           alt=""
           fill
-          priority
-          sizes="100vw"
+          sizes="(max-width: 991px) max(100vw, 623px), max(100vw, 800px)"
           className="object-cover -z-10"
         />
         <div className="absolute inset-0 bg-black/55" />
@@ -205,7 +201,7 @@ export default async function NewsDetailPage({
             {/* Meta */}
             <div className="flex flex-wrap items-center gap-4 mb-8">
               {publishedAt && <span className="flex items-center gap-1.5 text-sm text-gray-500">
-                <i className="far fa-calendar-alt" />
+                <Icon className="far fa-calendar-alt" />
                 {formatDate(news.publishedAt)}
               </span>}
               {news.mainCategory && (
@@ -233,14 +229,12 @@ export default async function NewsDetailPage({
                 className="relative rounded-xl overflow-hidden mb-8"
               >
                 <Image
-                  src={mainPhoto.fullUrl}
+                  src={mainPhoto.thumbUrl}
                   alt={news.title}
                   width={mainPhoto.width}
                   height={mainPhoto.height}
-                  unoptimized
                   sizes="(max-width: 768px) 100vw, 800px"
                   className="w-full h-auto"
-                  priority
                 />
               </PhotoViewer>
             )}
