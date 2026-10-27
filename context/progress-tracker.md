@@ -1,5 +1,25 @@
 # Progress Tracker
 
+## ▶ СТАРТ ТУТ — новий план чинний з 2026-10-27
+
+**Читати лише цей блок і [master-plan.md](master-plan.md).** Усе нижче — історія роботи Codex; у Фазі 0 її буде перенесено до `archive/2026-10-27/`.
+
+- Проведено аудит роботи Codex (SEO/швидкодія/RSC/дизайн/зайві файли). Висновки, рішення, фази 0–9, дії власника й рекомендації — у новому [master-plan.md](master-plan.md); попередній план — [archive/2026-10-27/master-plan.md](archive/2026-10-27/master-plan.md). Редизайн під Larexa — [specs/08-larexa-redesign.md](specs/08-larexa-redesign.md).
+- **Рішення користувача:** фото — адаптивні прев'ю через Sanity CDN + оригінал у лайтбоксі/завантаженні (скасовує «оригінали всюди» D9); документи — архівувати й стиснути; темп — фази з кількох кроків (один замір/гейт/commit на фазу); заголовки — Montserrat (Poppins без кирилиці); hero головної — статичний.
+- **Наступна сесія починає з Фази 0** ([master-plan §C](master-plan.md#фаза-0--гігієна-репо-і-документації--старт-наступної-сесії)): архів/стиснення context і docs, видалення зайвих файлів, README, `.env.example`. Потім гейт вибору Фази 1.
+- Код застосунку, CMS, env та індексація в цій сесії не змінювались; гілка `codex/seo-1-audit` (22 коміти) досі не злита в master.
+
+## SEO до індексації — консультація 2026-10-27
+
+На запит «Що по SEO варто робити далі» звірено чинні audit/spec/master-plan, `lib/seo-readiness.ts` і офіційні рекомендації Google. HEAD `2959fd0` містить D2.1/D8.1; робоче дерево перед консультацією чисте. Це рекомендації за наявними доказами, без нового live-аудиту або редакційного схвалення.
+
+- Перший пріоритет: редакційна матриця launch-сторінок — підтвердити історію 1991/1992, «Нове служіння», повноту оголошення, назви/дати/місця й актуальність матеріалів. Published не дорівнює готовності; SEO_APPROVAL лишається порожнім.
+- Наступний технічний юніт: D2 render-blocking CSS/mobile LCP зі зіставним вимірюванням; останній font-display fix прискорення не довів. Оригінали фото збережені за вибором користувача. Решту D8 виконувати як доступність/зручність, не називати прямим SEO-блокером.
+- Підготувати локальну семантику для церкви в Бориславі, узгоджені назву/адресу/телефон/розклад та наявний Google Business Profile без дублювання; перевірити доступ до домену й можливість DNS-верифікації Search Console. Нічого не змінювати в акаунтах/DNS/env без відповідного доручення.
+- До запуску окремо перевірити F01 на актуальних Production/Preview і platform protection, фінальні URL/redirects/canonical та готовність sitemap. `Disallow: /` заважає crawler прочитати noindex і не гарантує відсутності URL у пошуку. SEO-L/відкриття індексації — останній окремо погоджений крок.
+
+Код застосунку, CMS, індексація та архітектурні/UI-конвенції не змінені; новий етап реалізації не розпочато. `cmd /c "pnpm run build"` PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; чинні Node/Browserslist warnings. Початковий sandbox Sanity-config EPERM усунено дозволеним повтором. Документаційний diff-check PASS; commit/push не виконано.
+
 **Commit + push D2.1/D8.1 прямо погоджені 2026-10-27:** користувач відповів «Так» після фінального QA. Погоджено 12 файлів (4 application, measurement script, 6 Markdown-документів та evidence JSON) у `codex/seo-1-audit` за workflow §3. Свіжий fetch HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду/відсутність commit+push — попередній стан. Результат публікації — у git history та фінальному повідомленні; решта D2/D8 відкрита, live deployment окремо не засвідчений.
 
 - Перед погодженою публікацією повторний `cmd /c "pnpm run build"` PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; чинні Node/Browserslist warnings. Review погоджених 12 файлів, UTF-8 / 75 локальних targets, 5 source / 6 performance / 3 font asset / a11y-browser-screenshot hashes та staged diff-check PASS. Єдиний відомий Diff Surgeon `semicolon-style` false positive лишається поясненим; код і попередній QA не розширені.
