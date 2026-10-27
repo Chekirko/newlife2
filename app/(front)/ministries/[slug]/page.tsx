@@ -242,7 +242,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
                     />}
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500 mb-1">Відповідальний за служіння</p>
+                    <p className="text-sm text-gray-600 mb-1">Відповідальний за служіння</p>
                     <h3 className="text-lg font-bold text-gray-800 m-0 group-hover:text-primary-text transition-colors">
                       {leaders[0].name}
                     </h3>

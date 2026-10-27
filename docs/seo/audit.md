@@ -1,5 +1,53 @@
 # SEO-аудит до запуску
 
+**Публікація D2.1/D8.1 прямо погоджена 2026-10-27:** користувач відповів «Так» після фінального QA; дозволено commit + push 12 файлів у `codex/seo-1-audit` за workflow §3. Свіжий fetch HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду/відсутність commit+push — попередній стан. Результат — у git history та фінальному повідомленні; загальні D2/D8 відкриті, live deployment не засвідчений.
+
+Перед погодженою публікацією повторний build PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks. Review 12 файлів, UTF-8 / 75 локальних targets, 5 source / 6 performance / 3 font asset / a11y-browser-screenshot hashes і staged diff-check PASS. Чинні Node/Browserslist warnings та пояснений Diff Surgeon false positive без змін; попередній QA не розширено.
+
+<a id="d2-d8-2026-10-27"></a>
+## D2.1 / D8.1 — 2026-10-27
+
+**Завершено локально два вузькі юніти.** Пряме доручення «Роби Далі — D2/D8»; старт чистий `6b12965`, `codex/seo-1-audit` (D9 уже в HEAD). [Scope і критерії](../../context/specs/07-d2-d8-fonts-dialog.md), [машиночитані вимірювання](d2-d8-2026-10-27.json). Загальні D2/D8 залишаються відкритими; commit/push і deployment не виконано.
+
+### D2.1 — font-display локальних іконок
+
+Три використовувані Font Awesome 6 faces мали `font-display: block`: Lighthouse в усіх baseline runs позначав їх як затримку відображення. Додано [локальні overrides](../../app/icon-fonts.css), імпортовані після package CSS у root layout: Brands 400, Free 400 і Free 900 використовують `swap`. Файли WOFF2, URL/хеші, glyph mappings, ваги, назви сімейств і довільний CMS-вибір іконок збережені. Не додано preload, віддалені fonts, залежності чи експериментальні Next flags. Під час завантаження `swap` допускає короткий fallback; перевірка точного вигляду нижче стосується вже завантажених іконок.
+
+Межі рішення: окремі CSS-файли досі блокують рендер; повний Font Awesome CSS не обрізали, щоб не зламати CMS-іконки. Глобальний `inlineCss` не застосовано: [документація Next.js](https://nextjs.org/docs/app/api-reference/config/next-config-js/inlineCss) позначає його експериментальним, з дублюванням CSS у HTML/RSC і втратою окремого кешу стилів.
+
+Вимірювання — [measure-font-delivery.mjs](../../scripts/measure-font-delivery.mjs), built app на localhost:3004; по 3 cold-browser mobile runs до/після, Lighthouse 13.5.0. Chrome/повні профілі, image sources та URL/resourceSize усіх 11 font requests точно збігаються. Усі runWarnings порожні. Next optimizer прогріто до кожної серії; це локальна лабораторна симуляція, не польові CWV. D8-зміни виконано після цієї серії.
+
+| Median | До | Після |
+|---|---:|---:|
+| Performance | 66 | 66 |
+| LCP | 6,885 с | 6,908 с |
+| FCP | 3,810 с | 3,833 с |
+| TBT | 151,5 мс | 162 мс |
+| CLS | 0,001561 | 0,001572 |
+| Total transfer | 1 760 207 B | 1 760 258 B |
+| Font-display audit (кожен run) | 0 | 1 |
+
+**Прискорення не доведено:** median LCP +0,34%, Performance без змін. Закрито конкретний font-display finding, не ціль ≥90/зелених CWV. Після завантаження 24 іконки × 3 viewport = **72/72 точних збігів** class/glyph/font family/weight/width/height; font assets не дублюються у network.
+
+### D8.1 — label contrast і доступна ширина фотодіалогу
+
+- Ministry single-leader label: `text-gray-500` → чинний `text-gray-600`; на `bg-gray-50` **4,46:1 → 4,72:1**, AA normal-text PASS за проєктним contrast checker. DOM підтвердив `rgb(107,113,119)`; текст/розмір/link/розмітка збережені. Окремий production Lighthouse accessibility run цієї сторінки: **100**, color-contrast PASS, scored failures 0. Це автоматична перевірка однієї сторінки, не повний WCAG PASS.
+- Shared `ImageLightbox`: `max-w-[92vw]` → `max-w-[min(92vw,calc(100dvw-2rem))]`. Фото враховує сумарні 2rem padding діалогу; старий 92vw cap залишається верхньою межею. На 320px **clientWidth/scrollWidth 320/323 → 320/320**, фото 294 → 288px. На 390px — 358px, на 1280px — старий cap 92vw. Native modal, control positions, object-contain, висота, URL/full-resolution/q=100, D9 observer і preload gate не змінені.
+
+Browser QA: 5 реальних фото служіння × 320/390/1280px — **15/15 без overflow**, рахунок/межі 1–5, Enter/стрілки/Esc/повернення фокусу перевірені. Synthetic SVG portrait 1200×2400 з точними production dialog/image класами — ще **3/3** без overflow (288×576, 357×715, 396×792). Це geometry fixture, не запис до CMS й не доказ portrait-контенту у цьому служінні. Окремий однокадровий team viewer і shared `/media/photos` (1/83→2/83, Space/Enter, backdrop, Esc, restore) працюють; gallery dialog 320/320 і 390/390. Native Tab/Shift+Tab переходить між controls і browser boundary (`activeElement=body`), потім повертається в діалог; background-page links не отримували focus. Не заявляється примусове утримання focus у DOM на кожному натисканні. Console warnings/errors 0. Mobile screenshot оглянуто; raw browser evidence/screenshot — ignored `node_modules/.cache/d2-d8/`.
+
+Проєктний static scanner запущено на двох TSX і rendered HTML. Він не дав чистого PASS: component-scope main/H1/nav/skip findings та 8 HTML heuristics. Перевірено їхні межі: main/H1/skip приходять із layout/PageHero, 2 empty-alt images декоративні або всередині названого leader link, 5 inline-color попереджень стосуються Next Image `color:transparent`, skip matcher не розпізнає наявний `#main-content`. Результат не підмінено автоматичною заявою про відповідність WCAG.
+
+### Перевірки та залишок
+
+- Обидва unit builds PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Lint і повний `tsc --noEmit`, 3 штатні та 4 SEO/photo регресії PASS. Початкові sandbox Sanity-config EPERM/loopback timeout усунені дозволеними запусками; один пізніший read-only Sanity timeout у server log не змінив успішних HTTP результатів.
+- 7 HTTP GET: 6×200/1×404, один H1 у 5 HTML, noindex metadata/header, Disallow і порожній sitemap збережені. Build config/дані/schema/GROQ/env/settings/package/lockfile/approval не змінені. Тимчасову public portrait fixture видалено.
+- **Далі D2:** render-blocking CSS, mobile LCP, ≥90 і польові CWV. **Далі D8:** FAQ disclosure, nav landmark, breadcrumb contrast, sidebar visual/DOM order, history summary focus, media load-more focus та відстеження #418. Загальні D2/D8/F01/SEO-L відкриті; full-resolution strategy D9 чинна. Commit/push — лише за окремою згодою за [workflow §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19).
+
+Фінальний review 4 application файлів і measurement script завершено; UTF-8 12 файлів/75 локальних file+anchor targets/diff-check PASS. 5 source hashes, 6 performance report hashes та a11y/browser/screenshot hashes перевірені. Diff Surgeon дав один intentional false positive `semicolon-style` для CSS import, який повторює чинний стиль layout; автоматичного CLEAN verdict немає. QA-сервер зупинено, viewport скинуто, вкладку закрито, public fixture відсутня.
+
+Нижче — історія попередніх юнітів.
+
 **Публікація D9 прямо погоджена 2026-10-27:** користувач відповів «Так» після підсумкового QA; дозволено commit + push погоджених 15 файлів у `codex/seo-1-audit` за workflow §3. Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду або відсутність commit/push — попередній стан. Результат — у git history та фінальному повідомленні; live deployment окремо не засвідчений.
 
 Перед погодженою публікацією повторний build PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks. Перша спроба мала тимчасовий ConnectTimeout Sanity API на `/ministries/media`; повтор без зміни коду успішний. Review 15 файлів, UTF-8 / 72 локальні targets, 6 source / 6 raw report hashes і staged diff-check PASS; application/script Diff Surgeon CLEAN. Попередній QA і scope не розширено.

@@ -1,0 +1,630 @@
+{
+  "date": "2026-10-27",
+  "baseCommit": "6b12965",
+  "scope": "D2.1 font-display only; measurements precede the D8.1 label/dialog changes",
+  "method": {
+    "url": "http://localhost:3004/",
+    "runsPerStage": 3,
+    "lighthouseVersion": "13.5.0",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+    "settings": {
+      "output": [
+        "json"
+      ],
+      "maxWaitForFcp": 30000,
+      "maxWaitForLoad": 45000,
+      "pauseAfterFcpMs": 1000,
+      "pauseAfterLoadMs": 1000,
+      "networkQuietThresholdMs": 1000,
+      "cpuQuietThresholdMs": 1000,
+      "formFactor": "mobile",
+      "throttling": {
+        "rttMs": 150,
+        "throughputKbps": 1638.4,
+        "requestLatencyMs": 562.5,
+        "downloadThroughputKbps": 1474.5600000000002,
+        "uploadThroughputKbps": 675,
+        "cpuSlowdownMultiplier": 4
+      },
+      "throttlingMethod": "simulate",
+      "screenEmulation": {
+        "mobile": true,
+        "width": 412,
+        "height": 823,
+        "deviceScaleFactor": 1.75,
+        "disabled": false
+      },
+      "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+      "auditMode": false,
+      "gatherMode": false,
+      "clearStorageTypes": [
+        "file_systems",
+        "shader_cache",
+        "service_workers",
+        "cache_storage"
+      ],
+      "disableStorageReset": false,
+      "debugNavigation": false,
+      "channel": "cli",
+      "usePassiveGathering": false,
+      "disableFullPageScreenshot": true,
+      "skipAboutBlank": false,
+      "blankPage": "about:blank",
+      "ignoreStatusCode": false,
+      "locale": "en-US",
+      "blockedUrlPatterns": null,
+      "additionalTraceCategories": null,
+      "extraHeaders": null,
+      "precomputedLanternData": null,
+      "onlyAudits": null,
+      "onlyCategories": [
+        "performance"
+      ],
+      "skipAudits": null
+    },
+    "sameImageSources": true,
+    "sameFontURLsAndResourceSizes": true,
+    "rawReports": [
+      {
+        "file": "node_modules/.cache/d2-d8/before/home-mobile-1.report.json",
+        "sha256": "e423f6d66e7d5b84cd1fab7489556e8c47cb01e66c3b652f45f726d5640ab10b"
+      },
+      {
+        "file": "node_modules/.cache/d2-d8/before/home-mobile-2.report.json",
+        "sha256": "46456efa1fd3069d2b8fe7066039f8d3575efef2f979c00c64bbd3d29ca79458"
+      },
+      {
+        "file": "node_modules/.cache/d2-d8/before/home-mobile-3.report.json",
+        "sha256": "a253ce50d3b1b078f3949922f499f9a1799e71726064e363d3e8b9bf1d6a690d"
+      },
+      {
+        "file": "node_modules/.cache/d2-d8/after/home-mobile-1.report.json",
+        "sha256": "6d33c5cf88b8565774980aa2bc1794fe9b854f90fb1b434598a505040c2fc07c"
+      },
+      {
+        "file": "node_modules/.cache/d2-d8/after/home-mobile-2.report.json",
+        "sha256": "9ff85407b5501a8dbab5ec48bcd8f852dc1ad58660c2738c3a890ebebadb3188"
+      },
+      {
+        "file": "node_modules/.cache/d2-d8/after/home-mobile-3.report.json",
+        "sha256": "6ac78e7b375c058cd84cfe45a0f57d99ca64b3dafc00a0920cedd27d588902e7"
+      }
+    ]
+  },
+  "medians": {
+    "before": {
+      "score": 66,
+      "lcpMs": 6884.7942,
+      "fcpMs": 3809.7942000000003,
+      "tbtMs": 151.5,
+      "cls": 0.001560585597425021,
+      "bytes": 1760207
+    },
+    "after": {
+      "score": 66,
+      "lcpMs": 6907.94685,
+      "fcpMs": 3832.9468500000003,
+      "tbtMs": 162,
+      "cls": 0.001571732637406629,
+      "bytes": 1760258
+    }
+  },
+  "runs": {
+    "before": [
+      {
+        "run": 1,
+        "fetchTime": "2026-10-27T07:37:42.062Z",
+        "score": 65,
+        "lcpMs": 8742.8661,
+        "fcpMs": 3846.43305,
+        "tbtMs": 145.5000000000009,
+        "cls": 0.001571732637406629,
+        "bytes": 1760220,
+        "fontDisplayScore": 0,
+        "fontDisplayItems": [
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-solid-900.2cadd19c.woff2",
+            "wastedMs": 75
+          },
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-regular-400.00e4ddd4.woff2",
+            "wastedMs": 65
+          },
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-brands-400.cfc17d35.woff2",
+            "wastedMs": 55
+          }
+        ],
+        "warnings": []
+      },
+      {
+        "run": 2,
+        "fetchTime": "2026-10-27T07:38:01.732Z",
+        "score": 66,
+        "lcpMs": 6879.0243,
+        "fcpMs": 3804.0243,
+        "tbtMs": 153,
+        "cls": 0.001560585597425021,
+        "bytes": 1760174,
+        "fontDisplayScore": 0,
+        "fontDisplayItems": [
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-solid-900.2cadd19c.woff2",
+            "wastedMs": 110
+          },
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-brands-400.cfc17d35.woff2",
+            "wastedMs": 100
+          },
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-regular-400.00e4ddd4.woff2",
+            "wastedMs": 100
+          }
+        ],
+        "warnings": []
+      },
+      {
+        "run": 3,
+        "fetchTime": "2026-10-27T07:38:24.194Z",
+        "score": 66,
+        "lcpMs": 6884.7942,
+        "fcpMs": 3809.7942000000003,
+        "tbtMs": 151.5,
+        "cls": 0.001238015575979242,
+        "bytes": 1760207,
+        "fontDisplayScore": 0,
+        "fontDisplayItems": [
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-solid-900.2cadd19c.woff2",
+            "wastedMs": 145
+          },
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-brands-400.cfc17d35.woff2",
+            "wastedMs": 115
+          },
+          {
+            "url": "http://localhost:3004/_next/static/media/fa-regular-400.00e4ddd4.woff2",
+            "wastedMs": 115
+          }
+        ],
+        "warnings": []
+      }
+    ],
+    "after": [
+      {
+        "run": 1,
+        "fetchTime": "2026-10-27T07:41:47.259Z",
+        "score": 65,
+        "lcpMs": 6943.100550000001,
+        "fcpMs": 3868.10055,
+        "tbtMs": 162,
+        "cls": 0.001571732637406629,
+        "bytes": 1760258,
+        "fontDisplayScore": 1,
+        "fontDisplayItems": [],
+        "warnings": []
+      },
+      {
+        "run": 2,
+        "fetchTime": "2026-10-27T07:42:14.444Z",
+        "score": 74,
+        "lcpMs": 5573.832,
+        "fcpMs": 1507.416,
+        "tbtMs": 250,
+        "cls": 0.001238015575979242,
+        "bytes": 1760311,
+        "fontDisplayScore": 1,
+        "fontDisplayItems": [],
+        "warnings": []
+      },
+      {
+        "run": 3,
+        "fetchTime": "2026-10-27T07:42:37.297Z",
+        "score": 66,
+        "lcpMs": 6907.94685,
+        "fcpMs": 3832.9468500000003,
+        "tbtMs": 138,
+        "cls": 0.001571732637406629,
+        "bytes": 1760242,
+        "fontDisplayScore": 1,
+        "fontDisplayItems": [],
+        "warnings": []
+      }
+    ]
+  },
+  "fontAssets": [
+    {
+      "name": "fa-brands-400",
+      "sha256": "d7236a19bf23cbb2027280e8f51dc99d6c45976a2ed60de73382b034b18a2b68"
+    },
+    {
+      "name": "fa-regular-400",
+      "sha256": "e3456d1283b9d75337a773dfd147bf908fd02c01b4bf48576d8603a69b13cbe5"
+    },
+    {
+      "name": "fa-solid-900",
+      "sha256": "aa75998623a391e61c6901794ace832e3ecdd288b56d608f21bea0411acc0b8e"
+    }
+  ],
+  "sourceHashes": [
+    {
+      "file": "app/layout.tsx",
+      "sha256": "80f6b31559eb6900822ec818111d19a1c06ad95f9dca00965058b1d3f3d17f43"
+    },
+    {
+      "file": "app/icon-fonts.css",
+      "sha256": "7afffa5021a1b02ef83193185d89f0e96b4b4f75628a9a8b4947a467fc92475a"
+    },
+    {
+      "file": "components/ui/ImageLightbox.tsx",
+      "sha256": "ebbae8394e3e1b466d12054eb229934a8967b7ede4858b3c079009c6ce110013"
+    },
+    {
+      "file": "app/(front)/ministries/[slug]/page.tsx",
+      "sha256": "cff4e77e2be7de2a7ac06304e37f5bcf0baaa9f522c8e468f9add4ba84ed4598"
+    },
+    {
+      "file": "scripts/measure-font-delivery.mjs",
+      "sha256": "ddc18c282c40937eb7fdff21a3329ff4b5711a2dd84f513c9d105192f3af615c"
+    }
+  ],
+  "conclusion": "Font-display audit passes; median Performance unchanged and LCP +0.34%. No demonstrated speed improvement or field CWV claim. D2 remains open.",
+  "finalVerification": {
+    "http": [
+      {
+        "path": "/",
+        "status": 200,
+        "noindexHeader": true
+      },
+      {
+        "path": "/ministries/nove-sluzhinnya",
+        "status": 200,
+        "noindexHeader": true
+      },
+      {
+        "path": "/media/photos",
+        "status": 200,
+        "noindexHeader": true
+      },
+      {
+        "path": "/team/illya-metela",
+        "status": 200,
+        "noindexHeader": true
+      },
+      {
+        "path": "/d2-d8-not-found",
+        "status": 404,
+        "noindexHeader": true
+      },
+      {
+        "path": "/robots.txt",
+        "status": 200,
+        "noindexHeader": true
+      },
+      {
+        "path": "/sitemap.xml",
+        "status": 200,
+        "noindexHeader": true
+      }
+    ],
+    "accessibility": {
+      "url": "http://localhost:3004/ministries/nove-sluzhinnya",
+      "score": 100,
+      "contrastScore": 1,
+      "warnings": [],
+      "reportFile": "node_modules/.cache/d2-d8/ministry-a11y.report.json",
+      "reportSha256": "2118e82c23f4a8068a3c12e375924c7d7ae21edc9559cc5a6d86015e7e0adc55",
+      "limitation": "Automated single-page Lighthouse; not full WCAG compliance."
+    },
+    "browser": {
+      "dialogChecks": [
+        {
+          "counter": "1 / 5",
+          "dialogWidth": 320,
+          "dimensions": [
+            "2816",
+            "1536"
+          ],
+          "imageHeight": 157,
+          "imageWidth": 288,
+          "nextDisabled": false,
+          "previousDisabled": true,
+          "scrollWidth": 320,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+          "width": 320
+        },
+        {
+          "counter": "2 / 5",
+          "dialogWidth": 320,
+          "dimensions": [
+            "2400",
+            "1792"
+          ],
+          "imageHeight": 215,
+          "imageWidth": 288,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 320,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+          "width": 320
+        },
+        {
+          "counter": "3 / 5",
+          "dialogWidth": 320,
+          "dimensions": [
+            "2400",
+            "1792"
+          ],
+          "imageHeight": 215,
+          "imageWidth": 288,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 320,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+          "width": 320
+        },
+        {
+          "counter": "4 / 5",
+          "dialogWidth": 320,
+          "dimensions": [
+            "5184",
+            "3456"
+          ],
+          "imageHeight": 192,
+          "imageWidth": 288,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 320,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100",
+          "width": 320
+        },
+        {
+          "counter": "5 / 5",
+          "dialogWidth": 320,
+          "dimensions": [
+            "5184",
+            "3456"
+          ],
+          "imageHeight": 192,
+          "imageWidth": 288,
+          "nextDisabled": true,
+          "previousDisabled": false,
+          "scrollWidth": 320,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+          "width": 320
+        },
+        {
+          "counter": "1 / 5",
+          "dialogWidth": 390,
+          "dimensions": [
+            "2816",
+            "1536"
+          ],
+          "imageHeight": 195,
+          "imageWidth": 358,
+          "nextDisabled": false,
+          "previousDisabled": true,
+          "scrollWidth": 390,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+          "width": 390
+        },
+        {
+          "counter": "2 / 5",
+          "dialogWidth": 390,
+          "dimensions": [
+            "2400",
+            "1792"
+          ],
+          "imageHeight": 268,
+          "imageWidth": 358,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 390,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+          "width": 390
+        },
+        {
+          "counter": "3 / 5",
+          "dialogWidth": 390,
+          "dimensions": [
+            "2400",
+            "1792"
+          ],
+          "imageHeight": 268,
+          "imageWidth": 358,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 390,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+          "width": 390
+        },
+        {
+          "counter": "4 / 5",
+          "dialogWidth": 390,
+          "dimensions": [
+            "5184",
+            "3456"
+          ],
+          "imageHeight": 239,
+          "imageWidth": 358,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 390,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100",
+          "width": 390
+        },
+        {
+          "counter": "5 / 5",
+          "dialogWidth": 390,
+          "dimensions": [
+            "5184",
+            "3456"
+          ],
+          "imageHeight": 239,
+          "imageWidth": 358,
+          "nextDisabled": true,
+          "previousDisabled": false,
+          "scrollWidth": 390,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+          "width": 390
+        },
+        {
+          "counter": "1 / 5",
+          "dialogWidth": 1280,
+          "dimensions": [
+            "2816",
+            "1536"
+          ],
+          "imageHeight": 642,
+          "imageWidth": 1178,
+          "nextDisabled": false,
+          "previousDisabled": true,
+          "scrollWidth": 1280,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+          "width": 1280
+        },
+        {
+          "counter": "2 / 5",
+          "dialogWidth": 1280,
+          "dimensions": [
+            "2400",
+            "1792"
+          ],
+          "imageHeight": 792,
+          "imageWidth": 1061,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 1280,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+          "width": 1280
+        },
+        {
+          "counter": "3 / 5",
+          "dialogWidth": 1280,
+          "dimensions": [
+            "2400",
+            "1792"
+          ],
+          "imageHeight": 792,
+          "imageWidth": 1061,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 1280,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+          "width": 1280
+        },
+        {
+          "counter": "4 / 5",
+          "dialogWidth": 1280,
+          "dimensions": [
+            "5184",
+            "3456"
+          ],
+          "imageHeight": 785,
+          "imageWidth": 1178,
+          "nextDisabled": false,
+          "previousDisabled": false,
+          "scrollWidth": 1280,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100",
+          "width": 1280
+        },
+        {
+          "counter": "5 / 5",
+          "dialogWidth": 1280,
+          "dimensions": [
+            "5184",
+            "3456"
+          ],
+          "imageHeight": 785,
+          "imageWidth": 1178,
+          "nextDisabled": true,
+          "previousDisabled": false,
+          "scrollWidth": 1280,
+          "source": "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+          "width": 1280
+        }
+      ],
+      "portraitChecks": [
+        {
+          "dialogWidth": 320,
+          "image": [
+            288,
+            576
+          ],
+          "natural": [
+            1200,
+            2400
+          ],
+          "scrollWidth": 320,
+          "width": 320
+        },
+        {
+          "dialogWidth": 390,
+          "image": [
+            357,
+            715
+          ],
+          "natural": [
+            1200,
+            2400
+          ],
+          "scrollWidth": 390,
+          "width": 390
+        },
+        {
+          "dialogWidth": 1280,
+          "image": [
+            396,
+            792
+          ],
+          "natural": [
+            1200,
+            2400
+          ],
+          "scrollWidth": 1280,
+          "width": 1280
+        }
+      ],
+      "galleryCheck": {
+        "counter": "1 / 83",
+        "dialog": [
+          320,
+          320
+        ]
+      },
+      "focusCycle": [
+        {
+          "label": "Наступне фото",
+          "tag": "BUTTON"
+        },
+        {
+          "label": null,
+          "tag": "BODY"
+        },
+        {
+          "label": "Закрити",
+          "tag": "BUTTON"
+        },
+        {
+          "label": null,
+          "tag": "BODY"
+        },
+        {
+          "label": "Наступне фото",
+          "tag": "BUTTON"
+        }
+      ],
+      "iconComparisons": {
+        "320": 24,
+        "390": 24,
+        "1280": 24
+      },
+      "console": [],
+      "browserFile": "node_modules/.cache/d2-d8/browser.json",
+      "sha256": "1667e7661ccfce4f55132be4dfb016beca052769592e234f7431cf5a99d0fda0",
+      "focusLimitation": "Native modal Tab cycle includes browser boundary (activeElement body); background page links were not focused.",
+      "screenshot": "node_modules/.cache/d2-d8/dialog-320.jpg",
+      "screenshotSha256": "ad591f222ffff272772cc5852f146f6b41ed01437f3de259128ebbaabb6f17e7"
+    }
+  }
+}

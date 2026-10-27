@@ -131,7 +131,7 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
           onLoad={() => setLoadedIndex(index)}
           placeholder={photo.lqip ? 'blur' : 'empty'}
           blurDataURL={photo.lqip}
-          className="h-auto max-h-[88vh] w-auto max-w-[92vw] rounded-lg object-contain"
+          className="h-auto max-h-[88vh] w-auto max-w-[min(92vw,calc(100dvw-2rem))] rounded-lg object-contain"
         />
       </div>
 

@@ -1,5 +1,11 @@
 # Code Standards
 
+## Icon fonts і modal width D2.1/D8.1 (2026-10-27)
+
+`app/icon-fonts.css` імпортується після Font Awesome package CSS й задає `swap` використовуваним FA6 Brands 400 / Free 400,900 з тими самими локальними WOFF2. Не змінювати glyph mappings/сімейства/ваги або додавати icon preload без вимірювань. Порівнювати exact loaded glyph/style/geometry та фактичні network requests; audit PASS сам по собі не доводить поліпшення LCP. Body/heading fonts лишаються у `app/fonts.css`.
+
+У shared `ImageLightbox` photo max-width — `min(92vw,calc(100dvw - 2rem))`; 2rem відповідають двом сторонам `p-4` діалогу. Якщо змінюється padding, узгодити cap; перевіряти dialog clientWidth/scrollWidth на 320px, landscape/portrait і desktop, без простого приховування overflow. Зберігати full-resolution/q=100 та D9 preload gate. Для дрібного single-leader label на `bg-gray-50` використовувати `text-gray-600` (4,72:1), не попередній `gray-500` (4,46:1). [Вимірювання й QA](../docs/seo/audit.md#d2-d8-2026-10-27).
+
 ## Доставка gallery originals D9 (2026-10-27)
 
 Не замінювати погоджені full-resolution/q=100 фото адаптивними прев’ю без вибору користувача. Для ministry/media мозаїк — `DeferredGalleryImage`: резервування наявного tile, LQIP до intersection 400px, observer cleanup, fallback без API й SSR noscript. Не повертати звичайний native lazy original поза noscript до intersection: браузер може завантажити його далеко нижче екрана. Не застосовувати цей delay до видимого основного фото. Кнопки повинні залишатися названими й відкривати viewer незалежно від стану тайла. У lightbox сусіди чекають `onLoad` поточного індексу; після navigation gate повторюється.

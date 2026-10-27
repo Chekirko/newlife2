@@ -1,5 +1,30 @@
 # Progress Tracker
 
+**Commit + push D2.1/D8.1 прямо погоджені 2026-10-27:** користувач відповів «Так» після фінального QA. Погоджено 12 файлів (4 application, measurement script, 6 Markdown-документів та evidence JSON) у `codex/seo-1-audit` за workflow §3. Свіжий fetch HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду/відсутність commit+push — попередній стан. Результат публікації — у git history та фінальному повідомленні; решта D2/D8 відкрита, live deployment окремо не засвідчений.
+
+- Перед погодженою публікацією повторний `cmd /c "pnpm run build"` PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; чинні Node/Browserslist warnings. Review погоджених 12 файлів, UTF-8 / 75 локальних targets, 5 source / 6 performance / 3 font asset / a11y-browser-screenshot hashes та staged diff-check PASS. Єдиний відомий Diff Surgeon `semicolon-style` false positive лишається поясненим; код і попередній QA не розширені.
+
+## Поточний стан — D2.1 / D8.1 завершені локально, 2026-10-27
+
+Пряме доручення «Роби Далі — D2/D8» виконано у двох вузьких послідовних юнітах за чинним лімітом сесії. Старт чистий `6b12965`, `codex/seo-1-audit`; D9 вже у HEAD. [Scope](specs/07-d2-d8-fonts-dialog.md), [звіт і залишок](../docs/seo/audit.md#d2-d8-2026-10-27), [evidence](../docs/seo/d2-d8-2026-10-27.json).
+
+- **D2.1:** `app/icon-fonts.css` після Font Awesome задає `swap` трьом використовуваним FA6 faces; оригінальні assets/хеші, mappings і CMS-вибір іконок збережено. Три production mobile runs до/після: font-display audit 0→1 у всіх runs; median Performance 66→66, LCP 6,885→6,908 с (+0,34%). **Прискорення не доведено**, render-blocking CSS та загальні цілі D2 відкриті. 72/72 exact loaded icon comparisons на 320/390/1280px; ті самі 11 font requests/ресурсні розміри, image sources, Chrome/повні профілі, warnings 0.
+- **D8.1:** single-leader label `gray-500`→`gray-600`, 4,46→4,72:1; production Lighthouse ministry accessibility 100/color-contrast PASS. Shared photo max-width враховує `p-4`: `min(92vw,calc(100dvw - 2rem))`; на 320px dialog 320/323→320/320, image 288px. 15 реальних photo×viewport + 3 synthetic portrait geometry checks без overflow, single team viewer/shared gallery 1/83→2/83, Enter/Space/arrows/межі/Esc/backdrop/focus restore перевірені. Native Tab cycle проходить browser boundary й повертається до dialog, background links не фокусувалися; strict DOM focus trap не заявляється. Console warnings/errors 0. Тимчасову public fixture видалено; raw artifacts у ignored `node_modules/.cache/d2-d8/`.
+- Обидві unit builds PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Фінальні lint/повний tsc, 3 штатні + 4 SEO/photo регресії PASS. 7 GET (6×200/1×404), один H1 у 5 HTML, noindex/header/Disallow/порожній sitemap збережені. Static a11y scanner має перевірені component/Next Image heuristics, чистого scanner/full WCAG PASS не заявляємо. Початкові sandbox EPERM/loopback timeout усунені дозволеними запусками; пізніший server-log Sanity read-only timeout не змінив успішної HTTP матриці.
+
+Фінальний review 4 application файлів і measurement script завершено; UTF-8 12 файлів / 75 локальних file+anchor targets / diff-check PASS. 5 source hashes, 6 performance report hashes, a11y report/browser report/screenshot hashes перевірені. Diff Surgeon позначив єдиний intentional false positive `semicolon-style` для нового CSS import: він відповідає чинному стилю root layout; CLEAN автоматичного verdict не заявляємо. QA server зупинено (3004 без listener), viewport override скинуто, вкладку закрито, public fixture відсутня.
+
+**Далі:** D2 render-blocking CSS/mobile LCP/≥90/польові CWV; D8 FAQ disclosure/nav landmark/breadcrumb contrast/sidebar order/history summary focus/media load-more focus/#418. Загальні D2/D8/F01/SEO-L відкриті; full-resolution домовленість D9 чинна. CMS/schema/GROQ/env/settings/package/lockfile/індексація без змін. Commit/push **не виконані** — потрібна окрема згода за [workflow §3](ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19); live deployment не засвідчений. Нижче — проміжний стан і попередня історія.
+
+## Поточний юніт — D2.1 завершено локально, D8.1 у роботі, 2026-10-27
+
+Пряме доручення «Роби Далі — D2/D8». Старт чистий `6b12965`, `codex/seo-1-audit`; D9 вже в HEAD. [Scope](specs/07-d2-d8-fonts-dialog.md).
+
+- **D2.1:** локальний `app/icon-fonts.css`, імпортований після Font Awesome, задає `swap` трьом використовуваним FA6 faces. Оригінальні glyph mappings, assets/хеші, сімейства/ваги й CMS-вибір іконок збережені. 72/72 exact icon geometry/style comparisons на 320/390/1280px; console warnings/errors 0.
+- Три production mobile Lighthouse runs до/після: font-display audit **0 → 1 у всіх runs**. Median LCP **6,885 → 6,908 с**, Performance **66 → 66**: прискорення не доведено, загальний D2 лишається відкритим. Raw reports — ignored `node_modules/.cache/d2-d8/`. Render-blocking CSS не змінено.
+- Build PASS: 21 schema types / 34 GROQ queries, TypeScript, 42/42 generation tasks. Старі Node/Browserslist warnings. Lint, 3 штатні й 4 SEO/photo регресії PASS. Початкові sandbox Sanity-config EPERM / loopback timeout усунено дозволеним запуском build/server поза sandbox.
+- **D8.1 далі:** підтверджено dialog clientWidth 320 / scrollWidth 323 і label 4,46:1 на `bg-gray-50`; чинний `gray-600` дає 4,72:1. Поки D8-код не змінено. Решта D8/F01/SEO-L відкрита; індексація збережена. Commit/push не виконані — окрема згода за workflow §3 після завершеного QA.
+
 Update this file after every meaningful implementation change.
 
 ## Поточний стан — D9: доставка оригіналів завершена локально, 2026-10-27

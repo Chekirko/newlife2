@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { SITE_URL } from "@/lib/site";
 import { getPageMetadata } from "@/lib/metadata";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "./icon-fonts.css";
 import "./globals.css";
 
 export async function generateMetadata(): Promise<Metadata> {
