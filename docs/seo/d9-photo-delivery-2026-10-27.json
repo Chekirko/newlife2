@@ -1,0 +1,300 @@
+{
+  "date": "2026-10-27",
+  "baselineCommit": "436f852",
+  "route": "/ministries/nove-sluzhinnya",
+  "strategy": "Unchanged full-resolution q=100 originals; gallery requests within 400px; neighbours after foreground load",
+  "method": "Local production, 3 cold Lighthouse navigation runs per variant, identical assets/settings/browser; decimal MB",
+  "limitation": "CPU calibration warning in before run 3. Performance/LCP are diagnostic, not a proven speed improvement or field CWV. Visible original and total bytes after browsing all photos remain heavy. Shuffled /media/photos has browser QA only, not a comparable Lighthouse series.",
+  "lighthouseVersion": "13.5.0",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+  "settings": {
+    "output": [
+      "json"
+    ],
+    "maxWaitForFcp": 30000,
+    "maxWaitForLoad": 45000,
+    "pauseAfterFcpMs": 1000,
+    "pauseAfterLoadMs": 1000,
+    "networkQuietThresholdMs": 1000,
+    "cpuQuietThresholdMs": 1000,
+    "formFactor": "mobile",
+    "throttling": {
+      "rttMs": 150,
+      "throughputKbps": 1638.4,
+      "requestLatencyMs": 562.5,
+      "downloadThroughputKbps": 1474.5600000000002,
+      "uploadThroughputKbps": 675,
+      "cpuSlowdownMultiplier": 4
+    },
+    "throttlingMethod": "simulate",
+    "screenEmulation": {
+      "mobile": true,
+      "width": 412,
+      "height": 823,
+      "deviceScaleFactor": 1.75,
+      "disabled": false
+    },
+    "emulatedUserAgent": "Mozilla/5.0 (Linux; Android 11; moto g power (2022)) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Mobile Safari/537.36",
+    "auditMode": false,
+    "gatherMode": false,
+    "clearStorageTypes": [
+      "file_systems",
+      "shader_cache",
+      "service_workers",
+      "cache_storage"
+    ],
+    "disableStorageReset": false,
+    "debugNavigation": false,
+    "channel": "cli",
+    "usePassiveGathering": false,
+    "disableFullPageScreenshot": true,
+    "skipAboutBlank": false,
+    "blankPage": "about:blank",
+    "ignoreStatusCode": false,
+    "locale": "en-US",
+    "blockedUrlPatterns": null,
+    "additionalTraceCategories": null,
+    "extraHeaders": null,
+    "precomputedLanternData": null,
+    "onlyAudits": null,
+    "onlyCategories": [
+      "performance"
+    ],
+    "skipAudits": null
+  },
+  "originals": [
+    "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+    "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+    "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+    "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+    "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100"
+  ],
+  "median": {
+    "before": {
+      "bytes": 34418416,
+      "lcpMs": 5331.680300000001,
+      "cls": 0.0002090580392154921,
+      "score": 72
+    },
+    "after": {
+      "bytes": 5870150,
+      "lcpMs": 5282.529500000001,
+      "cls": 0.0002090580392154921,
+      "score": 71
+    },
+    "bytesReductionPercent": 82.9447409782019
+  },
+  "runs": {
+    "before": [
+      {
+        "run": 1,
+        "fetchTime": "2026-10-27T07:04:09.675Z",
+        "score": 72,
+        "lcpMs": 5331.680300000001,
+        "cls": 0.0002090580392154921,
+        "bytes": 34418416,
+        "photoRequests": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+            "transferSize": 5042882,
+            "resourceSize": 5038670,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+            "transferSize": 2025816,
+            "resourceSize": 2023117,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+            "transferSize": 5934351,
+            "resourceSize": 5929943,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100",
+            "transferSize": 7610453,
+            "resourceSize": 7602712,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+            "transferSize": 12980577,
+            "resourceSize": 12973144,
+            "statusCode": 200
+          }
+        ],
+        "warnings": [],
+        "reportSha256": "5ccd2ee930cd57ac3983f6e9e2c9c9c75160485dd637f2349026df27d5aea393"
+      },
+      {
+        "run": 2,
+        "fetchTime": "2026-10-27T07:04:39.380Z",
+        "score": 72,
+        "lcpMs": 5272.043699999998,
+        "cls": 0.0002090580392154921,
+        "bytes": 34417437,
+        "photoRequests": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+            "transferSize": 5043285,
+            "resourceSize": 5038670,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+            "transferSize": 2025437,
+            "resourceSize": 2023117,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+            "transferSize": 5935912,
+            "resourceSize": 5929943,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100",
+            "transferSize": 7607543,
+            "resourceSize": 7602712,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+            "transferSize": 12980559,
+            "resourceSize": 12973144,
+            "statusCode": 200
+          }
+        ],
+        "warnings": [],
+        "reportSha256": "7e32a062ca01b6f346848744bf00c54047405a5bba9dca97b0868f1d705db84c"
+      },
+      {
+        "run": 3,
+        "fetchTime": "2026-10-27T07:05:07.030Z",
+        "score": 70,
+        "lcpMs": 5473.858499999999,
+        "cls": 0.0002090580392154921,
+        "bytes": 34418780,
+        "photoRequests": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+            "transferSize": 5047131,
+            "resourceSize": 5038670,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+            "transferSize": 2024549,
+            "resourceSize": 2023117,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+            "transferSize": 5933505,
+            "resourceSize": 5929943,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100",
+            "transferSize": 7607201,
+            "resourceSize": 7602712,
+            "statusCode": 200
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+            "transferSize": 12981693,
+            "resourceSize": 12973144,
+            "statusCode": 200
+          }
+        ],
+        "warnings": [
+          "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+        ],
+        "reportSha256": "9bc76341a66e70888168cf5b00d8ccc86065b36458341e51f84fcb3ea325b1b4"
+      }
+    ],
+    "after": [
+      {
+        "run": 1,
+        "fetchTime": "2026-10-27T07:10:57.579Z",
+        "score": 71,
+        "lcpMs": 5205.6234,
+        "cls": 0.0002090580392154921,
+        "bytes": 5867630,
+        "photoRequests": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+            "transferSize": 5042477,
+            "resourceSize": 5038670,
+            "statusCode": 200
+          }
+        ],
+        "warnings": [],
+        "reportSha256": "52979768348c303bc068c9cc72973ea8a5a01062ad7682ddf8d3c698f74b6709"
+      },
+      {
+        "run": 2,
+        "fetchTime": "2026-10-27T07:11:35.364Z",
+        "score": 71,
+        "lcpMs": 5282.529500000001,
+        "cls": 0.0002090580392154921,
+        "bytes": 5870150,
+        "photoRequests": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+            "transferSize": 5045015,
+            "resourceSize": 5038670,
+            "statusCode": 200
+          }
+        ],
+        "warnings": [],
+        "reportSha256": "d23364d8caaa87d1bd239d873480f7c575238d19a2194f403d053f54c047de0d"
+      },
+      {
+        "run": 3,
+        "fetchTime": "2026-10-27T07:12:04.080Z",
+        "score": 69,
+        "lcpMs": 5341.99245,
+        "cls": 0.0002090580392154921,
+        "bytes": 5870288,
+        "photoRequests": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+            "transferSize": 5045133,
+            "resourceSize": 5038670,
+            "statusCode": 200
+          }
+        ],
+        "warnings": [],
+        "reportSha256": "9d2c9b230df68a49e16ee7844fbc5131344a18012db28dd447cc88c9e35085f2"
+      }
+    ]
+  },
+  "sourceSha256": {
+    "components/ui/DeferredGalleryImage.tsx": "14d6bf8f2b790124abe9b268ec0cfaca1b24df63005b01c05a3e39a87fefec1e",
+    "components/ui/ImageLightbox.tsx": "8a68e8eeb71f9e3cf8759e07a05afd93a1144fb8133de62d5b267af9a0a84dfa",
+    "app/(front)/ministries/[slug]/components/PhotoGalleryGrid.tsx": "08abd69bf184b3ce8aa95476c75c5df663f418f8e7f2383ceac9bbe797b55dd8",
+    "app/(front)/media/photos/components/PhotoGallery.tsx": "dbb1618ee8a9c6aab199df5f4b38a3edce604fcad09b17694dc1eacac7634ca9",
+    "scripts/measure-photo-delivery.mjs": "4246ca2206cb00c700bfd0ca90b5f2b6e989d5f18436140f9da63e74c68ff60f",
+    "scripts/check-photo-delivery.mjs": "73c5ec38bc5fc61e71c506dd640f41260b4cd33f1ca87b4f2b8375e7c9ab3d04"
+  },
+  "browser": {
+    "ministryGeometryExactMatches": 33,
+    "testedWidths": [
+      1280,
+      390,
+      320
+    ],
+    "initialMinistryGalleryImages": 0,
+    "ministryGalleryButtons": 4,
+    "mediaInitialTiles": 12,
+    "mediaAfterLoadMore": 24,
+    "mediaTotalPhotos": 83,
+    "loadMoreAt390x600": "Last two appended tiles at top 1103.5px stay deferred; near tiles load. noscript img DOM nodes: 0.",
+    "modal": "Deferred tile opens index 24/83; q=100 and asset dimensions. Ministry 1/5 and 5/5 boundaries, Enter, arrows, Esc, backdrop, focus trap/restore verified.",
+    "consoleWarningsOrErrors": 0,
+    "existingGeometryFindingForD8": "At 320px, modal clientWidth=320 and scrollWidth=323. max-w-[92vw] and p-4 geometry classes are unchanged by D9; no complete a11y pass claimed."
+  }
+}

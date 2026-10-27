@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
 import { clsx } from 'clsx'
 import { ImageLightbox, type PhotoItem } from '@/components'
+import { DeferredGalleryImage } from '@/components/ui/DeferredGalleryImage'
 
 // =========================================
 // PhotoGallery — bento mosaic of all ministry photos. Fixed-height cells +
@@ -58,15 +58,9 @@ export function PhotoGallery({ photos }: PhotoGalleryProps) {
               idx % 12 === 6 && 'lg:col-start-2', // …and every other large tile hugs the right
             )}
           >
-            <Image
-              src={photo.thumbUrl}
-              unoptimized
-              alt={photo.alt}
-              fill
+            <DeferredGalleryImage
+              photo={photo}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 50vw, 33vw"
-              placeholder={photo.lqip ? 'blur' : 'empty'}
-              blurDataURL={photo.lqip}
-              className="object-cover transition-transform duration-700 ease-out group-hover:scale-105"
             />
             <span className="absolute inset-0 bg-black/0 transition-colors duration-500 group-hover:bg-black/15" />
           </button>

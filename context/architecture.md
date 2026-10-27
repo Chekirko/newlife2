@@ -1,5 +1,11 @@
 # Architecture Context
 
+## Доставка оригіналів D9 (2026-10-27)
+
+Користувач підтвердив оригінали всюди із завантаженням при наближенні. `DeferredGalleryImage` — клієнтська частина вже клієнтських ministry/media мозаїк: займає весь наявний tile без зміни геометрії, показує LQIP background, монтує `Image unoptimized` при intersection із margin 400px. Observer відключається після спрацювання й при unmount; без API — звичайне завантаження. SSR містить оригінал у `noscript`, який не створює image nodes у JS-сесії, включно з load-more. Кнопка зберігає accessible name й відкриває viewer навіть до завантаження тайла. Main photo і дані `PhotoItem`/GROQ/URL builder не змінені.
+
+`ImageLightbox` зберігає індекс усередині; сусідні full-resolution фото монтуються для preload тільки після `onLoad` поточного індексу. Native modal/focus/scroll/group boundaries збережені. Це економія початкових запитів, не зменшення ваги оригіналу або всього перегляду. [Spec](specs/06-d9-photo-delivery.md), [QA](../docs/seo/audit.md#d9-2026-10-27).
+
 ## JSON-LD та неповні дані SEO-5 (2026-10-26)
 
 Detail JSON-LD використовує фактичний route slug та стабільні `#article`/`#event`/`#person`; посилання на церкву — єдиний `SITE_URL/#church`. Homepage описує цю сутність сумісними типами `Church` + `Organization` (юридичні/контактні поля належать Organization). Person бере назву через `getSiteSettings()` і `memberOf`, без твердження про працевлаштування. Ministry відкидає null/incomplete leaders до вибору singular/grid; відсутнє фото не передається image builder. Detail team без фото використовує чинний `ImagePlaceholder`.

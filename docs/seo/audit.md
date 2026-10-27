@@ -1,5 +1,50 @@
 # SEO-аудит до запуску
 
+**Публікація D9 прямо погоджена 2026-10-27:** користувач відповів «Так» після підсумкового QA; дозволено commit + push погоджених 15 файлів у `codex/seo-1-audit` за workflow §3. Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду або відсутність commit/push — попередній стан. Результат — у git history та фінальному повідомленні; live deployment окремо не засвідчений.
+
+Перед погодженою публікацією повторний build PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks. Перша спроба мала тимчасовий ConnectTimeout Sanity API на `/ministries/media`; повтор без зміни коду успішний. Review 15 файлів, UTF-8 / 72 локальні targets, 6 source / 6 raw report hashes і staged diff-check PASS; application/script Diff Surgeon CLEAN. Попередній QA і scope не розширено.
+
+**Актуальний D9:** погоджений юніт доставки оригіналів завершено локально 2026-10-27: **34,42 → 5,87 МБ стартового трафіку (−82,94%)**, full-resolution/q=100 збережені. [Результат і межі](#d9-2026-10-27). SEO-7 вже у HEAD `436f852`; нижчі вступні записи — історія. Commit/push D9 не виконано.
+
+<a id="d9-2026-10-27"></a>
+
+## D9 — доставка оригіналів, 2026-10-27
+
+Користувач доручив D9 та прямо обрав **«Оригінали всюди, завантаження при наближенні»**. [Spec](../../context/specs/06-d9-photo-delivery.md), [6 raw-run summaries, profiles, hashes і QA](d9-photo-delivery-2026-10-27.json). Старт чистий `436f852`, `codex/seo-1-audit`.
+
+Причина стартового трафіку: browser native lazy loading завантажував далекі gallery tiles; у зіставній серії на `/ministries/nove-sluzhinnya` кожен run отримував main photo та всі 4 оригінали галереї. `DeferredGalleryImage` у мозаїках служіння та `/media/photos` тепер монтує original Image при наближенні tile до viewport на 400px. До того LQIP, SSR fallback — noscript, без IntersectionObserver — звичайне завантаження. Кнопки й viewer доступні до завантаження тайла. Main photo не відкладене. Спільний lightbox починає preload сусідів після `onLoad` поточного фото; після переходу чекає новий індекс.
+
+URL і повна роздільність asset, q=100, `unoptimized`, відсутність resize/auto-format/Next optimizer, кадрування та layout збережені. [Next Image: unoptimized](https://nextjs.org/docs/app/api-reference/components/image#unoptimized) і [параметри Sanity](https://www.sanity.io/docs/content-lake/image-urls) звірено; у цьому юніті нових CDN transforms немає. Це не гарантія побітового upload-оригіналу — попередня межа публічного CDN чинна.
+
+### Метод і результат
+
+Built Next.js 16.1.6, Lighthouse 13.5.0 / Chrome 155: по 3 холодні navigation runs на тому самому ministry route, п'ять точних original URLs, settings/browser/version звірені програмно. Mobile 412×823, DPR 1,75, simulated throttling, CPU×4. Вимірювальна утиліта — `scripts/measure-photo-delivery.mjs`; raw reports/traces/HTML — ignored `node_modules/.cache/d9/{before,after}/`. MB нижче десяткові.
+
+| Метрика, медіана | До | Після |
+|---|---:|---:|
+| Загальний стартовий трафік | 34 418 416 bytes | 5 870 150 bytes (−82,94%) |
+| Запити original photos, кожен run | 5 | 1 |
+| LCP | 5,332 с | 5,283 с |
+| Performance | 72 | 71 |
+| CLS | 0,000209 | 0,000209 |
+
+**Висновок — зменшено початковий трафік, прискорення не доведено.** Before run 3 має CPU calibration warning. Score/LCP тут діагностичні; це не польові CWV, не закриття D2 і не повторення старого SEO-7 baseline. Видимий main original лишається приблизно 5,04 МБ. Після перегляду всіх фото користувач отримає ті самі оригінали. Shuffled `/media/photos` перевірено функціонально, без заяви зіставної Lighthouse-серії.
+
+### Перевірка й залишок
+
+- Build PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; чинні Node/Browserslist warnings. Початковий sandbox Sanity-config EPERM усунено дозволеним повтором.
+- Повний lint/tsc, 3 штатні + 3 SEO-регресії PASS. Нова `check-photo-delivery.mjs` перевіряє відсутність original img до intersection, LQIP/empty, noscript, observer cleanup/unsupported fallback; 0/1/many viewer, порядок preload й межі navigation. Це VM/SSR, доповнені реальним browser QA.
+- Browser ministry: 33/33 exact geometry comparisons main headings/photo buttons на 1280/390/320px; сторінки без horizontal overflow. На початку 4 gallery buttons і 0 gallery img; після scroll усі 4 завантажені з натуральними 2400×1792 / 5184×3456. Main у viewer — 2816×1536. Enter/Space, ←/→, межі 1/5–5/5, Esc/бекдроп, focus trap/restore, screenshots перевірені; console warnings/errors 0.
+- Browser `/media/photos`: 12→24 із 83. На 390×600 останні два додані tile на top 1103,5px ще без img, ближні мають original img; noscript image DOM nodes 0 після hydration та client append. Відкладений tile відкриває правильний 24/83 viewer із q=100 та натуральними dimensions. На 1280/390/320px сторінка без overflow.
+- 7 HTTP GET (6×200/1×404), один H1 на 4 успішних HTML, SSR noscript 4 ministry/12 media; header/meta noindex, Disallow та порожній sitemap збережені. 6 source hashes і 6 raw report hashes звірені.
+- **D8:** dialog на 320px має clientWidth 320 / scrollWidth 323; `max-w-[92vw]` і `p-4` у цьому юніті незмінні. Це окремий geometry finding поряд із label contrast/FAQ/nav/breadcrumbs/sidebar/history/media-focus. Повний a11y PASS не заявляється.
+
+Фінальний review 6 application/script файлів і Diff Surgeon CLEAN; UTF-8 усіх 15 файлів / 72 унікальні локальні file+anchor targets / diff-check PASS. QA-сервер зупинено (3004 без listener), viewport скинуто, основну QA-вкладку закрито.
+
+Погоджений юніт доставки D9 завершений локально. Вага видимих оригіналів, повного перегляду та інших full-resolution шаблонів залишається обмеженням обраної стратегії. Далі D2 CSS/fonts/mobile LCP і D8; адаптивні прев’ю автоматично не впроваджувати. CMS/GROQ/schema/env/settings/package/lockfile/індексація не змінені; F01/SEO-L відкриті. Commit/push D9 потребують окремої згоди за [workflow §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19); live deployment не засвідчений.
+
+---
+
 **Публікація SEO-7 прямо погоджена 2026-10-27:** відповідь користувача «Так» після підсумкового QA дозволяє commit + push погоджених 10 файлів у `codex/seo-1-audit` за workflow §3. Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду — попередній стан. Результат публікації — у git history та фінальному повідомленні; live deployment окремо не засвідчений.
 
 Перед погодженою публікацією повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 10 файлів, UTF-8 / 69 локальних file+anchor targets, 31 report hash + 2 source hashes і diff-check PASS; application/regression Diff Surgeon CLEAN. Попередній performance/browser/HTTP QA не розширено, код застосунку не змінено.

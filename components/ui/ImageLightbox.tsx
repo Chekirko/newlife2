@@ -9,7 +9,7 @@ import Image from 'next/image'
 //
 // The current index lives HERE (not in the parent grid), so navigating does not
 // re-render the gallery. The visible image is keyed by index (instant blur on
-// change) and the two neighbours are preloaded off-screen → arrows feel instant.
+// change). Neighbours preload after the visible photo finishes loading.
 // =========================================
 
 export interface PhotoItem {
@@ -32,6 +32,7 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
   const dialogRef = useRef<HTMLDialogElement>(null)
   const closeRef = useRef<HTMLButtonElement>(null)
   const [index, setIndex] = useState(initialIndex)
+  const [loadedIndex, setLoadedIndex] = useState<number | null>(null)
 
   const count = photos.length
   useEffect(() => {
@@ -127,6 +128,7 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
           sizes="90vw"
           unoptimized
           priority
+          onLoad={() => setLoadedIndex(index)}
           placeholder={photo.lqip ? 'blur' : 'empty'}
           blurDataURL={photo.lqip}
           className="h-auto max-h-[88vh] w-auto max-w-[92vw] rounded-lg object-contain"
@@ -137,8 +139,8 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
         {index + 1} / {count}
       </p>
 
-      {/* Off-screen preload of the neighbouring photos so ◀ ▶ are instant. */}
-      <div aria-hidden className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
+      {/* Give the visible original the connection before preloading neighbours. */}
+      {loadedIndex === index && <div aria-hidden className="pointer-events-none absolute h-px w-px overflow-hidden opacity-0">
         {neighbours.map((n) => (
           <Image
             key={n.id}
@@ -151,7 +153,7 @@ export function ImageLightbox({ photos, initialIndex, onClose }: ImageLightboxPr
             loading="eager"
           />
         ))}
-      </div>
+      </div>}
     </dialog>
   )
 }
