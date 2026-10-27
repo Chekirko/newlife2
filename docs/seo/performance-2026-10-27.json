@@ -1,0 +1,1183 @@
+{
+  "date": "2026-10-27",
+  "beforeRef": "2c55238",
+  "lighthouseVersion": "13.5.0",
+  "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36",
+  "afterHeroSha256": "2b54167859b35ef125523c8877fbb23f5712c6275ac067c44eadae2f66efefde",
+  "runnerSha256": "fa4ceec14f6a75c9d35c9fe0d0d527e0982e5b812334320d73c9ddfdc7e11b41",
+  "groups": [
+    {
+      "name": "home",
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      },
+      "medians": {
+        "before": {
+          "score": 61,
+          "fcpMs": 3839.2044000000005,
+          "lcpMs": 9465.7891,
+          "tbtMs": 247,
+          "cls": 0.001571732637406629,
+          "speedIndexMs": 3839.2044000000005,
+          "bytes": 1978255
+        },
+        "after": {
+          "score": 66,
+          "fcpMs": 3798.1209,
+          "lcpMs": 6873.120899999998,
+          "tbtMs": 139.99999999999955,
+          "cls": 0.001571732637406629,
+          "speedIndexMs": 3798.1209,
+          "bytes": 1760086
+        }
+      },
+      "samples": {
+        "before": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T05:52:12.313Z",
+            "reportSha256": "193df8399bc4182cb6aac85a5fef84e292b419df64909814fb59de0161b920a6",
+            "benchmarkIndex": 2059.5,
+            "score": 66,
+            "fcpMs": 3864.129,
+            "lcpMs": 7910.781499999999,
+            "tbtMs": 124.5,
+            "cls": 0.001571732637406629,
+            "speedIndexMs": 3864.129,
+            "bytes": 1978099,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 657044,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T05:52:35.339Z",
+            "reportSha256": "1d0ce5b98e2d7fd28f9db6c1c80110cc5d1f4d19b1e385ad8c8e9ef78f9c7742",
+            "benchmarkIndex": 1855,
+            "score": 61,
+            "fcpMs": 3804.09195,
+            "lcpMs": 9512.140424999998,
+            "tbtMs": 247,
+            "cls": 0.001571732637406629,
+            "speedIndexMs": 3804.09195,
+            "bytes": 1978293,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 657082,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T05:52:56.429Z",
+            "reportSha256": "f754c0213bd9355a9ce23506265053c493fbac7e73b889b1f6f27f6d551f6d81",
+            "benchmarkIndex": 1999,
+            "score": 61,
+            "fcpMs": 3839.2044000000005,
+            "lcpMs": 9465.7891,
+            "tbtMs": 267,
+            "cls": 0.001571732637406629,
+            "speedIndexMs": 3839.2044000000005,
+            "bytes": 1978255,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 657038,
+            "failedRequestCount": 0
+          }
+        ],
+        "after": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T06:15:50.192Z",
+            "reportSha256": "557154a5589f20dea409df827a2c0c4c3425f3e5d79cbe0e499cdeae58f664b0",
+            "benchmarkIndex": 1829,
+            "score": 66,
+            "fcpMs": 3814.7688,
+            "lcpMs": 6889.768800000002,
+            "tbtMs": 151,
+            "cls": 0.001571732637406629,
+            "speedIndexMs": 3814.7688,
+            "bytes": 1760098,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": true,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 438359,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T06:16:10.785Z",
+            "reportSha256": "41e3b90fb59df9c9a7f51e16228832a186f9aa4da190e8e089e1eeef3233a4f2",
+            "benchmarkIndex": 1810,
+            "score": 74,
+            "fcpMs": 2322.34155,
+            "lcpMs": 5823.227700000001,
+            "tbtMs": 139.99999999999955,
+            "cls": 0.001238015575979242,
+            "speedIndexMs": 2322.34155,
+            "bytes": 1760086,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": true,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 438359,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T06:16:34.495Z",
+            "reportSha256": "abc01c6fd1ca2e25776679ec47ff689e7935fee36fe0fff4e93500954b31cf08",
+            "benchmarkIndex": 1983.5,
+            "score": 66,
+            "fcpMs": 3798.1209,
+            "lcpMs": 6873.120899999998,
+            "tbtMs": 130,
+            "cls": 0.001571732637406629,
+            "speedIndexMs": 3798.1209,
+            "bytes": 1760086,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": true,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 438359,
+            "failedRequestCount": 0
+          }
+        ]
+      },
+      "heroDelivery": {
+        "before": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/9f4c31e5902020e1292117ead28d03c6706600f1-1200x675.webp?w=1920&h=1080",
+            "status": 200,
+            "bytes": 214984,
+            "priority": "High"
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/8d4edb644dbdf585776b567eaf9a3f0d4a94b686-640x480.jpg?rect=0,60,640,360&w=1920&h=1080",
+            "status": 200,
+            "bytes": 149088,
+            "priority": "High"
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/939b4208314f3f22689cff01ffc71f2c1c329159-5712x3213.jpg?w=1920&h=1080",
+            "status": 200,
+            "bytes": 292972,
+            "priority": "High"
+          }
+        ],
+        "after": [
+          {
+            "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fn4j5141g%2Fproduction%2F9f4c31e5902020e1292117ead28d03c6706600f1-1200x675.webp%3Fw%3D1920%26h%3D1080&w=1920&q=75",
+            "status": 200,
+            "bytes": 183654,
+            "priority": "High"
+          },
+          {
+            "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fn4j5141g%2Fproduction%2F8d4edb644dbdf585776b567eaf9a3f0d4a94b686-640x480.jpg%3Frect%3D0%2C60%2C640%2C360%26w%3D1920%26h%3D1080&w=1920&q=75",
+            "status": 200,
+            "bytes": 67094,
+            "priority": "Low"
+          },
+          {
+            "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fn4j5141g%2Fproduction%2F939b4208314f3f22689cff01ffc71f2c1c329159-5712x3213.jpg%3Fw%3D1920%26h%3D1080&w=1920&q=75",
+            "status": 200,
+            "bytes": 187611,
+            "priority": "Low"
+          }
+        ]
+      },
+      "failedRequests": []
+    },
+    {
+      "name": "news",
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      },
+      "medians": {
+        "before": {
+          "score": 68,
+          "fcpMs": 3196.5150000000003,
+          "lcpMs": 5596.515000000001,
+          "tbtMs": 247.74749999999995,
+          "cls": 0,
+          "speedIndexMs": 3196.5150000000003,
+          "bytes": 1044218
+        },
+        "after": {
+          "score": 70,
+          "fcpMs": 3205.389,
+          "lcpMs": 5903.019,
+          "tbtMs": 131,
+          "cls": 0,
+          "speedIndexMs": 3205.389,
+          "bytes": 1043948
+        }
+      },
+      "samples": {
+        "before": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T05:53:58.451Z",
+            "reportSha256": "efec5df3cfb61b30a23c839b1242e8ced22c06e0f7aca2c9ee455af67b2c1981",
+            "benchmarkIndex": 1771,
+            "score": 88,
+            "fcpMs": 1228.844,
+            "lcpMs": 3793.266,
+            "tbtMs": 88.5,
+            "cls": 0,
+            "speedIndexMs": 1767.932998844069,
+            "bytes": 1044162,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T05:54:17.740Z",
+            "reportSha256": "7e2ec5048bee0ba3dd7576ca84a1038f230ad19a6bea40b02c4e68e80a38fb31",
+            "benchmarkIndex": 1390,
+            "score": 68,
+            "fcpMs": 3221.9790000000003,
+            "lcpMs": 5621.978999999999,
+            "tbtMs": 261.5034999999998,
+            "cls": 0,
+            "speedIndexMs": 3221.9790000000003,
+            "bytes": 1044218,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T05:54:40.383Z",
+            "reportSha256": "b636f5f756e97b66703d6ec11ab8c450f87dd48a16f5a778c1ec3fbaa4f6e58e",
+            "benchmarkIndex": 1344.5,
+            "score": 68,
+            "fcpMs": 3196.5150000000003,
+            "lcpMs": 5596.515000000001,
+            "tbtMs": 247.74749999999995,
+            "cls": 0,
+            "speedIndexMs": 3196.5150000000003,
+            "bytes": 1045591,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          }
+        ],
+        "after": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T06:16:56.835Z",
+            "reportSha256": "4db980bd1fa9944dd432adae319b3d6cb2eb6d496fac403fd9231496d8cd5db4",
+            "benchmarkIndex": 1874.5,
+            "score": 71,
+            "fcpMs": 3203.0190000000002,
+            "lcpMs": 5903.019,
+            "tbtMs": 119,
+            "cls": 0,
+            "speedIndexMs": 3203.0190000000002,
+            "bytes": 1045441,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T06:17:18.795Z",
+            "reportSha256": "b9d7ec8301dea108f993e8f7195ab45f57632e0183546b7b780d691411c3b2db",
+            "benchmarkIndex": 1868.5,
+            "score": 70,
+            "fcpMs": 3227.652,
+            "lcpMs": 6002.652,
+            "tbtMs": 131,
+            "cls": 0,
+            "speedIndexMs": 3227.652,
+            "bytes": 1043337,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T06:17:38.869Z",
+            "reportSha256": "327c9bf2339b57cc2f9051d32fc753abccdea1fb7898b343cecd51c0b7537633",
+            "benchmarkIndex": 1837,
+            "score": 68,
+            "fcpMs": 3205.389,
+            "lcpMs": 5605.389000000001,
+            "tbtMs": 251.76850000000013,
+            "cls": 0,
+            "speedIndexMs": 3205.389,
+            "bytes": 1043948,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          }
+        ]
+      },
+      "heroDelivery": {
+        "before": [],
+        "after": []
+      },
+      "failedRequests": []
+    },
+    {
+      "name": "media",
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      },
+      "medians": {
+        "before": {
+          "score": 70,
+          "fcpMs": 3228.621,
+          "lcpMs": 6030.953999999996,
+          "tbtMs": 149.99999999999955,
+          "cls": 0,
+          "speedIndexMs": 3228.621,
+          "bytes": 1027683
+        },
+        "after": {
+          "score": 71,
+          "fcpMs": 3216.09,
+          "lcpMs": 5916.090000000001,
+          "tbtMs": 114,
+          "cls": 0,
+          "speedIndexMs": 3216.09,
+          "bytes": 1027764
+        }
+      },
+      "samples": {
+        "before": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T05:55:03.492Z",
+            "reportSha256": "7f4c7cbe2b193704a5effc62c875644ecdd3f85f634500fb96925fc7afd78dfb",
+            "benchmarkIndex": 1792,
+            "score": 72,
+            "fcpMs": 3207.0299999999997,
+            "lcpMs": 5457.030000000001,
+            "tbtMs": 128.00000000000045,
+            "cls": 0,
+            "speedIndexMs": 3207.0299999999997,
+            "bytes": 1027417,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 9
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T05:55:26.494Z",
+            "reportSha256": "996195237110b4355ac2bc175fd79e43f0b087ec1a9fa327dc6e5631492a99cc",
+            "benchmarkIndex": 1488,
+            "score": 70,
+            "fcpMs": 3255.9539999999997,
+            "lcpMs": 6030.953999999996,
+            "tbtMs": 149.99999999999955,
+            "cls": 0,
+            "speedIndexMs": 3255.9539999999997,
+            "bytes": 1027683,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 14
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T05:55:46.105Z",
+            "reportSha256": "13930673978cab87a7fb1048164cadce30825047e27f36c01b52f9ee2fda81e2",
+            "benchmarkIndex": 1840.5,
+            "score": 70,
+            "fcpMs": 3228.621,
+            "lcpMs": 6078.620999999999,
+            "tbtMs": 152,
+            "cls": 0,
+            "speedIndexMs": 3228.621,
+            "bytes": 1027683,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 14
+          }
+        ],
+        "after": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T06:18:02.341Z",
+            "reportSha256": "41171900239a9579bbc8f7cadcb985639caa28e00209d8a80b34b3818aed575b",
+            "benchmarkIndex": 1948,
+            "score": 71,
+            "fcpMs": 3211.464,
+            "lcpMs": 5911.464000000001,
+            "tbtMs": 114,
+            "cls": 0,
+            "speedIndexMs": 3211.464,
+            "bytes": 1027489,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 9
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T06:18:26.160Z",
+            "reportSha256": "97dc73edc7ed45621bfc90347a7d3088b357d419213fc8d8fea701fd1256b193",
+            "benchmarkIndex": 1453.5,
+            "score": 68,
+            "fcpMs": 3248.2305,
+            "lcpMs": 5948.2305,
+            "tbtMs": 226.49999999999955,
+            "cls": 0,
+            "speedIndexMs": 3248.2305,
+            "bytes": 1027764,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 14
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T06:18:47.661Z",
+            "reportSha256": "84b23fd166eb9106ed0a9338f08ce7ffd92d10b17890aea5a8d069c85cf559bb",
+            "benchmarkIndex": 1942,
+            "score": 71,
+            "fcpMs": 3216.09,
+            "lcpMs": 5916.090000000001,
+            "tbtMs": 97.00000000000045,
+            "cls": 0,
+            "speedIndexMs": 3216.09,
+            "bytes": 1027764,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 14
+          }
+        ]
+      },
+      "heroDelivery": {
+        "before": [],
+        "after": []
+      },
+      "failedRequests": [
+        {
+          "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2F72I3t0oqmSY%2Fmaxresdefault.jpg&w=750&q=90",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FuAvJnUoDsTI%2Fmaxresdefault.jpg&w=750&q=90",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FXltupk_W-VE%2Fmaxresdefault.jpg&w=750&q=90",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FZw3KjW1sEYA%2Fmaxresdefault.jpg&w=750&q=90",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FymIJDv82spw%2Fmaxresdefault.jpg&w=750&q=90",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FfkW6cv7tenU%2Fmaxresdefault.jpg&w=750&q=90",
+          "status": 404
+        },
+        {
+          "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fimg.youtube.com%2Fvi%2FmN0wWlerX-0%2Fmaxresdefault.jpg&w=750&q=90",
+          "status": 404
+        }
+      ]
+    },
+    {
+      "name": "photos",
+      "settings": {
+        "formFactor": "mobile",
+        "screenEmulation": {
+          "mobile": true,
+          "width": 412,
+          "height": 823,
+          "deviceScaleFactor": 1.75,
+          "disabled": false
+        },
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 150,
+          "throughputKbps": 1638.4,
+          "requestLatencyMs": 562.5,
+          "downloadThroughputKbps": 1474.5600000000002,
+          "uploadThroughputKbps": 675,
+          "cpuSlowdownMultiplier": 4
+        }
+      },
+      "medians": {
+        "before": {
+          "score": 74,
+          "fcpMs": 3204.49035,
+          "lcpMs": 5154.49035,
+          "tbtMs": 124.5,
+          "cls": 0,
+          "speedIndexMs": 3204.49035,
+          "bytes": 18380165
+        },
+        "after": {
+          "score": 73,
+          "fcpMs": 3201.4710000000005,
+          "lcpMs": 5151.5637,
+          "tbtMs": 156.50000000000045,
+          "cls": 0,
+          "speedIndexMs": 3201.4710000000005,
+          "bytes": 26894236
+        }
+      },
+      "samples": {
+        "before": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T05:56:06.118Z",
+            "reportSha256": "00bd654265ba20ae8c70e0b1604e1e27c84a6b36687da4431903b2088bf3c396",
+            "benchmarkIndex": 1952.5,
+            "score": 74,
+            "fcpMs": 3204.49035,
+            "lcpMs": 5154.49035,
+            "tbtMs": 121.5,
+            "cls": 0,
+            "speedIndexMs": 3204.49035,
+            "bytes": 29803271,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T05:56:33.359Z",
+            "reportSha256": "9e0cec3f927f8ea5829b54318989dfe66c4fafcf4b54f27d4899501d9c012d53",
+            "benchmarkIndex": 1454,
+            "score": 74,
+            "fcpMs": 3195.0009,
+            "lcpMs": 5145.0009,
+            "tbtMs": 124.5,
+            "cls": 0,
+            "speedIndexMs": 3195.0009,
+            "bytes": 18380165,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T05:56:55.880Z",
+            "reportSha256": "38e344a8dd239ffc9db4be5aa33dc0c0caacb16909d51f208b59c3f15b1ee101",
+            "benchmarkIndex": 1505.5,
+            "score": 71,
+            "fcpMs": 3214.3469999999998,
+            "lcpMs": 5314.347000000001,
+            "tbtMs": 174.5,
+            "cls": 0,
+            "speedIndexMs": 3214.3469999999998,
+            "bytes": 14641822,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          }
+        ],
+        "after": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T06:19:10.392Z",
+            "reportSha256": "30454c4e6808e474967bd4193c8bb7485542300f73de798b0c86c377bb428f42",
+            "benchmarkIndex": 2088,
+            "score": 72,
+            "fcpMs": 3201.4710000000005,
+            "lcpMs": 5301.471,
+            "tbtMs": 164.5,
+            "cls": 0,
+            "speedIndexMs": 3201.4710000000005,
+            "bytes": 14506253,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T06:19:33.278Z",
+            "reportSha256": "292aa43d60a1666882d04639c688d9a2c467b0041eb474c6ee7a67ed5d54d8e0",
+            "benchmarkIndex": 1723.5,
+            "score": 73,
+            "fcpMs": 3201.5636999999997,
+            "lcpMs": 5151.5637,
+            "tbtMs": 156.50000000000045,
+            "cls": 0,
+            "speedIndexMs": 3201.5636999999997,
+            "bytes": 26894236,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T06:19:57.254Z",
+            "reportSha256": "f1b41c6661cf2ef726ce26cc329a02916082c1fec9973d104020698d447ff493",
+            "benchmarkIndex": 1606.5,
+            "score": 74,
+            "fcpMs": 3197.8113000000003,
+            "lcpMs": 5147.8113,
+            "tbtMs": 101.5,
+            "cls": 0,
+            "speedIndexMs": 3197.8113000000003,
+            "bytes": 26895429,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 0,
+            "failedRequestCount": 0
+          }
+        ]
+      },
+      "heroDelivery": {
+        "before": [],
+        "after": []
+      },
+      "failedRequests": []
+    },
+    {
+      "name": "home-desktop",
+      "settings": {
+        "formFactor": "desktop",
+        "screenEmulation": {
+          "mobile": false,
+          "width": 1350,
+          "height": 940,
+          "deviceScaleFactor": 1,
+          "disabled": false
+        },
+        "throttlingMethod": "simulate",
+        "throttling": {
+          "rttMs": 40,
+          "throughputKbps": 10240,
+          "requestLatencyMs": 0,
+          "downloadThroughputKbps": 0,
+          "uploadThroughputKbps": 0,
+          "cpuSlowdownMultiplier": 1
+        }
+      },
+      "medians": {
+        "before": {
+          "score": 92,
+          "fcpMs": 816.9378999999999,
+          "lcpMs": 1792.5045999999998,
+          "tbtMs": 28,
+          "cls": 0.0006164708011336301,
+          "speedIndexMs": 817.6065152165469,
+          "bytes": 2076873
+        },
+        "after": {
+          "score": 96,
+          "fcpMs": 813.6058,
+          "lcpMs": 1310.8973652015134,
+          "tbtMs": 13.5,
+          "cls": 0.0006164708011336301,
+          "speedIndexMs": 813.6058,
+          "bytes": 1858879
+        }
+      },
+      "samples": {
+        "before": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T05:57:17.213Z",
+            "reportSha256": "9de69a576222728a25ca59bee5b2a0a4f8fe410dedcb2e0e45d6506caf05e7b8",
+            "benchmarkIndex": 1837,
+            "score": 92,
+            "fcpMs": 816.9378999999999,
+            "lcpMs": 1792.5045999999998,
+            "tbtMs": 18.999999999999773,
+            "cls": 0.0006164708011336301,
+            "speedIndexMs": 816.9378999999999,
+            "bytes": 2076873,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 657038,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T05:57:38.768Z",
+            "reportSha256": "f6b1af7e57e6c4bbab912cd4c592abc2866d90ed8874f89f6587acb77ea6dc67",
+            "benchmarkIndex": 1876,
+            "score": 92,
+            "fcpMs": 828.8767499999999,
+            "lcpMs": 1795.4586249999998,
+            "tbtMs": 39,
+            "cls": 0.000611508375863506,
+            "speedIndexMs": 938.7492086618021,
+            "bytes": 2076816,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 657043,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T05:58:03.887Z",
+            "reportSha256": "d424a869a5a3082406f608814302e73a54ce862ceee6b4e16099d6428ddcc326",
+            "benchmarkIndex": 971,
+            "score": 92,
+            "fcpMs": 793.2229,
+            "lcpMs": 1771.2429499999998,
+            "tbtMs": 28,
+            "cls": 0.0006164708011336301,
+            "speedIndexMs": 817.6065152165469,
+            "bytes": 2077571,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": false,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 657038,
+            "failedRequestCount": 0
+          }
+        ],
+        "after": [
+          {
+            "run": 1,
+            "fetchTime": "2026-10-27T06:20:24.743Z",
+            "reportSha256": "836e89a23cae12d15a35b2f50cd2277aef660b2c98296fa02cfecf392a83245d",
+            "benchmarkIndex": 1667.5,
+            "score": 94,
+            "fcpMs": 813.6058,
+            "lcpMs": 1589.343,
+            "tbtMs": 12,
+            "cls": 0.0006164708011336301,
+            "speedIndexMs": 813.6058,
+            "bytes": 1858389,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": true,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 438359,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 2,
+            "fetchTime": "2026-10-27T06:20:48.414Z",
+            "reportSha256": "f0e1f9a0bc36c02b16f5b9f0337d6af9729120b91a684d01173066d9dd185e8b",
+            "benchmarkIndex": 1387,
+            "score": 96,
+            "fcpMs": 798.4735000000001,
+            "lcpMs": 1272.0612499999997,
+            "tbtMs": 13.5,
+            "cls": 0.0006164708011336301,
+            "speedIndexMs": 798.4735000000001,
+            "bytes": 1858879,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": true,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 438359,
+            "failedRequestCount": 0
+          },
+          {
+            "run": 3,
+            "fetchTime": "2026-10-27T06:21:11.108Z",
+            "reportSha256": "d56647dce1b6853526093d5b81f97e1cbf4ff3f2e97eff027420996daddee56a",
+            "benchmarkIndex": 1775.5,
+            "score": 96,
+            "fcpMs": 827.5803810190073,
+            "lcpMs": 1310.8973652015134,
+            "tbtMs": 17,
+            "cls": 0.0006164708011336301,
+            "speedIndexMs": 846.277154359208,
+            "bytes": 1859695,
+            "warnings": [],
+            "lcpDiscovery": {
+              "priorityHinted": true,
+              "requestDiscoverable": true,
+              "eagerlyLoaded": true
+            },
+            "heroBytes": 438359,
+            "failedRequestCount": 0
+          }
+        ]
+      },
+      "heroDelivery": {
+        "before": [
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/9f4c31e5902020e1292117ead28d03c6706600f1-1200x675.webp?w=1920&h=1080",
+            "status": 200,
+            "bytes": 214978,
+            "priority": "High"
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/8d4edb644dbdf585776b567eaf9a3f0d4a94b686-640x480.jpg?rect=0,60,640,360&w=1920&h=1080",
+            "status": 200,
+            "bytes": 149088,
+            "priority": "High"
+          },
+          {
+            "url": "https://cdn.sanity.io/images/n4j5141g/production/939b4208314f3f22689cff01ffc71f2c1c329159-5712x3213.jpg?w=1920&h=1080",
+            "status": 200,
+            "bytes": 292972,
+            "priority": "High"
+          }
+        ],
+        "after": [
+          {
+            "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fn4j5141g%2Fproduction%2F9f4c31e5902020e1292117ead28d03c6706600f1-1200x675.webp%3Fw%3D1920%26h%3D1080&w=1920&q=75",
+            "status": 200,
+            "bytes": 183654,
+            "priority": "High"
+          },
+          {
+            "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fn4j5141g%2Fproduction%2F8d4edb644dbdf585776b567eaf9a3f0d4a94b686-640x480.jpg%3Frect%3D0%2C60%2C640%2C360%26w%3D1920%26h%3D1080&w=1920&q=75",
+            "status": 200,
+            "bytes": 67094,
+            "priority": "High"
+          },
+          {
+            "url": "http://localhost:3004/_next/image?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fn4j5141g%2Fproduction%2F939b4208314f3f22689cff01ffc71f2c1c329159-5712x3213.jpg%3Fw%3D1920%26h%3D1080&w=1920&q=75",
+            "status": 200,
+            "bytes": 187611,
+            "priority": "High"
+          }
+        ]
+      },
+      "failedRequests": []
+    }
+  ],
+  "ministryDiagnostic": {
+    "path": "/ministries/nove-sluzhinnya",
+    "fetchTime": "2026-10-27T06:22:14.139Z",
+    "reportSha256": "39036df57ef61f427bc667464c85d9f5242785355dc4799cd21d1f4d3bf50ae9",
+    "scores": {
+      "performance": 61,
+      "accessibility": 96,
+      "best-practices": 100,
+      "seo": 69
+    },
+    "benchmarkIndex": 708.5,
+    "runWarnings": [
+      "The tested device appears to have a slower CPU than  Lighthouse expects. This can negatively affect your performance score. Learn more about [calibrating an appropriate CPU slowdown multiplier](https://github.com/GoogleChrome/lighthouse/blob/main/docs/throttling.md#cpu-throttling)."
+    ],
+    "lcpMs": 29597.608699999982,
+    "bytes": 34412116,
+    "failedAudits": {
+      "seo": [
+        {
+          "id": "is-crawlable",
+          "details": {
+            "type": "table",
+            "headings": [
+              {
+                "key": "source",
+                "valueType": "code",
+                "label": "Blocking Directive Source"
+              }
+            ],
+            "items": [
+              {
+                "source": {
+                  "type": "node",
+                  "lhId": "1-90-META",
+                  "path": "1,HTML,0,HEAD,26,META",
+                  "selector": "head > meta",
+                  "boundingRect": {
+                    "top": 0,
+                    "bottom": 0,
+                    "left": 0,
+                    "right": 0,
+                    "width": 0,
+                    "height": 0
+                  },
+                  "snippet": "<meta name=\"robots\" content=\"noindex, follow\" />",
+                  "nodeLabel": "head > meta"
+                }
+              },
+              {
+                "source": "X-Robots-Tag: noindex"
+              },
+              {
+                "source": {
+                  "type": "source-location",
+                  "url": "http://localhost:3004/robots.txt",
+                  "urlProvider": "network",
+                  "line": 1,
+                  "column": 0
+                }
+              }
+            ]
+          }
+        }
+      ],
+      "accessibility": [
+        {
+          "id": "color-contrast",
+          "details": {
+            "type": "table",
+            "headings": [
+              {
+                "key": "node",
+                "valueType": "node",
+                "subItemsHeading": {
+                  "key": "relatedNode",
+                  "valueType": "node"
+                },
+                "label": "Failing Elements"
+              }
+            ],
+            "items": [
+              {
+                "node": {
+                  "type": "node",
+                  "lhId": "1-0-P",
+                  "path": "1,HTML,1,BODY,4,MAIN,2,SECTION,0,DIV,0,DIV,1,DIV,3,A,1,DIV,0,P",
+                  "selector": "div.w-full > a.flex > div > p.text-sm",
+                  "boundingRect": {
+                    "top": 1317,
+                    "bottom": 1334,
+                    "left": 124,
+                    "right": 286,
+                    "width": 162,
+                    "height": 18
+                  },
+                  "snippet": "<p class=\"text-sm text-gray-500 mb-1\">",
+                  "nodeLabel": "Відповідальний за служіння",
+                  "explanation": "Fix any of the following:\n  Element has insufficient color contrast of 4.46 (foreground color: #6f757a, background color: #f9fafb, font size: 9.2pt (12.2496px), font weight: normal). Expected contrast ratio of 4.5:1"
+                },
+                "subItems": {
+                  "type": "subitems",
+                  "items": [
+                    {
+                      "relatedNode": {
+                        "type": "node",
+                        "lhId": "1-1-A",
+                        "path": "1,HTML,1,BODY,4,MAIN,2,SECTION,0,DIV,0,DIV,1,DIV,3,A",
+                        "selector": "div.container-larexa > div.flex > div.w-full > a.flex",
+                        "boundingRect": {
+                          "top": 1285,
+                          "bottom": 1397,
+                          "left": 16,
+                          "right": 396,
+                          "width": 380,
+                          "height": 112
+                        },
+                        "snippet": "<a class=\"flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8 group hover:bg-gray…\" href=\"/team/illya-metela\">",
+                        "nodeLabel": "Відповідальний за служіння\n\nІлля Метела"
+                      }
+                    }
+                  ]
+                }
+              }
+            ],
+            "debugData": {
+              "type": "debugdata",
+              "impact": "serious",
+              "tags": [
+                "cat.color",
+                "wcag2aa",
+                "wcag143",
+                "TTv5",
+                "TT13.c",
+                "EN-301-549",
+                "EN-9.1.4.3",
+                "ACT",
+                "RGAAv4",
+                "RGAA-3.2.1"
+              ]
+            }
+          }
+        }
+      ],
+      "best-practices": []
+    },
+    "largestRequests": [
+      {
+        "url": "https://cdn.sanity.io/images/n4j5141g/production/2154afde9a5a4de8350f5c2b5ea4e7c35fdbaf75-5184x3456.jpg?q=100",
+        "bytes": 12980577,
+        "status": 200
+      },
+      {
+        "url": "https://cdn.sanity.io/images/n4j5141g/production/efef549ebf7672850e8737ac1609c82b557eaa89-5184x3456.jpg?q=100",
+        "bytes": 7607210,
+        "status": 200
+      },
+      {
+        "url": "https://cdn.sanity.io/images/n4j5141g/production/a4df1ffde373f51045b54eb121662f48772d824f-2400x1792.png?q=100",
+        "bytes": 5933491,
+        "status": 200
+      },
+      {
+        "url": "https://cdn.sanity.io/images/n4j5141g/production/e18abb03904f1ecc259395bb4fbc67fecfac4be5-2816x1536.png?q=100",
+        "bytes": 5042019,
+        "status": 200
+      },
+      {
+        "url": "https://cdn.sanity.io/images/n4j5141g/production/51bc53a8812d4ab00c959f6c9e07b412f0b081d3-2400x1792.png?q=100",
+        "bytes": 2024510,
+        "status": 200
+      }
+    ]
+  }
+}

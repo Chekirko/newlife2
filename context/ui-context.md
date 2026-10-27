@@ -26,6 +26,12 @@
 
 На `/contact` збережено наявну картку й grid. Усі 4 поля мають видимі labels, required/maxLength; ім’я/email — autocomplete. Server field errors зв’язані через aria-invalid/aria-describedby, фокус повертається до першого проблемного поля після розблокування fieldset. Pending блокує всі поля й кнопку; текст кнопки «Надсилається...». Успіх оголошується через persistent role=status лише після прийняття Resend; помилка — role=alert, введений текст зберігається. Honeypot прихований і виключений з Tab. Статуси використовують наявні theme tokens; жодного таймера приховування повідомлення. Коротка примітка пояснює передачу даних церкві для відповіді.
 
+## Hero delivery SEO-7 (2026-10-27)
+
+Homepage `HeroSlider` зберігає чинні 500px/750px висоти, центроване cover-кадрування, scrim, контент і керування. Фон тепер декоративний `next/image fill object-cover object-center` з `alt=""`; лише перше фото має preload і `fetchPriority="high"`. Для чинних 16:9 джерел `sizes` враховує мінімальну ширину cover: 889px на mobile / 1334px на desktop, а також `100vw`. При зміні висоти/пропорцій узгоджувати ці значення; саме `100vw` розмивало вузький високий hero. 57/57 typography/geometry comparisons на 1280/390/320px збігаються з baseline; клавіатура й усі 3 фото перевірені. Повнорозмірні фото служінь/галерей q=100 не змінені. [Вимірювання і QA](../docs/seo/audit.md#seo-7--2026-10-27).
+
+Окремий D8: на `/ministries/nove-sluzhinnya` підпис «Відповідальний за служіння» `text-gray-500` на `bg-gray-50` має 4,46:1 < 4,5:1 (Lighthouse/axe + contrast checker + DOM). Це підтверджений залишок; SEO-7 його не виправляв і не закриває повний D8.
+
 ## Theme
 
 Light theme. Clean, modern church website aesthetic. White/light gray backgrounds with green accent colors. Frosted-glass effects on hero sections. Professional but warm and inviting feel.

@@ -24,7 +24,7 @@ vm.runInNewContext(outputText, { exports,
       useEffect: (effect) => effects.push(effect), useCallback: (fn) => fn, useRef: () => pointerRotation,
     }
     if (name === 'motion/react') return { useReducedMotion: () => reducedMotion }
-    if (name === 'next/image') return { default: () => null }
+    if (name === 'next/image') return require(name)
     if (['react/jsx-runtime', 'clsx'].includes(name)) return require(name)
     throw new Error(`Unexpected import: ${name}`)
   },
@@ -40,6 +40,10 @@ function render(props = {}) {
   cursor = 0; effects = []; interval = undefined
   const tree = exports.HeroSlider({ slides, showDots: true, ...props })
   const html = renderToStaticMarkup(tree)
+  const slideCount = (props.slides ?? slides).length
+  assert.equal([...html.matchAll(/<img\b/g)].length, slideCount)
+  assert.equal([...html.matchAll(/rel="preload" as="image"/g)].length, slideCount ? 1 : 0)
+  assert.equal([...html.matchAll(/fetchPriority="high"/g)].length, slideCount ? 2 : 0, 'High priority belongs to the first image and its preload')
   assert.equal([...html.matchAll(/<h1\b/g)].length, props.slides?.length === 0 ? 0 : 1)
   assert(!html.includes('<h3') && !html.includes('href="#"') && !html.includes('Incomplete CTA'))
   return { tree, html }
@@ -47,6 +51,8 @@ function render(props = {}) {
 const nodes = (node) => !node || typeof node !== 'object' ? [] : [node, ...[node.props?.children].flat(Infinity).flatMap(nodes)]
 const button = (tree, label) => nodes(tree).find(n => n.type === 'button' && n.props['aria-label'] === label)
 let { tree, html } = render()
+assert(html.includes('imageSrcSet="/_next/image?url=%2Ffirst.jpg'), 'Only the initial hero image is preloaded')
+assert(!html.includes('background-image:'), 'Hero backgrounds must use the image optimizer')
 assert(html.includes('<h1') && html.includes('>First</h1>'))
 assert.equal([...html.matchAll(/ inert=""/g)].length, 2)
 const cleanup = effects[0]()
@@ -90,4 +96,5 @@ state = []
 render({ slides: [slides[0]] }); effects[0]()
 assert.equal(interval, undefined)
 assert(!render({ slides: [] }).html.includes('<button'))
-console.log('Heading SEO regressions PASS: single active H1, inert slides, real links, manual controls, focus/hover/reduced-motion timer gates and cleanup; VM state/SSR, no browser or CMS writes.')
+assert(render({ slides: [{ ...slides[0], backgroundImage: { src: '/static.jpg', width: 1200, height: 675 } }] }).html.includes('url=%2Fstatic.jpg'))
+console.log('Hero SEO regressions PASS: optimized string/static images, one initial image preload, single active H1, inert slides, real links, manual controls, focus/hover/reduced-motion timer gates and cleanup; VM state/SSR, no browser or CMS writes.')

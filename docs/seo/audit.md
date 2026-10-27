@@ -1,6 +1,10 @@
 # SEO-аудит до запуску
 
-Дата: 2026-10-26. **SEO-6 завершено локально, F11 технічно закрито:** [фінальні зміни й докази](#seo-6-final--2026-10-26). Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). Fresh crawl 50 HTML: один H1, без heading skips, битих HTML/fragment цілей. Далі SEO-7; повний D8, F01 та SEO-L відкриті. Нижчі секції SEO-6.1–6.10 зберігають історичні докази й попередні статуси.
+**Публікація SEO-7 прямо погоджена 2026-10-27:** відповідь користувача «Так» після підсумкового QA дозволяє commit + push погоджених 10 файлів у `codex/seo-1-audit` за workflow §3. Свіжий fetch: HEAD/origin 0/0; Git Credential Manager — `Chekirko`. Нижчі згадки про ще потрібну згоду — попередній стан. Результат публікації — у git history та фінальному повідомленні; live deployment окремо не засвідчений.
+
+Перед погодженою публікацією повторний `cmd /c "pnpm run build"` — PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Review 10 файлів, UTF-8 / 69 локальних file+anchor targets, 31 report hash + 2 source hashes і diff-check PASS; application/regression Diff Surgeon CLEAN. Попередній performance/browser/HTTP QA не розширено, код застосунку не змінено.
+
+Первинний аудит: 2026-10-26. Оновлено 2026-10-27. **SEO-7 завершено локально:** [production measurements, F12 і QA](#seo-7--2026-10-27), [30 зіставних вимірювань та діагностика служіння](performance-2026-10-27.json). Mobile LCP головної 9,47 → 6,87 с; hero bytes −33,3%. Це лабораторні метрики, повні D2/D9/D8 не закриті. [SEO-6/F11 завершено раніше](#seo-6-final--2026-10-26). Специфікація: [05-prelaunch-seo.md](../../context/specs/05-prelaunch-seo.md). F01/редакційні залежності/SEO-L відкриті; нижчі секції зберігають історичні докази й попередні статуси.
 
 ## Висновки
 
@@ -73,6 +77,7 @@ P1 — високий вплив до запуску або ризик недо�
 | F09. CMS SEO/OG-поля не впливають на metadata | [siteSettings schema](../../sanity/schemaTypes/siteSettings.ts):221–234 визначає ogImage/defaultDescription. [query](../../sanity/lib/queries.ts):30–44 не вибирає ogImage; [helper](../../lib/site-settings.ts):127 повертає defaultDescription, але `rg` не знаходить його споживача в app. Root metadata статичні. Published settings зараз **без обох значень** | Середній для редактора: майбутнє заповнення не дасть очікуваного результату; зараз втрати конкретного заповненого значення не виявлено | Підключити наявні поля до defaults з fallback або уточнити контракт. Не створювати дублікати полів; порожній CMS не має прибирати metadata | P2 / SEO-3 |
 | F10. Неповні description | `/ministries` повторює description головної. `/events/obid-dlya-rodin-zagiblikh-zakhisnikiv` → 200, але description немає: немає ні CMS description, ні body. 43/44 URL sitemap мають description | Середній: загальний або відсутній анонс не описує сторінку | Для списку — опис лише підтвердженого призначення; для detail — безпечний fallback/правило відкладення за SEO-2. Остаточний зміст оголошення надає власник | P2 / SEO-3 + SEO-L |
 | F11. H1 і рівні heading неузгоджені | Виправлено contact/media/photos та єдиний CMS H4; fresh crawl 50 HTML, усі 34 details/202 blocks — один H1, без heading skips. Умовні empty branches перевірені SSR | Поліпшено семантику/навігацію; зміна позицій у пошуку не вимірювалася | [SEO-6 final: код, CMS, crawl і browser QA](#seo-6-final--2026-10-26) | P2 / технічно закрито локально; повний D8 окремо |
+| F12. Неефективна доставка homepage hero-фото | Production mobile LCP median 9,466 с, 657 044 bytes для трьох CSS-фонів без initial high-priority preload | Повільний видимий hero та конкуренція з прихованими фонами | [SEO-7: Next Image, initial preload/high hint, cover-aware sizes](#seo-7--2026-10-27); після LCP 6,873 с, 438 359 hero bytes | P2 / локально закрито; повний D2/D9 окремо |
 
 Поведінка `/about` відповідає [документації Next.js про shallow metadata merge](https://nextjs.org/docs/app/api-reference/functions/generate-metadata#merging); джерелом істини для встановленої 16.1.6 тут слугує перевірений HTML. Довжина title/description сама по собі не використана як жорсткий критерій дефекту.
 
@@ -429,6 +434,77 @@ Build, lint, typecheck, 3 наявні регресії та `scripts/check-list
 До SEO-L власник підтверджує NAP/legalName/geo/соцмережі та їхні fallback, справжній розклад і його endTime, FAQ/свідчення/біографії/ролі, дати матеріалів та авторство. Event потребує точної адреси/статусу/організатора за кожною подією; video — справжньої uploadDate, назв/описів і готовності watch experience. У цій сесії відсутні факти пропущені або записані як залежності, а не вигадані. Історія й readiness approval лишаються непогодженими.
 
 Pre-launch root/header/page noindex, Disallow та порожній approval збережені. Schema/GROQ sources, package/lockfile, CMS/env/DNS/platform settings не змінені; TypeGen лише штатний ignored output. Live deployment/Search Console/Google index та mobile/desktop layout не перевірені: in-app browser localhost timeout, HTTP через локальний процес успішний. F01 лишається відкритим. Commit/push SEO-5 не виконано — [проєктний гейт §3](../../context/ai-workflow-rules.md#working-agreement-project-wide-agreed-2026-06-19).
+
+## SEO-7 — 2026-10-27
+
+**Результат:** один підтверджений F12 — неефективна доставка фонових фото головної — оптимізовано локально. Mobile LCP головної зменшився на 27,4%, desktop на 26,9%; hero transfer bytes −33,3%, усього mobile −11,0%. Повний performance backlog не закрито: mobile оцінка 66 і LCP 6,87 с залишаються нижче цілі D2. Поліпшення Google ranking/польових CWV не вимірювалося.
+
+### Метод і відтворення
+
+Старт — чистий `2c55238`, `codex/seo-1-audit`. Production `pnpm run build` → `pnpm run start --port 3004`. [Runner](../../scripts/measure-seo-performance.mjs): pinned Lighthouse **13.5.0**, Chrome **155.0.0.0**, Windows, Node 26.2.0; окремий headless Chrome без користувацького профілю для кожного запуску, storage reset увімкнений. По 3 послідовні samples до/після для чотирьох mobile маршрутів та головної desktop — **30 фінальних зіставних запусків**. Первинний baseline виконаний до зміни Hero; фінальна серія — `after-final`. Проміжні діагностичні запуски не підмішувалися до цих серій. Версії, UA і settings усіх пар звірені програмно; SHA-256 raw reports та фінального Hero/runner збережені в [метриках](performance-2026-10-27.json).
+
+- Mobile: 412×823, DPR 1,75; simulated RTT 150ms, 1638,4Kbps, CPU ×4.
+- Desktop: 1350×940, DPR 1; simulated RTT 40ms, 10240Kbps, CPU ×1.
+- Перед case runner прогріває HTML та image optimizer за HTML `src`; це не гарантує прогріву всіх srcset/format variants. Профіль браузера холодний; сервер/OS/CDN не скидаються. ISR 60s і живий read-only Sanity/CDN лишаються зовнішніми змінними. На Windows не ізольовані всі фонові процеси; три samples показують розкид, не довірчий інтервал. Локальні server latency й cache не моделюють Vercel cold starts.
+- Для свіжої серії потрібен новий label: наявний label відновлює попередні samples. Для baseline використовувати production checkout `2c55238` і цей самий runner з фінальної версії; CWD runner — каталог відповідної збірки. Зупиняти попередній сервер перед новим build; не запускати build/інші Lighthouse серії одночасно з вимірюванням.
+
+```text
+cmd /c "pnpm run build"
+cmd /c "pnpm run start --port 3004"
+cmd /c "pnpm exec node scripts/measure-seo-performance.mjs before-repeat"
+# Після переходу на фінальну версію, нового build і restart:
+cmd /c "pnpm exec node scripts/measure-seo-performance.mjs after-repeat"
+```
+
+Усі значення нижче — незалежні медіани трьох samples, **до → після**, з однаковими профілями. FCP/Speed Index/всі samples доступні в JSON; TBT не є INP.
+
+| Маршрут / profile | Performance | LCP, с | TBT, ms | CLS | Transfer, МБ (decimal) |
+|---|---|---|---|---|---|
+| `/` mobile | 61 → 66 | 9,466 → 6,873 | 247 → 140 | 0,00157 → 0,00157 | 1,978 → 1,760 |
+| `/news` mobile | 68 → 70 | 5,597 → 5,903 | 248 → 131 | 0 → 0 | 1,044 → 1,044 |
+| `/media` mobile | 70 → 71 | 6,031 → 5,916 | 150 → 114 | 0 → 0 | 1,028 → 1,028 |
+| `/media/photos` mobile | 74 → 73 | 5,154 → 5,152 | 125 → 157 | 0 → 0 | 18,380 → 26,894 |
+| `/` desktop | 92 → 96 | 1,793 → 1,311 | 28 → 14 | 0,00062 → 0,00062 | 2,077 → 1,859 |
+
+Головна mobile: LCP samples до 7,911/9,512/9,466 с, після 6,890/5,823/6,873 с. FCP майже не змінився: 3,839 → 3,798 с. На контрольних маршрутах немає змін відповідних UI-шаблонів; їхні коливання не приписуються оптимізації головної. `/media/photos` shuffle змінює першу добірку при ISR: transfer ranges до 14,64–29,80 МБ / після 14,51–26,90 МБ; різницю медіан не називати доведеною регресією або покращенням. У `/media` зафіксовано чинні YouTube maxres 404 з fallback; вони не виправлялися в SEO-7.
+
+### F12: доставка hero-фото
+
+| Проблема | Доказ | Вплив | Виправлення | Пріоритет / статус |
+|---|---|---|---|---|
+| Homepage hero використовував CSS backgrounds без responsive optimizer/preload/high hint | Усі 3 фото 1920×1080 запитувались із Sanity одразу, разом 657 044 bytes; LCP — перший фон, `priorityHinted=false`. Baseline mobile LCP median 9,466 с | Повільний великий видимий блок; зайві bytes і конкуренція з прихованими фото | `HeroSlider`: декоративний Next Image fill, один initial preload + high priority, cover-aware sizes; два інші фото отримали Low priority в final trace | P2 / локально закрито в межах доставки hero; решта D2 окремо |
+
+Ті самі три джерела в before/after звірені через network requests. Після — **438 359 bytes**, WebP; 3/3 HTTP 200. У всіх трьох фінальних mobile reports `priorityHinted`, `requestDiscoverable`, `eagerlyLoaded` = true. Інші фото можуть завантажуватися в межах viewport lazy threshold; це не реалізація відкладеного монтажу слайдів.
+
+Кадрування лишилось `cover/center`, scrim/тексти/висоти/opacity transition/керування збережені. Для 16:9 фото та поточних 500/750px висот `sizes` враховує мінімум 889/1334 CSS px плюс viewport: проста ширина `100vw` давала розмитий кроп на вузькому екрані. Увесь високий пріоритет закріплений за індексом 0, не переноситься при перемиканні. Якість full-resolution фото новин/служінь/галерей і `q=100` не змінювалися. [Next Image API](https://nextjs.org/docs/app/api-reference/components/image) звірено зі встановленою 16.1.6 та реальним SSR; причина використання медіан і обмежень — [варіативність Lighthouse](https://developer.chrome.com/docs/lighthouse/performance/performance-scoring).
+
+### Служіння зі скриншота користувача
+
+Користувач додав screenshot Vercel `/ministries/nove-sluzhinnya`: Performance 67 / Accessibility 96 / Best Practices 73 / SEO 69. Відомі лише ці числа й маршрут; deployment SHA, settings і повного звіту немає. Це не baseline для локальної зміни головної.
+
+Окремий локальний full-category Lighthouse run: **61 / 96 / 100 / 69**, transfer **34 412 116 bytes**. Він має CPU calibration warning (benchmarkIndex 708,5), тому simulated LCP 29,6 с / performance 61 не трактуються як повторювана медіана чи live-регресія. Це діагностика поза 30-run comparison, зі збереженим warning у JSON.
+
+- **Performance / D9:** п'ять найбільших запитів — оригінали `q=100`, приблизно 12,98 / 7,61 / 5,93 / 5,04 / 2,02 МБ. DOM і код підтвердили main photo та gallery без Next optimizer. Обсяг стосується запитів, захоплених цим Lighthouse run; він не означає, що кожен користувач одразу завантажує всі lazy фото. Оптимізація головної цей шаблон не змінює. Погоджену якість не знижено.
+- **Accessibility / D8:** єдиний failed scored audit — `color-contrast`: «Відповідальний за служіння», `text-gray-500` на `bg-gray-50`, **4,46:1 < 4,5:1**. Foreground `#6f757a`, background `#f9fafb`; DOM + незалежний contrast checker підтвердили. Це доданий конкретний залишок D8, не виправлений у SEO-7. 96 не є повним WCAG PASS.
+- **SEO:** єдиний failed audit — `is-crawlable`: meta noindex, `X-Robots-Tag: noindex`, robots Disallow. Це чинний pre-launch захист; піднімати бал відкриттям crawling не дозволено. Інші технічні checks цього run пройшли, редакційна готовність не засвідчена.
+- **Best Practices:** усі scored audits пройшли (100), failed requests/console errors у цьому run немає. Причина 73 на Vercel локально не встановлена; потрібен його повний звіт, щоб її діагностувати. Нового live-виправлення не заявляємо.
+
+### Перевірка та межі
+
+Production build PASS: 21 schema type / 34 GROQ queries, TypeScript, 42/42 generation tasks; старі Node/Browserslist warnings. Initial sandbox Sanity-config EPERM усунено дозволеним повтором; це не помилка застосунку. Heading regression використовує справжній Next Image: string/StaticImageData, 0/1/many, один preload, high hint на першому img/link, один активний H1, inert, CTA guards, manual transitions, pause/focus/hover/reduced-motion timer gates. Browser доповнює VM scheduler checks.
+
+57/57 exact typography/geometry comparisons 19 hero текстів/посилань/кнопок на 1280/390/320px після font load; hero 750/500px, без horizontal overflow. Скріншоти до/після оглянуто, невдалий вузький `100vw` варіант замінено на cover-aware sizes до фінальної серії. На 320px Enter/Space next/prev/dots/pause/play, один активний H1, два inert slides, видимий focus, 3 завантажені декоративні фото перевірені; console errors 0. Після останньої high-hint зміни повторно підтверджено layout/DOM/preload на всіх трьох ширинах; окреме ministry DOM inspection також без console errors. Це вузьке QA, не повний D8.
+
+13 GET: 7 HTML ×200 + 1 HTML ×404, robots/sitemap ×200, 3 hero WebP ×200. У всіх 8 HTML один H1 і meta/header noindex; robots Disallow, sitemap без URL, approval порожній. Заголовки/footer/metadata/JSON-LD/контентні дані не переписувалися. Static a11y scanner Hero зберігає 4 component-level warnings про dynamic H1/layout landmarks — вони не є новими порушеннями; реальна сторінка має H1/main/skip-link, nav landmark лишається попереднім D8. Фінальні lint, tsc, три штатні та три SEO-регресії — PASS. UTF-8 10 файлів / 69 унікальних локальних file+anchor targets / 31 raw report hash + 2 source hashes — PASS; diff-check та Diff Surgeon application/regression diff — CLEAN. Утиліту вимірювань переглянуто вручну: фіксовані localhost routes, валідований label, послідовні runs, без CMS mutations/секретів/змін package dependencies.
+
+Raw reports/HTML/traces/devtools logs/HTTP QA — ignored `node_modules/.cache/seo-7/`; компактний tracked JSON містить samples/settings/report hashes/asset evidence і окремий ministry diagnostic. Один файл застосунку, дві CLI/регресійні утиліти та документація; CMS/schema/GROQ/env/settings/package/lockfile не змінено. QA-сервер зупинено, порт 3004 без listener; viewport скинуто, тимчасові вкладки закрито. Індексація закрита; live deployment/польові CWV/Google index не засвідчені. Commit/push потребують окремої згоди за workflow §3.
+
+### Наступні дії
+
+1. **D9:** окремий юніт доставки важких оригіналів служіння/галерей. Спершу зафіксувати повторюваний viewport/набір фото й узгодити стратегію, що збереже затверджену full-resolution/q=100 якість; не знижувати її заради бала.
+2. **D2:** профілювати render-blocking CSS/Font Awesome/шрифти; FCP головної близько 3,8 с, mobile LCP усе ще повільний. Поле CWV/INP потребує реальних даних після окремо погодженого deployment.
+3. **D8:** label contrast 4,46:1 та попередні FAQ/nav/breadcrumbs/sidebar/focus/#418 follow-ups. Оцінка 96 не закриває ручні перевірки.
+4. **F01 / SEO-L:** platform protection, редакційні факти, домен і Search Console; відкриття індексації лише за окремим фінальним рішенням. Токен, засвічений у попередній сесії, має ротувати власник.
 
 ## SEO-6 final — 2026-10-26
 
@@ -844,5 +920,6 @@ HeroGradientImage у тому самому файлі також замінює 
 2. **SEO-3 завершено локально:** defaults/static та чотири detail families перевірені; F07–F10 технічно закриті. Commit+push SEO-3.2 прямо погоджено користувачем; результат — у git history та фінальному повідомленні. Контентна готовність/live social preview не засвідчені.
 3. **SEO-4 завершено локально:** SEO-4.1/4.2 технічно закрили F02/F03/F05/F06. Фінальні 154 GET і регресія helper/metadata/SSR/sitemap — PASS; approval порожній, noindex/Disallow збережено. Commit/push SEO-4.2 не виконано.
 4. **SEO-5 завершено локально:** F04/null-photo та JSON-LD виправлені; 57 GET, tracked regression і Schema.org synthetic validation PASS. Google Rich Results Test заблокований вимогою login; факти/eligibility лишаються SEO-L.
-5. **SEO-6 завершено локально, F11 технічно закрито:** усі відомі headings виправлені; fresh crawl, SSR і browser/keyboard PASS. Повний D8 окремо. **Далі SEO-7 — вимірювання:** production baseline і лише підтверджена оптимізація; зараз performance-дефект не заявляється.
-6. **Редакційні залежності / SEO-L:** власник підтверджує факти й перелік готових сторінок; домен/Search Console/відкриття індексації — окреме фінальне рішення. До нього не прирівнювати технічний PASS до готовності контенту.
+5. **SEO-6 завершено локально, F11 технічно закрито:** усі відомі headings виправлені; fresh crawl, SSR і browser/keyboard PASS. Повний D8 окремо.
+6. **SEO-7 завершено локально, F12 закрито у вузькому scope:** 30 production Lighthouse runs, hero delivery, mobile LCP −27,4% / desktop −26,9%, hero bytes −33,3%; повний D2/D9 та польові CWV не закриті. Далі D9 важких оригіналів служіння/галерей, D2 CSS/fonts і D8 label contrast/попередній залишок — окремими юнітами. [Метод і докази](#seo-7--2026-10-27).
+7. **Редакційні залежності / SEO-L:** власник підтверджує факти й перелік готових сторінок; домен/Search Console/відкриття індексації — окреме фінальне рішення. До нього не прирівнювати технічний PASS до готовності контенту.

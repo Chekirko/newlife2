@@ -4,6 +4,12 @@
 
 - Contact form: page-local Server Action validates FormData with Zod and honeypot before delivery. Mail/Redis modules use `server-only`; all credentials stay in server env, recipient comes from server config/CMS, visitor address is Reply-To only, payload is plain text. Use durable atomic Redis limits with TTL; fail closed if limiter/config is unavailable. Keep form values on error and announce statuses accessibly. Regression `tsx --conditions=react-server scripts/check-contact-form.ts` uses mocked HTTP and no live mail/Redis. See `docs/contact-form.md` for config and test boundaries.
 
+## Performance measurement / hero SEO-7 (2026-10-27)
+
+Вимірювати production build, не dev; `scripts/measure-seo-performance.mjs` запускає pinned Lighthouse 13.5.0 через `pnpm dlx`, без залежностей/lockfile застосунку. Фіксовані mobile/desktop profiles, 3 cold-browser samples на case, медіани та raw reports/traces у ignored cache; новий label для нової серії, наявний label лише відновлює її. Порівнювати однакові профілі/версії/джерела, фіксувати CPU warnings/ISR/зовнішні CDN та не називати локальні simulated LCP/TBT польовими CWV/INP. [Метод і межі](../docs/seo/audit.md#seo-7--2026-10-27).
+
+`HeroSlider`: декоративний `Image fill`, один initial preload і high priority для індексу 0; не переносити preload на кожен активований слайд. `object-cover object-center` зберігає кадрування. `sizes` має враховувати ширину після cover-кропу (для чинних 500/750px висот і 16:9 — 889/1334px), а не лише viewport. Зміна висоти/пропорцій потребує повторної перевірки sizes. Регресія `scripts/check-heading-seo.mjs` використовує реальний Next Image для SSR/string/static image та 0/1/many; VM timer/focus/reduced-motion checks доповнюються browser QA. Не оптимізувати погоджені повнорозмірні q=100 фото через зміну якості без окремого рішення.
+
 ## General
 
 - **History headings SEO-6.10:** етапи timeline — H3 під H2 хронології, самостійний CTA — H2; ранг визначати за вкладеністю в повній сторінці. При заміні heading-тегів зберігати класи й звіряти computed typography/розміри після font load на 1280/390/320px. Optional arrays/image/video перевіряти SSR fixtures без CMS writes. Незмінність HTML за винятком heading tags не означає повний a11y PASS: наявний `summary.outline-none` без видимого focus переданий D8. [QA](../docs/seo/audit.md#seo-610-заголовки-хронології-та-cta-історії--2026-10-26).

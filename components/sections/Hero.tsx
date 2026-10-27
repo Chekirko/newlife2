@@ -98,17 +98,22 @@ export const HeroSlider = ({
             inert={idx !== currentSlide}
             className={clsx(
               height,
-              'bg-cover bg-center transition-opacity duration-500',
+              'transition-opacity duration-500',
               idx === currentSlide
                 ? 'opacity-100 relative'
                 : 'opacity-0 absolute inset-0 pointer-events-none'
             )}
-            style={{
-              backgroundImage: typeof slide.backgroundImage === 'string'
-                ? `url(${slide.backgroundImage})`
-                : `url(${slide.backgroundImage.src})`
-            }}
           >
+            {/* Cover needs at least height × 16/9, even on narrow screens. */}
+            <Image
+              src={slide.backgroundImage}
+              alt=""
+              fill
+              preload={idx === 0}
+              fetchPriority={idx === 0 ? 'high' : undefined}
+              sizes="(max-width: 1023px) max(100vw, 889px), max(100vw, 1334px)"
+              className="object-cover object-center"
+            />
             {/* Gradient scrim — keeps the photo visible while guaranteeing text contrast */}
             <div
               className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/30 pointer-events-none"
