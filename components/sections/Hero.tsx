@@ -1,9 +1,9 @@
 'use client'
 
-
 import { useState, useEffect, useCallback, useRef, useSyncExternalStore } from 'react'
 import { clsx } from 'clsx'
 import Image, { StaticImageData } from '@/components/ui/SiteImage'
+
 const motionQuery = '(prefers-reduced-motion: reduce)'
 const subscribeMotion = (listener: () => void) => {
   const query = window.matchMedia(motionQuery)
@@ -50,11 +50,14 @@ export const HeroSlider = ({
   className,
 }: HeroSliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(0)
+  // The first photo loads alone; then neighbours mount so arrows/autoplay never reveal an empty slide.
   const [visited, setVisited] = useState<Set<number>>(() => new Set([0]))
+  const visitAround = useCallback((index: number) => setVisited(previous => new Set(previous)
+    .add(index).add((index + 1) % slides.length).add((index - 1 + slides.length) % slides.length)), [slides.length])
   const selectSlide = useCallback((index: number) => {
-    setVisited(previous => new Set(previous).add(index))
+    visitAround(index)
     setCurrentSlide(index)
-  }, [])
+  }, [visitAround])
   const [rotationRequested, setRotationRequested] = useState<boolean | null>(null)
   const [hovered, setHovered] = useState(false)
   const reducedMotion = useSyncExternalStore(subscribeMotion, getMotion, serverMotion)
@@ -123,7 +126,9 @@ export const HeroSlider = ({
               alt=""
               fill
               preload={idx === 0}
+              loading={idx === 0 ? undefined : 'eager'}
               fetchPriority={idx === 0 ? 'high' : undefined}
+              onLoad={idx === 0 ? () => visitAround(0) : undefined}
               sizes="(max-width: 991px) max(100vw, 889px), max(100vw, 1334px)"
               className="object-cover object-center"
             />}

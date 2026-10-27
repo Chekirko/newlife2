@@ -1,9 +1,7 @@
 'use client'
 
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
-
 import { ControlIcon as Icon } from '@/components/ui/ControlIcon'
-
 import { useState, useEffect, useCallback } from 'react'
 import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'

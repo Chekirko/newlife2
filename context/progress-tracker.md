@@ -17,11 +17,12 @@
 ## Фаза 1 — завершено
 
 - Серверний Icon/CMS-реєстр і малий клієнтський ControlIcon замінили icon fonts; локальні Montserrat/Roboto/Playfair italic через next/font/local, Latin/Cyrillic/OFL, без Poppins і ручного font CSS/preload.
-- Статичні секції/FAQ/details/pagination/ministry grid і header — серверні; MobileMenu/NavDropdown/NavLink — острівці, CSS sticky й hidden/inert. Hero reduced-motion hydration-safe, невідвідані фото прихованих слайдів не монтуються; статичний hero лишається для Фази 5.
+- Статичні секції/FAQ/details/pagination/ministry grid і header — серверні; MobileMenu/NavDropdown/NavLink — острівці, CSS sticky й hidden/inert. Hero reduced-motion hydration-safe, фото сусідніх слайдів монтуються лише після першого; статичний hero лишається для Фази 5.
 - SiteImage/CDN loader, адаптивні прев’ю/sizes/LQIP, оригінал лише у відкладеному native viewer/завантаженні; прибрано DeferredGalleryImage, биті placeholder paths, CSS-фото й дубль action1.
-- Дати/межа дня Europe/Kyiv з DST; серверні media cards + play-острівець, native video dialog, hqdefault, карта-фасад, lazy Live, без демо-Vimeo; окремі public/Studio root layouts.
+- Дати/межа дня Europe/Kyiv з DST; серверні media cards + play-острівець, native video dialog, hqdefault, lazy Live, без демо-Vimeo; окремі public/Studio root layouts.
 - Build 42/42, lint, повний TypeGen/typecheck, 4 регресії, frozen offline install — PASS. Browser QA: 14 маршрутів, SSR деталей team/event, 320/390/1280px, меню/FAQ/діалоги/фокус/фільтри/карта/Studio, без console/hydration errors; CMS і жива форма не змінювались.
 - Lighthouse mobile, 3 прогони/медіани: Performance головна 61→77, новина 66→74, служіння 59→74, фото 45→79, контакти 60→85. Метод, LCP/байти й обмеження — [звіт](../docs/phase1-performance.md); загальна ціль ≥95 ще попереду. Архітектуру/UI/стандарти/scope оновлено; індексація закрита.
+- Доопрацювання після рев’ю: шрифти обрізано до latin+cyrillic (головна 349→137 КБ, preload 259→91 КБ); фото пастора знову SVG `<image>` (ризик WebKit із foreignObject); карта знову iframe одразу (фасад відхилено користувачем); фото команди знову з desktop-паралаксом через `image-set` q90 (AVIF у Next = quality−20, q75 розмивав обличчя), а не 5-МБ оригінал; hero після першого фото монтує сусідні слайди; іконка «Що очікувати» лише зі списку; гігієна імпортів/CSS/fallback. Lint, typecheck, 4 регресії, build 42/42 PASS; Lighthouse не перезапускався.
 
 ## Далі
 

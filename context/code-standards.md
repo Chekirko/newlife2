@@ -28,9 +28,9 @@
 ## Styling and Images
 
 - Tailwind v4 + tokens із `app/globals.css`; дизайн — [spec 08](specs/08-larexa-redesign.md), не скляні hero/великі радіуси.
-- B4 реалізовано: локальні Montserrat (heading, кирилиця), Roboto (body), Playfair italic (accent), через `app/site-fonts.ts`/`next/font/local`. Зберігати ліцензії й sources.json; не повертати remote font CSS.
+- B4 реалізовано: локальні Montserrat (heading, кирилиця), Roboto (body), Playfair italic (accent), через `app/site-fonts.ts`/`next/font/local`. Файли — лише latin + cyrillic за `unicodes` із sources.json; при оновленні шрифту повторити subset, зберегти ліцензії й sources.json; не повертати remote font CSS.
 - B3 реалізовано: серверний `Icon` (`server-only`) + `lib/icons.ts`, inline SVG і CMS-сумісні FA-назви. Client controls використовують малий `ControlIcon`, спільна розмітка — `SvgIcon`; CMS-реєстр не потрапляє в браузер. Декоративні іконки aria-hidden; icon-font CSS не додавати.
-- B1 реалізовано: використовувати `SiteImage` для Sanity CDN прев’ю (власний loader, q=75/auto=format, `sizes`/LQIP). `toPhotoItem()` відділяє thumbUrl від fullUrl; оригінал/unoptimized дозволений лише у viewer та завантаженні. Не повертати deferred-original компонент.
+- B1 реалізовано: використовувати `SiteImage` для Sanity CDN прев’ю (власний loader, q=75/auto=format, `sizes`/LQIP). `toPhotoItem()` відділяє thumbUrl від fullUrl; оригінал/unoptimized дозволений лише у viewer та завантаженні. Next кодує AVIF з якістю quality−20: для групових фото й облич через Next optimizer ставити `quality={90}`. Не повертати deferred-original компонент.
 - `next/image` замість важких CSS-фонів; `preload` лише для LCP. `sizes` враховує фактичний cover-crop, а не лише viewport.
 - Немає asset → `ImagePlaceholder`, а не посилання на неіснуючий файл. У gallery пропускати assets без необхідних dimensions.
 

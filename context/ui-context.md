@@ -54,9 +54,9 @@
 
 ## Photos and Viewers
 
-**B1 реалізовано:** адаптивні Sanity CDN прев’ю + оригінал на вимогу у lightbox/завантаженні. Пропорції з asset metadata, LQIP і коректні sizes; без неіснуючих placeholder URL. Статичні фото й колишні CSS-фони — Next Image; групове фото без bg-fixed.
+**B1 реалізовано:** адаптивні Sanity CDN прев’ю + оригінал на вимогу у lightbox/завантаженні. Пропорції з asset metadata, LQIP і коректні sizes; без неіснуючих placeholder URL. Статичні фото й колишні CSS-фони — Next Image; групове фото команди — desktop-паралакс `bg-fixed` з `getImageProps` → `image-set` q90, mobile — Image q90.
 
-Спільний `PhotoViewer` → відкладений native `ImageLightbox`: повний кадр object-contain, Esc/бекдроп/←→/межі групи, 48px controls, лічильник і «Завантажити оригінал», scroll lock/focus restore. Індекс усередині viewer; ширина фото враховує dialog padding на 320px. Використовується на detail, rich-text, history/team photo і media/ministry galleries. Відео відкривається через VideoPlayButton у відкладеному native dialog. Google Maps має фото-фасад, кнопку відкриття iframe й постійне зовнішнє посилання; Live iframe lazy.
+Спільний `PhotoViewer` → відкладений native `ImageLightbox`: повний кадр object-contain, Esc/бекдроп/←→/межі групи, 48px controls, лічильник і «Завантажити оригінал», scroll lock/focus restore. Індекс усередині viewer; ширина фото враховує dialog padding на 320px. Використовується на detail, rich-text, history/team photo і media/ministry galleries. Відео відкривається через VideoPlayButton у відкладеному native dialog. Google Maps — iframe одразу (lazy, ч/б → колір при наведенні) і посилання «Відкрити в Google Maps»; фасад відхилено користувачем. Live iframe lazy.
 
 ## Contact and Studio
 

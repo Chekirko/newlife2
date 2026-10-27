@@ -44,8 +44,7 @@
   --color-grad-start: #97c74e;
   --color-grad-end: #2ab9a5;
 
-  /* ===== FONTS ===== */
-
+  /* ===== FONTS: --font-base/heading/alt come from next/font (app/site-fonts.ts) ===== */
 
   /* ===== FONT SIZES ===== */
   --text-xs: 0.8125rem;

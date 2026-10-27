@@ -4,7 +4,7 @@
 
 ## Stack
 
-Next.js 16 App Router, React 19, TypeScript strict; Sanity 4 + `next-sanity`/TypeGen; Tailwind v4; Vercel. Менеджер пакетів — pnpm із `package.json#packageManager`. Локальні variable WOFF2: Roboto, Montserrat і Playfair Display italic через `next/font/local`; кожен має Latin/Cyrillic.
+Next.js 16 App Router, React 19, TypeScript strict; Sanity 4 + `next-sanity`/TypeGen; Tailwind v4; Vercel. Менеджер пакетів — pnpm із `package.json#packageManager`. Локальні variable WOFF2: Roboto, Montserrat і Playfair Display italic через `next/font/local`; кожен обрізаний до Google-діапазонів latin + cyrillic (40–52 КБ, перелік — `public/fonts/sources.json#unicodes`).
 
 ## System Boundaries
 
@@ -40,11 +40,11 @@ Next.js 16 App Router, React 19, TypeScript strict; Sanity 4 + `next-sanity`/Typ
 
 ## Images and UI boundaries
 
-`SiteImage` — тонка клієнтська обгортка Next Image: Sanity URLs отримують власний loader (`w`, пропорційний `h` для crop, q=75, auto=format), локальні файли — Next optimizer AVIF/WebP. `toPhotoItem()` створює адаптивний `thumbUrl` і `fullUrl` оригіналу; сторінки/галереї/rich text рендерять лише прев’ю. Немає asset → `ImagePlaceholder`; gallery без dimensions пропускається. CSS-фото замінено Image, включно з SVG-кліпом пастора.
+`SiteImage` — тонка клієнтська обгортка Next Image: Sanity URLs отримують власний loader (`w`, пропорційний `h` для crop, q=75, auto=format), локальні файли — Next optimizer AVIF/WebP. `toPhotoItem()` створює адаптивний `thumbUrl` і `fullUrl` оригіналу; сторінки/галереї/rich text рендерять лише прев’ю. Немає asset → `ImagePlaceholder`; gallery без dimensions пропускається. CSS-фото замінено Image; фото пастора лишається нативним SVG `<image>` у кліпі з CDN URL (без `foreignObject`, який ненадійний у WebKit).
 
-`PhotoViewer` і photo gallery імпортують `ImageLightbox` через `next/dynamic` при відкритті. Фото й відео використовують native modal dialog: Esc/бекдроп, scroll lock/focus restore; фото також ←→/межі й завантаження оригіналу. Сусіди viewer вантажаться після поточного оригіналу. `VideoPlayButton` — клієнтський острівець у серверних FeaturedSermon/MediaCard; YouTube cover — стандартний hqdefault. Карта має локальний фасад і зовнішнє посилання, iframe з’являється після натискання; Live iframe lazy, демо-Vimeo прибрано.
+`PhotoViewer` і photo gallery імпортують `ImageLightbox` через `next/dynamic` при відкритті. Фото й відео використовують native modal dialog: Esc/бекдроп, scroll lock/focus restore; фото також ←→/межі й завантаження оригіналу. Сусіди viewer вантажаться після поточного оригіналу. `VideoPlayButton` — клієнтський острівець у серверних FeaturedSermon/MediaCard; YouTube cover — стандартний hqdefault. Карта — Google iframe одразу (`loading="lazy"`) + посилання «Відкрити в Google Maps»; фасад відхилено користувачем 2026-10-27. Live iframe lazy, демо-Vimeo прибрано.
 
-`Icon` + `lib/icons.ts` рендерять inline SVG із наявних CMS FA-назв; CMS-реєстр захищений server-only, client controls мають окремий малий ControlIcon зі спільним SvgIcon; icon fonts/CSS і пряму залежність motion видалено. Статичні секції, FAQ/details і pagination — серверні; `HeroGradientImage` відокремлено. HeroSlider ще клієнтський: hydration-safe reduced-motion через useSyncExternalStore, приховані невідвідані фото не монтуються. **Фази 4–5 / B5, B7:** Larexa й статичний hero головної — [spec 08](specs/08-larexa-redesign.md).
+`Icon` + `lib/icons.ts` рендерять inline SVG із наявних CMS FA-назв; CMS-реєстр захищений server-only, client controls мають окремий малий ControlIcon зі спільним SvgIcon; icon fonts/CSS і пряму залежність motion видалено. Статичні секції, FAQ/details і pagination — серверні; `HeroGradientImage` відокремлено. HeroSlider ще клієнтський: hydration-safe reduced-motion через useSyncExternalStore, спершу монтується лише перше фото, після його завантаження — сусіди активного слайда (eager). **Фази 4–5 / B5, B7:** Larexa й статичний hero головної — [spec 08](specs/08-larexa-redesign.md).
 
 ## Contact and Studio
 

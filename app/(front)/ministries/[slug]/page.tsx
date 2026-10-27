@@ -90,13 +90,17 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
   }))
 
   // Transform gallery images into lightbox-ready photos (thumb + full + lqip)
-  const galleryPhotos: PhotoItem[] = (ministry.gallery ?? []).filter((img) => img.asset?._ref && img.dimensions?.width && img.dimensions?.height).map((img, i) => toPhotoItem(img as SanityImageSource, {
-    id: img._key ?? `${ministry.slug}-${i}`,
-    lqip: img.lqip ?? undefined,
-    alt: `Фото — ${ministry.title}`,
-    width: img.dimensions?.width ?? 1600,
-    height: img.dimensions?.height ?? 1067,
-  }))
+  const galleryPhotos: PhotoItem[] = (ministry.gallery ?? []).flatMap((img, i) => {
+    const { width, height } = img.dimensions ?? {}
+    if (!img.asset?._ref || !width || !height) return []
+    return [toPhotoItem(img as SanityImageSource, {
+      id: img._key ?? `${ministry.slug}-${i}`,
+      lqip: img.lqip ?? undefined,
+      alt: `Фото — ${ministry.title}`,
+      width,
+      height,
+    })]
+  })
   const mainPhoto: PhotoItem | null = ministry.image ? toPhotoItem(ministry.image, {
     id: 'main',
     alt: ministry.title,

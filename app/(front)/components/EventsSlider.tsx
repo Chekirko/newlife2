@@ -1,7 +1,6 @@
 'use client'
 
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
-
 import { useState, useEffect, useCallback } from 'react'
 import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'

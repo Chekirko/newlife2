@@ -36,6 +36,7 @@ export const PastorGreeting = ({
   image,
   className,
 }: PastorGreetingProps) => {
+  // Get image src for SVG xlinkHref
   const imageSrc = typeof image === 'string' ? image : image.src
 
   return (
@@ -77,11 +78,14 @@ export const PastorGreeting = ({
                   </clipPath>
                 </defs>
                 <g clipPath="url(#imageClip)">
-                  <foreignObject width={700} height={700} x="1" y="-81">
-                    <div className="relative h-full w-full">
-                      <Image src={imageSrc} alt="" fill sizes="(max-width: 991px) 100vw, 600px" className="object-cover" />
-                    </div>
-                  </foreignObject>
+                  <image
+                    width={700}
+                    height={700}
+                    xlinkHref={imageSrc}
+                    x="1"
+                    y="-81"
+                    preserveAspectRatio="xMidYMid slice"
+                  />
                 </g>
                 
                 {/* Bottom left circle decoration */}

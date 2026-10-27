@@ -99,12 +99,13 @@ export function PortableTextBody({
 
   const photos: PhotoItem[] = (value.filter((block) => block._type === 'image') as unknown as InlineImage[])
     .flatMap((image) => {
-      if (!image.asset?._ref || !image.dimensions?.width || !image.dimensions?.height) return []
+      const { width, height } = image.dimensions ?? {}
+      if (!image.asset?._ref || !width || !height) return []
       return [toPhotoItem(image as SanityImageSource, {
         id: image._key ?? image.asset._ref,
         alt: image.alt?.trim() || 'Фотографія',
-        width: image.dimensions?.width ?? 1200,
-        height: image.dimensions?.height ?? 800,
+        width,
+        height,
       })]
     })
 

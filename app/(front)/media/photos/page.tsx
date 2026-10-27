@@ -39,13 +39,17 @@ export default async function PhotosPage() {
 
   // Flatten every ministry gallery into one photo list (with ministry → alt).
   const photos: PhotoItem[] = data.flatMap((group) =>
-    (group.gallery ?? []).filter((img) => img.asset?._ref && img.dimensions?.width && img.dimensions?.height).map((img, i) => toPhotoItem(img as SanityImageSource, {
-      id: img._key ?? `${group.ministry}-${i}`,
-      lqip: img.lqip ?? undefined,
-      alt: group.ministry ? `Фото — ${group.ministry}` : 'Фото служіння',
-      width: img.dimensions?.width ?? 1600,
-      height: img.dimensions?.height ?? 1067,
-    })),
+    (group.gallery ?? []).flatMap((img, i) => {
+      const { width, height } = img.dimensions ?? {}
+      if (!img.asset?._ref || !width || !height) return []
+      return [toPhotoItem(img as SanityImageSource, {
+        id: img._key ?? `${group.ministry}-${i}`,
+        lqip: img.lqip ?? undefined,
+        alt: group.ministry ? `Фото — ${group.ministry}` : 'Фото служіння',
+        width,
+        height,
+      })]
+    }),
   )
 
   // Shuffle (Fisher–Yates) so the mosaic mixes ministries; re-shuffled per ISR cycle.

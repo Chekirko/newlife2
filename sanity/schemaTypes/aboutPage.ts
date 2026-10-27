@@ -1,5 +1,4 @@
 import { defineType, defineField } from 'sanity'
-import { TagInput } from '../components/TagInput'
 
 // =========================================
 // ABOUT PAGE — singleton document holding the /about page's editable content
@@ -176,8 +175,7 @@ export const aboutPageType = defineType({
               name: 'icon',
               title: 'Іконка',
               type: 'string',
-              description:
-                'Оберіть зі списку або впишіть свій клас Font Awesome (напр. fas fa-heart). Безкоштовні іконки: fontawesome.com/search?m=free',
+              description: 'Оберіть іконку зі списку. Потрібна інша — попросіть розробника додати її на сайт.',
               options: {
                 list: [
                   { title: 'Рукостискання', value: 'fas fa-handshake' },
@@ -190,8 +188,7 @@ export const aboutPageType = defineType({
                   { title: 'Паркінг', value: 'fas fa-square-parking' },
                 ],
               },
-              components: { input: TagInput },
-              validation: (rule) => rule.required().error('Оберіть або впишіть іконку'),
+              validation: (rule) => rule.required().error('Оберіть іконку'),
             }),
             defineField({
               name: 'title',

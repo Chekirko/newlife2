@@ -29,7 +29,7 @@
 
 «Актуальне слово» використовує weak reference з homepage або найновішу проповідь. Live-банер на головній під hero та на media потребує channel ID у Studio + `YOUTUBE_API_KEY`. Без конфігурації секція схована.
 
-Контентні фото відкриваються у спільному відкладеному native viewer, включно з rich text/history/team photo. Сторінки показують адаптивні CDN-прев’ю; оригінали доступні у viewer та для завантаження. Відео має native dialog, карта — фасад із кнопкою й зовнішнім посиланням. Публічний сайт і Studio мають окремі root layouts.
+Контентні фото відкриваються у спільному відкладеному native viewer, включно з rich text/history/team photo. Сторінки показують адаптивні CDN-прев’ю; оригінали доступні у viewer та для завантаження. Відео має native dialog, карта — Google iframe (lazy) і зовнішнє посилання. Публічний сайт і Studio мають окремі root layouts.
 
 ## Scope and Planned Changes
 

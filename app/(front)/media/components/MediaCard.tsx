@@ -1,5 +1,4 @@
 import { Icon } from '@/components/ui/Icon'
-
 import Image from '@/components/ui/SiteImage'
 import { VideoPlayButton } from '@/components/ui/VideoPlayButton'
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'

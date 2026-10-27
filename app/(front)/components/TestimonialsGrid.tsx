@@ -1,5 +1,4 @@
 import { Icon } from '@/components/ui/Icon'
-
 import { clsx } from 'clsx'
 import Image, { StaticImageData } from '@/components/ui/SiteImage'
 

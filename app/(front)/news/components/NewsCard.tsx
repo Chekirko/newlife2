@@ -1,5 +1,4 @@
 import { ImagePlaceholder } from '@/components/ui/ImagePlaceholder'
-
 import { Icon } from '@/components/ui/Icon'
 import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
