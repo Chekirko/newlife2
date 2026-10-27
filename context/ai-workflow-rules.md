@@ -2,86 +2,61 @@
 
 ## Approach
 
-Build this project incrementally using a spec-driven workflow. Context files define what to build, how to build it, and the current state of progress. Always implement against these specs — do not infer or invent behavior from scratch.
+Spec-driven робота за [master-plan](master-plan.md); дизайн — [spec 08](specs/08-larexa-redesign.md), стан — [progress-tracker](progress-tracker.md). Завершені specs у `specs/done/` та архіви є історією, не паралельним планом.
 
 ## Working Agreement (project-wide, agreed 2026-06-19)
 
-Узгоджено з користувачем; діє на весь подальший проєкт. Канонічне місце цих правил — цей файл; консолідований план і backlog — `context/master-plan.md`.
+Темп оновлено користувачем 2026-10-27; канон процесу — цей файл.
 
-1. **Karpathy завжди.** Перед будь-яким кодовим юнітом завантажувати `.agents/skills/karpathy-coder/SKILL.md` і застосовувати 4 принципи (припущення вголос → простота → хірургічні зміни → перевіряльні цілі). Always-on, не лише за тригером.
-2. **Гейт перед кожною фазою.** Перед стартом кожної фази надати користувачу перелік запланованих пунктів цієї фази і ЗАПИТАТИ, що саме з них робити. Не починати без явного вибору.
-3. **Коміт/пуш-гейт після кожного етапу.** Після кожного завершеного етапу/юніту ЗАПИТАТИ про commit + push; виконувати лише за згодою користувача (push як `Chekirko`).
-4. **Індексація — найостанніший крок.** Відкриття індексації (flip `app/robots.ts` → allow, зняти `noindex`, виставити власний домен у `NEXT_PUBLIC_SITE_URL`) — найостанніша дія всього проєкту, лише за явним «готово» від користувача. Ніколи раніше. Див. `progress-tracker.md` → Launch checklist.
-5. **Контекст у синхроні.** Дописувати важливі зміни в усі релевантні `context/*.md` (не лише `progress-tracker.md`: `architecture.md`/`ui-context.md`/`code-standards.md`/`project-overview.md` — за доменом зміни).
-6. **Спершу — план у контекст.** Будь-яка нова велика ініціатива спершу фіксується в контексті (`context/master-plan.md` / spec у `context/specs/`), і тільки тоді починається робота.
-7. **Обсяг сесії — 1–2 юніти** (узгоджено 2026-10-24). Виконувати послідовно, по одному; кожен має конкретний результат і перевірку. Перед реалізацією читати відповідні проєктні `SKILL.md`; після завершення — оновлювати `progress-tracker.md` та релевантну документацію. Великий пункт плану розбивати на менші юніти, не збільшувати обсяг сесії приховано.
+1. **Karpathy завжди:** завантажити skill, назвати припущення, просте рішення, зміни в межах завдання, перевіряльні цілі.
+2. **Гейт перед фазою:** показати її кроки й отримати вибір користувача. Пряме доручення почати впровадження за чинним планом дозволяє почати його явно визначену наступну фазу; не перепитувати той самий дозвіл. Перехід до наступної фази — новий гейт.
+3. **Commit/push-гейт після фази:** лише за згодою користувача, push як `Chekirko`. Без окремих журналів погоджень у tracker; результат публікації видно в Git.
+4. **Індексація — остання дія:** лише після явного «готово» та [launch checklist §F](master-plan.md#f-launch-checklist-найостанніший-крок). Заміна indexing-механізму у Фазі 3 не є дозволом запуску.
+5. **Контекст у синхроні:** після завершення фази оновити tracker і доменні файли за фактичними змінами. Відрізняти поточний код від затвердженої майбутньої архітектури.
+6. **Велика ініціатива спочатку в master-plan/spec:** не вигадувати product behavior і не розширювати scope приховано.
+7. **Темп — фази з кількох кроків:** одна зіставна серія Lighthouse до/після runtime-змін, один підсумковий гейт і commit на фазу; ≤10 рядків результату в tracker. Без хеш-дампів і покрокових evidence-журналів.
 
 ## Scoping Rules
 
-- Work on one feature unit at a time
-- Prefer small, verifiable increments over large speculative changes
-- Do not combine unrelated system boundaries in a single implementation step
-- Each unit must produce one visible, verifiable result
-- Do not install packages before the unit that requires them
+Усі кроки обраної фази виконувати послідовно в її межах. Розділяти лише незалежні або неоднозначні зміни; не перетворювати кожну дрібну правку на окрему сесію. Нові залежності додавати тільки там, де їх потребує поточна фаза.
 
-## When to Split Work
-
-Split an implementation step if it combines:
-
-- UI changes and Sanity schema changes in one step
-- Multiple unrelated pages or components
-- Behavior not clearly defined in the context files
-- Both creating new components AND refactoring existing ones
-
-If a change cannot be verified end to end quickly, the scope is too broad — split it.
-
-## Handling Missing Requirements
-
-- Do not invent product behavior not defined in the context files
-- If a requirement is ambiguous, resolve it by asking the user before implementing
-- If a requirement is missing, add it as an open question in `progress-tracker.md` before continuing
-- Never assume Sanity schema structure — check `sanity/schemaTypes/` first
+Питання, на які відповідає код/контекст, вирішувати перевіркою. Якщо вимога справді відсутня й має кілька суттєвих варіантів — зафіксувати відкритий пункт і уточнити, продовжуючи незалежну роботу. CMS schema не вгадувати: читати `sanity/schemaTypes/`.
 
 ## Protected Files
 
-Do not modify the following unless explicitly instructed:
-
-- `sanity/lib/sanity.types.ts` — auto-generated by TypeGen
-- `schema.json` — auto-generated by `sanity schema extract`
-- `app/studio/` — Sanity Studio route (auto-generated)
-- `sanity.config.ts` — Studio configuration (modify only with explicit approval)
-- `app/globals.css` — Design system tokens (modify only when design changes are approved)
+- `sanity/lib/sanity.types.ts`, `schema.json` — generated, не редагувати вручну; після schema/GROQ запустити `pnpm run typegen`.
+- `app/studio/`, `sanity.config.ts` — лише з явним дозволом на відповідну зміну.
+- `app/globals.css` — зміни дизайну лише за затвердженим scope. Master-plan вже дозволяє потрібні зміни захищених файлів для Фаз 1 і 4, без повторного погодження.
 
 ## Keeping Docs in Sync
 
-Для gallery Select перевіряти не тільки типи/SSR controls, а реальні read-only asset queries та інтерактивну добірку: кілька assets → одна `onInsert`, дублікати, залишок до 10, пошук, наступна порція, клавіатура й адаптивність. Відрізняти локальну form fixture з реальними assets від збереження у авторизованій CMS. Для heartbeat reconnect використовувати `scripts/check-studio-reconnect.mjs`: вузький warning-патч має зберігати error events, retry та реальні errors. Після зміни patched dependency перезапустити dev-сервер, щоб Webpack не тримав старий pnpm path.
+| Зміна | Файл |
+| --- | --- |
+| Архітектура, межі, дані/схеми | `architecture.md` |
+| Конвенції коду | `code-standards.md` |
+| Scope/сторінки | `project-overview.md` |
+| Дизайн/UI | `ui-context.md` |
+| Завершення фази, наступний крок | `progress-tracker.md` |
 
-Update the relevant context file whenever implementation changes:
+Специфікації й архіви переносити зі збереженням історії Git та локальних посилань. Активний tracker ≤8 КБ; старі результати не дублювати в кожному context-файлі.
 
-- System architecture or boundaries → `architecture.md`
-- Storage model or Sanity schema decisions → `architecture.md`
-- Code conventions or standards → `code-standards.md`
-- Feature scope or new pages → `project-overview.md`
-- Visual design decisions → `ui-context.md`
-- Current state of the build → `progress-tracker.md`
+## Definition of Done фази
 
-## Before Moving to the Next Unit
+1. Усі обрані кроки працюють end-to-end, інваріанти збережені.
+2. `pnpm run lint`, `pnpm run typecheck`, `pnpm test`, **`pnpm run build`** проходять. Windows довгі команди через `cmd /c`.
+3. Для runtime/UI змін — production browser smoke, без console errors; keyboard/mobile/desktop за релевантним ризиком. VM/SSR checks не замінюють browser hydration QA.
+4. Для runtime performance — одна серія до/після, 3 прогони/медіани за master-plan. Для Фази 0 без runtime-змін достатньо source/resource/link перевірок та quality gates; новий Lighthouse бал не приписувати прибиранню.
+5. Context оновлено, без секретів/QA fixtures у CMS; diff у межах фази, відомі обмеження записані стисло.
+6. Показати конкретний результат і запитати про commit/push. Перехід до іншої фази погоджується за пунктом 2 угоди.
 
-1. The current unit works end to end within its defined scope
-2. No invariant defined in `architecture.md` was violated
-3. `progress-tracker.md` reflects the completed work
-4. `npm run build` passes with no errors
-5. No TypeScript errors in the modified files
-6. No console errors in the browser
-7. Responsive layout verified at mobile and desktop widths
-   Для галереї новин перевіряти відсутній/порожній масив, 1/2/10 фото та змішані вертикальні/горизонтальні пропорції; у Studio ліміт 10 має блокувати публікацію 11 фото. QA-дані не записувати в живий CMS-датасет.
-   Для пакетного завантаження перевіряти multiple picker, передачу всіх файлів у штатний uploader, ліміт залишку й readOnly. Для повнорозмірних фото перевіряти `q=100`, відсутність resize/Next optimizer та відповідність dimensions asset metadata; не обіцяти побітового збігу публічного CDN з upload. Для лайтбокса — стрілки, межі групи, Esc/бекдроп, focus restore і mobile viewport.
-   Для custom Studio inputs перевіряти фактично передані props встановленої версії Sanity, а не тільки TS interface. Regression mock не повинен додавати callback, якого немає в native field: для image/object arrays Sanity 4.22 це `onSelectFile`, без `onUpload`.
-8. Verified that relevant skills from the **Skill Registry** in `AGENTS.md` were loaded and applied (e.g., schema-markup JSON-LD for new pages, a11y patterns for new UI components, performance checks for image/bundle changes).
-9. **SEO surface kept in sync**: if the unit added a public page or a new Sanity content type, update `STATIC_SEO_ROUTES` in `lib/seo-readiness.ts`, or the GROQ branch/mapping in `app/sitemap.ts` and shared detail-family predicate for a new type. The route registry is not approval: retain noindex and exclude the URL until editorial approval and a separate SEO-L launch decision pass the shared metadata/sitemap criterion. A new indexable page is NOT "done" until it is in the sitemap — or deliberately excluded with a noted reason. See `code-standards.md` → SEO & New Pages.
+## Focused Verification Rules
+
+- Sanity references завжди weak + null-guard; GROQ через defineQuery. Inputs перевіряти з фактичними props installed Sanity: `onSelectFile`, не вигаданий `onUpload`; existing assets вставляти native `onInsert`.
+- Gallery: empty/1/2/10 фото, mixed ratios, max 10, readOnly/дублікати; viewer keyboard/межі/Esc/бекдроп/focus restore та вузький viewport. CMS writes/міграції — окремий явно дозволений scope.
+- Contact: fail closed без конфігурації, mocks не доводять inbox delivery. Реальне тестове надсилання — окреме доручення.
+- SEO: нова сторінка узгоджує metadata/canonical/sitemap/JSON-LD; pre-launch обмеження лишаються до запуску. B2 замінить code approval registry у Фазі 3.
+- Dependency patch: `patches/` + workspace metadata + lockfile, frozen install; heartbeat regression зберігає error events/retry. Після patch перезапустити dev server.
 
 ## Encoding Safety
 
-- NEVER use PowerShell `Out-File` or `>` redirect for files containing Cyrillic text
-- ALWAYS use the built-in editor tools (write_to_file, replace_file_content) for code modifications
-- Verify Cyrillic characters render correctly after any file operation
+UTF-8; кириличний текст не записувати через PowerShell pipes, Out-File або redirects. Після перенесень/редагування перевірити коректність тексту. Секрети лишаються в ignored env/провайдерів, не в документах чи tool output.

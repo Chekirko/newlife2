@@ -74,7 +74,9 @@
 
 **Цілі Lighthouse (mobile):** Performance ≥95 (100 на контентних сторінках), Accessibility 100, Best Practices 100, SEO 100 після запуску (до запуску SEO <100 лише через `is-crawlable`). Замір — `scripts/measure-seo-performance.mjs`, 3 прогони production build, сторінки: `/`, одна `/news/[slug]`, одна `/ministries/[slug]`, `/media/photos`, `/contact`.
 
-### Фаза 0 — Гігієна репо і документації ⟵ **СТАРТ наступної сесії**
+### Фаза 0 — Гігієна репо і документації
+
+Статус 2026-10-27: **завершено локально** — lint, typecheck, test, build PASS; application source без змін. Результат і наступний гейт — у [tracker](progress-tracker.md). Нижче збережено погоджений checklist фази; назви видалених файлів тут та в архівах — історичні, не runtime-посилання.
 Без змін логіки й дизайну.
 1. **Архів/стиснення документації** (`git mv`, історія зберігається):
    - старий `progress-tracker.md` → `archive/2026-10-27/progress-tracker.md`; новий tracker ≤8 КБ (поточний стан, наступна фаза, правило: ≤10 рядків на фазу, без абзаців «commit погоджено» — журнал у git);
@@ -93,7 +95,7 @@
 3. **Перемістити/оновити:** `skills_analysis_for_newlife2.md` → `docs/skills-analysis.md`; `README.md` → короткий опис (pnpm, env, посилання на AGENTS.md, `docs/ci.md`, `docs/contact-form.md`); `.env.example` + назви `SANITY_API_WRITE_TOKEN`, `SANITY_AUTH_TOKEN`, `YOUTUBE_API_KEY`.
 4. **Залишити:** `seed-*.ts` (до запуску), `check-*.mjs` (до заміни у Фазі 7), `measure-seo-performance.mjs`, `patches/`, `lib/*-data.ts` (фолбеки CMS), `PlaceholderPage` (до реальної privacy).
 
-**Приймання:** build/lint/test PASS; `git grep` за видаленими назвами — 0; відносні посилання в `context/*.md`, `AGENTS.md`, `README.md` валідні.
+**Приймання:** build/lint/test PASS; у чинному коді/конфігурації немає залежностей від видалених файлів; відносні посилання в `context/*.md`, `AGENTS.md`, `README.md` валідні. Без runtime-змін Lighthouse/скриншоти не повторюються; перевіряються незмінність application source і відсутність зламаних ресурсних залежностей.
 
 ### Фаза 1 — Фундамент швидкодії
 Візуально без змін, крім шрифту заголовків.

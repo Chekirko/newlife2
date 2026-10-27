@@ -1,118 +1,70 @@
 # Architecture Context
 
-## Доставка оригіналів D9 (2026-10-27)
-
-Користувач підтвердив оригінали всюди із завантаженням при наближенні. `DeferredGalleryImage` — клієнтська частина вже клієнтських ministry/media мозаїк: займає весь наявний tile без зміни геометрії, показує LQIP background, монтує `Image unoptimized` при intersection із margin 400px. Observer відключається після спрацювання й при unmount; без API — звичайне завантаження. SSR містить оригінал у `noscript`, який не створює image nodes у JS-сесії, включно з load-more. Кнопка зберігає accessible name й відкриває viewer навіть до завантаження тайла. Main photo і дані `PhotoItem`/GROQ/URL builder не змінені.
-
-`ImageLightbox` зберігає індекс усередині; сусідні full-resolution фото монтуються для preload тільки після `onLoad` поточного індексу. Native modal/focus/scroll/group boundaries збережені. Це економія початкових запитів, не зменшення ваги оригіналу або всього перегляду. [Spec](specs/06-d9-photo-delivery.md), [QA](../docs/seo/audit.md#d9-2026-10-27).
-
-## JSON-LD та неповні дані SEO-5 (2026-10-26)
-
-Detail JSON-LD використовує фактичний route slug та стабільні `#article`/`#event`/`#person`; посилання на церкву — єдиний `SITE_URL/#church`. Homepage описує цю сутність сумісними типами `Church` + `Organization` (юридичні/контактні поля належать Organization). Person бере назву через `getSiteSettings()` і `memberOf`, без твердження про працевлаштування. Ministry відкидає null/incomplete leaders до вибору singular/grid; відсутнє фото не передається image builder. Detail team без фото використовує чинний `ImagePlaceholder`.
-
-`schemaDate()` у `lib/utils.ts` пропускає лише справжні ISO dates/дату-час із timezone, без синтезу дат. NewsArticle має видимий `datePublished`, без автоматичних author/dateModified із publisher/технічного `_updatedAt`; description походить із того самого body/fallback, що рендериться. Event лише для події з назвою, датою та видимим location: без автоматичного church address, Scheduled або organizer. Місце з одного текстового поля не засвідчує повну адресу чи eligibility Google.
-
-`MediaGallery` SSR-рендерить ItemList з поточних playable cards і оновлює його тим самим React state після search/filter/load-more; порожній список не емітується. Title/description/thumbnail збігаються з card transformer. YouTube watch URL — `url`, privacy embed — `embedUrl`; `contentUrl` відсутній без прямого відеофайлу, `uploadDate` відсутній без підтвердження дати завантаження. Факти та eligibility лишаються SEO-L; без нових CMS-полів/залежностей. Регресія: `pnpm exec node scripts/check-jsonld-seo.mjs` (VM/SSR і handlers з mocked state/actions; не browser hydration).
-
-## URL списків SEO-4.2 (2026-10-26)
-
-`lib/listing-params.ts` нормалізує серверні searchParams для `/news`, `/events`, `/media` перед metadata та CMS-запитами. `LISTING_PER_PAGE=6` спільний для news/events і sitemap. Невалідний/повторений/небезпечний page → 307 на першу сторінку зі збереженням скалярного filter; page=1 видаляється, leading zeros нормалізуються. Коректний N поза count або порожня порція N≥2 → `notFound()`, базовий порожній список → 200/noindex. Page-local React `cache()` зі скалярними аргументами дає metadata і UI однакову порцію в межах запиту; count перевіряється до slice. Непорожня пагінація без filter має власний canonical/OG URL, search/filter — noindex з базовим canonical. Повторені filter відкидаються з redirect, scalar trim/empty нормалізуються; невідомі параметри не потрапляють у canonical чи GROQ. Media не має номерної пагінації, її page видаляється зі збереженням фільтрів; Server Actions/shallow URL і дизайн не змінені.
-
-`getPageMetadata()` приймає лише на вході `listingItems`; `isListingIndexable()` вимагає чинного launch, схваленого базового списку та всіх `_id`+slug видимої непорожньої порції news/events. Сам query path не є записом approval. Sitemap використовує цей самий критерій для першої порції, із тим самим порядком/умовами GROQ, включно з матеріалами без slug (вони блокують готовність списку, а не непомітно пропускаються). Порожній `/media` також виключено. Query URL не додані до sitemap; approval лишається порожнім, загальні noindex/Disallow збережені. Регресія: `pnpm exec node scripts/check-listing-seo.mjs`, ізольовані синтетичні metadata/SSR/sitemap без мережі чи CMS writes.
-
-## Metadata defaults SEO-3.1 / SEO-3.2 (2026-10-26)
-
-`lib/metadata.ts:getPageMetadata(path, page)` читає чинний `getSiteSettings()` (ISR 60s) і повертає повні OG/Twitter objects для root, 11 статичних маршрутів і 4 dynamic detail families (news/event/ministry/team). Пріоритет description: власний непорожній опис → `siteSettings.defaultDescription` → попередній кодовий fallback; HTML/зайві пробіли в title/description прибираються. Detail-шаблони беруть excerpt або `toPlainText()` із body/fullDescription/bio (legacy-рядок підтриманий у metadata), до 160 символів; team без bio зберігає попередній опис за ім’ям. Helper приймає опційний `image: {url,width,height,alt}` лише як вхід: фото матеріалу для social 1200×630 через `urlFor().fit('crop')` → CMS ogImage → hero fallback. Основні повнорозмірні фото UI не змінені. `SITE_SETTINGS_QUERY` вибирає чинне `ogImage`; `SiteSettings.ogImage` — URL Sanity 1200×630 або null за відсутнього asset ref. Нових схем/полів/інтеграцій немає. Helper задає social URL через `SITE_URL`, але canonical лише явно переданий сторінкою; глобального canonical немає. Root `generateMetadata` зберігає metadataBase/keywords/noindex. UI/JSON-LD/robots/sitemap не змінені; null-ref та відсутнє photo в UI team лишаються поза metadata-юнітом.
-
-## Контактна форма C1 (2026-10-25)
-
-`/contact/components/ContactForm` → page-local `actions.ts` (Server Action) → Zod-validation/honeypot → адреса одержувача з серверного env або `getSiteSettings()` → `delivery.ts` (server-only) → Upstash REST EVAL (атомарні ліміти між instances) → Resend HTTP API. Ключі тільки в server env, plain-text лист, visitor email лише Reply-To. Звернення не зберігаються у CMS/browser/application logs; Redis має тільки HMAC keys/counts із TTL. Конфігурація відсутня/сервіс не відповідає → помилка, без удаваного успіху. Докладно: `docs/contact-form.md`; реальний email/Redis QA потребує конфігурації. Нових Sanity-схем або API routes немає.
-
-## Studio: пакетний вибір наявних фото (2026-10-25)
-
-`news.gallery` має `GalleryInput` із двома кнопками: native multiple upload через `onSelectFile` і `Select — вибрати фото зі Studio`. Другий шлях відкриває `GalleryAssetPicker`: `useClient` поточного Studio workspace + параметризований `defineQuery` до `sanity.imageAsset`, пошук за originalFilename, стабільне сортування й порції по 40. Це окремий picker для масиву; `sanity-plugin-media` 4.3.6 у single-image source одразу повертає один asset і не реалізує потрібний multi-select. Вибрані assets додаються одним native `onInsert` (унікальні `_key`, image `_type`, weak asset refs, `skipInitialValue`, `open:false`); масив цілком не перезаписується. Основне image-поле лишається одиночним. Власних токенів, API routes чи CMS-клієнта для upload немає.
-
-`event-source-polyfill@1.0.31` має відтворюваний pnpm patch у `patches/`: лише його recoverable heartbeat message `No activity within … Reconnecting.` логовано як warning, щоб Next dev overlay не перекривав Studio. Події error/reconnect, retry/backoff та справжні мережеві/HTTP помилки збережено. Патч не усуває мережеві розриви й не вимикає live sync.
-
-### Studio: пакетний вибір наявних фото (2026-10-25)
-
-`news.gallery` має `GalleryInput` із двома кнопками: native multiple upload через `onSelectFile` і `Select — вибрати фото зі Studio`. Другий шлях відкриває `GalleryAssetPicker`: `useClient` поточного Studio workspace + параметризований `defineQuery` до `sanity.imageAsset`, пошук за originalFilename, стабільне сортування й порції по 40. Це окремий picker для масиву; `sanity-plugin-media` 4.3.6 у single-image source одразу повертає один asset і не реалізує потрібний multi-select. Вибрані assets додаються одним native `onInsert` (унікальні `_key`, image `_type`, weak asset refs, `skipInitialValue`, `open:false`); масив цілком не перезаписується. Основне image-поле лишається одиночним. Власних токенів, API routes чи CMS-клієнта для upload немає.
-
-`event-source-polyfill@1.0.31` має відтворюваний pnpm patch у `patches/`: лише його recoverable heartbeat message `No activity within … Reconnecting.` логовано як warning, щоб Next dev overlay не перекривав Studio. Події error/reconnect, retry/backoff та справжні мережеві/HTTP помилки збережено. Патч не усуває мережеві розриви й не вимикає live sync.
+Канон змін — [master-plan](master-plan.md), рішення B1–B8. Нижче описано поточну реалізацію та окремо заплановані заміни; Фаза 0 не змінює runtime.
 
 ## Stack
 
-| Layer       | Technology                      | Role                                      |
-| ----------- | ------------------------------- | ----------------------------------------- |
-| Framework   | Next.js 16 (App Router) + TS    | SSG/SSR, routing, React Server Components |
-| CMS         | Sanity v4                       | Контент, медіа, вбудоване Studio (+ `sanity-plugin-media` — бібліотека ассетів) |
-| CMS Client  | next-sanity + @sanity/image-url | GROQ-запити, генерація URL зображень      |
-| Styling     | Tailwind CSS v4 + globals.css   | Utility-first + кастомна дизайн-система   |
-| Types       | Sanity TypeGen                  | Автогенерація TS-типів з GROQ-запитів     |
-| Deploy      | Vercel                          | CI/CD, edge functions, preview            |
-| Fonts       | Local WOFF2: Poppins, Roboto, Playfair Display (`public/fonts/`, `app/fonts.css`) | Типографіка без Google Fonts network під час build/runtime |
+Next.js 16 App Router, React 19, TypeScript strict; Sanity 4 + `next-sanity`/TypeGen; Tailwind v4; Vercel. Менеджер пакетів — pnpm із `package.json#packageManager`. Шрифти локальні WOFF2; поточні Poppins/Roboto/Playfair Display замінюються за B4 у Фазі 1.
 
 ## System Boundaries
 
-- `app/(front)/` — Публічні сторінки (homepage, news, ministries, history)
-- `app/(front)/components/` — Компоненти ТІЛЬКИ для homepage
-- `app/(front)/news/components/` — Компоненти ТІЛЬКИ для сторінок новин
-- `app/(front)/events/` — Сторінки подій/оголошень (`/events`, `/events/[slug]`) + `components/` (EventCard, SidebarRecentEvents, EventsPagination) — структура дзеркалить `news/`
-- `app/(front)/ministries/components/` — Компоненти ТІЛЬКИ для списку служінь
-- `app/(front)/ministries/[slug]/components/` — Компоненти для деталей служіння
-- `app/(front)/team/components/` — Компоненти для сторінки команди (TeamSection, HonorarySection, TeamPhotoBanner, TeamMemberCard)
-- `app/(front)/**/queries.ts` — GROQ-запити, локальні для кожної сторінки
-- `app/studio/` — Sanity Studio (не модифікувати вручну)
-- `components/` — Спільні компоненти (Header, Footer, HeroSlider, NewsSlider, PageHero, PlaceholderPage, NotFoundView, **PortableTextBody** — рендер Portable Text-тіла для детальних сторінок news/event/ministry/team, мапить блоки на типографіку сайту, fallback на `<p>` для legacy-рядка)
-- `ChurchFooter` — async Server Component: підтягує топ-5 служінь із Sanity для колонки футера (динамічні посилання, без хардкоду slug)
-- `app/not-found.tsx` — глобальний 404 для незіставлених URL (додає Header/Footer вручну, бо root layout без хрому); `app/(front)/not-found.tsx` — 404 для `notFound()` усередині сайту (хром із (front)-layout); `app/(front)/error.tsx` — error-межа сегмента (Client Component)
-- `components/sections/` — Спільні секційні компоненти
-- `components/ui/` — Базові UI-компоненти (MinistryCard)
-- `sanity/lib/` — Sanity client, image helper, спільні запити, згенеровані типи
-- `sanity/lib/queries.ts` — ТІЛЬКИ спільні GROQ-запити (використовуються 2+ сторінками)
-- `sanity/schemaTypes/objects/richText.ts` — `richTextBlocks`: ЄДИНЕ означення Portable Text-тулбару (заголовки H2–H4+цитата = розмір тексту, жирний/курсив/підкреслення, списки, посилання, вбудовані зображення з alt), спільне для body-полів news/event/ministry/teamMember. Excerpt-поля (`text`/`description`/`shortDescription`) лишаються простим текстом для карток/SEO.
-- `pageHeroes` — **singleton**: редаговані hero-фони ВСІХ сторінок, крім головної (`newsHero`, `eventsHero`, `ministriesHero`, `teamHero`, `historyHero`, `contactHero`, `aboutHero`, `mediaHero`, `privacyHero`). Для розділів зі списком+деталями (news/events/ministries/team) — одне фото спільне для списку та всіх деталей. Читається через `getPageHeroes()` (`lib/page-heroes.ts`) — map-based, повертає `Record<PageHeroKey, string>` із fallback на статичні файли `/public/images` для кожного ключа. Кожна сторінка (Server Component) фетчить `getPageHeroes()` і передає потрібний ключ у `PageHero`/детальний hero. Enforce як інші singleton-и (structure.ts + sanity.config.ts SINGLETON_TYPES). Додати hero для нової сторінки = поле в схемі + ключ+fallback у `getPageHeroes` + проп у сторінці.
-- `sanity/schemaTypes/` — Sanity-схеми документів (siteSettings, homepage, pageHeroes, aboutPage, ministry, news, event, teamMember). `siteSettings` — **singleton** (один документ): редагується контент-менеджером у /studio, тримає NAP, розклад, соцмережі (масив `{platform,url,label}` — додаються/сортуються без розробника, платформи з реєстру `lib/social.ts`), OG-дефолти. `homepage` — **singleton**: редагований контент головної (групи: `heroSlides`, `testimonials` (свідчення — цитата/ім'я/підпис/рейтинг/опц. фото), `faq` (запитання/відповідь — живить акордеон + FAQPage JSON-LD), `whatYouFind` (картки «Що ви знайдете» — іконка з дропдауну + заголовок/опис/зображення)). Увесь статичний контент головної тепер у CMS. (Статистика церкви живе в `aboutPage`, не тут — рендериться лише на /about.) `event` — події **та** оголошення (одна модель, поле `type`): `startDate` (datetime, для сортування/показу/Event JSON-LD), `activeUntil` (опц. дедлайн), `location`, `description` (анонс), `body` (повний текст). «Актуальність» для головної залежить від типу: `подія` показується поки `startDate >= $today` (видима ввесь свій день, далі зникає — `activeUntil` для подій ІГНОРУЄТЬСЯ); `оголошення` — поки `coalesce(activeUntil, startDate) >= $now`. `page.tsx` передає обидва параметри (`now`, `today`). Детальна сторінка `подія` віддає Event JSON-LD. `aboutPage` — **singleton**: увесь редагований контент сторінки /about (заголовки секцій + контент): hero-заголовок, «хто ми»+місія, історія-абзаци, віровчення[], цінності[] (iconKey-дропдаун + `featured`), «чого очікувати»[] (іконка через `TagInput` — обери зі списку АБО впиши будь-який FA-клас), керівництво, статистика (заголовки + числа `stats[]` value/label), фінальний CTA. Поля пласкі (whoPreTitle, denomination, historyParagraphs, beliefs[], values[], stats[]…), згруповані по секціях. Числа статистики тепер ТУТ (перенесено з `homepage`, бо рендеряться лише на /about). Кнопкові маршрути лишаються в коді; редагується лише текст. Читається через `getAboutPage()`
-- `lib/` — Загальні утиліти: `utils.ts` (`formatDate`, `formatEventDate`, `jsonLdHtml` — екранує `<` для безпечного вставлення JSON-LD у `<script>`), `site.ts` (`SITE_URL`), `church.ts` (типізований FALLBACK + форма даних церкви), `site-settings.ts` (`getSiteSettings()` — читає Sanity-singleton `siteSettings` і зливає поверх дефолтів `church.ts`; ЄДИНА точка доступу до даних церкви для UI та JSON-LD; також віддає похідний `openingHours[]` — служіння з днем+`time`+`endTime`, UA-день мапиться на schema.org-англ. — який живить `openingHoursSpecification` у homepage Church JSON-LD), `social.ts` (реєстр соцмереж: платформа → іконка/колір/назва; ЄДИНЕ джерело для дропдауна у схемі та рендеру в header/footer), `homepage.ts` (`getHomepage()` — читає Sanity-singleton `homepage`, повертає `heroSlides` + `testimonials` + `faq` + `whatYouFind`; резолвить зображення через `urlFor()`, fallback на відповідні `*-data.ts`), `hero-slides-data.ts` + `testimonials-data.ts` + `faq-data.ts` + `what-you-find-data.ts` + `about-data.ts` (чисті типізовані дефолти — без Sanity-залежностей, спільні для helper-ів та seed-скриптів; `about-data.ts` — типізований fallback + канонічна ФОРМА всього контенту /about (`ABOUT_FALLBACK: AboutContent`): історія, віровчення, цінності, «чого очікувати», статистика (числа), заголовки секцій, CTA), `about.ts` (`getAboutPage()` — читає Sanity-singleton `aboutPage` і зливає поверх `ABOUT_FALLBACK` ПОЛЕ-ЗА-ПОЛЕМ: порожній CMS-рядок/масив → дефолт; патерн як `getSiteSettings()`)
-- `public/images/` — Статичні зображення (hero-фони, іконки)
-- `next.config.ts` — `images.remotePatterns` (cdn.sanity.io) + `headers()`: security-заголовки в enforce (nosniff, Referrer-Policy, X-Frame-Options, HSTS, Permissions-Policy) на всіх маршрутах та CSP у **Report-Only** (`/studio` виключено; перемкнути в enforce після runtime-смоук — див. `context/master-plan.md` → C2)
-- `sanity/components/` — кастомні Studio-інпути: **`TagInput`** (обери зі списку `schemaType.options.list` АБО впиши своє — вільний текст ЗБЕРІГАЄТЬСЯ через `set/unset`; reusable для tag/category-полів: `event.tag`, `news.mainCategory`, `news.categories`; замінив зламаний `CategoryInput`), `QuoteBlock`
+| Шлях | Відповідальність |
+| --- | --- |
+| `app/(front)/` | Публічні сторінки, page-local `components/`, `queries.ts`, `actions.ts` |
+| `components/`, `components/sections/`, `components/ui/` | Компоненти, спільні для кількох сторінок; `PortableTextBody`, hero, фото-переглядач |
+| `sanity/schemaTypes/`, `sanity/components/` | Контент-модель і Studio inputs |
+| `sanity/lib/` | CMS client, спільні GROQ, image helpers, типи |
+| `lib/` | Перетворення даних, налаштування/фолбеки CMS, metadata, утиліти |
+| `public/` | Логотипи, локальні фото/шрифти та ліцензії |
+| `app/studio/` | Вбудоване Studio, окрема Sanity-авторизація |
+
+Root layout задає metadata/шрифти/стилі. `(front)/layout.tsx` отримує `getSiteSettings()` і передає settings у header/footer, додає skip-link та main. Footer — async Server Component, читає посилання на служіння. Глобальний 404 додає хром сам; segment 404 успадковує front-layout; `error.tsx` — клієнтська межа помилок.
 
 ## Storage Model
 
-- **Фото новин**: `news.image` — обов’язкове image-поле з перевіркою asset; `news.gallery` — необов’язковий масив до 10 image-елементів із необов’язковим `alt`. Asset кожного доданого елемента обов’язковий. Detail-запит через `defineQuery` відбирає до 10 наявних assets та проєктує dimensions/LQIP; сторінка будує єдину групу основного й додаткових фото. `NewsPhotoGallery` — Server Component із клієнтськими `PhotoViewer`-тригерами, пропускаються відсутні assets/розміри. `GalleryInput` у Studio додає multiple file picker і делегує кожен файл у штатний `onSelectFile({file, schemaType, assetSource})`; source з `Uploader` береться з `useFormBuilder().__internal.image.assetSources`, з урахуванням `directUploads`, як у native Sanity upload target. Sanity контролює прогрес, помилки, initial items і patches. **Sanity 4.22 не передає `onUpload` для image/object arrays** — не використовувати його як умову доступності чи upload callback. Добірка понад вільні місця або з непідтримуваним файлом відхиляється цілком до початку upload. Старі новини без gallery сумісні, міграція не потрібна. Галерея `/media/photos` лишається агрегатом `ministry.gallery`.
-- **Повнорозмірні фото**: `sanity/lib/image.ts` → `originalImageUrl()` повертає повну роздільність asset, ігнорує crop/hotspot, встановлює `q=100`; без resize/auto-format. Фото на детальних news/event/ministry/team, у фотогалереях і Portable Text використовують цей URL + `Image unoptimized`, без другого стиснення Next. Публічний CDN усе одно кодує JPEG; це не побітовий оригінал (`dlRaw` вимагає авторизації, не виносити токени на фронтенд). `PhotoViewer` — спільний клієнтський button-wrapper; відкриває `ImageLightbox` із групою `PhotoItem[]` і потрібним індексом. Переглядач використовує native modal `dialog` у top layer (працює всередині transformed-карток), Esc/бекдроп/закриття, ←/→ й екранні кнопки, лічильник, блокування scroll і повернення фокусу. Індекс живе всередині переглядача. Фонові hero, navigation-картки й відео мають окреме компонування. Повнорозмірні файли значно важчі; lazy loading збережено.
-- **Sanity Content Lake**: Весь динамічний контент (новини, служіння, події, текстові описи)
-- **Sanity CDN**: Медіа-файли (фотографії, зображення галерей)
-- **`public/`**: Статичні ресурси (hero-фони, логотип, іконки, фото пастора)
+- Content Lake — джерело редакційного контенту; `lib/*-data.ts` і `lib/church.ts` — типізовані фолбеки, не друга CMS.
+- Singletons: `siteSettings`, `homepage`, `pageHeroes`, `aboutPage`; фіксований `_id` і заборона create/delete/duplicate/unpublish узгоджені між `sanity/structure.ts` та `sanity.config.ts`.
+- `getSiteSettings()` об’єднує CMS із `church.ts`: NAP, розклад, гео, соцмережі, SEO defaults. Реєстр платформ — `lib/social.ts`. `getHomepage()`, `getAboutPage()`, `getPageHeroes()` мають відповідні типізовані фолбеки.
+- `news`, `event`, `ministry`, `teamMember`, `mediaItem` — колекції. `event.type` розділяє події й оголошення; на головній події видимі весь день, оголошення — до `activeUntil` або `startDate`. Часові межі ще потребують Europe/Kyiv (Фаза 1).
+- `ministry.leaders[]` → weak references на `teamMember`; `news.ministries[]` → weak references на ministry; `homepage.featuredSermon` → weak reference на mediaItem. Відсутні referenced-дані фільтруються до рендеру. Одна відповідальна особа й кілька мають окремі layout-гілки.
+- Довгі тексти — Portable Text, спільний `richTextBlocks` у `sanity/schemaTypes/objects/richText.ts`; excerpt-поля прості. `PortableTextBody` рендерить блоки та підтримує legacy string.
+- `news.image` — required asset; `news.gallery` — до 10 фото. GROQ проєктує dimensions/LQIP; відсутні assets пропускаються. `/media/photos` агрегує `ministry.gallery`, а не галереї новин.
 
 ## Caching and Revalidation Model
 
-- **Incremental Static Regeneration (ISR)**: Усі динамічні сторінки, що завантажують контент із Sanity, використовують Next.js ISR для автоматичного оновлення кешу у фоновому режимі.
-- **Інтервал ревалідації**: Сторінки експортують `revalidate = 60` (кешування не більше ніж на 60 секунд) для балансу продуктивності та актуальності.
-- **Пряме опитування API (Bypass CDN)**: Клієнт Sanity налаштований з `useCdn: false`, щоб під час фонової регенерації Next.js отримував найсвіжіші опубліковані зміни безпосередньо з Live API, оминаючи затримки кешу CDN.
-- **Виняток — динамічні сторінки з фільтрами**: `/media` читає `searchParams` (`category`/`speaker`/`q`) для серверного пошуку/фільтрування, тому рендериться **on-demand** (`ƒ` dynamic), а не як статичний ISR. Прийнятний компроміс заради масштабу (тисячі відео): кожен запит виконує GROQ свіжо. Сторінки-списки без серверних фільтрів (`/news`, `/events`) лишаються на slice-пагінації через `searchParams`, але кешуються per-URL.
+**Зараз:** Sanity client має `useCdn: false`; більшість сторінок — `revalidate = 60`, singleton fetch має `next.revalidate: 60`. Ministry/team detail мають `generateStaticParams()`. `/news`, `/events`, `/media` читають `searchParams` і рендеряться динамічно; news/event detail не мають `generateStaticParams()`. Оголошення `revalidate = 60` саме по собі не робить такі маршрути статичними.
+
+Пошук/фільтри великих медіаколекцій виконуються GROQ на сервері. Початкові props приходять зі сторінки; `searchMedia`/`loadMoreMedia` — Server Actions, спільний transformer у `lib/media.ts`. Клієнт оновлює грид і shallow URL без завантаження всієї колекції. Фото наразі перемішуються при ISR.
+
+**Фаза 2 / B6:** static-first, пагінація шляхами та on-demand revalidation через Sanity webhook. Це ще не реалізовано; часові блоки мають залишатися актуальними без ручного редагування CMS — врахувати в цій фазі.
+
+## Images and UI boundaries
+
+**Зараз:** detail/gallery/rich-text фото використовують `originalImageUrl()` (`q=100`, повні dimensions, ігнорування crop/hotspot) + `Image unoptimized`. `PhotoViewer` відкриває native modal `ImageLightbox`, який зберігає індекс, підтримує Esc/стрілки/бекдроп, scroll lock і focus restore. `DeferredGalleryImage` у ministry/media мозаїках монтує фото біля viewport, із LQIP та noscript; сусіди viewer завантажуються після поточного фото. Hero вже використовує Next Image, але слайдер лишається клієнтським.
+
+**Фаза 1 / B1, B3, B4:** адаптивні Sanity CDN прев’ю; оригінал лише на вимогу; видалення deferred-original механізму; SVG-іконки замість повного FA CSS; Montserrat/Roboto/Playfair через `next/font/local`; мінімальні клієнтські острівці. **Фази 4–5 / B5, B7:** Larexa й статичний hero головної — [spec 08](specs/08-larexa-redesign.md).
+
+## Contact and Studio
+
+Контактна форма: page-local Server Action → Zod/honeypot → server-only delivery → атомарний Upstash EVAL → Resend. Одержувач — server env/CMS, visitor email лише Reply-To, лист plain text. Звернення не пишуться у CMS/browser/logs; Redis зберігає HMAC buckets із TTL. Відсутній конфіг/лімітер — відмова, успіх лише після прийняття провайдером. Деталі й межі QA — [contact-form](../docs/contact-form.md).
+
+Studio `GalleryInput` делегує multiple upload нативному `onSelectFile`; `GalleryAssetPicker` читає assets через Studio `useClient` і параметризований `defineQuery`, вставляє одну добірку native `onInsert`. Захист від дублів/readOnly/перевищення 10; без власних токенів чи переписування всього масиву. Media plugin — single-image source/бібліотека.
+
+`event-source-polyfill` має pnpm patch лише для recoverable heartbeat logging: warning замість dev overlay; error events/retry/реальні помилки збережені. `patches/`, workspace config і lockfile — єдиний комплект.
 
 ## Auth and Access Model
 
-- Публічний сайт — авторизація користувачів відсутня
-- SEO-4.1: `lib/seo-readiness.ts` — єдиний реєстр `SEO_APPROVAL` (launch origin/date + pages path/date/опційний CMS `_id`), початково `launch: null, pages: []`. `isPageIndexable()` спільний для `getPageMetadata()` і sitemap: лише Production із погодженим `SITE_URL`, відомий canonical маршрут та явне схвалення; detail додатково звіряє published `_id` і slug у шляху. Privacy/Studio/невідомі/query URL виключені. Metadata передає `documentId` як службовий вхід helper; CMS-схеми/контент не змінені. Sitemap читає `perspective: 'published'`, підхоплює схвалені наявні документи через ISR 60s, прибирає дублікати; статичні URL без lastmod, CMS — лише валідний `_updatedAt`, без fallback «зараз». Поточний sitemap порожній; це не контроль доступу. Root/header noindex й Disallow збережено, повне відкриття — окрема скоординована дія SEO-L.
-- Pre-launch SEO-2.2: root metadata `noindex, follow` та `X-Robots-Tag: noindex` у чинному `next.config.ts#headers` на всіх шляхах/ресурсах; `robots.ts` зберігає `Disallow: /`. Це пошукові сигнали, не контроль доступу й не гарантія виключення URL за заблокованого crawling. Privacy/Studio зберігають свої robots. Production platform protection (F01) лишається окремою зовнішньою дією; перед SEO-L узгоджено переглянути root/header/page-specific правила. Докази — `docs/seo/audit.md`, SEO-2.2.
-- Sanity Studio (`/studio`) — доступ через Sanity Dashboard (окремий логін)
-- Контент-менеджер оновлює дані через Studio без участі розробника
+Публічний сайт без акаунтів; Studio — Sanity login. Поточний pre-launch: root/page noindex, `X-Robots-Tag: noindex`, `robots.ts` із `Disallow: /`, порожній sitemap. `lib/seo-readiness.ts` містить порожній реєстр схвалень для metadata/sitemap. Це пошукові сигнали, а не обмеження доступу; заборона crawl заважає прочитати noindex.
+
+**Фаза 3 / B2:** заміна реєстру одним перемикачем `SITE_INDEXING=on` + Production і документним `seo.noIndex`; узгодження robots/meta/header/sitemap. Запуск лишається окремою дією за явним «готово» — [§F](master-plan.md#f-launch-checklist-найостанніший-крок). CSP поки Report-Only, Studio виключене; enforce без nonce — Фаза 7 / B8.
 
 ## Invariants
 
-1. Весь динамічний контент живе ТІЛЬКИ в Sanity — жодних hardcoded даних для CMS-типів
-2. GROQ-запити визначаються через `defineQuery()` з `next-sanity` — для TypeGen сумісності
-3. Спільні компоненти (`components/`) НІКОЛИ не імпортують з page-level директорій (`app/(front)/components/`)
-4. Page-level компоненти НЕ виносяться в `components/` без підтвердження переиспользування на 2+ сторінках
-5. Кириличний текст записується ТІЛЬКИ через інструменти редагування — НІКОЛИ через PowerShell pipe/Out-File
-6. `npm run build` ПОВИНЕН проходити перед кожним push/deploy
-7. Sanity TypeGen (`npm run typegen`) запускається при зміні GROQ-запитів або Sanity-схем
-8. CSS-кольори використовують ТІЛЬКИ токени з `globals.css` (`--color-primary`, `--gradient-start/end`) — жодних raw hex
-9. Відповідальні за служіння зв'язуються як **масив weak references** до `teamMember` (`ministry.leaders[]` — кілька осіб на служіння) — дозволяє видаляти служителів без блокування, фронтенд gracefully ховає блок при порожньому масиві (1 особа → singular card; 2+ → сітка міні-карток)
-10. Усі `reference`-поля в Sanity-схемах ЗАВЖДИ використовують `weak: true` — фронтенд-компоненти ОБОВ'ЯЗКОВО перевіряють `null` перед рендером referenced-даних
-11. Дані церкви (NAP, розклад, соцмережі, гео) для UI та JSON-LD ЗАВЖДИ читаються через `getSiteSettings()` (`lib/site-settings.ts`) — Sanity-singleton `siteSettings` із fallback на `lib/church.ts`. Client Components не фетчать самі: layout/сторінка (Server Component) фетчить і передає `settings` пропсами (напр. `ChurchHeader`). Singleton-інваріант: рівно один документ `siteSettings` (enforced у `structure.ts` + `sanity.config.ts` document.actions)
-12. **Серверний пошук/фільтр великих колекцій**: для типів, що ростуть до тисяч (наразі `mediaItem`), пошук/фільтр/пагінація — на СЕРВЕРІ через GROQ (`match` + токенізований префікс `toMatchQuery`; порожній параметр = `''` → гілка `select(...,true)` без фільтра). **Початковий рендер** — Server Component із `searchParams` (прямий лінк/SEO). **Інтерактивна зміна фільтра** (таб/спікер/пошук) — НЕ навігація, а Server Action (`searchMedia → {cards,total}`) у `useTransition`, що оновлює лише грид (cross-fade); URL синхронізується шалов (`history.replaceState`). Підвантаження («Завантажити ще») — Server Action (`loadMoreMedia`), клієнт акумулює. Спільний трансформер raw→card живе в `lib/` (одне джерело правди для сторінки й екшенів). НЕ фетчити всю колекцію на клієнт для in-memory фільтрування; НЕ робити повну навігацію заради зміни фільтра.
-13. Абсолютні URL (metadataBase, sitemap, JSON-LD `item`/`url`) ЗАВЖДИ походять із `lib/site.ts` → `SITE_URL` — ЖОДНОГО захардкодженого домену в коді. Порядок визначення: `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL` (авто-домен Vercel, само-оновлюється на власний домен після під'єднання) → дефолт `https://newlife.church` (лише для локального/не-Vercel білда). `SITE_URL` читається ТІЛЬКИ в Server Components
+1. GROQ через `defineQuery()`; query/schema зміни → `pnpm run typegen`; типи не редагувати вручну.
+2. Усі schema references — `weak: true`; referenced-дані nullable, рендер із null-guard.
+3. Fetch контенту на сервері, props у клієнт; Studio `useClient` — окрема авторизована межа.
+4. Спільні компоненти не імпортують page-local компоненти; виносити спільне лише за реального reuse.
+5. NAP/розклад/соцмережі UI та JSON-LD — через `getSiteSettings()`; абсолютні URL — `lib/site.ts` → `SITE_URL`.
+6. JSON-LD — `jsonLdHtml()`, факти й дати лише з наявних даних; metadata і видимий контент узгоджені.
+7. Лише pnpm; build перед завершенням фази; Windows довгі команди через `cmd /c`.
+8. Поточна реалізація не скасовує нових рішень master-plan. Історичні результати — [архів tracker](archive/2026-10-27/progress-tracker.md) та [SEO audit](../docs/archive/seo-codex-2026-10/audit.md).

@@ -1,7 +1,7 @@
 # Application Building Context
 
 Read context files lazily to save tokens. If a new chat starts or you receive a new task:
-1. PROACTIVELY read ONLY `context/progress-tracker.md` to understand the current phase and next steps.
+1. PROACTIVELY read ONLY `context/progress-tracker.md` (≤8 KB) to understand the current phase and next steps. Follow its link to `context/master-plan.md` for the selected phase; archived trackers/specs are history, not active instructions.
 2. Read the other files (`architecture.md`, `ui-context.md`, `code-standards.md`, `project-overview.md`) ONLY IF your task specifically touches those domains (e.g., UI changes, new database schemas, etc.).
 
 ## Rules
@@ -14,7 +14,7 @@ Read context files lazily to save tokens. If a new chat starts or you receive a 
 - Always run `pnpm run build` before considering any unit complete.
 - Never use PowerShell pipes for files containing Cyrillic text.
 - **CRITICAL (Weak References)**: При створенні або модифікації будь-якої Sanity-схеми, що містить `type: 'reference'` — ЗАВЖДИ додавай `weak: true`. Фронтенд-компонент, що рендерить referenced-дані, ОБОВ'ЯЗКОВО повинен мати null-guard (`{data.ref && ...}`). Див. `context/code-standards.md` → Sanity References.
-- For skill rationale and full analysis, see `skills_analysis_for_newlife2.md` (read only if needed for background context).
+- For skill rationale and full analysis, see `docs/skills-analysis.md` (read only if needed for background context).
 
 ## Skill Registry
 
@@ -70,4 +70,6 @@ Load the actual skill files **on-demand** based on what your task involves. Path
 ## Feature Specs
 
 When building a new feature, check `context/specs/` for a spec file. If one exists, implement exactly what the spec describes — no more, no less.
+
+The current redesign specification is [08-larexa-redesign.md](context/specs/08-larexa-redesign.md); implementation order and decisions are in [master-plan.md](context/master-plan.md). Completed specifications 00–07 are in `context/specs/done/`. Update the tracker with ≤10 lines per completed phase; commit history belongs in Git.
 

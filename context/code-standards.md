@@ -1,182 +1,98 @@
 # Code Standards
 
-## Icon fonts і modal width D2.1/D8.1 (2026-10-27)
-
-`app/icon-fonts.css` імпортується після Font Awesome package CSS й задає `swap` використовуваним FA6 Brands 400 / Free 400,900 з тими самими локальними WOFF2. Не змінювати glyph mappings/сімейства/ваги або додавати icon preload без вимірювань. Порівнювати exact loaded glyph/style/geometry та фактичні network requests; audit PASS сам по собі не доводить поліпшення LCP. Body/heading fonts лишаються у `app/fonts.css`.
-
-У shared `ImageLightbox` photo max-width — `min(92vw,calc(100dvw - 2rem))`; 2rem відповідають двом сторонам `p-4` діалогу. Якщо змінюється padding, узгодити cap; перевіряти dialog clientWidth/scrollWidth на 320px, landscape/portrait і desktop, без простого приховування overflow. Зберігати full-resolution/q=100 та D9 preload gate. Для дрібного single-leader label на `bg-gray-50` використовувати `text-gray-600` (4,72:1), не попередній `gray-500` (4,46:1). [Вимірювання й QA](../docs/seo/audit.md#d2-d8-2026-10-27).
-
-## Доставка gallery originals D9 (2026-10-27)
-
-Не замінювати погоджені full-resolution/q=100 фото адаптивними прев’ю без вибору користувача. Для ministry/media мозаїк — `DeferredGalleryImage`: резервування наявного tile, LQIP до intersection 400px, observer cleanup, fallback без API й SSR noscript. Не повертати звичайний native lazy original поза noscript до intersection: браузер може завантажити його далеко нижче екрана. Не застосовувати цей delay до видимого основного фото. Кнопки повинні залишатися названими й відкривати viewer незалежно від стану тайла. У lightbox сусіди чекають `onLoad` поточного індексу; після navigation gate повторюється.
-
-Регресія: `pnpm exec node scripts/check-photo-delivery.mjs` (observer/LQIP/empty/noscript/fallback/cleanup, foreground-first preload, 0/1/many/межі); browser перевіряє scroll/focus/load-more. Вимірювання: `scripts/measure-photo-delivery.mjs` на built app:3004, immutable before/after labels; порівнювати assets/версії/профілі й зберігати warnings. Shuffled `/media/photos` не вважати зіставною серією без фіксації photo set/order. [Результат і межі](../docs/seo/audit.md#d9-2026-10-27).
-
-- **Contact/media headings SEO-6 final:** contact info H3 вкладені в H2 основної секції; допоміжні незалежні блоки H2 з `text-h5`, бо колишній H5 отримував розмір із base CSS. Media cards і empty media/photos — сталі H2 під PageHero H1. Під час заміни тегів звіряти не тільки класи, а computed typography/розміри після font load на 1280/390/320px; optional schedule та 0/1/many galleries перевіряти без запису fixture-даних у CMS. CMS rich-text rank виправляти в конкретному block за `_key`, з перевіркою тексту, draft/revision guard, dry-run, backup та звіркою незмінності інших полів; не перенумеровувати всі заголовки глобально. Помилки Sanity CLI-скриптів можуть містити request credentials: виводити лише безпечні code/status, не сирий error. [QA](../docs/seo/audit.md#seo-6-final--2026-10-26).
-
-- Contact form: page-local Server Action validates FormData with Zod and honeypot before delivery. Mail/Redis modules use `server-only`; all credentials stay in server env, recipient comes from server config/CMS, visitor address is Reply-To only, payload is plain text. Use durable atomic Redis limits with TTL; fail closed if limiter/config is unavailable. Keep form values on error and announce statuses accessibly. Regression `tsx --conditions=react-server scripts/check-contact-form.ts` uses mocked HTTP and no live mail/Redis. See `docs/contact-form.md` for config and test boundaries.
-
-## Performance measurement / hero SEO-7 (2026-10-27)
-
-Вимірювати production build, не dev; `scripts/measure-seo-performance.mjs` запускає pinned Lighthouse 13.5.0 через `pnpm dlx`, без залежностей/lockfile застосунку. Фіксовані mobile/desktop profiles, 3 cold-browser samples на case, медіани та raw reports/traces у ignored cache; новий label для нової серії, наявний label лише відновлює її. Порівнювати однакові профілі/версії/джерела, фіксувати CPU warnings/ISR/зовнішні CDN та не називати локальні simulated LCP/TBT польовими CWV/INP. [Метод і межі](../docs/seo/audit.md#seo-7--2026-10-27).
-
-`HeroSlider`: декоративний `Image fill`, один initial preload і high priority для індексу 0; не переносити preload на кожен активований слайд. `object-cover object-center` зберігає кадрування. `sizes` має враховувати ширину після cover-кропу (для чинних 500/750px висот і 16:9 — 889/1334px), а не лише viewport. Зміна висоти/пропорцій потребує повторної перевірки sizes. Регресія `scripts/check-heading-seo.mjs` використовує реальний Next Image для SSR/string/static image та 0/1/many; VM timer/focus/reduced-motion checks доповнюються browser QA. Не оптимізувати погоджені повнорозмірні q=100 фото через зміну якості без окремого рішення.
+Чинні рішення й фази — [master-plan](master-plan.md); процес — [ai-workflow-rules](ai-workflow-rules.md). Історичні QA-журнали не є новими вимогами.
 
 ## General
 
-- **History headings SEO-6.10:** етапи timeline — H3 під H2 хронології, самостійний CTA — H2; ранг визначати за вкладеністю в повній сторінці. При заміні heading-тегів зберігати класи й звіряти computed typography/розміри після font load на 1280/390/320px. Optional arrays/image/video перевіряти SSR fixtures без CMS writes. Незмінність HTML за винятком heading tags не означає повний a11y PASS: наявний `summary.outline-none` без видимого focus переданий D8. [QA](../docs/seo/audit.md#seo-610-заголовки-хронології-та-cta-історії--2026-10-26).
-
-- **Events headings SEO-6.9:** у списку подій sidebar, CTA та empty-state мають сталий H2 під PageHero H1, як і картки. Ранг не залежить від кількості записів або останнього heading основного списку. Зберігати чинні typography utilities; перевіряти 0/1/many і незалежно порожні main/sidebar через SSR, exact remaining markup до HEAD, computed styles/розміри після font load та фактичний innerWidth на 1280/390/320px. Умовний empty-state перевіряти ізольованими fixtures без CMS writes. [QA](../docs/seo/audit.md#seo-69-заголовки-списку-подій--2026-10-26).
-
-- **Ministry detail headings SEO-6.7:** sidebar groups мають сталий H2; single leader — H3, multiple group — H3 та імена H4 під нею. Після p → heading явно зберігати body font (`font-base`), але не додавати line-height поверх наявних responsive typography utilities: `text-lg/lg:text-xl` уже його задають. Порівнювати computed styles після `document.fonts.ready`, включно з розмірами на 1280/390/320px. Фото в leader links декоративні відносно видимого імені (`alt=""`); фото detail/lightbox зберігають свої назви. Валідні leaders фільтруються до вибору single/multiple, без змін CMS. [QA](../docs/seo/audit.md#seo-67-заголовки-детальної-сторінки-служіння--2026-10-26).
-
-- **Footer headings SEO-6.6:** незалежні групи `ChurchFooter` використовують H2 зі сталим рангом на всіх маршрутах; footer є сусідом main, а не підрозділом його останньої секції. `footer-title` зберігає typography без додаткових size utilities. SSR-порівняння до/після має підтвердити незмінність класів/href/optional-data branches; computed styles і розміри звіряти на desktop/mobile. Не додавати H1/main/skip-link до footer через попередження scanner, який трактує компонент як цілу сторінку. [QA](../docs/seo/audit.md#seo-66-заголовки-футера--2026-10-26); ministry detail headings — SEO-6.7, повний D8 окремо.
-
-- **Testimonials/FAQ headings SEO-6.5:** ім’я після цитати — підпис авторства в p, а не новий розділ H6. При заміні heading на p зберігати не лише font-family/size, а й line-height/color/margins; тут `font-heading text-h6 leading-heading text-gray-800 m-0 font-bold`. Контактний підрозділ FAQ має H3 під H2 з `text-h4` для попереднього розміру. Звіряти DOM/SSR та computed styles із baseline на desktop/mobile. Вузький heading QA не засвідчує повну доступність accordion або layout; FAQ disclosure semantics і nav landmark залишаються D8.
-
-- **Section pre-titles SEO-6.4:** OurVision/PastorGreeting використовують абзаци для коротких надзаголовків перед H2; H3 місії лишається вкладеним у OurVision. При заміні heading на p явно зберігати успадкований `font-heading`, решту typography — чинними класами; перевіряти computed styles до/після на desktop/mobile, оскільки один лише незмінний `text-sm` не зберігає font family. Перевіряти повну SSR-сторінку й реальний CTA, не додавати H1/main/nav до section-компонентів за regex-попередженнями. Решта F11 — SEO-6.5+.
-
-- **Card headings/links SEO-6.3:** картки під секційним H2 у `/team` та `/ministries` використовують H3 зі збереженою типографікою. Цілісне посилання вже назване видимим heading; вкладене фото має порожній alt, щоб не повторювати ім’я/назву. Це правило для цих карток, не для самостійних фото detail/lightbox. Перевіряти повний SSR із PageHero/layout, а не додавати H1/main у компоненти через regex scanner warnings. Crawl має охоплювати всі distinct href карток, keyboard/mobile QA — звичайні й почесні картки та ministry grid. Інші section/footer/detail headings лишаються F11/SEO-6.4+.
-
-- Package manager: `pnpm@11.5.1`, pinned in `package.json#packageManager`. Vercel enables Corepack through `vercel.json#build.env.ENABLE_EXPERIMENTAL_COREPACK=1` so local and deployment installs use the same version. Do not infer pnpm's major from `lockfileVersion: 9.0`: pnpm 10 rejects the pnpm 11 string-form `patchedDependencies` metadata with `ERR_PNPM_LOCKFILE_CONFIG_MISMATCH`. Validate dependency/patch changes with a clean `pnpm install --frozen-lockfile` in addition to `pnpm run build`.
-- C4: work in a separate `codex/*` branch; user authorized commit + push after completed tasks for Vercel Preview. Run `pnpm run lint`, `pnpm run typecheck`, `pnpm test`, and `pnpm run build`. CI runs one cached Ubuntu/Node 24 job on PRs to `master` and pushes to `master`; see `docs/ci.md`. Do not add test frameworks or expensive CI suites without a concrete regression/risk. Generated types and agent skill examples are outside ESLint; application/Studio/scripts rules stay enabled, warnings fail CI. C1 adds a third regression for contact validation/delivery with mock HTTP; the workflow itself is unchanged.
-- Keep modules small and single-purpose
-- Fonts are vendored WOFF2 with OFL licenses/source hashes in `public/fonts/`; use `app/fonts.css` and existing family tokens. Do not fetch fonts via `next/font/google` or remote CSS during build/runtime. This avoids Next 16.1.6's intermittent extensionless Google Fonts URL parser failure; see `public/fonts/README.md`.
-- Fix root causes — do not layer workarounds
-- Do not mix unrelated concerns in one component
-- Follow DRY — shared logic belongs in `lib/utils.ts`
-- Every component file exports via named export (not default, except pages)
+- Лише pnpm; версія за `package.json#packageManager`. Не визначати major pnpm за версією lockfile. Після dependency/patch changes перевіряти `pnpm install --frozen-lockfile`.
+- Karpathy: явні припущення, найпростіший достатній код, зміни в межах фази, перевіряльний результат.
+- Маленькі модулі; named exports, крім page/layout conventions. Спільні transformers — у `lib/`, без передчасних абстракцій.
+- Кирилицю редагувати інструментами редагування, не PowerShell pipes/Out-File/redirects. Файли UTF-8.
+- Commit/push — окремий гейт після перевіреної фази; `codex/*` гілки, master через PR. Деталі CI — [docs/ci.md](../docs/ci.md).
 
 ## TypeScript
 
-- Strict mode is required throughout the project
-- Avoid `any` — use explicit interfaces or `unknown` with narrowing
-- Types for Sanity documents live in `sanity/lib/types.ts` (manual) and `sanity/lib/sanity.types.ts` (TypeGen auto)
-- Use TypeGen-generated types where available; fall back to manual types for edge cases
-- All GROQ query results must be typed (either via TypeGen or manual generics on `client.fetch<T>()`)
+- Strict mode, без `any`; `unknown` + narrowing для невідомих даних.
+- Перевага TypeGen results; ручні типи — `sanity/lib/types.ts`. `client.fetch<T>()` має типізований результат.
+- Не редагувати generated `sanity/lib/sanity.types.ts`, `schema.json`, Next route types вручну.
 
 ## Next.js (App Router)
 
-- Default to Server Components — add `'use client'` only when browser interactivity requires it
-- Use `async` Server Components for data fetching (no `useEffect` for initial data)
-- Lazy-load below-fold client components with `next/dynamic`
-- Each page owns its own `queries.ts` for page-specific GROQ queries
-- Shared queries (used on 2+ pages) stay in `sanity/lib/queries.ts`
-- Use `generateStaticParams()` for dynamic SSG routes
-- Use `generateMetadata()` for dynamic SEO
-- Configure all dynamic, CMS-connected pages with `export const revalidate = 60` to enforce Incremental Static Regeneration (ISR)
-- Client-triggered incremental loads ("Завантажити ще") use a **Server Action** (`'use server'`), co-located as `app/(front)/[page]/actions.ts`, that returns already-transformed data for the client to append — no API route, no client-side Sanity client
-- Велику колекцію (тисячі+) фільтруй/шукай/пагінуй на СЕРВЕРІ через GROQ (`match` + slice `[$start...$end]`), а не на клієнті in-memory. **Початковий рендер** читає `searchParams` (прямий лінк/SEO → сторінка dynamic `ƒ`); **інтерактивна зміна фільтра** — клієнтський виклик Server Action (НЕ навігація), що оновлює лише результати, + плавна анімація; URL синхронізуй шалов через `history.replaceState`, не `router.push` (див. `architecture.md` → інваріант 12)
-- Трансформ raw→view-model, спільний для сторінки та Server Action, виноситься в `lib/` (одне джерело правди)
+- Server Components за замовчуванням; `'use client'` лише для browser interactivity. Початковий fetch у server page/layout, без `useEffect` для CMS-контенту.
+- `next/dynamic` — для справді відкладеного клієнтського острівця, не для статичних серверних секцій.
+- Page-specific GROQ у page `queries.ts`; запити для 2+ сторінок — `sanity/lib/queries.ts`; завжди `defineQuery()` з `next-sanity`.
+- Початкові дані та Server Actions використовують той самий transformer; великі колекції шукаються/фільтруються/пагінуються серверно. Не тягнути весь mediaItem dataset у браузер.
+- **Поточний кеш:** `revalidate = 60`, `useCdn: false`; сторінки з `searchParams` динамічні. **Фаза 2 / B6:** статичні маршрути, path pagination, webhook/tags. Не називати всі CMS-сторінки статичними до цієї зміни.
+- Client state на першому рендері має збігатися з SSR; reduced-motion не повинен змінювати початкову розмітку. B6 не скасовує актуальність часових даних.
 
-## Styling
+## Styling and Images
 
-- Use Tailwind CSS v4 utility classes as the primary styling method
-- Use CSS custom property tokens from `globals.css` — no hardcoded hex values
-- Brand gradient: `--gradient-start: #97c74e` → `--gradient-end: #2ab9a5`
-- Primary color: `--color-primary: #4cbd89`
-- Frosted-glass pattern for hero sections — use `PageHero` shared component
-- Follow the border radius scale defined in `globals.css` (`--radius`, `--radius-sm/md/lg`)
-- Button styles use `.btn-*` component classes from `globals.css`
-
-## Data and Storage
-
-- All CMS content comes from Sanity — never hardcode news, events, or ministries
-- Static data (hero slides, testimonials, FAQ items) lives as constants in page files
-- Images from Sanity use `urlFor()` from `@/sanity/lib/image`
-- Для повнорозмірних фото використовувати `originalImageUrl()` + `Image unoptimized`: helper ігнорує crop/hotspot, встановлює `.quality(100)`, не задає `.width()/.height()/.auto()`. Next.js не стискає повторно. Розміри з asset metadata задають layout, а не CDN resize. Це повна роздільність із максимальною якістю CDN, не гарантія побітового оригіналу: навіть базовий URL Sanity може відрізнятися від завантажених байтів, а `dlRaw` вимагає авторизації. Для `news.gallery` проєктувати dimensions/LQIP, перевіряти asset і розміри, зберігати `w-full h-auto`; основне фото входить до тієї самої групи лайтбокса. Ліміт 10 забезпечується Studio validation і захисним обмеженням рендера; порожня галерея не створює секцію. Основне `news.image` валідується через `required().assetRequired()`.
-- Пакетне додавання фото в Studio делегувати штатному `onSelectFile` через `GalleryInput`, із upload-capable source із `useFormBuilder().__internal.image`, без власного Sanity-клієнта, токенів чи перезаписування масиву через stale `set`. У Sanity 4.22 image/object-array input отримує `onSelectFile`, а не optional legacy `onUpload`; контракт звіряти з installed `ArrayOfObjectsField`, а не лише широкими TS-типами. Перевіряти добірку й кількість вільних місць до запуску upload. Regression check: `pnpm exec tsx --env-file=.env.local scripts/check-gallery-input.tsx` (props без `onUpload`). Лайтбокс повторно використовувати через `PhotoViewer`/`ImageLightbox`; modal-dialog має містити всі свої controls, підтримувати клавіатуру й відновлювати фокус.
-- Static images live in `public/images/`
-- The Sanity Client must be configured with `useCdn: false` in `client.ts` to allow background Next.js revalidation fetches to immediately bypass CDN cache and retrieve live, fresh data.
+- Tailwind v4 + tokens із `app/globals.css`; дизайн — [spec 08](specs/08-larexa-redesign.md), не скляні hero/великі радіуси.
+- B4: локальні Montserrat (heading, кирилиця), Roboto (body), Playfair italic (accent), через `next/font/local` у Фазі 1. Зберігати ліцензії; не повертати remote font CSS.
+- B3: inline SVG через CMS-сумісний реєстр у Фазі 1. Поки FA локальний; повний CSS не додавати повторно.
+- B1 скасовує вимогу оригіналів всюди: адаптивні Sanity CDN прев’ю з коректними `sizes`/LQIP, оригінал у viewer/завантаженні. **Код ще використовує q=100/unoptimized до Фази 1**; не вважати міграцію завершеною.
+- `next/image` замість важких CSS-фонів; `preload` лише для LCP. `sizes` враховує фактичний cover-crop, а не лише viewport.
+- Немає asset → `ImagePlaceholder`, а не посилання на неіснуючий файл. У gallery пропускати assets без необхідних dimensions.
 
 ## File Organization
 
-- Для пакетного додавання наявних gallery assets використовувати native array `onInsert`, не `set([...props.value, ...])`. Перед вставкою повторно перевіряти readOnly/залишок/дублікати; кожному image дати унікальний `_key`. Asset picker читає через `useClient` поточної Studio та `defineQuery` з параметрами; запити abort-яться при зміні пошуку/закритті, помилки доступні для retry. Не переносити multi-select на одиночні image-поля.
-- Transitive dependency patch зберігати через `pnpm patch`/`patch-commit` разом із `patches/`, `pnpm-workspace.yaml`, lockfile ([офіційний workflow](https://pnpm.io/cli/patch)). Патч heartbeat logging вузький: не фільтрувати глобальний `console.error`, не змінювати auth/CORS чи retry. Regression: `pnpm exec node scripts/check-studio-reconnect.mjs` — віртуальний timeout 45000ms/145 chars, warning, error event, повторне підключення, справжній transport error і cleanup.
-- `.gitattributes` фіксує `patches/*.patch -text`: не нормалізувати CRLF усередині generated patch, бо pnpm перевіряє hash точних bytes. Для staged whitespace-перевірки таких patch-файлів враховувати `core.whitespace=cr-at-eol`.
-
-- Для пакетного додавання наявних gallery assets використовувати native array `onInsert`, не `set([...props.value, ...])`. Перед вставкою повторно перевіряти readOnly/залишок/дублікати; кожному image дати унікальний `_key`. Asset picker читає через `useClient` поточної Studio та `defineQuery` з параметрами; запити abort-яться при зміні пошуку/закритті, помилки доступні для retry. Не переносити multi-select на одиночні image-поля.
-- Transitive dependency patch зберігати через `pnpm patch`/`patch-commit` разом із `patches/`, `pnpm-workspace.yaml`, lockfile. Патч heartbeat logging вузький: не фільтрувати глобальний `console.error`, не змінювати auth/CORS чи retry. Regression: `pnpm exec node scripts/check-studio-reconnect.mjs` — віртуальний timeout 45000ms/145 chars, warning, error event, повторне підключення, справжній transport error і cleanup.
-
-- `app/(front)/` — Pages and page-scoped components
-- `app/(front)/[page]/components/` — Components used ONLY by that page
-- `app/(front)/[page]/queries.ts` — GROQ queries scoped to that page
-- `components/` — Shared components (barrel via `index.ts`)
-- `components/sections/` — Shared section components (Hero, NewsSlider, PageHero)
-- `components/ui/` — Shared base UI components (MinistryCard)
-- `sanity/lib/` — Sanity utilities, shared queries, types
-- `sanity/schemaTypes/` — Sanity document schemas
-- `lib/` — General utilities
-- `context/` — AI context files (this system)
+- `app/(front)/[page]/components/queries.ts/actions.ts` — page ownership; `components/` — реальний reuse; `lib/` — shared logic.
+- `sanity/schemaTypes/` — CMS, `sanity/components/` — inputs, `sanity/lib/` — client/query/image/types.
+- Активний контекст — `context/*.md`; завершені specs — `context/specs/done/`; історія — `context/archive/` і `docs/archive/`.
+- `patches/*.patch -text` у `.gitattributes`: не змінювати CRLF generated patch. Зміна patch = workspace metadata + lockfile + frozen install. Не фільтрувати глобальний `console.error`.
 
 ## Sanity References
 
-- Усі `reference`-поля в Sanity-схемах ЗАВЖДИ визначаються з `weak: true` — це дозволяє видаляти referenced-документи без блокування
-- При рендері referenced-даних (через GROQ `->`) ЗАВЖДИ перевіряти на `null`: `{data.refField && <Component />}` або `{data.refField?.name && (...)}`
-- TypeScript типи для reference-полів ЗАВЖДИ моделюються як `| null`
-- Якщо referenced-документ видалений — UI gracefully ховає відповідний блок, а не показує помилку або порожні дані
-- При створенні нової Sanity-схеми з reference-полем — обов'язково написати відповідний null-guard у компоненті ДО деплою
+- Кожен `type: 'reference'` у схемах — з `weak: true`.
+- Після GROQ `->` дані nullable: перевіряти reference/обов’язкові поля перед рендером. Видалений документ ховає блок, не ламає сторінку.
+- Nullable ручні типи узгоджувати з реальним результатом; порожні/incomplete leaders фільтрувати до вибору single/grid layout.
 
 ## Rich Text (Portable Text)
 
-- Long-form **body** fields (news `body`, event `body`, ministry `fullDescription`, teamMember `bio`) are **Portable Text** (`type: 'array', of: richTextBlocks`). The toolbar is defined ONCE in `sanity/schemaTypes/objects/richText.ts` (`richTextBlocks`): heading styles H2–H4 + Quote (these set the on-page text size — no custom px decorators), `strong`/`em`/`underline` decorators, bullet & numbered lists, a `link` annotation, and inline images (with `alt`). Add a new rich field by importing `richTextBlocks` and spreading it into `of`.
-- **Excerpt/card fields stay plain** `text` (news), `description` (event), `shortDescription` (ministry) — used by cards, sliders, and SEO meta. Never render Portable Text in a card; never put the card summary inside the rich field.
-- Render bodies with the shared **`PortableTextBody`** Server Component (`components/PortableTextBody.tsx`, exported from `@/components`) — it maps every node to the site's typography (no `prose` plugin is installed, so the `prose` classes are inert; use this component, not raw `<PortableText>`). It also falls back to a plain `<p>` if handed a legacy string, so a not-yet-migrated document never throws.
-- **Detail-page GROQ** must deref inline-image dimensions: `body[]{ ..., _type == "image" => { ..., "dimensions": asset->metadata.dimensions } }` (same for `fullDescription`/`bio`). `next/image` uses those dimensions.
-- For SEO `description` derived from a rich field, use `toPlainText()` from `@portabletext/react` (e.g. team bio); plain excerpt fields need no conversion.
-- Converting a `text` field to Portable Text changes its stored type — run `scripts/migrate-portable-text.ts` (`pnpm migrate:pt`, dry-run by default, `--write` to apply) to convert existing string values to blocks.
+- `news.body`, `event.body`, `ministry.fullDescription`, `teamMember.bio` — shared `richTextBlocks`: H2–H4, Quote, decorators, lists, links, images із alt. Карткові excerpt/description лишаються plain text.
+- Рендер — `PortableTextBody` (server), із legacy-string fallback; не raw PortableText без mappings і не неіснуючий `prose` plugin.
+- Detail GROQ проєктує inline-image `asset->metadata.dimensions`; description із rich text через `toPlainText()`, legacy string перевіряти окремо.
+- Зміна stored type потребує окремої dry-run міграції/backup/revision guard; виконані одноразові міграції не є поточними командами проєкту.
 
-## Sanity Singletons & Site-wide Settings
+## Sanity Singletons & Studio
 
-- **Singleton pattern**: a document type that must have exactly ONE instance (e.g. `siteSettings`) is enforced in two places — (1) `sanity/structure.ts` pins a single fixed list item via `S.document().schemaType('x').documentId('x')` (the `documentId` equals the type name), and (2) `sanity.config.ts` strips `create`/`delete`/`duplicate`/`unpublish` from `document.actions` for that type (see `SINGLETON_TYPES` set). To add a new singleton, register it in both places.
-- **Seed singletons with a fixed `_id`** equal to the type name via `createOrReplace` (idempotent). Pattern: `scripts/seed-site-settings.ts` (dry-run by default, `--write` to commit; needs `SANITY_API_WRITE_TOKEN`).
-- **Server-fetch → client props**: a Client Component (`'use client'`) cannot fetch from Sanity. Fetch the data in the nearest Server Component (the layout/page) and pass it down as props. `app/(front)/layout.tsx` fetches `getSiteSettings()` once and passes `settings` to both `ChurchHeader` (client) and `ChurchFooter` (server) — never fetch the same singleton twice in one render.
-- **`getSiteSettings()` fallback-merge**: `lib/site-settings.ts` reads the `siteSettings` singleton and merges it OVER the `lib/church.ts` defaults — any field left empty in the CMS falls back to `church.ts`, so the UI/JSON-LD never break. `church.ts` is the typed fallback AND the canonical data SHAPE; keep them in sync when adding settings fields.
-- **Extensible "pick + render" lists (social links pattern)**: for a CMS list whose items each need an icon/color/label (e.g. socials), model it as a Sanity **array** of `{ platform, url, label? }` where `platform` is a `string` with `options.list`. Keep the platform→icon/color/label mapping in ONE code registry (`lib/social.ts`: `SOCIAL_PLATFORMS`, `SOCIAL_PLATFORM_OPTIONS`, `resolveSocialLink()`), imported by BOTH the schema (to build the dropdown) and the frontend (to render). A manager adds/reorders any registered platform with zero code; a novel one uses the `other` fallback (generic icon + custom label). `getSiteSettings()` resolves the raw array into render-ready items and derives `sameAs` from their URLs — never hardcode per-platform `<a>` blocks in components.
+- Singleton реєструється в `structure.ts` із fixed documentId і в `sanity.config.ts#SINGLETON_TYPES`; seed fixed `_id`, dry-run by default.
+- `getSiteSettings()` і відповідні homepage/about helpers об’єднують CMS із типізованими фолбеками. Соцмережі — один `lib/social.ts` registry для схеми й рендера.
+- Gallery uploads — нативний `onSelectFile` із upload-capable source; Sanity 4.22 image arrays не передають `onUpload`. Перевіряти installed props, не лише interface.
+- Existing-assets picker — Studio `useClient` + параметризований `defineQuery`, abort старого пошуку, retry; один native `onInsert`, унікальні `_key`, повторна перевірка readOnly/дублів/залишку до 10. Не stale `set([...value])`.
+- QA не пише fixtures у живу CMS. Для inputs перевіряти 0/1/2/10 фото, ліміт 11, search/load-more/keyboard; mock не може вигадувати native callback.
 
 ## SEO & New Pages
 
-- **JSON-LD SEO-5 (2026-10-26).** Усі scripts — через `jsonLdHtml()`; перевіряти round-trip `</script>`, quotes, Unicode. URL detail брати з route slug, IDs стабільні та спільні між сутностями. Dates через `schemaDate()`; CMS `_updatedAt` не доводить редакційного оновлення, media date не доводить uploadDate, publisher не доводить author. Description має походити з видимого body/fallback, із підтримкою legacy string. Не підставляти адресу/статус/організатора події без відповідних даних; Event без дати/назви/місця пропускати. Для YouTube watch використовувати `url` + `embedUrl`, не `contentUrl`. Media JSON-LD живе в `MediaGallery` та слідує поточному cards state. Regression: `pnpm exec node scripts/check-jsonld-seo.mjs`; відрізняти Schema.org валідність від Google eligibility, stale евристики локального validator не є нормативними вимогами.
+- `generateMetadata()` → `getPageMetadata()`, явний canonical; helper повертає повні OG/Twitter objects. Абсолютні URL тільки з `SITE_URL`.
+- Description: власний текст → CMS default → fallback. Social image: detail → CMS ogImage → hero. Title/description очищати; UI-зображення не підміняти social crops.
+- JSON-LD через `jsonLdHtml()` (екранує `<`); стабільні entity IDs та фактичний route slug. Дати через `schemaDate()`; не вигадувати author/uploadDate/адресу/organizer із технічних полів.
+- Видимий контент і structured data мають збігатися. Media ItemList слідує поточному cards state; порожній не емітується. Schema validity не гарантує rich results.
+- Listings: `normalizeListingParams()` до metadata/fetch; безпечні slice/count, 307 для невалідних/дубльованих params, 404 для N поза count, власний canonical непорожньої пагінації. Filter/search — noindex.
+- **До Фази 3:** чинний `lib/seo-readiness.ts` спільний для metadata/sitemap; реєстр порожній, root/header noindex й Disallow збережено. Новий маршрут узгодити зі спільним переліком і sitemap, без автоматичного відкриття індексації.
+- **B2 / Фаза 3:** заміна реєстру перемикачем indexing + документний `seo.noIndex`; опис цілі — у master-plan, код поки старий. Фактичне відкриття — лише [§F](master-plan.md#f-launch-checklist-найостанніший-крок).
 
-Whenever a new public page or a new Sanity content type with a public detail route is added, keep the SEO surface in sync (this is part of the unit's Definition of Done — see `ai-workflow-rules.md`):
+## Security Headers & Contact
 
-- **SEO-4.2 listings (2026-10-26).** Перед metadata/fetch викликати `normalizeListingParams()` з `lib/listing-params.ts`; враховувати `string[]` у searchParams. Невалідний page → 307 зі збереженням скалярного filter, коректний N поза count/порожня порція N≥2 → 404. У GROQ не передавати NaN/небезпечний slice; count перед slice. `LISTING_PER_PAGE` спільний для news/events і sitemap; page-local `cache()` зі скалярними аргументами узгоджує metadata/UI. Для непорожньої пагінації без filter — власний canonical/OG URL; filter/search — noindex і базовий canonical. `listingItems` лише вхід metadata, не вихідне поле. `isListingIndexable()` перевіряє схвалення списку й кожного видимого `_id`+slug; перша порція sitemap проходить той самий критерій і порядок/умови GROQ. Відсутній slug не виключати перед перевіркою готовності списку; порожній список не indexable, зокрема `/media`. Query URL поза початковим sitemap. Регресія `pnpm exec node scripts/check-listing-seo.mjs` перевіряє реальні helper/page/metadata/SSR/sitemap із синтетичними даними без CMS writes; runtime — production HTTP, включно зі звичайним UA та HTML-limited bot. Загальні noindex/Disallow зберігати до SEO-L.
-
-- **SEO-4.1 readiness (2026-10-26).** [Контракт SEO-2.1](../docs/seo/audit.md#політика-готовності-для-seo-4-і-seo-l) реалізований у `lib/seo-readiness.ts`: `SEO_APPROVAL` початково `{ launch: null, pages: [] }`; окреме SEO-L записує origin/date запуску й path/date кожної схваленої сторінки, для CMS також `documentId` (published `_id`, поточний slug у path). `isPageIndexable()` спільний для metadata/sitemap, вимагає `VERCEL_ENV=production` і збігу погодженого origin із `SITE_URL`. Схвалення не виводити з published/slug/body; зміна slug/_id потребує нового запису, суттєві зміни фактів — повторної редакційної перевірки. CMS approval-полів немає. Privacy/Studio/unknown/query URL не проходять; query/пагінація окремо SEO-4.2. Root/header noindex та Disallow переглядати разом лише в SEO-L.
-- **Sitemap reflects indexable URLs.** Add new static routes to `STATIC_SEO_ROUTES` in `lib/seo-readiness.ts`; це перелік наявних маршрутів, не схвалення. For a new Sanity document type with public detail pages, add a branch to `SITEMAP_QUERY`, its mapping and known detail family in the shared predicate. Sitemap читає published-перспективу, відбирає за спільним критерієм і прибирає дублікати; початково 0 URL. Сам запис у sitemap не надає дозволу на індексацію. Статичним URL не вигадувати lastmod; CMS використовує тільки валідний `_updatedAt`, без дати генерації як fallback.
-- **Placeholders are excluded.** Unfinished pages use `export const metadata = { robots: { index: false } }` and stay outside the launch sitemap. Знімати noindex та додавати до sitemap можна лише після редакційного схвалення й окремого дозволу SEO-L, зі збереженням обмежень незавершених сторінок.
-- **Dynamic CMS content is automatic.** Existing types covered by `SITEMAP_QUERY` need no manual query edits per item. Відбір застосовується лише до схвалених published-документів за `_id` + path; неперевірений новий матеріал за замовчуванням не indexable. Схвалений, але видалений/unpublished документ не потрапляє у sitemap; дата схвалення не є lastmod.
-- **Pre-launch noindex (SEO-2.2).** Root `app/layout.tsx` задає `robots: { index: false, follow: true }`, `next.config.ts` — `X-Robots-Tag: noindex` на `/:path*`, включно з не-HTML ресурсами/RSC. Page-specific robots замінює батьківський об’єкт цілком: зберігати noindex (privacy/studio вже мають власні). Перевіряти production-build HTML та HTTP, одного typecheck недостатньо. Перед SEO-L разом переглянути root/header/per-page правила за спільною readiness-політикою; нових env-перемикачів немає.
-- **Site-wide `robots.ts`** лишається `Disallow: /` до окремого дозволу SEO-L. Noindex є додатковим сигналом, не контролем доступу: за Disallow crawler може його не прочитати, відсутність URL у пошуку не гарантована. F01/platform protection залишається відкритим; не знімати жодних обмежень без явного дозволу користувача.
-- **Add JSON-LD** appropriate to the new page type (load the `schema-markup` skill): Article/NewsArticle, Event, Person, BreadcrumbList, etc. Absolute URLs come from `SITE_URL` (`lib/site.ts`).
-- **Render JSON-LD safely.** Serialize with `jsonLdHtml()` from `lib/utils.ts` (escapes `<` → `<`) inside `dangerouslySetInnerHTML` — never raw `JSON.stringify`, so CMS content containing `</script>` cannot break out of the `<script>` tag.
-- **Canonical + social (SEO-3.1/3.2).** Статичні та 4 dynamic detail-шаблони використовують `generateMetadata()` → `getPageMetadata(path, page)` з `lib/metadata.ts`; передавати чинні title/description та явний `alternates.canonical`. Helper повертає повні OG/Twitter objects (Next.js не робить deep merge), узгоджені title/description/URL, siteName/uk_UA/image. Власний опис → наявний CMS defaultDescription → кодовий fallback; для detail — excerpt або `toPlainText()` із rich text (legacy string перевіряти через typeof), до 160 символів. Team зберігає попередній fallback за ім’ям. Опційний `image: {url,width,height,alt}` — лише вхід helper, не поле вихідного Metadata; фото матеріалу 1200×630 для social → CMS ogImage → hero fallback, title/description/image alt очищаються. Не змінювати заради social повнорозмірні фото UI. Root задає metadataBase/keywords/noindex, але НЕ глобальний canonical. Privacy поки без canonical, із власним noindex. Missing slug лишається 404/noindex; metadata без фото перевіряти окремо від UI, null-ref/JSON-LD — SEO-5.
-
-## Security Headers & CSP
-
-- HTTP security headers live in `next.config.ts` (`headers()`): `X-Content-Type-Options: nosniff`, `Referrer-Policy`, `X-Frame-Options: SAMEORIGIN`, `Strict-Transport-Security`, `Permissions-Policy` — **enforced on all routes**.
-- The Content-Security-Policy is currently **`Content-Security-Policy-Report-Only`** (non-blocking) with `/studio` excluded (Studio needs `unsafe-eval`/blob/ws). Flip it to the enforcing `Content-Security-Policy` only after a runtime smoke test (homepage scripts, Sanity images, Google Maps embed, Studio) — see `master-plan.md` → C2.
-- Adding any external embed/script (e.g. YouTube for /media) requires updating the matching CSP source list (`frame-src`/`img-src`/`connect-src`).
+- Headers у `next.config.ts`; CSP наразі Report-Only, Studio виключене. Enforce без nonce — Фаза 7/B8 після runtime smoke; allowlist звіряти з реальними embeds.
+- Контактний Action: server Zod/honeypot; server-only mail/Redis, plain text, visitor email лише Reply-To, recipient тільки env/CMS. Durable atomic limiter із TTL; fail closed без конфігурації/Redis. Значення зберігати при помилці, статус оголошувати доступно.
+- Жодних секретів у public env, Git, logs або raw Sanity error dumps. Виводити лише безпечні code/status. `.env.example` містить імена й порожні secrets.
+- [Контактна форма](../docs/contact-form.md) описує конфіг і межі mock QA; реальна доставка потребує окремого тесту.
 
 ## Accessibility (WCAG 2.2 AA)
 
-- **News heading/links SEO-6.2:** у `/news` картки та незалежні sidebar-блоки мають H2 під єдиним PageHero H1; empty-state також H2. Візуальний розмір визначають чинні класи. Повторне «Читати далі» доповнювати `sr-only` назвою конкретного матеріалу, залишаючи видимі слова в accessible name. Для фото-посилання з absolutely positioned Image задавати ненульову площу (`absolute inset-0`) і inset outline в overflow wrapper; перевіряти actual browser focus. Sidebar category links позначають поточний вибір через `aria-current`. Footer/решта карток і секцій ще не уніфіковані (F11/SEO-6.3+).
+- Один H1, rank за структурою повної сторінки, розмір через CSS. Pre-title/підпис автора — не новий heading. Sidebar/footer rank не залежить від кількості карток.
+- Нативні button/link/details/dialog, accessible names, `aria-current` для активної навігації; disclosure `aria-expanded`, закритий вміст не фокусується. Декоративні icons/images приховані від AT, якщо visible label уже називає посилання.
+- Текст ≥4.5:1; на світлому green text/focus — `text-primary-text`; білий текст лише на `.bg-grad-readable`, без opacity-зниження. Глобальний focus-visible не прибирати без заміни.
+- DOM порядок відповідає читанню/Tab; hidden carousel slides inert; автоплей не додавати. Native dialog: Esc/бекдроп/стрілки/межі/scroll lock/focus restore, усі controls всередині modal, mobile без overflow.
+- Перевірки UI на 1280/390/320px та клавіатурою; SSR/regex/VM PASS не засвідчує browser hydration чи повний WCAG. Незакриті проблеми — Фаза 6.
 
-- **Heading/links SEO-6.1:** рівень heading визначається структурою, а розмір — CSS; pre-title і повторне ім’я не потребують heading. `HeroSlider` залишає один H1 активного слайда, неактивні групи — `inert` + `aria-hidden`. Autoplay має видиме pause/play, focus stop, hover pause і reduced-motion default; pointer-down стан кнопки зберігається до click, щоб focus stop не перетворював pause click на play. CTA без href не підмінювати `#`; внутрішні fragments перевіряти на реальний id цілі та відступ під fixed header. `scripts/check-heading-seo.mjs` перевіряє справжній компонент через VM state/SSR; browser keyboard/mobile QA лишається окремою перевіркою. Інші heading templates ще не уніфіковані (F11/SEO-6.2+).
+## Verification
 
-- **Color contrast**: text on white must be ≥4.5:1. Use `text-gray-600`/`text-gray-800` for readable body text — `--color-gray-500`/`-600` are tuned to pass AA. Verify new color pairs with `.agents/skills/a11y-audit/scripts/contrast_checker.py "<fg>" "<bg>"`.
-- **White text on gradients** goes only on the darker `--gradient-btn-*` (`.btn-grad` / `.bg-grad-readable`), never the bright decorative `--gradient-start/end`. Keep normal copy opaque; do not lower the opacity of enabled buttons on hover. `.gradient-text` uses dark stops on light surfaces. White-button labels must remain dark inside `.all-text-white`.
-- **Focus**: rely on the global `:focus-visible` outline; never set `outline:none`/`ring-0` without an equally visible replacement.
-- **Green text on light backgrounds**: use `text-primary-text` (`--color-primary-text: #216e4e`), including hover/active states; `--color-primary` remains the bright decorative accent. Do not lower link opacity on hover. Focus rings/borders must stay opaque and visible.
-- **Interactive elements**: use native `<button>`/`<a>`; menus/disclosures need `aria-haspopup`/`aria-expanded`, keyboard open/close (Escape), and must not be hover-only. Active nav links get `aria-current="page"`.
-- **Decorative icons** (`<i class="fa…">`, inline SVG) get `aria-hidden="true"`; icon-only controls get an `aria-label`.
-- **Images**: section/hero backgrounds use `next/image` (`fill priority`, empty `alt=""` when decorative), not CSS `background-image`.
-- **Font Awesome** is self-hosted (`@fortawesome/fontawesome-free`, imported in `app/layout.tsx`) — do not re-add the cdnjs `<link>`.
+`pnpm run lint`, `pnpm run typecheck`, `pnpm test`, `pnpm run build`; Windows довгі команди через `cmd /c`. Поточні `check-*.mjs` збережені до Фази 7; не розширювати VM-імітацію як заміну browser QA.
+
+Для runtime performance — production build, `scripts/measure-seo-performance.mjs`, 3 зіставні прогони та медіани. Одна серія до/після на фазу; записати профіль і суттєві warnings. Simulated Lighthouse не є польовими CWV/INP. Для Фази 0 без runtime-змін Lighthouse/скриншоти не дають нового доказу: перевірити незмінність source, залежності ресурсів і build.
 
 ## Naming Conventions
 
-- Components: PascalCase (`EventsSlider.tsx`)
-- Utilities: camelCase (`formatDate`)
-- GROQ queries: UPPER_SNAKE_CASE (`NEWS_PAGINATED_QUERY`)
-- CSS classes: kebab-case with BEM-like prefixes (`btn-grad`, `container-larexa`)
-- Sanity types: `Sanity` prefix (`SanityNews`, `SanityMinistry`)
+Компоненти PascalCase; helpers camelCase; GROQ UPPER_SNAKE_CASE; CSS kebab-case; ручні CMS-типи з префіксом Sanity.

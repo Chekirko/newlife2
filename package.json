@@ -10,7 +10,6 @@
     "lint": "eslint . --max-warnings=0",
     "typecheck": "pnpm run typegen && next typegen && tsc --noEmit",
     "test": "tsx --env-file-if-exists=.env.local scripts/check-gallery-input.tsx && node scripts/check-studio-reconnect.mjs && tsx --conditions=react-server scripts/check-contact-form.ts",
-    "migrate": "tsx scripts/migrate.ts",
     "seed:site": "tsx scripts/seed-site-settings.ts",
     "seed:homepage": "tsx scripts/seed-homepage.ts",
     "seed:testimonials": "tsx scripts/seed-testimonials.ts",
@@ -18,8 +17,6 @@
     "seed:homepage-sections": "tsx scripts/seed-homepage-sections.ts",
     "seed:about": "tsx scripts/seed-about-page.ts",
     "seed:media": "tsx scripts/seed-media.ts",
-    "migrate:pt": "tsx scripts/migrate-portable-text.ts",
-    "migrate:multi-responsible": "tsx scripts/migrate-multi-responsible.ts",
     "typegen": "sanity schema extract && sanity typegen generate",
     "prebuild": "sanity schema extract && sanity typegen generate"
   },
