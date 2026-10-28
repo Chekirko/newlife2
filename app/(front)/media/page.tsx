@@ -1,12 +1,11 @@
 import type { Metadata } from 'next'
 import { cache } from 'react'
-import { normalizeListingParams, type ListingSearchParams } from '@/lib/listing-params'
 import { getPageMetadata } from '@/lib/metadata'
 import { LiveBanner, PageHero } from '@/components'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
-import { toMediaCard, toMatchQuery, type RawMediaItem } from '@/lib/media'
+import { toMediaCard, type RawMediaItem } from '@/lib/media'
 import {
   MEDIA_SEARCH_QUERY,
   MEDIA_COUNT_QUERY,
@@ -17,45 +16,39 @@ import { getLiveVideoId } from '@/lib/live-stream'
 import { renderMediaCards } from './components/MediaCard'
 import { MediaGallery } from './components/MediaGallery'
 
-export const revalidate = 60 // Revalidate page every 60 seconds
 
-type Props = { searchParams: Promise<ListingSearchParams> }
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-  const { filtered, filters: { category, speaker, q } } = normalizeListingParams('/media', await searchParams)
-  const { itemsRaw } = await getMediaListing(category, speaker, q)
+export async function generateMetadata(): Promise<Metadata> {
+  const { itemsRaw } = await getMediaListing()
   return getPageMetadata('/media', {
     title: 'Медіа | Церква «Нове Життя»',
     description:
       'Проповіді, трансляції богослужінь, пісні та відео церкви «Нове Життя» у Бориславі.',
     alternates: { canonical: '/media' },
-    ...(filtered || itemsRaw.length === 0 ? { robots: { index: false, follow: true } } : {}),
+    ...(itemsRaw.length === 0 ? { robots: { index: false, follow: true } } : {}),
   })
 }
 
-const getMediaListing = cache(async (category: string, speaker: string, q: string) => {
+const getMediaListing = cache(async () => {
   const params = {
-    category,
-    speaker,
-    q: toMatchQuery(q),
+    category: '',
+    speaker: '',
+    q: '',
     start: 0,
     end: MEDIA_PER_PAGE,
   }
 
   const [itemsRaw, total] = await Promise.all([
-    client.fetch<RawMediaItem[]>(MEDIA_SEARCH_QUERY, params),
-    client.fetch<number>(MEDIA_COUNT_QUERY, { category, speaker, q: params.q }),
+    sanityFetch<RawMediaItem[]>(MEDIA_SEARCH_QUERY, params, ['mediaItem']),
+    sanityFetch<number>(MEDIA_COUNT_QUERY, { category: '', speaker: '', q: '' }, ['mediaItem']),
   ])
   return { itemsRaw, total }
 })
 
-export default async function MediaPage({
-  searchParams,
-}: Props) {
-  const { filters: { category, speaker, q } } = normalizeListingParams('/media', await searchParams)
+export default async function MediaPage() {
   const [{ itemsRaw, total }, speakers, heroes, settings] = await Promise.all([
-    getMediaListing(category, speaker, q),
-    client.fetch<string[]>(MEDIA_SPEAKERS_QUERY),
+    getMediaListing(),
+    sanityFetch<string[]>(MEDIA_SPEAKERS_QUERY, {}, ['mediaItem']),
     getPageHeroes(),
     getSiteSettings(),
   ])
@@ -86,9 +79,6 @@ export default async function MediaPage({
             initialViews={renderMediaCards(cards)}
             total={total}
             speakers={speakers}
-            category={category}
-            speaker={speaker}
-            q={q}
           />
         </div>
       </section>

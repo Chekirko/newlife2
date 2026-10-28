@@ -36,7 +36,7 @@ export function SidebarCategories({ categories, activeCategory }: SidebarCategor
         {categories.map((cat) => (
           <li key={cat}>
             <Link
-              href={`/news?category=${encodeURIComponent(cat)}`}
+              href={`/news/category/${encodeURIComponent(cat)}`}
               aria-current={activeCategory === cat ? 'page' : undefined}
               className={`flex items-center justify-between px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 activeCategory === cat

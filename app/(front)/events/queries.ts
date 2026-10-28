@@ -6,7 +6,7 @@ import { defineQuery } from 'next-sanity'
 
 /** Paginated events/announcements, newest first (incl. past). Params: $start, $end */
 export const EVENTS_PAGINATED_QUERY = defineQuery(`
-  *[_type == "event" && defined(startDate)] | order(startDate desc) [$start...$end] {
+  *[_type == "event" && defined(startDate)] | order(startDate desc, _id asc) [$start...$end] {
     _id,
     type,
     title,
@@ -51,4 +51,8 @@ export const EVENT_BY_SLUG_QUERY = defineQuery(`
     image,
     "imageDimensions": image.asset->metadata.dimensions
   }
+`)
+
+export const EVENT_SLUGS_QUERY = defineQuery(`
+  *[_type == "event" && defined(slug.current)]{ "slug": slug.current }
 `)

@@ -31,6 +31,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return ['/news', '/events', '/news/category/:category'].flatMap((base) => [
+      { source: `${base}/page/:n(0*1)`, destination: base, permanent: false },
+      { source: `${base}/page/:zeros(0+):n([1-9]\\d*)`, destination: `${base}/page/:n`, permanent: false },
+    ]);
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     // Next 16 only allows quality values listed here (default [75]); 90 is used

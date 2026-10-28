@@ -1,7 +1,7 @@
 'use client'
 
 import { ControlIcon as Icon } from '@/components/ui/ControlIcon'
-import { useEffect, useState, useTransition, type ReactNode } from 'react'
+import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode } from 'react'
 import { clsx } from 'clsx'
 import type { MediaCardItem } from './MediaCard'
 import { loadMoreMedia, searchMedia } from '../actions'
@@ -14,7 +14,8 @@ import { getYouTubeEmbedUrl } from '@/lib/youtube'
 // searchMedia server action inside a transition; the grid dims while loading and
 // the result set swaps in place (no remount, so no flicker/stale frame). The URL
 // is synced shallowly (history.replaceState) so links stay shareable. The first
-// batch comes pre-rendered from the server (direct links / SEO). "Завантажити ще"
+// batch comes pre-rendered from the static page. URL filters load after hydration.
+// "Завантажити ще"
 // appends the next batch via loadMoreMedia. Clicking a card opens the Lightbox.
 // =========================================
 
@@ -34,9 +35,6 @@ interface MediaGalleryProps {
   initialViews: ReactNode[]
   total: number
   speakers: string[]
-  category: string
-  speaker: string
-  q: string
 }
 
 export function MediaGallery({
@@ -44,35 +42,51 @@ export function MediaGallery({
   initialViews,
   total: initialTotal,
   speakers,
-  category: initialCategory,
-  speaker: initialSpeaker,
-  q: initialQ,
 }: MediaGalleryProps) {
   const [isPending, startTransition] = useTransition()
+  const requestVersion = useRef(0)
 
   // Committed filter state (drives the server action + the shallow URL).
-  const [category, setCategory] = useState(initialCategory)
-  const [speaker, setSpeaker] = useState(initialSpeaker)
-  const [q, setQ] = useState(initialQ)
-  const [search, setSearch] = useState(initialQ) // search-box value (debounced into q)
+  const [category, setCategory] = useState('')
+  const [speaker, setSpeaker] = useState('')
+  const [q, setQ] = useState('')
+  const [search, setSearch] = useState('') // search-box value (debounced into q)
 
   const [cards, setCards] = useState(initialCards)
   const [total, setTotal] = useState(initialTotal)
   const [views, setViews] = useState(initialViews)
 
   // Apply a new filter: update state, sync the URL shallowly, fetch the first page.
-  const applyFilter = (next: { category: string; speaker: string; q: string }) => {
-    setCategory(next.category)
-    setSpeaker(next.speaker)
-    setQ(next.q)
+  const applyFilter = useCallback((next: { category: string; speaker: string; q: string }) => {
+    const version = ++requestVersion.current
     window.history.replaceState(null, '', buildUrl(next))
     startTransition(async () => {
+      setCategory(next.category)
+      setSpeaker(next.speaker)
+      setQ(next.q)
+      setSearch(next.q)
       const res = await searchMedia(next)
+      if (version !== requestVersion.current) return
       setCards(res.cards)
       setViews(res.views)
       setTotal(res.total)
     })
-  }
+  }, [])
+
+  useEffect(() => {
+    const restoreFilters = () => {
+      const params = new URLSearchParams(window.location.search)
+      const category = params.get('category')?.trim() ?? ''
+      applyFilter({
+        category,
+        speaker: category === 'проповідь' ? params.get('speaker')?.trim() ?? '' : '',
+        q: params.get('q')?.trim() ?? '',
+      })
+    }
+    if (window.location.search) restoreFilters()
+    window.addEventListener('popstate', restoreFilters)
+    return () => window.removeEventListener('popstate', restoreFilters)
+  }, [applyFilter])
 
   // Debounce the search box into a committed query.
   useEffect(() => {
@@ -90,8 +104,10 @@ export function MediaGallery({
   const onSpeaker = (value: string) => applyFilter({ category, speaker: value, q: search })
 
   const loadMore = () => {
+    const version = requestVersion.current
     startTransition(async () => {
       const more = await loadMoreMedia({ category, speaker, q, start: cards.length })
+      if (version !== requestVersion.current) return
       setCards((prev) => [...prev, ...more.cards])
       setViews((prev) => [...prev, ...more.views])
     })

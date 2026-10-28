@@ -10,7 +10,7 @@
 // Server-only (uses the Sanity client). Consumer: app/(front)/page.tsx.
 // =========================================
 
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { urlFor } from '@/sanity/lib/image'
 import { HOMEPAGE_QUERY } from '@/sanity/lib/queries'
 import type { HOMEPAGE_QUERYResult } from '@/sanity/lib/sanity.types'
@@ -38,11 +38,7 @@ export async function getHomepage(): Promise<{
   whatYouFind: MinistryItem[]
   featuredSermon: RawMediaItem | null
 }> {
-  const data = await client.fetch<HOMEPAGE_QUERYResult>(
-    HOMEPAGE_QUERY,
-    {},
-    { next: { revalidate: 60 } },
-  )
+  const data = await sanityFetch<HOMEPAGE_QUERYResult>(HOMEPAGE_QUERY, {}, ['homepage','mediaItem'])
 
   const cmsSlides = (data?.heroSlides ?? [])
     .filter((s) => s.image && s.title)

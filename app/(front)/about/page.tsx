@@ -50,7 +50,6 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export const revalidate = 60
 
 export default async function AboutPage() {
   const [heroes, settings, about] = await Promise.all([

@@ -13,7 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export const revalidate = 60 // Revalidate page every 60 seconds
 
 const timelineEvents = [
   {

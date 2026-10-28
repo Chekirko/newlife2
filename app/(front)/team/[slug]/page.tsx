@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
 import { ImagePlaceholder, PageHero, PhotoViewer, PortableTextBody } from '@/components'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getPageMetadata } from '@/lib/metadata'
 import { getSiteSettings } from '@/lib/site-settings'
@@ -13,11 +13,10 @@ import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
 import type { SanityTeamMember } from '@/sanity/lib/types'
 import { jsonLdHtml } from '@/lib/utils'
 
-export const revalidate = 60 // Revalidate page every 60 seconds
 
 // SSG (senior-frontend skill: generateStaticParams pattern)
 export async function generateStaticParams() {
-  const slugs = await client.fetch<{ slug: string }[]>(TEAM_MEMBER_SLUGS_QUERY)
+  const slugs = await sanityFetch<{ slug: string }[]>(TEAM_MEMBER_SLUGS_QUERY, {}, ['teamMember'])
   return slugs.map((s) => ({ slug: s.slug }))
 }
 
@@ -26,9 +25,7 @@ export async function generateMetadata({
   params,
 }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const member = await client.fetch<SanityTeamMember | null>(
-    TEAM_MEMBER_BY_SLUG_QUERY, { slug }
-  )
+  const member = await sanityFetch<SanityTeamMember | null>(TEAM_MEMBER_BY_SLUG_QUERY, { slug }, ['teamMember'])
   if (!member) return { title: 'Служитель не знайдений' }
   const plainBio = typeof member.bio === 'string' ? member.bio : member.bio ? toPlainText(member.bio) : ''
   return getPageMetadata(`/team/${slug}`, {
@@ -50,7 +47,7 @@ export default async function TeamMemberPage({
 }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
   const [member, heroes, settings] = await Promise.all([
-    client.fetch<SanityTeamMember | null>(TEAM_MEMBER_BY_SLUG_QUERY, { slug }),
+    sanityFetch<SanityTeamMember | null>(TEAM_MEMBER_BY_SLUG_QUERY, { slug }, ['teamMember']),
     getPageHeroes(),
     getSiteSettings(),
   ])

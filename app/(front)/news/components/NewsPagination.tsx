@@ -1,5 +1,6 @@
 import { Icon } from '@/components/ui/Icon'
 import Link from 'next/link'
+import { listingHref } from '@/lib/listing-params'
 
 interface NewsPaginationProps {
   currentPage: number
@@ -10,13 +11,7 @@ interface NewsPaginationProps {
 export function NewsPagination({ currentPage, totalPages, category }: NewsPaginationProps) {
   if (totalPages <= 1) return null
 
-  const buildHref = (page: number) => {
-    const params = new URLSearchParams()
-    if (page > 1) params.set('page', String(page))
-    if (category) params.set('category', category)
-    const qs = params.toString()
-    return `/news${qs ? `?${qs}` : ''}`
-  }
+  const buildHref = (page: number) => listingHref('/news', page, category)
 
   // Show at most 5 page numbers centered on current
   const getPageNumbers = (): number[] => {
@@ -42,6 +37,7 @@ export function NewsPagination({ currentPage, totalPages, category }: NewsPagina
           {currentPage > 1 ? (
             <Link
               href={buildHref(currentPage - 1)}
+              aria-label="Попередня сторінка новин"
               className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary hover:text-primary-text transition-all duration-200"
             >
               <Icon className="fas fa-chevron-left text-xs" />
@@ -57,7 +53,7 @@ export function NewsPagination({ currentPage, totalPages, category }: NewsPagina
         {getPageNumbers().map((page) => (
           <li key={page}>
             {page === currentPage ? (
-              <span className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-semibold text-white bg-grad-readable">
+              <span aria-current="page" className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-semibold text-white bg-grad-readable">
                 {page}
               </span>
             ) : (
@@ -76,6 +72,7 @@ export function NewsPagination({ currentPage, totalPages, category }: NewsPagina
           {currentPage < totalPages ? (
             <Link
               href={buildHref(currentPage + 1)}
+              aria-label="Наступна сторінка новин"
               className="inline-flex items-center justify-center min-w-[42px] h-[42px] px-3 rounded-lg text-sm font-medium text-gray-700 bg-white border border-gray-200 hover:bg-gray-50 hover:border-primary hover:text-primary-text transition-all duration-200"
             >
               <Icon className="fas fa-chevron-right text-xs" />

@@ -14,7 +14,7 @@ import { OurVision } from './components/OurVision'
 import { Ministries } from './components/Ministries'
 import { EventsSlider } from './components/EventsSlider'
 import { FeaturedSermon } from './components/FeaturedSermon'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { NEWS_QUERY } from '@/sanity/lib/queries'
 import { EVENTS_QUERY, SENIOR_PASTOR_QUERY } from './queries'
 import { LATEST_SERMON_QUERY } from './media/queries'
@@ -40,7 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export const revalidate = 60 // Revalidate page every 60 seconds
+export const revalidate = 3600
 
 export default async function HomePage() {
   // Fetch news, events, site settings and homepage content from Sanity.
@@ -52,12 +52,12 @@ export default async function HomePage() {
     today: startOfKyivDay(_now),
   }
   const [newsRaw, eventsRaw, settings, homepage, pastor, latestSermonRaw] = await Promise.all([
-    client.fetch<SanityNews[]>(NEWS_QUERY),
-    client.fetch<SanityEvent[]>(EVENTS_QUERY, eventParams),
+    sanityFetch<SanityNews[]>(NEWS_QUERY, {}, ['news','ministry']),
+    sanityFetch<SanityEvent[]>(EVENTS_QUERY, eventParams, ['event'], 3600),
     getSiteSettings(),
     getHomepage(),
-    client.fetch<SENIOR_PASTOR_QUERYResult>(SENIOR_PASTOR_QUERY),
-    client.fetch<RawMediaItem | null>(LATEST_SERMON_QUERY),
+    sanityFetch<SENIOR_PASTOR_QUERYResult>(SENIOR_PASTOR_QUERY, {}, ['teamMember']),
+    sanityFetch<RawMediaItem | null>(LATEST_SERMON_QUERY, {}, ['mediaItem']),
   ])
 
   // "Актуальне слово": the manually-picked sermon (homepage.featuredSermon) wins;

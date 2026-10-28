@@ -1,10 +1,10 @@
 # Progress Tracker
 
-## Поточний стан — 2026-10-27
+## Поточний стан — 2026-10-28
 
 Єдиний чинний план — [master-plan.md](master-plan.md); дизайн — [spec 08](specs/08-larexa-redesign.md); процес — [ai-workflow-rules.md](ai-workflow-rules.md). Гілка `codex/seo-1-audit`; робота ще не злита в `master`. Сайт до запуску, індексація закрита.
 
-Рішення користувача: адаптивні Sanity-прев’ю + оригінал у лайтбоксі/завантаженні; Montserrat для заголовків; статичний hero; Larexa; static-first; робота фазами. B1/B3/B4 реалізовано у Фазі 1; static-first і редизайн ще попереду.
+Рішення користувача: адаптивні Sanity-прев’ю + оригінал у лайтбоксі/завантаженні; Montserrat для заголовків; статичний hero; Larexa; static-first; робота фазами. B1/B3/B4 реалізовано у Фазі 1; Static-first реалізовано у Фазі 2; редизайн ще попереду.
 
 ## Фаза 0 — завершено
 
@@ -24,9 +24,18 @@
 - Lighthouse mobile, 3 прогони/медіани: Performance головна 61→77, новина 66→74, служіння 59→74, фото 45→79, контакти 60→85. Метод, LCP/байти й обмеження — [звіт](../docs/phase1-performance.md); загальна ціль ≥95 ще попереду. Архітектуру/UI/стандарти/scope оновлено; індексація закрита.
 - Доопрацювання після рев’ю: шрифти обрізано до latin+cyrillic (головна 349→137 КБ, preload 259→91 КБ); фото пастора знову SVG `<image>` (ризик WebKit із foreignObject); карта знову iframe одразу (фасад відхилено користувачем); фото команди знову з desktop-паралаксом через `image-set` q90 (AVIF у Next = quality−20, q75 розмивав обличчя), а не 5-МБ оригінал; hero після першого фото монтує сусідні слайди; іконка «Що очікувати» лише зі списку; гігієна імпортів/CSS/fallback. Lint, typecheck, 4 регресії, build 42/42 PASS; Lighthouse не перезапускався.
 
+## Фаза 2 — код завершено
+
+- Публічний Sanity fetch — published/force-cache, теги типів і referenced-даних; підписаний webhook, `live.ts` видалено.
+- SSG новин/подій, path pagination і news categories (noindex); нові params — на вимогу. Часові сторінки мають годинну страховку.
+- Статичний /media + URL-фільтри через Actions після hydration; back/forward і захист від запізнілих відповідей. Фото мають стабільний порядок та унікальні ID.
+- Build 55/55: усі public routes ○/●; lint/typecheck/4 регресії PASS. HTTP/Chrome QA, 320/390/1280px, кирилиця, redirects/404, signed webhook HIT→STALE→HIT — PASS.
+- Lighthouse mobile (3 прогони, медіани): головна 81, новина 88, служіння 88, фото 87, контакти 86; [до/після й межі](../docs/phase2-performance.md). Ціль ≥95 ще попереду.
+- Зовнішній webhook Sanity→Vercel ще налаштовує власник за [інструкцією](../docs/sanity-revalidation.md). CMS/production env не змінювались; індексація закрита.
+
 ## Далі
 
-Фаза 2: static-first, tagged fetch/webhook, path pagination/static params, стабільний порядок фото. Повний перелік і критерії — master-plan §C; Фаза 2 ще не розпочата.
+Фаза 3: єдиний перемикач індексації, SEO-поля й structured data. Перелік і критерії — master-plan §C; запуск індексації лишається окремим явним рішенням.
 
 Контент, privacy, ротація раніше засвіченого Sanity-токена й конфігурація сервісів — [дії власника](master-plan.md#d-дії-власника-не-код). Запуск — лише за окремим явним «готово» згідно з [launch checklist](master-plan.md#f-launch-checklist-найостанніший-крок).
 

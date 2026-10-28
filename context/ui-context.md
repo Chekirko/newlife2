@@ -46,11 +46,11 @@
 
 - Головна зараз: Hero → умовний Live → події → місія/OurVision → пастор → розклад → «Що ви знайдете» → новини → свідчення → FAQ → «Актуальне слово» → CTA. Hero стане статичним у Фазі 5.1. Проповідь — CMS featured reference, fallback на найновішу; немає даних — секцію сховати.
 - PageHero та inline news/event heroes замінюються `PageTitle` у Фазах 4–5. Background через Next Image, breadcrumbs із label/current/контрастом, без скляної картки.
-- News/events — PostCard + SidebarWidget + server Pagination. Видимий label «Читати далі» доповнювати sr-only назвою. Порядок DOM має відповідати mobile читанню.
+- News/events мають статичну path pagination (`/news/page/2`, `/events/page/2`); категорії — `/news/category/<назва>` з noindex та вкладеною пагінацією. Цільовий дизайн — PostCard + SidebarWidget + server Pagination. Видимий label «Читати далі» доповнювати sr-only назвою. Порядок DOM має відповідати mobile читанню.
 - Team/ministry cards — heading H3 під H2 секції; фото в цілісному named link має alt="". Detail фото має власний опис; немає фото — ImagePlaceholder. Ministry detail: 1 leader — singular, 2+ — grid; невирішені refs не рендерити. Responsibility масив: на загальній картці перший, на detail всі.
 - `/about` бере місію, історію, віровчення, цінності, очікування, статистику й CTA з singleton. Перехід на Larexa описано в spec 08; статистика лишається статичним текстом, не animated counters.
-- Media: search/speaker/category через Server Actions, без повного reload; pending dim, результати міняються без keyed remount. Load-more по 12, aria-live count. Кнопки фільтрів у цільовому UI — aria-pressed.
-- `/media/photos` — агрегат ministry galleries, бенто, 12 + load-more; title служіння лише в alt. Поточний shuffle per-ISR підлягає впорядкуванню за планом.
+- Media: статичний initial batch, URL-фільтри відновлюються після hydration/popstate; search/speaker/category через Server Actions, без повного reload; pending dim, результати міняються без keyed remount. Load-more по 12, aria-live count. Кнопки фільтрів у цільовому UI — aria-pressed.
+- `/media/photos` — агрегат ministry galleries, бенто, 12 + load-more; title служіння лише в alt. Порядок стабільний: порядок служінь, title/ID для однакових значень, потім CMS-масив фото.
 
 ## Photos and Viewers
 

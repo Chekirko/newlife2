@@ -18,11 +18,11 @@
 
 ## Next.js (App Router)
 
-- Server Components за замовчуванням; `'use client'` лише для browser interactivity. Початковий fetch у server page/layout, без `useEffect` для CMS-контенту.
+- Server Components за замовчуванням; `'use client'` лише для browser interactivity. Початковий fetch у server page/layout; URL-фільтри статичної медіатеки відновлюються після hydration через Server Actions.
 - `next/dynamic` — для справді відкладеного клієнтського острівця, не для статичних серверних секцій.
 - Page-specific GROQ у page `queries.ts`; запити для 2+ сторінок — `sanity/lib/queries.ts`; завжди `defineQuery()` з `next-sanity`.
 - Початкові дані та Server Actions використовують той самий transformer; великі колекції шукаються/фільтруються/пагінуються серверно. Не тягнути весь mediaItem dataset у браузер.
-- **Поточний кеш:** `revalidate = 60`, `useCdn: false`; сторінки з `searchParams` динамічні. **Фаза 2 / B6:** статичні маршрути, path pagination, webhook/tags. Не називати всі CMS-сторінки статичними до цієї зміни.
+- Публічні CMS-fetch — через `sanityFetch(query, params, tags)` із `sanity/lib/fetch.ts` (server-only, published, force-cache). Теги охоплюють усі типи з `->`; asset-тег додається автоматично. Studio/seed мають окремий client. Webhook перевіряє підпис і тип, потім `revalidateTag(type, 'max')`; не логувати секрет/тіло. Часові сторінки — `revalidate = 3600`, інші — за тегами; [налаштування](../docs/sanity-revalidation.md).
 - Client state на першому рендері має збігатися з SSR; reduced-motion не повинен змінювати початкову розмітку. B6 не скасовує актуальність часових даних.
 
 ## Styling and Images
@@ -68,7 +68,7 @@
 - Description: власний текст → CMS default → fallback. Social image: detail → CMS ogImage → hero. Title/description очищати; UI-зображення не підміняти social crops.
 - JSON-LD через `jsonLdHtml()` (екранує `<`); стабільні entity IDs та фактичний route slug. Дати через `schemaDate()`; не вигадувати author/uploadDate/адресу/organizer із технічних полів.
 - Видимий контент і structured data мають збігатися. Media ItemList слідує поточному cards state; порожній не емітується. Schema validity не гарантує rich results.
-- Listings: `normalizeListingParams()` до metadata/fetch; безпечні slice/count, 307 для невалідних/дубльованих params, 404 для N поза count, власний canonical непорожньої пагінації. Filter/search — noindex.
+- Listings: `listingHref()` і `parseListingPage()` для `/news/page/[n]`, `/events/page/[n]` та news category paths. Безпечні slice/count, 307 для `/page/1`/початкових нулів, 404 для невалідних/позамежних N; власний canonical. Категорії noindex. `generateStaticParams` + dynamic params для нових публікацій без deployment. `/media` має статичний initial batch; URL-фільтри — після hydration через Server Actions, із захистом від запізнілих відповідей.
 - **До Фази 3:** чинний `lib/seo-readiness.ts` спільний для metadata/sitemap; реєстр порожній, root/header noindex й Disallow збережено. Новий маршрут узгодити зі спільним переліком і sitemap, без автоматичного відкриття індексації.
 - **B2 / Фаза 3:** заміна реєстру перемикачем indexing + документний `seo.noIndex`; опис цілі — у master-plan, код поки старий. Фактичне відкриття — лише [§F](master-plan.md#f-launch-checklist-найостанніший-крок).
 

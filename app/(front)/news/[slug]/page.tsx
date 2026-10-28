@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
@@ -15,8 +15,14 @@ import type { SanityNews } from '@/sanity/lib/types'
 import { defineQuery } from 'next-sanity'
 import { jsonLdHtml, schemaDate } from '@/lib/utils'
 import { NewsPhotoGallery } from './components/NewsPhotoGallery'
+import { NEWS_SLUGS_QUERY } from '../queries'
 
-export const revalidate = 60 // Revalidate page every 60 seconds
+export const dynamicParams = true
+
+export async function generateStaticParams() {
+  return sanityFetch<{ slug: string }[]>(NEWS_SLUGS_QUERY, {}, ['news'])
+}
+
 
 const NEWS_BY_SLUG_QUERY = defineQuery(`
   *[_type == "news" && slug.current == $slug][0] {
@@ -49,7 +55,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const news = await client.fetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug })
+  const news = await sanityFetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug }, ['news'])
   if (!news) return { title: 'Новину не знайдено' }
 
   const description = news.text?.trim() ||
@@ -76,7 +82,7 @@ export default async function NewsDetailPage({
 }) {
   const { slug } = await params
   const [news, heroes, settings] = await Promise.all([
-    client.fetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug }),
+    sanityFetch<SanityNews | null>(NEWS_BY_SLUG_QUERY, { slug }, ['news']),
     getPageHeroes(),
     getSiteSettings(),
   ])
@@ -206,7 +212,7 @@ export default async function NewsDetailPage({
               </span>}
               {news.mainCategory && (
                 <Link
-                  href={`/news?category=${encodeURIComponent(news.mainCategory)}`}
+                  href={`/news/category/${encodeURIComponent(news.mainCategory)}`}
                   className="bg-grad-readable text-white text-xs font-semibold px-3 py-1 rounded"
                 >
                   {news.mainCategory}

@@ -9,7 +9,7 @@ export const NEWS_PAGINATED_QUERY = defineQuery(`
   *[_type == "news" && select(
     defined($category) && $category != "" => mainCategory == $category,
     true
-  )] | order(publishedAt desc) [$start...$end] {
+  )] | order(publishedAt desc, _id asc) [$start...$end] {
     _id,
     title,
     "slug": slug.current,
@@ -42,5 +42,9 @@ export const NEWS_RECENT_QUERY = defineQuery(`
 
 /** All unique mainCategory values */
 export const NEWS_CATEGORIES_QUERY = defineQuery(`
-  array::unique(*[_type == "news" && defined(mainCategory)].mainCategory)
+  array::unique(*[_type == "news" && defined(mainCategory) && mainCategory != ""].mainCategory)
+`)
+
+export const NEWS_SLUGS_QUERY = defineQuery(`
+  *[_type == "news" && defined(slug.current)]{ "slug": slug.current }
 `)

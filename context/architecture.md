@@ -1,6 +1,6 @@
 # Architecture Context
 
-Канон змін — [master-plan](master-plan.md), рішення B1–B8. Фундамент Фази 1 реалізовано; static-first і новий indexing-механізм ще попереду.
+Канон змін — [master-plan](master-plan.md), рішення B1–B8. Фундамент Фази 1 і static-first Фази 2 реалізовано; новий indexing-механізм — Фаза 3.
 
 ## Stack
 
@@ -32,11 +32,11 @@ Next.js 16 App Router, React 19, TypeScript strict; Sanity 4 + `next-sanity`/Typ
 
 ## Caching and Revalidation Model
 
-**Зараз:** Sanity client має `useCdn: false`; більшість сторінок — `revalidate = 60`, singleton fetch має `next.revalidate: 60`. Ministry/team detail мають `generateStaticParams()`. `/news`, `/events`, `/media` читають `searchParams` і рендеряться динамічно; news/event detail не мають `generateStaticParams()`. Оголошення `revalidate = 60` саме по собі не робить такі маршрути статичними.
+Публічні GROQ-запити проходять через server-only `sanity/lib/fetch.ts`: published perspective, `force-cache`, теги всіх прочитаних типів (включно з `->`) і `sanity.imageAsset`. `useCdn: false` обходить CDN під час revalidation. `/api/revalidate` перевіряє підпис через `parseBody`, allowlist типів і викликає `revalidateTag(type, 'max')`. Налаштування секрету/вебхука власником — [інструкція](../docs/sanity-revalidation.md).
 
-Пошук/фільтри великих медіаколекцій виконуються GROQ на сервері. Початкові дані й готові RSC-картки приходять зі сторінки; `searchMedia`/`loadMoreMedia` повертають `{cards, views}` (пошук також `total`). `cards` живлять лічильник/JSON-LD, `views` — серверну розмітку. Спільний transformer — `lib/media.ts`; `MediaGallery` оновлює грид і shallow URL. Фото наразі перемішуються при ISR.
+Пошук/фільтри великих медіаколекцій виконуються GROQ на сервері. Початкові дані й готові RSC-картки приходять зі сторінки; `searchMedia`/`loadMoreMedia` повертають `{cards, views}` (пошук також `total`). `cards` живлять лічильник/JSON-LD, `views` — серверну розмітку. Спільний transformer — `lib/media.ts`; `MediaGallery` оновлює грид і shallow URL; початковий SSR-список статичний, URL-фільтри відновлюються після hydration та popstate. Номер запиту захищає результати від запізнілих відповідей. Фото мають стабільний порядок служінь (`order`, title, `_id`), далі порядок CMS-масиву; ID фото включає ID служіння.
 
-**Фаза 2 / B6:** static-first, пагінація шляхами та on-demand revalidation через Sanity webhook. Це ще не реалізовано; часові блоки мають залишатися актуальними без ручного редагування CMS — врахувати в цій фазі.
+News/event detail, path pagination `/news/page/[n]`, `/events/page/[n]`, категорії `/news/category/[category]` (із вкладеною пагінацією, noindex) мають `generateStaticParams` і дозволяють нові параметри на вимогу. Існуючі ministry/team detail лишаються SSG. Публічні сторінки не читають `searchParams`. Головна та event-маршрути мають страховку `revalidate = 3600`; YouTube Live — власний fetch-кеш 900 с. Інші CMS-запити оновлюються тегами. `revalidateTag(..., 'max')` запускає фонове оновлення при наступному відвідуванні, тому перший запит може отримати попередній контент. `sanity/lib/live.ts` видалено.
 
 ## Images and UI boundaries
 

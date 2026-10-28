@@ -1,6 +1,6 @@
 import { PageHero } from '@/components'
 import { MinistryGridSection } from './components/MinistryGrid'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { MINISTRIES_QUERY } from './queries'
 import type { SanityMinistryCard } from '@/sanity/lib/types'
@@ -15,11 +15,10 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export const revalidate = 60 // Revalidate page every 60 seconds
 
 export default async function MinistriesPage() {
   const [ministries, heroes] = await Promise.all([
-    client.fetch<SanityMinistryCard[]>(MINISTRIES_QUERY),
+    sanityFetch<SanityMinistryCard[]>(MINISTRIES_QUERY, {}, ['ministry']),
     getPageHeroes(),
   ])
 

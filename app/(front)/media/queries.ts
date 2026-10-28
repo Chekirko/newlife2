@@ -5,8 +5,8 @@ export const MEDIA_PER_PAGE = 12
 
 // ============================================
 // MEDIA LIBRARY QUERIES — server-side search / filter / pagination.
-// The page reads `category`, `speaker`, `q` from searchParams and the list is
-// fetched a batch at a time (slice [$start...$end]); "Load More" pulls the next
+// The static page renders the first unfiltered batch. The client restores URL
+// filters through Server Actions (slice [$start...$end]); "Load More" pulls the next
 // batch via the loadMoreMedia server action. `$q` is a tokenized prefix string
 // (e.g. "love* grace*") so `match` does partial matching across the text fields.
 // Empty filter params default to '' (matched by the select(... , true) branch).
@@ -21,7 +21,7 @@ const MEDIA_FILTER = /* groq */ `_type == "mediaItem"
      ), true)`
 
 export const MEDIA_SEARCH_QUERY = defineQuery(`
-  *[${MEDIA_FILTER}] | order(date desc)[$start...$end] {
+  *[${MEDIA_FILTER}] | order(date desc, _id asc)[$start...$end] {
     _id,
     title,
     category,

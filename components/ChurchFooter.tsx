@@ -2,7 +2,7 @@ import { Icon } from '@/components/ui/Icon'
 import Link from 'next/link'
 import Image from '@/components/ui/SiteImage'
 import { defineQuery } from 'next-sanity'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import type { SiteSettings } from '@/lib/site-settings'
 
 const quickLinks = [
@@ -27,7 +27,7 @@ type FooterMinistry = { _id: string; title: string; slug: string | null }
 
 export default async function ChurchFooter({ settings }: { settings: SiteSettings }) {
   const currentYear = new Date().getFullYear()
-  const ministries = await client.fetch<FooterMinistry[]>(FOOTER_MINISTRIES_QUERY)
+  const ministries = await sanityFetch<FooterMinistry[]>(FOOTER_MINISTRIES_QUERY, {}, ['ministry'])
   const { address, phone, phoneDisplay, email, social, services } = settings
 
   return (

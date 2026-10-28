@@ -10,7 +10,7 @@
 // Stats numbers live here too (moved off the homepage singleton) — `stats.items`.
 // =========================================
 
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { ABOUT_PAGE_QUERY } from '@/sanity/lib/queries'
 import type { ABOUT_PAGE_QUERYResult } from '@/sanity/lib/sanity.types'
 import {
@@ -33,11 +33,7 @@ function str(value: string | null | undefined, fallback: string): string {
 }
 
 export async function getAboutPage(): Promise<AboutContent> {
-  const data = await client.fetch<ABOUT_PAGE_QUERYResult>(
-    ABOUT_PAGE_QUERY,
-    {},
-    { next: { revalidate: 60 } },
-  )
+  const data = await sanityFetch<ABOUT_PAGE_QUERYResult>(ABOUT_PAGE_QUERY, {}, ['aboutPage'])
 
   const fb = ABOUT_FALLBACK
   if (!data) return fb

@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { getPageMetadata } from '@/lib/metadata'
 import { PageHero } from '@/components'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import {
   TEAM_HONORARY_QUERY,
   TEAM_ORDAINED_QUERY,
@@ -22,15 +22,14 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export const revalidate = 60 // Revalidate page every 60 seconds
 
 export default async function TeamPage() {
   // Parallel fetching (senior-frontend skill: Promise.all pattern)
   const [honorary, ordained, candidates, responsible, heroes] = await Promise.all([
-    client.fetch<SanityTeamMemberCard[]>(TEAM_HONORARY_QUERY),
-    client.fetch<SanityTeamMemberCard[]>(TEAM_ORDAINED_QUERY),
-    client.fetch<SanityTeamMemberCard[]>(TEAM_CANDIDATE_QUERY),
-    client.fetch<SanityTeamMemberCard[]>(TEAM_RESPONSIBLE_QUERY),
+    sanityFetch<SanityTeamMemberCard[]>(TEAM_HONORARY_QUERY, {}, ['teamMember']),
+    sanityFetch<SanityTeamMemberCard[]>(TEAM_ORDAINED_QUERY, {}, ['teamMember']),
+    sanityFetch<SanityTeamMemberCard[]>(TEAM_CANDIDATE_QUERY, {}, ['teamMember']),
+    sanityFetch<SanityTeamMemberCard[]>(TEAM_RESPONSIBLE_QUERY, {}, ['teamMember']),
     getPageHeroes(),
   ])
 

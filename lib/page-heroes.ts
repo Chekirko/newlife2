@@ -11,7 +11,7 @@
 // =========================================
 
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { urlFor } from '@/sanity/lib/image'
 import { PAGE_HEROES_QUERY } from '@/sanity/lib/queries'
 import type { PAGE_HEROES_QUERYResult } from '@/sanity/lib/sanity.types'
@@ -32,11 +32,7 @@ const FALLBACKS = {
 type PageHeroKey = keyof typeof FALLBACKS
 
 export async function getPageHeroes(): Promise<Record<PageHeroKey, string>> {
-  const data = await client.fetch<PAGE_HEROES_QUERYResult>(
-    PAGE_HEROES_QUERY,
-    {},
-    { next: { revalidate: 60 } },
-  )
+  const data = await sanityFetch<PAGE_HEROES_QUERYResult>(PAGE_HEROES_QUERY, {}, ['pageHeroes'])
 
   const result = {} as Record<PageHeroKey, string>
   for (const key of Object.keys(FALLBACKS) as PageHeroKey[]) {

@@ -10,7 +10,7 @@
 // (header + footer), homepage JSON-LD, contact page.
 // =========================================
 
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { SITE_SETTINGS_QUERY } from '@/sanity/lib/queries'
 import type { SITE_SETTINGS_QUERYResult } from '@/sanity/lib/sanity.types'
 import { CHURCH } from '@/lib/church'
@@ -64,11 +64,7 @@ function pick(value: string | null | undefined, fallback: string): string {
 }
 
 export async function getSiteSettings(): Promise<SiteSettings> {
-  const data = await client.fetch<SITE_SETTINGS_QUERYResult>(
-    SITE_SETTINGS_QUERY,
-    {},
-    { next: { revalidate: 60 } },
-  )
+  const data = await sanityFetch<SITE_SETTINGS_QUERYResult>(SITE_SETTINGS_QUERY, {}, ['siteSettings'])
 
   // Social links: use the CMS array when it has entries, else the church.ts fallback.
   // Each item is enriched (icon/label/color) via the shared registry in lib/social.ts.

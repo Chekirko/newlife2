@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { PhotoViewer, PortableTextBody } from '@/components'
 import { getPageMetadata } from '@/lib/metadata'
@@ -12,9 +12,15 @@ import { getPageHeroes } from '@/lib/page-heroes'
 import { SITE_URL } from '@/lib/site'
 import { formatEventDate, jsonLdHtml, schemaDate } from '@/lib/utils'
 import type { SanityEvent } from '@/sanity/lib/types'
-import { EVENT_BY_SLUG_QUERY } from '../queries'
+import { EVENT_BY_SLUG_QUERY, EVENT_SLUGS_QUERY } from '../queries'
 
-export const revalidate = 60 // Revalidate page every 60 seconds
+export const dynamicParams = true
+
+export async function generateStaticParams() {
+  return sanityFetch<{ slug: string }[]>(EVENT_SLUGS_QUERY, {}, ['event'])
+}
+
+export const revalidate = 3600
 
 export async function generateMetadata({
   params,
@@ -22,7 +28,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const event = await client.fetch<SanityEvent | null>(EVENT_BY_SLUG_QUERY, { slug })
+  const event = await sanityFetch<SanityEvent | null>(EVENT_BY_SLUG_QUERY, { slug }, ['event'])
   if (!event) return { title: 'Подію не знайдено' }
 
   const plainDescription =
@@ -50,7 +56,7 @@ export default async function EventDetailPage({
 }) {
   const { slug } = await params
   const [event, heroes] = await Promise.all([
-    client.fetch<SanityEvent | null>(EVENT_BY_SLUG_QUERY, { slug }),
+    sanityFetch<SanityEvent | null>(EVENT_BY_SLUG_QUERY, { slug }, ['event']),
     getPageHeroes(),
   ])
 

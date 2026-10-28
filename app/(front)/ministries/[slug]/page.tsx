@@ -7,7 +7,7 @@ import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 
 import { ImagePlaceholder, NewsSlider, PageHero, PhotoViewer, PortableTextBody, type PhotoItem } from '@/components'
 import { PhotoGalleryGrid } from './components/PhotoGalleryGrid'
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/fetch'
 import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import {
   MINISTRY_BY_SLUG_QUERY,
@@ -22,11 +22,10 @@ import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/li
 
 // ============================================
 // Static params for all ministry slugs
-export const revalidate = 60 // Revalidate page every 60 seconds
 
 // ============================================
 export async function generateStaticParams() {
-  const slugs = await client.fetch<{ slug: string }[]>(MINISTRY_SLUGS_QUERY)
+  const slugs = await sanityFetch<{ slug: string }[]>(MINISTRY_SLUGS_QUERY, {}, ['ministry'])
   return slugs.map((s) => ({ slug: s.slug }))
 }
 
@@ -35,7 +34,7 @@ export async function generateStaticParams() {
 // ============================================
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const ministry = await client.fetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug })
+  const ministry = await sanityFetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug }, ['ministry','teamMember'])
   if (!ministry) return { title: 'Служіння не знайдено' }
 
   const description = ministry.shortDescription?.trim() ||
@@ -65,9 +64,9 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
   const { slug } = await params
 
   const [ministry, otherMinistries, newsRaw, heroes] = await Promise.all([
-    client.fetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug }),
-    client.fetch<SanityMinistryLink[]>(OTHER_MINISTRIES_QUERY, { slug }),
-    client.fetch<SanityNews[]>(MINISTRY_NEWS_QUERY, { slug }),
+    sanityFetch<SanityMinistry | null>(MINISTRY_BY_SLUG_QUERY, { slug }, ['ministry','teamMember']),
+    sanityFetch<SanityMinistryLink[]>(OTHER_MINISTRIES_QUERY, { slug }, ['ministry']),
+    sanityFetch<SanityNews[]>(MINISTRY_NEWS_QUERY, { slug }, ['news','ministry']),
     getPageHeroes(),
   ])
 

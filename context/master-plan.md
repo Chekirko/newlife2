@@ -116,6 +116,7 @@
 7. **Root layouts:** `app/(front)` і `app/studio` з окремими root layout — Studio без site CSS, сайт без Studio-залежностей (дозвіл на `app/studio/` дано затвердженням плану 2026-10-27).
 
 ### Фаза 2 — Статичний рендеринг і кешування (B6)
+Статус 2026-10-28: **код завершено** — усі публічні маршрути статичні, локальні HTTP/browser gates і quality checks PASS; [Lighthouse до/після](../docs/phase2-performance.md). Підключення зовнішнього webhook Sanity→Vercel та перевірка delivery після публікації — [дія власника](../docs/sanity-revalidation.md).
 1. Хелпер вибірки в `sanity/lib/` з `next: { tags: [<_type>] }`; усі `client.fetch` — через нього. Видалити `sanity/lib/live.ts`.
 2. `app/api/revalidate/route.ts`: `parseBody` з `next-sanity/webhook`, секрет `SANITY_REVALIDATE_SECRET`, `revalidateTag(body._type, 'max')` (сигнатура Next 16). Вебхук у sanity.io/manage — дія власника за інструкцією (проєкція `{_type}`).
 3. Прибрати `export const revalidate = 60`; дата-залежні сторінки (`/`, `/events`, `/events/[slug]`) — `revalidate = 3600` як страховка (подія «минає» без зміни контенту).

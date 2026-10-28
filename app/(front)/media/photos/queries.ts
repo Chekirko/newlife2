@@ -8,7 +8,8 @@ import { defineQuery } from 'next-sanity'
 // ============================================
 
 export const MINISTRY_GALLERIES_QUERY = defineQuery(`
-  *[_type == "ministry" && count(gallery) > 0] | order(order asc) {
+  *[_type == "ministry" && count(gallery) > 0] | order(order asc, title asc, _id asc) {
+    _id,
     "ministry": title,
     gallery[]{
       ...,
