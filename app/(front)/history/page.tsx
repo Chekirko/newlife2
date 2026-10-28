@@ -73,7 +73,7 @@ export default async function HistoryPage() {
       />
 
       {/* Timeline Section */}
-      <section className="py-16 lg:py-24 bg-gray-50">
+      <section className="py-16 lg:py-24 bg-gray-100">
         <div className="container-larexa">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Наш шлях: Історія та Досягнення</h2>
@@ -151,7 +151,7 @@ function TimelineCard({ item }: { item: (typeof timelineEvents)[number] }) {
         {item.type === 'list' && (
           <ul className="space-y-2 mt-2">
             {item.listItems?.map((listItem, i) => (
-              <li key={i} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg text-sm text-gray-700">
+              <li key={i} className="flex items-center gap-3 p-3 bg-gray-100 rounded-lg text-sm text-gray-700">
                 <span className="flex-shrink-0 w-6 h-6 rounded bg-primary text-gray-900 flex items-center justify-center font-semibold text-xs text-center">
                   0{i + 1}
                 </span>
@@ -164,7 +164,7 @@ function TimelineCard({ item }: { item: (typeof timelineEvents)[number] }) {
         {item.type === 'accordion' && (
           <div className="space-y-3 mt-4">
             {item.accordions?.map((acc, i) => (
-              <details key={i} className="group border border-gray-200 rounded-lg overflow-hidden bg-gray-50">
+              <details key={i} className="group border border-gray-200 rounded-lg overflow-hidden bg-gray-100">
                 <summary className="cursor-pointer font-semibold px-4 py-3 text-gray-800 flex justify-between items-center outline-none">
                   {acc.q}
                   <span className="transition-transform group-open:rotate-180 text-primary-text">

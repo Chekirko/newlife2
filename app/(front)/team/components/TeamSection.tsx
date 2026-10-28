@@ -26,7 +26,7 @@ export function TeamSection({ preTitle, title, members, subtitleField, bgClass =
         </div>
 
         {isEmpty ? (
-          <div className="text-center py-10 bg-gray-50 rounded-xl border border-gray-100">
+          <div className="text-center py-10 bg-gray-100 rounded-xl border border-gray-100">
             <p className="text-gray-500 italic">Поки що немає доданих служителів у цій категорії.</p>
           </div>
         ) : (

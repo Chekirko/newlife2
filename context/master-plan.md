@@ -137,6 +137,7 @@
 **Приймання:** Rich Results Test (після деплою) для головної, новини, події — 0 помилок; заголовки відповідей і robots.txt для обох станів перемикача.
 
 ### Фаза 4 — Дизайн-система Larexa (B7, [spec 08](specs/08-larexa-redesign.md))
+Статус 2026-10-28: **код завершено** на гілці `feat/phase-4-larexa-design-system` — `globals.css` 1782 → ~1020 рядків, 12 серверних компонентів + острівець `SnapArrows`, `ui-context.md` оновлено. Компоненти зібрані на демо-сторінці `/larexa-preview` (noindex, без посилань; видаляється перед запуском — §F); реальні сторінки змінено лише глобальними токенами. Результат — [tracker](progress-tracker.md).
 1. `app/globals.css` (захищений файл — дозвіл дано затвердженням плану): токени секцій Larexa (`5rem 0 3.8rem`, md `4rem 0 3rem`), radius 3px, тіні Larexa, `.title h2` вага 600; видалити мертві блоки (скляний `.portfolio-card` ~1720–1787 тощо), `gray-50` → `gray-100`; додати відсутні `.breadcrumb`, `.timeline-*`, `.testimonials-border`, `.pattern-overlay-2`, стиль accordion для `<details>`.
 2. Серверні компоненти `components/larexa/` (перелік і контракти — spec 08): `SectionTitle`, `PageTitle`, `PostCard`, `FeatureBox`, `SidebarWidget`, `Pagination`, `Accordion`, `Timeline`, `TeamItem`, `CounterStrip`, `ActionBox`, `SnapRow` + клієнтський острівець `SnapArrows`.
 3. Оновити `ui-context.md` під систему Larexa.
@@ -226,7 +227,7 @@
 
 ## F. Launch checklist (НАЙОСТАННІШИЙ крок)
 
-Виконувати **лише** після явного «готово» користувача. Передумови: Фази 1–7 завершені, §D (контент, privacy, NAP) виконано, редакційна перевірка сторінок.
+Виконувати **лише** після явного «готово» користувача. Передумови: Фази 1–7 завершені, §D (контент, privacy, NAP) виконано, редакційна перевірка сторінок, демо-сторінку `/larexa-preview` (`app/(front)/larexa-preview/`) видалено.
 1. Домен у Vercel; `NEXT_PUBLIC_SITE_URL` = власний домен; 308 www → apex; canonical-и на новому домені.
 2. `SITE_INDEXING=on` у Production → перевірити robots.txt, відсутність `X-Robots-Tag: noindex`, meta robots, наповнений sitemap.
 3. Google Search Console (DNS TXT) → подати sitemap; Rich Results Test головної/новини/події.

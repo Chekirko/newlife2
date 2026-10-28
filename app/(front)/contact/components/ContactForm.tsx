@@ -5,7 +5,7 @@ import { submitContact } from '../actions'
 import { CONTACT_LIMITS, type ContactResult, type ContactValues } from '../form-model'
 
 const emptyForm: ContactValues = { name: '', email: '', subject: '', message: '' }
-const inputClass = 'w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50/50 text-sm text-gray-800 placeholder:text-gray-500 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all aria-invalid:border-danger'
+const inputClass = 'w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-100/50 text-sm text-gray-800 placeholder:text-gray-500 focus:border-primary-text focus:ring-2 focus:ring-primary-text transition-all aria-invalid:border-danger'
 const labelClass = 'block text-sm font-medium text-gray-800 mb-1.5'
 
 export function ContactForm() {

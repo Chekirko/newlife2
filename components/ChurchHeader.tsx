@@ -22,7 +22,7 @@ function NavigationItems({ mobile = false }: { mobile?: boolean }) {
     {navItems.map(item => <li key={item.label} className="relative">
       {item.children ? <NavDropdown label={item.label} paths={item.children.map(child => child.href)} mobile={mobile}>
         <ul>{item.children.map(child => <li key={child.href}>
-          <NavLink href={child.href} className="block px-4 py-2 hover:bg-gray-50">{child.label}</NavLink>
+          <NavLink href={child.href} className="block px-4 py-2 hover:bg-gray-100">{child.label}</NavLink>
         </li>)}</ul>
       </NavDropdown> : <NavLink href={item.href!} className="block px-4 py-2 text-[15px] font-medium">{item.label}</NavLink>}
     </li>)}

@@ -199,7 +199,7 @@ export default async function HomePage() {
           title="Що нового в церкві"
           description="Новини та оновлення з життя нашої спільноти"
           news={newsData}
-          className="bg-gray-50"
+          className="bg-gray-100"
         />
       )}
 

@@ -192,7 +192,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
 
               {/* Bible Quote */}
               {ministry.bibleQuoteText && (
-                <blockquote className="relative my-10 py-6 px-8 rounded-xl bg-gray-50 border-l-4 border-primary">
+                <blockquote className="relative my-10 py-6 px-8 rounded-xl bg-gray-100 border-l-4 border-primary">
                   <svg className="absolute top-4 right-4 w-10 h-10 text-primary-text/20" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983z" />
                   </svg>
@@ -211,7 +211,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               {leaders.length === 1 && (
                 <Link
                   href={`/team/${leaders[0].slug}`}
-                  className="flex items-center gap-5 bg-gray-50 rounded-xl p-6 mt-8 group hover:bg-gray-100 transition-colors no-underline"
+                  className="flex items-center gap-5 bg-gray-100 rounded-xl p-6 mt-8 group hover:bg-gray-100 transition-colors no-underline"
                 >
                   <div className="w-16 h-16 lg:w-20 lg:h-20 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 relative ring-2 ring-transparent group-hover:ring-primary transition-all">
                     {leaders[0].photo && <Image
@@ -232,7 +232,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
               )}
 
               {leaders.length > 1 && (
-                <div className="bg-gray-50 rounded-xl p-6 mt-8">
+                <div className="bg-gray-100 rounded-xl p-6 mt-8">
                   <h3 className="font-base text-lg lg:text-xl font-bold text-gray-800 mb-5">Відповідальні за служіння</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {leaders.map((leader) => (
@@ -281,7 +281,7 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
           title="Новини служіння"
           description={`Останні новини та оновлення, пов'язані зі служінням «${ministry.title}»`}
           news={newsData}
-          className="bg-gray-50"
+          className="bg-gray-100"
         />
       )}
     </>

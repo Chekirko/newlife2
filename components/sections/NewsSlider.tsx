@@ -120,7 +120,7 @@ export const NewsSlider = ({
           {news.length > visibleCards && (
             <button
               onClick={goToPrev}
-              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 lg:-translate-x-6 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+              className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-3 lg:-translate-x-6 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
               aria-label="Попередня новина"
             >
               <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -200,7 +200,7 @@ export const NewsSlider = ({
           {news.length > visibleCards && (
             <button
               onClick={goToNext}
-              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 lg:translate-x-6 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-50 transition-colors"
+              className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-3 lg:translate-x-6 z-10 w-10 h-10 lg:w-12 lg:h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-gray-100 transition-colors"
               aria-label="Наступна новина"
             >
               <svg className="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">

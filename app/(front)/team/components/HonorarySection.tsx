@@ -9,7 +9,7 @@ interface HonorarySectionProps {
   bgClass?: string
 }
 
-export function HonorarySection({ members, bgClass = 'bg-gray-50' }: HonorarySectionProps) {
+export function HonorarySection({ members, bgClass = 'bg-gray-100' }: HonorarySectionProps) {
   if (members.length === 0) return null
 
   return (

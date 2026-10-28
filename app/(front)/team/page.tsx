@@ -31,10 +31,10 @@ export default async function TeamPage() {
     getPageHeroes(),
   ])
 
-  // Track rendered content sections for alternating background colors (bg-gray-50 / bg-white)
+  // Track rendered content sections for alternating background colors (bg-gray-100 / bg-white)
   let sectionIndex = 0
   const getBgClass = () => {
-    const bg = sectionIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'
+    const bg = sectionIndex % 2 === 0 ? 'bg-gray-100' : 'bg-white'
     sectionIndex++
     return bg
   }

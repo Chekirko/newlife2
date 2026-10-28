@@ -1,6 +1,6 @@
 # UI Context
 
-Дизайн-система — **Larexa**, [spec 08](specs/08-larexa-redesign.md). Це затверджена ціль; міграція компонентів — Фази 4–5 [master-plan](master-plan.md). Фаза 1 реалізує технічний фундамент і Montserrat, не редизайн сторінок.
+Дизайн-система — **Larexa**, [spec 08](specs/08-larexa-redesign.md). Фаза 4 реалізувала токени й серверні компоненти `components/larexa/`; сторінки переходять на них посторінково у Фазі 5 [master-plan](master-plan.md). Нові секції будувати лише з цих компонентів і токенів.
 
 ## Colors
 
@@ -15,7 +15,7 @@
 | Body / headings | gray-600 #6b7177 / gray-800 #343a40 |
 | Section background | white / gray-100 #f7f8f9 |
 
-`.bg-grad` — декор; `.bg-grad-readable`, `.btn-grad` — білий текст із AA-контрастом. Нормальний текст не послаблювати opacity. `.all-text-white` не має перекривати темний label білої кнопки. На світлому green text/hover/focus — `text-primary-text`.
+`.bg-grad` — декор; `.bg-grad-readable`, `.btn-grad` — білий текст із AA-контрастом (також активна сторінка пагінації, відкритий пункт accordion, тег картки). Нормальний текст не послаблювати opacity (тому `.title-light` — чистий білий, без Larexa 90%). `.all-text-white` не має перекривати темний label білої кнопки. На світлому green text/hover/focus — `text-primary-text`. Tailwind `gray-50` не використовувати — світлий фон лише `gray-100`. Градієнтні іконки — SVG `<linearGradient>` у `FeatureBox` (text-clip `.icon-grad` для SVG не працює й видалений).
 
 ## Typography
 
@@ -30,23 +30,36 @@
 ## Shape and Layout
 
 - Radius Larexa — **3px** для карток, полів, hero й звичайних кнопок. Без великих радіусів, скляних панелей, декоративних кіл та плаваючих hover-карток.
-- Контейнер `.container-larexa` 1140/1200px; секції 5rem 0 3.8rem, від md 4rem 0 3rem.
-- Section heading — `.title` → `.pre-title` + H2 + опис; без uppercase eyebrow і гігантського заголовка.
-- Кнопки — `.btn-grad`, `.btn-outline-grad`, `.btn-white`, `.btn-outline-white`, `.btn-dark`, `.btn-link`; 2px border, `.5rem 1rem`, вага 500.
-- Компоненти цільової системи: `SectionTitle`, `PageTitle`, `PostCard`, `FeatureBox`, `SidebarWidget`, `Pagination`, `Accordion`, `Timeline`, `TeamItem`, `CounterStrip`, `ActionBox`, `SnapRow` — контракти та джерела в spec 08.
+- Контейнер `.container-larexa` 1140/1200px. Базовий `section` (і `.section-pt/.section-pb`): 4rem/3rem, від 768px — 5rem/3.8rem (Bootstrap 5 `down(md)`). Власні `py-*` секції перекривають базу.
+- Section heading — `SectionTitle` (`.title`): `.pre-title` Playfair 24px (20px <576) + H2/H3 36px/600 (30px <576) + опис; без uppercase eyebrow і гігантського заголовка.
+- Кнопки — `.btn-grad`, `.btn-outline-grad`, `.btn-white`, `.btn-outline-white`, `.btn-dark`, `.btn-link`, `.btn-round`; 2px border, `.5rem 1rem`, вага 500. Bootstrap-кольори (`btn-primary` тощо) видалені.
+- Утиліти: `bg-overlay-dark-2…9` (кожен клас самодостатній), `pattern-overlay-2` (AVIF-хвилі `public/images/patterns/`, лише на градієнтних смугах), `all-text-white`, `gradient-text`, `divider`.
 - Серверна розмітка; client islands лише для меню, фільтрів, play/lightbox і scroll arrows. Каруселі без автоплею; accordion через details/summary.
+
+### Компоненти `components/larexa/`
+
+Контракти й джерела — spec 08; тут — правила використання.
+
+- **Рівень заголовка** структурний: `SectionTitle`/`PostCard`/`SidebarWidget` мають `as` (H2 на сторінці без секційного H2, H3 усередині секції). `FeatureBox`, `Timeline`, `TeamItem` — H3.
+- **Фото в картках** декоративні (`alt=""`): картку називає заголовок-посилання; у `PostCard` посилання обкладинки поза Tab-порядком, «Читати далі» має sr-only назву. `PostCard`/`TeamItem` приймають `sizes` під свою сітку; без фото — `ImagePlaceholder`.
+- `PageTitle` — H1 + фото `preload` під `bg-overlay-dark-7` + спільні `Breadcrumbs` (крапки-роздільники через CSS без тексту, JSON-LD з того ж масиву).
+- `PostCard` — дата ISO → `formatDate` (Europe/Kyiv); `meta` для часу/спікера; `video` — обкладинка стає `VideoPlayButton`, `href` необов'язковий.
+- `Pagination` — `basePath` сторінки 1 + `pagedHref` з `lib/listing-params`; prev/next лише коли існують, 40px <640, 44px вище.
+- `Accordion` — `<details name>` (ексклюзивно, без JS), перший відкритий; клас `.accordion-icon-gradient`. Старі `.accordion-*` лишаються для FAQSplit до Фази 5.2.
+- `SnapRow` — серверний `<ul>` 1/2/3 картки; `SnapArrows` — єдиний острівець: `scrollBy` на ширину доріжки (reduced-motion → без плавності), вимикається на краях, ховається без overflow (місце зберігається).
+- `CounterStrip` — статичні числа у списку, не заголовки. `ActionBox` — власна `section` з контейнером.
 
 ## Logo and Header
 
 Оригінальні SVG `public/images/logo-dark.svg` / `logo-white.svg`: зберігати мальований знак, хрест і напис «церква м. Борислав». Header — темний на білому, 56px; footer — білий, 224px з max-width. Обидва home links мають accessible name.
 
-**Поточний стан:** серверний header, top bar 44px у звичайному потоці, CSS sticky nav (80px mobile / 120px desktop), без ручного відступу main. NavLink/Dropdown/MobileMenu — острівці, закриті меню hidden/inert, nav має label, активне посилання aria-current. Компактний редизайн nav — Фаза 4. Media dropdown — Відео `/media` і Фото `/media/photos`; «Про нас» групує about/history/team.
+**Поточний стан:** серверний header, top bar 44px у звичайному потоці, CSS sticky nav (80px mobile / 120px desktop), без ручного відступу main. NavLink/Dropdown/MobileMenu — острівці, закриті меню hidden/inert, nav має label, активне посилання aria-current. Компактний nav (E2.1) не входив у Фазу 4 — вирішується на гейті Фази 5. Top bar поза landmark (axe `region`) — Фаза 6. Media dropdown — Відео `/media` і Фото `/media/photos`; «Про нас» групує about/history/team.
 
 ## Page Patterns and Content
 
 - Головна зараз: Hero → умовний Live → події → місія/OurVision → пастор → розклад → «Що ви знайдете» → новини → свідчення → FAQ → «Актуальне слово» → CTA. Hero стане статичним у Фазі 5.1. Проповідь — CMS featured reference, fallback на найновішу; немає даних — секцію сховати.
 - Спільний серверний `Breadcrumbs` формує видиму навігацію і JSON-LD з одного масиву; nav має label, поточний пункт aria-current, текст і посилання білі без opacity-зниження. Додаткові факти події (адреса, завершення, організатор, статус, умови участі) показуються лише коли заповнені.
-- PageHero та inline news/event heroes замінюються `PageTitle` у Фазах 4–5. Background через Next Image, breadcrumbs із label/current/контрастом, без скляної картки.
+- PageHero та inline news/event heroes замінюються `PageTitle` у Фазі 5.1; до того PageHero вже має Larexa-крапки в крихтах. Sidebar усередині `main` — `div`, не `aside` (axe `landmark-complementary-is-top-level`).
 - News/events мають статичну path pagination (`/news/page/2`, `/events/page/2`); категорії — `/news/category/<назва>` з noindex та вкладеною пагінацією. Цільовий дизайн — PostCard + SidebarWidget + server Pagination. Видимий label «Читати далі» доповнювати sr-only назвою. Порядок DOM має відповідати mobile читанню.
 - Team/ministry cards — heading H3 під H2 секції; фото в цілісному named link має alt="". Detail фото має власний опис; немає фото — ImagePlaceholder. Ministry detail: 1 leader — singular, 2+ — grid; невирішені refs не рендерити. Responsibility масив: на загальній картці перший, на detail всі.
 - `/about` бере місію, історію, віровчення, цінності, очікування, статистику й CTA з singleton. Перехід на Larexa описано в spec 08; статистика лишається статичним текстом, не animated counters.

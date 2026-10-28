@@ -1,9 +1,14 @@
 import { notFound, permanentRedirect } from 'next/navigation'
 export const LISTING_PER_PAGE = 6
 
+/** Page 1 is the bare listing path; later pages append `/page/<n>`. */
+export function pagedHref(base: string, page: number): string {
+  return page > 1 ? `${base}/page/${page}` : base
+}
+
 export function listingHref(path: '/news' | '/events', page = 1, category = ''): string {
   const base = category ? `${path}/category/${encodeURIComponent(category)}` : path
-  return page > 1 ? `${base}/page/${page}` : base
+  return pagedHref(base, page)
 }
 
 export function listingPageNumber(raw: string): number {

@@ -2,7 +2,7 @@
 
 ## Поточний стан — 2026-10-28
 
-Єдиний чинний план — [master-plan.md](master-plan.md); дизайн — [spec 08](specs/08-larexa-redesign.md); процес — [ai-workflow-rules.md](ai-workflow-rules.md). Гілка `codex/seo-1-audit`; робота ще не злита в `master`. Сайт до запуску, індексація закрита.
+Єдиний чинний план — [master-plan.md](master-plan.md); дизайн — [spec 08](specs/08-larexa-redesign.md); процес — [ai-workflow-rules.md](ai-workflow-rules.md). Гілки `codex/seo-1-audit` (Фази 0–3) і `feat/phase-4-larexa-design-system` (Фаза 4, від неї); робота ще не злита в `master`. Сайт до запуску, індексація закрита.
 
 Рішення користувача: адаптивні Sanity-прев’ю + оригінал у viewer/завантаженні; Montserrat; статичний hero; Larexa; static-first; робота фазами. B1/B3/B4 реалізовано у Фазі 1, B6 — у Фазі 2, B2 — у Фазі 3. Редизайн ще попереду.
 
@@ -33,9 +33,16 @@
 - Build 57/57, lint/повний TypeGen/typecheck/5 регресій, on/off HTTP/Chrome по 16 маршрутах, 320/390/1280px — PASS; on sitemap 44 URL, off 0. Schema.org Validator новини: 0 помилок/застережень.
 - Lighthouse mobile: 78 / 84 / 88 / 86 / 90 (головна/новина/служіння/фото/контакти); межі — [звіт Фази 3](../docs/phase3-seo.md). Rich Results Test розгорнутих URL після деплою ще потрібен (Google попросив авторизацію). Індексація закрита; production env і жива форма не змінювались.
 
+## Фаза 4 — код завершено
+
+- Гілка `feat/phase-4-larexa-design-system` (від `codex/seo-1-audit`). `globals.css` 1782 → 1020 рядків: мертві блоки прибрано, Larexa-токени секцій/`.title`, нові breadcrumb/timeline/accordion/post/pagination/widget, `pattern-overlay-2` (AVIF 24 КБ), виправлено `bg-overlay-dark-N`.
+- `components/larexa/`: 12 серверних компонентів + острівець `SnapArrows`; уточнення контрактів — у spec 08, правила — у ui-context. `Breadcrumbs` з CSS-крапками, `pagedHref`, `gray-50 → gray-100`.
+- Демо-сторінка `/larexa-preview` (noindex; видалити перед запуском — §F): 1280/390/320, axe — 0 порушень у компонентах. Lint/tsc/5 регресій/build 57/57 — PASS.
+- [Lighthouse](../docs/phase4-design-system.md): 71 / 85 / 86 / 86 / 89 на повільнішому хості; регресії коду не видно, +23 КБ візерунка на головній.
+
 ## Далі
 
-Фаза 4: дизайн-система Larexa — CSS-токени/очищення стилів, серверні компоненти й оновлення UI-конвенцій. Перелік і критерії — master-plan §C; наступна фаза потребує окремого доручення.
+Фаза 5: посторінковий редизайн (5.1 PageTitle/SectionTitle/статичний hero → 5.6). Компактний nav (E2.1) — вирішити на гейті. Наступна фаза потребує окремого доручення.
 
 Контент, privacy, ротація раніше засвіченого Sanity-токена й сервіси — [дії власника](master-plan.md#d-дії-власника-не-код). Запуск — лише за окремим явним «готово» згідно з [launch checklist](master-plan.md#f-launch-checklist-найостанніший-крок).
 

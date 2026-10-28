@@ -1,6 +1,8 @@
 # Spec 08 — Редизайн під Larexa (server-first)
 
-Статус: **заплановано** (Фази 4–5 [master-plan](../master-plan.md#фаза-4--дизайн-система-larexa-b7-spec-08)). Створено 2026-10-27 за результатами порівняльного аудиту.
+Статус: **Фаза 4 виконана** 2026-10-28 (токени `app/globals.css` + 12 компонентів і `SnapArrows` у `components/larexa/`); посторінкова міграція — Фаза 5 [master-plan](../master-plan.md#фаза-4--дизайн-система-larexa-b7-spec-08). Створено 2026-10-27 за результатами порівняльного аудиту.
+
+**Уточнення контрактів під час реалізації (Фаза 4):** `as` (рівень заголовка) у `SectionTitle`/`PostCard`/`SidebarWidget`; `className` у `SectionTitle`/`SidebarWidget`; `sizes` у `PostCard`/`TeamItem`; `PostCard.href` необов'язковий для `video`, `meta` — рядок; `SnapRow.label` (назва списку й стрілок); `Pagination.label`, prev/next рендеряться лише коли сторінка існує. Тексти на градієнті — `bg-grad-readable` замість `bg-grad` (AA). Акордеон — квадратні кути Larexa в межах 3px-елемента.
 
 ## Джерело дизайну
 
