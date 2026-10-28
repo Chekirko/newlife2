@@ -7,6 +7,7 @@ export const teamMemberType = defineType({
   type: 'document',
   icon: () => '👤',
   fields: [
+    defineField({ name: 'seo', title: 'SEO та соціальні мережі', type: 'seo' }),
     defineField({
       name: 'name',
       title: "Ім'я",

@@ -65,12 +65,12 @@
 ## SEO & New Pages
 
 - `generateMetadata()` → `getPageMetadata()`, явний canonical; helper повертає повні OG/Twitter objects. Абсолютні URL тільки з `SITE_URL`.
-- Description: власний текст → CMS default → fallback. Social image: detail → CMS ogImage → hero. Title/description очищати; UI-зображення не підміняти social crops.
+- Description: документний seo.description → власний текст → CMS default → fallback. Social image: документний seo.ogImage → detail → CMS ogImage → hero. Title/description очищати; UI-зображення не підміняти social crops.
 - JSON-LD через `jsonLdHtml()` (екранує `<`); стабільні entity IDs та фактичний route slug. Дати через `schemaDate()`; не вигадувати author/uploadDate/адресу/organizer із технічних полів.
-- Видимий контент і structured data мають збігатися. Media ItemList слідує поточному cards state; порожній не емітується. Schema validity не гарантує rich results.
-- Listings: `listingHref()` і `parseListingPage()` для `/news/page/[n]`, `/events/page/[n]` та news category paths. Безпечні slice/count, 307 для `/page/1`/початкових нулів, 404 для невалідних/позамежних N; власний canonical. Категорії noindex. `generateStaticParams` + dynamic params для нових публікацій без deployment. `/media` має статичний initial batch; URL-фільтри — після hydration через Server Actions, із захистом від запізнілих відповідей.
-- **До Фази 3:** чинний `lib/seo-readiness.ts` спільний для metadata/sitemap; реєстр порожній, root/header noindex й Disallow збережено. Новий маршрут узгодити зі спільним переліком і sitemap, без автоматичного відкриття індексації.
-- **B2 / Фаза 3:** заміна реєстру перемикачем indexing + документний `seo.noIndex`; опис цілі — у master-plan, код поки старий. Фактичне відкриття — лише [§F](master-plan.md#f-launch-checklist-найостанніший-крок).
+- Видимий контент і structured data мають збігатися. Неповний VideoObject-список у медіатеці не емітується; Event — лише для події з реальною датою, місцем і повною PostalAddress. Не вигадувати endDate, організатора чи безкоштовність. Schema validity не гарантує rich results.
+- Listings: `listingHref()` і `parseListingPage()` для `/news/page/[n]`, `/events/page/[n]` та news category paths. Безпечні slice/count, 308 для `/page/1`/початкових нулів, 404 для невалідних/позамежних N; власний canonical. Категорії noindex. `generateStaticParams` + dynamic params для нових публікацій без deployment. `/media` має статичний initial batch; URL-фільтри — після hydration через Server Actions, із захистом від запізнілих відповідей.
+- `lib/indexing.ts`: індексація лише за `SITE_INDEXING=on` + `VERCEL_ENV=production`; усі інші стани noindex. Root/page robots, HTTP header, robots.txt і sitemap залежать від цього перемикача; реєстру схвалень немає. `seo.noIndex` виключає документ із sitemap і дає meta noindex. Відкриття — лише [§F](master-plan.md#f-launch-checklist-найостанніший-крок), після нового deployment.
+- Короткі page title + root `title.template`; новини мають OG article dates, keywords не додавати. Фільтри — noindex без canonical на іншу URL; `/media` без canonical, бо static HTML спільний із query-фільтрами (HTTP noindex). BreadcrumbList і видима навігація — тільки через спільний `Breadcrumbs`; один WebSite/Church graph у public root, стабільні @id. Sitemap без priority/changefreq та без вигаданого now як lastModified.
 
 ## Security Headers & Contact
 

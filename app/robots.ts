@@ -1,16 +1,15 @@
 import type { MetadataRoute } from 'next'
 import { SITE_URL } from '@/lib/site'
+import { isIndexingEnabled } from '@/lib/indexing'
 
-// ⚠️ PRE-LAUNCH: the whole site is closed to search engines on purpose.
-// RE-OPEN at launch only when the user confirms — see
-// context/progress-tracker.md → "Launch checklist". To open: replace the
-// rule with `{ userAgent: '*', allow: '/', disallow: '/studio' }`.
 export default function robots(): MetadataRoute.Robots {
+  const enabled = isIndexingEnabled()
   return {
     rules: {
       userAgent: '*',
-      disallow: '/',
+      allow: '/',
+      ...(enabled ? { disallow: '/studio' } : {}),
     },
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    ...(enabled ? { sitemap: `${SITE_URL}/sitemap.xml` } : {}),
   }
 }

@@ -1,6 +1,6 @@
 # Architecture Context
 
-Канон змін — [master-plan](master-plan.md), рішення B1–B8. Фундамент Фази 1 і static-first Фази 2 реалізовано; новий indexing-механізм — Фаза 3.
+Канон змін — [master-plan](master-plan.md), рішення B1–B8. Фундамент Фази 1, static-first Фази 2 і SEO-архітектура Фази 3 реалізовані; індексація закрита.
 
 ## Stack
 
@@ -25,7 +25,7 @@ Next.js 16 App Router, React 19, TypeScript strict; Sanity 4 + `next-sanity`/Typ
 - Content Lake — джерело редакційного контенту; `lib/*-data.ts` і `lib/church.ts` — типізовані фолбеки, не друга CMS.
 - Singletons: `siteSettings`, `homepage`, `pageHeroes`, `aboutPage`; фіксований `_id` і заборона create/delete/duplicate/unpublish узгоджені між `sanity/structure.ts` та `sanity.config.ts`.
 - `getSiteSettings()` об’єднує CMS із `church.ts`: NAP, розклад, гео, соцмережі, SEO defaults. Реєстр платформ — `lib/social.ts`. `getHomepage()`, `getAboutPage()`, `getPageHeroes()` мають відповідні типізовані фолбеки.
-- `news`, `event`, `ministry`, `teamMember`, `mediaItem` — колекції. `event.type` розділяє події й оголошення; на головній події видимі весь київський день, оголошення — до `activeUntil` або `startDate`. `lib/utils.ts` форматує дати/час і початок дня в Europe/Kyiv, включно з DST.
+- `news`, `event`, `ministry`, `teamMember`, `mediaItem` — колекції. Перші чотири мають спільний об’єкт `seo` (title/description/ogImage/noIndex), з фолбеками на контент і siteSettings. У подій є необов’язкові endDate/eventStatus/locationAddress/organizer/isAccessibleForFree; повна адреса потрібна для Event JSON-LD, вигаданих значень немає. `event.type` розділяє події й оголошення; на головній події видимі весь київський день, оголошення — до `activeUntil` або `startDate`. `lib/utils.ts` форматує дати/час і початок дня в Europe/Kyiv, включно з DST.
 - `ministry.leaders[]` → weak references на `teamMember`; `news.ministries[]` → weak references на ministry; `homepage.featuredSermon` → weak reference на mediaItem. Відсутні referenced-дані фільтруються до рендеру. Одна відповідальна особа й кілька мають окремі layout-гілки.
 - Довгі тексти — Portable Text, спільний `richTextBlocks` у `sanity/schemaTypes/objects/richText.ts`; excerpt-поля прості. `PortableTextBody` рендерить блоки та підтримує legacy string.
 - `news.image` — required asset; `news.gallery` — до 10 фото. GROQ проєктує dimensions/LQIP; відсутні assets пропускаються. `/media/photos` агрегує `ministry.gallery`, а не галереї новин.
@@ -34,7 +34,7 @@ Next.js 16 App Router, React 19, TypeScript strict; Sanity 4 + `next-sanity`/Typ
 
 Публічні GROQ-запити проходять через server-only `sanity/lib/fetch.ts`: published perspective, `force-cache`, теги всіх прочитаних типів (включно з `->`) і `sanity.imageAsset`. `useCdn: false` обходить CDN під час revalidation. `/api/revalidate` перевіряє підпис через `parseBody`, allowlist типів і викликає `revalidateTag(type, 'max')`. Налаштування секрету/вебхука власником — [інструкція](../docs/sanity-revalidation.md).
 
-Пошук/фільтри великих медіаколекцій виконуються GROQ на сервері. Початкові дані й готові RSC-картки приходять зі сторінки; `searchMedia`/`loadMoreMedia` повертають `{cards, views}` (пошук також `total`). `cards` живлять лічильник/JSON-LD, `views` — серверну розмітку. Спільний transformer — `lib/media.ts`; `MediaGallery` оновлює грид і shallow URL; початковий SSR-список статичний, URL-фільтри відновлюються після hydration та popstate. Номер запиту захищає результати від запізнілих відповідей. Фото мають стабільний порядок служінь (`order`, title, `_id`), далі порядок CMS-масиву; ID фото включає ID служіння.
+Пошук/фільтри великих медіаколекцій виконуються GROQ на сервері. Початкові дані й готові RSC-картки приходять зі сторінки; `searchMedia`/`loadMoreMedia` повертають `{cards, views}` (пошук також `total`). `cards` живлять лічильник/load-more, `views` — серверну розмітку. Спільний transformer — `lib/media.ts`; `MediaGallery` оновлює грид і shallow URL; початковий SSR-список статичний, URL-фільтри відновлюються після hydration та popstate. Номер запиту захищає результати від запізнілих відповідей. Фото мають стабільний порядок служінь (`order`, title, `_id`), далі порядок CMS-масиву; ID фото включає ID служіння.
 
 News/event detail, path pagination `/news/page/[n]`, `/events/page/[n]`, категорії `/news/category/[category]` (із вкладеною пагінацією, noindex) мають `generateStaticParams` і дозволяють нові параметри на вимогу. Існуючі ministry/team detail лишаються SSG. Публічні сторінки не читають `searchParams`. Головна та event-маршрути мають страховку `revalidate = 3600`; YouTube Live — власний fetch-кеш 900 с. Інші CMS-запити оновлюються тегами. `revalidateTag(..., 'max')` запускає фонове оновлення при наступному відвідуванні, тому перший запит може отримати попередній контент. `sanity/lib/live.ts` видалено.
 
@@ -56,9 +56,9 @@ Studio `GalleryInput` делегує multiple upload нативному `onSelec
 
 ## Auth and Access Model
 
-Публічний сайт без акаунтів; Studio — Sanity login. Поточний pre-launch: root/page noindex, `X-Robots-Tag: noindex`, `robots.ts` із `Disallow: /`, порожній sitemap. `lib/seo-readiness.ts` містить порожній реєстр схвалень для metadata/sitemap. Це пошукові сигнали, а не обмеження доступу; заборона crawl заважає прочитати noindex.
+Публічний сайт без акаунтів; Studio — Sanity login. Поточний pre-launch: `lib/indexing.ts` дозволяє індексацію лише за `SITE_INDEXING=on` і `VERCEL_ENV=production`. Єдиний перемикач керує robots/meta/HTTP/sitemap; до запуску crawl дозволений, noindex увімкнений, sitemap порожній і не оголошений у robots. Після запуску Studio заборонене в robots; Studio/API й медіафільтри мають окремий HTTP noindex. Документний `seo.noIndex` керує meta та виключенням із sitemap, списки не залежать від схвалення кожного документа. Зміна env потребує нового deployment. Запуск — лише за явним «готово», [§F](master-plan.md#f-launch-checklist-найостанніший-крок).
 
-**Фаза 3 / B2:** заміна реєстру одним перемикачем `SITE_INDEXING=on` + Production і документним `seo.noIndex`; узгодження robots/meta/header/sitemap. Запуск лишається окремою дією за явним «готово» — [§F](master-plan.md#f-launch-checklist-найостанніший-крок). CSP поки Report-Only, Studio виключене; enforce без nonce — Фаза 7 / B8.
+Public root містить один WebSite + Church/Organization @graph із постійними @id; NewsArticle/Person/AboutPage посилаються на нього. `Breadcrumbs` рендерить видиму навігацію й BreadcrumbList з одного масиву. News metadata має article dates, заголовки використовують root template; keywords і VideoObject-список прибрані. `/media` без canonical: статична HTML-відповідь спільна з noindex URL-фільтрами. Sitemap містить лише URL/фактичний lastModified. Деталі й межі перевірки — [звіт Фази 3](../docs/phase3-seo.md). CSP поки Report-Only, Studio виключене; enforce без nonce — Фаза 7 / B8.
 
 ## Invariants
 

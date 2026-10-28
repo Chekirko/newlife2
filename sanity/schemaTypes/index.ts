@@ -8,7 +8,8 @@ import { siteSettingsType } from './siteSettings'
 import { homepageType } from './homepage'
 import { pageHeroesType } from './pageHeroes'
 import { aboutPageType } from './aboutPage'
+import { seoType } from './objects/seo'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [siteSettingsType, homepageType, pageHeroesType, aboutPageType, ministryType, newsType, eventType, mediaItemType, teamMemberType],
+  types: [seoType, siteSettingsType, homepageType, pageHeroesType, aboutPageType, ministryType, newsType, eventType, mediaItemType, teamMemberType],
 }

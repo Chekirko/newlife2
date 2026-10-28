@@ -127,6 +127,7 @@
 **Приймання:** у звіті `next build` усі публічні маршрути ○/● (крім API/Server Actions); правка в Studio → сторінка оновлюється за секунди.
 
 ### Фаза 3 — SEO-архітектура
+Статус 2026-10-28: **код завершено** — єдиний закритий indexing-перемикач, SEO-об’єкт у чотирьох типах, metadata/JSON-LD/sitemap/брендові іконки; локальні on/off HTTP/browser gates PASS. Для чесної Event-розмітки додано необов’язкові endDate/eventStatus/locationAddress/organizer/isAccessibleForFree; чинний контент не змінювався. Rich Results Test розгорнутих URL після деплою й заповнення фактичних адрес — зовнішня перевірка; [звіт](../docs/phase3-seo.md).
 1. `lib/indexing.ts` (B2) замість `lib/seo-readiness.ts`; `app/robots.ts` (до запуску: allow + без sitemap-URL; після: allow, `disallow: /studio`, sitemap), meta robots у root layout, `X-Robots-Tag` у `next.config.ts` — умовно від одного значення; sitemap порожній, доки індексація вимкнена.
 2. Поле-об'єкт `seo` (title, description, ogImage, noIndex) для `news`, `event`, `ministry`, `teamMember` — окремий крок зі schema-зміною; `pnpm typegen`.
 3. Metadata: `title.template: '%s | Церква «Нове Життя»'`, сторінки передають короткі унікальні title/description; «— сторінка N» для пагінації; новини — `og:type: article` + `publishedTime`/`modifiedTime`; прибрати `keywords`; фільтровані списки — noindex без canonical на іншу URL; `permanentRedirect` у `lib/listing-params.ts`.

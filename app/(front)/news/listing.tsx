@@ -41,11 +41,11 @@ export async function newsMetadata({ page = 1, category = '' }: Props = {}): Pro
   const filtered = !!category
   const { items } = await getNewsListing(page, category)
   return getPageMetadata(canonical, {
-    title: 'Новини | Церква «Нове Життя»',
+    title: `Новини${category ? ` — ${category}` : ''}${page > 1 ? ` — сторінка ${page}` : ''}`,
     description: 'Останні новини та оновлення церкви «Нове Життя» у Бориславі.',
     alternates: { canonical },
-    listingItems: items,
-    ...(filtered ? { robots: { index: false, follow: true } } : {}),
+    noIndex: items.length === 0,
+    ...(filtered ? { noIndex: true } : {}),
   })
 }
 

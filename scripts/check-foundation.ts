@@ -31,6 +31,6 @@ assert.equal(parseListingPage('2', '/news'), 2)
 for (const raw of ['0', '-1', 'abc', '1.5', '999999999999999999999']) {
   assert.throws(() => parseListingPage(raw, '/news'), { digest: 'NEXT_HTTP_ERROR_FALLBACK;404' })
 }
-assert.throws(() => parseListingPage('1', '/events'), { digest: 'NEXT_REDIRECT;replace;/events;307;' })
-assert.throws(() => parseListingPage('002', '/news'), { digest: 'NEXT_REDIRECT;replace;/news/page/2;307;' })
+assert.throws(() => parseListingPage('1', '/events'), { digest: 'NEXT_REDIRECT;replace;/events;308;' })
+assert.throws(() => parseListingPage('002', '/news'), { digest: 'NEXT_REDIRECT;replace;/news/page/2;308;' })
 console.log('Path pagination: canonical URLs, category encoding, redirects and invalid bounds PASS')

@@ -1,7 +1,7 @@
 // =========================================
 // YouTube helpers — extract the video id from any common YouTube URL shape and
 // build the thumbnail / privacy-friendly embed URLs from it. Pure functions,
-// reused by the media cards, lightbox player and VideoObject JSON-LD.
+// reused by the media cards and lightbox player.
 // =========================================
 
 /**

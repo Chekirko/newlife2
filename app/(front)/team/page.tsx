@@ -11,12 +11,10 @@ import {
 import { TeamSection, HonorarySection, TeamPhotoBanner } from './components'
 import type { SanityTeamMemberCard } from '@/sanity/lib/types'
 import { getPageHeroes } from '@/lib/page-heroes'
-import { SITE_URL } from '@/lib/site'
-import { jsonLdHtml } from '@/lib/utils'
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata('/team', {
-    title: 'Команда | Церква «Нове Життя»',
+    title: 'Команда',
     description: 'Наші служителі — пастори, диякони та відповідальні за різні напрями церковного служіння.',
     alternates: { canonical: '/team' },
   })
@@ -52,20 +50,6 @@ export default async function TeamPage() {
         ]}
       />
 
-      {/* BreadcrumbList JSON-LD (schema-markup skill) */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: jsonLdHtml({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
-              { '@type': 'ListItem', position: 2, name: 'Команда', item: `${SITE_URL}/team` },
-            ],
-          }),
-        }}
-      />
 
       {/* 1. Почесні служителі — спеціальний стиль */}
       {honorary.length > 0 && <HonorarySection members={honorary} bgClass={getBgClass()} />}

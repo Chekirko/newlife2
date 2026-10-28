@@ -8,6 +8,7 @@ export const eventType = defineType({
   type: 'document',
   icon: () => '📅',
   fields: [
+    defineField({ name: 'seo', title: 'SEO та соціальні мережі', type: 'seo' }),
     defineField({
       name: 'type',
       title: 'Тип',
@@ -50,10 +51,53 @@ export const eventType = defineType({
         'Необовʼязково. Доки показувати на головній. Якщо порожньо — до дати події. Корисно для оголошень із дедлайном.',
     }),
     defineField({
+      name: 'endDate',
+      title: 'Дата та час завершення',
+      type: 'datetime',
+      description: 'Заповнюйте лише відомий час завершення події.',
+      validation: (rule) => rule.min(rule.valueOfField('startDate')).error('Завершення не може бути раніше початку'),
+    }),
+    defineField({
+      name: 'eventStatus',
+      title: 'Статус події',
+      type: 'string',
+      options: { list: [
+        { title: 'Заплановано', value: 'EventScheduled' },
+        { title: 'Скасовано', value: 'EventCancelled' },
+        { title: 'Відкладено', value: 'EventPostponed' },
+      ] },
+      description: 'Порожнє поле означає «Заплановано». Після скасування чи відкладення зберігайте початкову дату.',
+    }),
+    defineField({
       name: 'location',
       title: 'Місце',
       type: 'string',
       description: 'Необовʼязково. Адреса чи назва місця проведення.',
+    }),
+    defineField({
+      name: 'locationAddress',
+      title: 'Повна адреса події',
+      type: 'object',
+      description: 'Потрібна для Event-розмітки; адреса церкви не підставляється автоматично.',
+      fields: [
+        defineField({ name: 'street', title: 'Вулиця та будинок', type: 'string', validation: (rule) => rule.required() }),
+        defineField({ name: 'city', title: 'Місто', type: 'string', validation: (rule) => rule.required() }),
+        defineField({ name: 'region', title: 'Область / регіон', type: 'string' }),
+        defineField({ name: 'postalCode', title: 'Поштовий індекс', type: 'string' }),
+        defineField({ name: 'country', title: 'Код країни', type: 'string', description: 'Дві латинські літери, наприклад UA.', validation: (rule) => rule.required().regex(/^[A-Z]{2}$/) }),
+      ],
+    }),
+    defineField({
+      name: 'organizer',
+      title: 'Організатор',
+      type: 'string',
+      description: 'Фактична назва організації. Залиште порожнім, якщо організатор не відомий.',
+    }),
+    defineField({
+      name: 'isAccessibleForFree',
+      title: 'Безкоштовна участь',
+      type: 'boolean',
+      description: 'Укажіть лише відомі умови участі. Порожнє поле не означає безкоштовну участь.',
     }),
     defineField({
       name: 'tag',

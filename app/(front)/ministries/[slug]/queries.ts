@@ -8,6 +8,7 @@ import { defineQuery } from 'next-sanity'
 export const MINISTRY_BY_SLUG_QUERY = defineQuery(`
   *[_type == "ministry" && slug.current == $slug][0] {
     _id,
+    seo,
     title,
     "slug": slug.current,
     shortDescription,

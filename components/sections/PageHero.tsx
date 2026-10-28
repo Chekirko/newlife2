@@ -1,15 +1,12 @@
 import Image from '@/components/ui/SiteImage'
-import Link from 'next/link'
+import { Breadcrumbs, type Breadcrumb } from '@/components/ui/Breadcrumbs'
 
 // =========================================
 // PageHero — Shared frosted-glass hero
 // Used on: History, Ministry Detail, etc.
 // =========================================
 
-export interface Breadcrumb {
-  label: string
-  href?: string
-}
+export type { Breadcrumb } from '@/components/ui/Breadcrumbs'
 
 export interface PageHeroProps {
   title: string
@@ -54,24 +51,7 @@ export function PageHero({
         <h1 className="text-white font-bold text-xl sm:text-2xl lg:text-4xl mb-2 leading-tight">
           {title}
         </h1>
-        {breadcrumbs.length > 0 && (
-          <nav>
-            <ol className="flex items-center justify-center gap-1.5 text-white/75 text-xs sm:text-sm">
-              {breadcrumbs.map((crumb, idx) => (
-                <li key={idx} className="flex items-center gap-1.5">
-                  {idx > 0 && <span className="text-white/40">/</span>}
-                  {crumb.href ? (
-                    <Link href={crumb.href} className="hover:text-white transition-colors">
-                      {crumb.label}
-                    </Link>
-                  ) : (
-                    <span className="text-white/55">{crumb.label}</span>
-                  )}
-                </li>
-              ))}
-            </ol>
-          </nav>
-        )}
+        <Breadcrumbs items={breadcrumbs} />
       </div>
     </section>
   )

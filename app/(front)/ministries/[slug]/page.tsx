@@ -17,7 +17,6 @@ import {
 } from './queries'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getPageMetadata } from '@/lib/metadata'
-import { SITE_URL } from '@/lib/site'
 import type { SanityMinistry, SanityMinistryLink, SanityNews } from '@/sanity/lib/types'
 
 // ============================================
@@ -42,8 +41,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       ministry.fullDescription ? toPlainText(ministry.fullDescription) : '')
 
   return getPageMetadata(`/ministries/${slug}`, {
-    documentId: ministry._id,
-    title: `${ministry.title || 'Служіння'} | Церква «Нове Життя»`,
+    seo: ministry.seo,
+    title: ministry.title || 'Служіння',
     description: description.slice(0, 160),
     alternates: { canonical: `/ministries/${slug}` },
     image: ministry.image ? {
@@ -55,7 +54,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   })
 }
 
-import { formatDate, jsonLdHtml } from '@/lib/utils'
+import { formatDate } from '@/lib/utils'
 
 // ============================================
 // PAGE (Server Component)
@@ -120,21 +119,6 @@ export default async function MinistryDetailPage({ params }: { params: Promise<{
         ]}
       />
 
-      {/* BreadcrumbList JSON-LD (schema-markup skill) */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: jsonLdHtml({
-            '@context': 'https://schema.org',
-            '@type': 'BreadcrumbList',
-            itemListElement: [
-              { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
-              { '@type': 'ListItem', position: 2, name: 'Служіння', item: `${SITE_URL}/ministries` },
-              { '@type': 'ListItem', position: 3, name: ministry.title, item: `${SITE_URL}/ministries/${slug}` },
-            ],
-          }),
-        }}
-      />
 
       {/* Main Content + Sidebar */}
       <section className="py-12 lg:py-20">

@@ -3,7 +3,9 @@ import ChurchFooter from "@/components/ChurchFooter";
 import { getSiteSettings } from "@/lib/site-settings";
 import type { Metadata } from 'next';
 import { SITE_URL } from '@/lib/site';
-import { getPageMetadata } from '@/lib/metadata';
+import { getPageMetadata, HOME_TITLE, SITE_TITLE } from '@/lib/metadata';
+import { siteGraph } from '@/lib/structured-data';
+import { jsonLdHtml } from '@/lib/utils';
 import { bodyFont, headingFont, accentFont } from '../site-fonts';
 import '../globals.css';
 
@@ -11,8 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     ...await getPageMetadata('/'),
     metadataBase: new URL(SITE_URL),
-    robots: { index: false, follow: true },
-    keywords: ['церква', 'євангельська церква', 'Борислав', 'Нове Життя', 'богослужіння'],
+    title: { default: HOME_TITLE, template: `%s | ${SITE_TITLE}` },
   };
 }
 
@@ -26,6 +27,7 @@ export default async function FrontLayout({
   return (
     <html lang="uk" className={`${bodyFont.variable} ${headingFont.variable} ${accentFont.variable}`}>
     <body className="antialiased">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(siteGraph(settings)) }} />
       {/* Skip-link — first focusable element, lets keyboard users jump past the header */}
       <a
         href="#main-content"

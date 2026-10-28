@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { isIndexingEnabled } from "./lib/indexing";
 
 const isDev = process.env.NODE_ENV === "development";
 
@@ -33,8 +34,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   async redirects() {
     return ['/news', '/events', '/news/category/:category'].flatMap((base) => [
-      { source: `${base}/page/:n(0*1)`, destination: base, permanent: false },
-      { source: `${base}/page/:zeros(0+):n([1-9]\\d*)`, destination: `${base}/page/:n`, permanent: false },
+      { source: `${base}/page/:n(0*1)`, destination: base, permanent: true },
+      { source: `${base}/page/:zeros(0+):n([1-9]\\d*)`, destination: `${base}/page/:n`, permanent: true },
     ]);
   },
   images: {
@@ -60,9 +61,19 @@ const nextConfig: NextConfig = {
         headers: [
           ...securityHeaders,
           // Pre-launch signal for HTML and non-HTML responses; not access control.
-          { key: "X-Robots-Tag", value: "noindex" },
+          ...(!isIndexingEnabled() ? [{ key: "X-Robots-Tag", value: "noindex" }] : []),
         ],
       },
+      ...["/studio/:path*", "/api/:path*"].map((source) => ({
+        source,
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      })),
+      // URL filters share the static /media HTML; their responses stay noindex.
+      ...["category", "speaker", "q"].map((key) => ({
+        source: "/media",
+        has: [{ type: "query" as const, key, value: ".+" }],
+        headers: [{ key: "X-Robots-Tag", value: "noindex" }],
+      })),
       {
         // CSP everywhere EXCEPT the embedded Sanity Studio (it needs eval/blob/ws
         // that a strict policy would break).

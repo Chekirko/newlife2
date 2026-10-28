@@ -7,7 +7,7 @@ import { getPageHeroes } from '@/lib/page-heroes'
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata('/history', {
-    title: 'Історія | Церква «Нове Життя»',
+    title: 'Історія',
     description: 'Дізнайтеся більше про історію та пройдений шлях нашої церкви.',
     alternates: { canonical: '/history' },
   })

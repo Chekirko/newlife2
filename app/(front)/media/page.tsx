@@ -21,11 +21,11 @@ import { MediaGallery } from './components/MediaGallery'
 export async function generateMetadata(): Promise<Metadata> {
   const { itemsRaw } = await getMediaListing()
   return getPageMetadata('/media', {
-    title: 'Медіа | Церква «Нове Життя»',
+    title: 'Медіа',
     description:
       'Проповіді, трансляції богослужінь, пісні та відео церкви «Нове Життя» у Бориславі.',
-    alternates: { canonical: '/media' },
-    ...(itemsRaw.length === 0 ? { robots: { index: false, follow: true } } : {}),
+    alternates: { canonical: null },
+    ...(itemsRaw.length === 0 ? { noIndex: true } : {}),
   })
 }
 

@@ -20,7 +20,7 @@
 | `/ministries`, `/ministries/[slug]` | Картки/опис/галерея, одна або кілька відповідальних осіб, пов’язані новини; фото опційне, є ImagePlaceholder |
 | `/team`, `/team/[slug]` | Почесні, рукопокладені, групове фото, кандидати, відповідальні; категорії можуть поєднуватися; біографія й масив відповідальностей |
 | `/news`, `/news/[slug]` | Статичні path-категорії/пагінація/sidebar, Portable Text, основне фото + до 10 додаткових, спільний viewer; weak зв’язки зі служіннями |
-| `/events`, `/events/[slug]` | Статичні списки/path-пагінація, події й оголошення в одній моделі, дати/дедлайни, список/sidebar/detail; Event JSON-LD лише для придатних даних події |
+| `/events`, `/events/[slug]` | Статичні списки/path-пагінація, події й оголошення в одній моделі, дати/дедлайни, список/sidebar/detail; необов’язкові адреса/завершення/статус/організатор/умови участі; Event JSON-LD лише для повних даних |
 | `/media` | Статичні перші 12 YouTube-карток, серверний пошук/category/speaker, Server Actions без повного reload, load-more по 12, відео-lightbox |
 | `/media/photos` | Агрегат ministry.gallery, бенто, load-more й фото-viewer; стабільний порядок служінь і CMS-масивів фото |
 | `/contact` | Контакти/розклад/карта, Server Action форма → Upstash limiter + Resend; production secrets і реальну доставку ще налаштовує власник |
@@ -35,7 +35,7 @@
 
 Зараз CMS має singletons siteSettings/homepage/pageHeroes/aboutPage та колекції ministry/news/event/teamMember/mediaItem. NAP, розклад, соцмережі й defaults — siteSettings; статистика — aboutPage. Фолбеки забезпечують неповні CMS-дані; контентні факти потребують перевірки редактором.
 
-Фундамент швидкодії Фази 1 та static-first/cache/webhook Фази 2 реалізовано; підключення вебхука в Sanity/Vercel — [дія власника](../docs/sanity-revalidation.md). Далі: єдиний indexing-механізм і SEO (3), Larexa components/редизайн сторінок зі статичним hero (4–5), доступність (6), browser/unit/CI перевірки та CSP (7), контент/дії власника (8), окремо погоджений запуск (9).
+Фундамент швидкодії Фази 1, static-first/cache/webhook Фази 2 та SEO-архітектуру Фази 3 реалізовано; підключення вебхука в Sanity/Vercel — [дія власника](../docs/sanity-revalidation.md). Чотири контентні типи мають SEO-поля; єдиний indexing-перемикач лишається закритим, metadata/JSON-LD/sitemap узгоджені ([деталі й перевірки](../docs/phase3-seo.md)). Далі: Larexa components/редизайн сторінок зі статичним hero (4–5), доступність (6), browser/unit/CI перевірки та CSP (7), контент/дії власника (8), окремо погоджений запуск (9).
 
 Рекомендації master-plan §E — backlog, не автоматично дозволений scope: «Я тут уперше», sermon detail pages, календар, give, молитовні потреби тощо. Авторизація публічних відвідувачів, processing платежів, newsletter, коментарі й мультимовність не входять у поточну реалізацію.
 

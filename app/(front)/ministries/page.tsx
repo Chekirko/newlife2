@@ -9,7 +9,7 @@ import { getPageMetadata } from '@/lib/metadata'
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata('/ministries', {
-    title: 'Служіння | Церква «Нове Життя»',
+    title: 'Служіння',
     description: 'Напрями служіння церкви «Нове Життя» у Бориславі та інформація про кожне служіння.',
     alternates: { canonical: '/ministries' },
   })

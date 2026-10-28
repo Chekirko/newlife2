@@ -4,40 +4,40 @@
 
 Єдиний чинний план — [master-plan.md](master-plan.md); дизайн — [spec 08](specs/08-larexa-redesign.md); процес — [ai-workflow-rules.md](ai-workflow-rules.md). Гілка `codex/seo-1-audit`; робота ще не злита в `master`. Сайт до запуску, індексація закрита.
 
-Рішення користувача: адаптивні Sanity-прев’ю + оригінал у лайтбоксі/завантаженні; Montserrat для заголовків; статичний hero; Larexa; static-first; робота фазами. B1/B3/B4 реалізовано у Фазі 1; Static-first реалізовано у Фазі 2; редизайн ще попереду.
+Рішення користувача: адаптивні Sanity-прев’ю + оригінал у viewer/завантаженні; Montserrat; статичний hero; Larexa; static-first; робота фазами. B1/B3/B4 реалізовано у Фазі 1, B6 — у Фазі 2, B2 — у Фазі 3. Редизайн ще попереду.
 
 ## Фаза 0 — завершено
 
-- Код і build-звіт підтвердили ключові проблеми плану: FA/q=100, дати без Europe/Kyiv, dynamic listings/detail news/events, 23 client directives і три відсутні image-paths. Hydration #418 лишається гіпотезою до browser QA Фази 1.
-- Архівовано tracker, specs 00–07, SEO audit/3 JSON; перенесено skills-analysis; оновлено всі 6 контекстних файлів, AGENTS/README/env example. Поточна реалізація чітко відділена від рішень B1–B8.
-- Прибрано 38 файлів (16 561 520 байтів) і 3 migration-команди; seed/check/основний measurement runner та patches збережено. Залежностей від видаленого у чинному коді/конфігурації немає.
-- Lint, повний typecheck, 3 штатні регресії та production build PASS: 21 schema type / 34 GROQ / 42 із 42 generation tasks. Початкові sandbox EPERM усунено дозволеним повтором; лишилися наявні Node/Browserslist warnings.
-- Локальні Markdown targets/anchors, UTF-8 і diff-check PASS; JSON evidence перенесені без зміни bytes. Application source, CMS, фактичний env, pnpm lock/patches та індексація без змін; новий Lighthouse не запускався для документаційної фази.
+- Архівовано старі tracker/specs/SEO-аудит; оновлено контекст, AGENTS/README/env example. Прибрано 38 невикористаних файлів (~16,6 МБ) і 3 migration-команди; application source та CMS не змінювались.
+- Lint, повний typecheck, 3 регресії, build 42/42, UTF-8/Markdown links/diff-check — PASS. Історія й початкові виміри — в архівах та Git.
 
 ## Фаза 1 — завершено
 
-- Серверний Icon/CMS-реєстр і малий клієнтський ControlIcon замінили icon fonts; локальні Montserrat/Roboto/Playfair italic через next/font/local, Latin/Cyrillic/OFL, без Poppins і ручного font CSS/preload.
-- Статичні секції/FAQ/details/pagination/ministry grid і header — серверні; MobileMenu/NavDropdown/NavLink — острівці, CSS sticky й hidden/inert. Hero reduced-motion hydration-safe, фото сусідніх слайдів монтуються лише після першого; статичний hero лишається для Фази 5.
-- SiteImage/CDN loader, адаптивні прев’ю/sizes/LQIP, оригінал лише у відкладеному native viewer/завантаженні; прибрано DeferredGalleryImage, биті placeholder paths, CSS-фото й дубль action1.
-- Дати/межа дня Europe/Kyiv з DST; серверні media cards + play-острівець, native video dialog, hqdefault, lazy Live, без демо-Vimeo; окремі public/Studio root layouts.
-- Build 42/42, lint, повний TypeGen/typecheck, 4 регресії, frozen offline install — PASS. Browser QA: 14 маршрутів, SSR деталей team/event, 320/390/1280px, меню/FAQ/діалоги/фокус/фільтри/карта/Studio, без console/hydration errors; CMS і жива форма не змінювались.
-- Lighthouse mobile, 3 прогони/медіани: Performance головна 61→77, новина 66→74, служіння 59→74, фото 45→79, контакти 60→85. Метод, LCP/байти й обмеження — [звіт](../docs/phase1-performance.md); загальна ціль ≥95 ще попереду. Архітектуру/UI/стандарти/scope оновлено; індексація закрита.
-- Доопрацювання після рев’ю: шрифти обрізано до latin+cyrillic (головна 349→137 КБ, preload 259→91 КБ); фото пастора знову SVG `<image>` (ризик WebKit із foreignObject); карта знову iframe одразу (фасад відхилено користувачем); фото команди знову з desktop-паралаксом через `image-set` q90 (AVIF у Next = quality−20, q75 розмивав обличчя), а не 5-МБ оригінал; hero після першого фото монтує сусідні слайди; іконка «Що очікувати» лише зі списку; гігієна імпортів/CSS/fallback. Lint, typecheck, 4 регресії, build 42/42 PASS; Lighthouse не перезапускався.
+- Inline SVG замість icon fonts; локальні Montserrat/Roboto/Playfair italic (latin+cyrillic); статичні секції/header — серверні, interactivity — острівці; hydration-safe hero.
+- Адаптивні SiteImage/CDN прев’ю, відкладені native фото/відео-viewers, оригінали лише на вимогу; дати Europe/Kyiv/DST; окремі public/Studio root layouts.
+- Після рев’ю: карта iframe одразу; пастор SVG image; desktop-паралакс команди через image-set q90; hero монтує сусідів після першого фото. Ці домовленості збережені в architecture/UI context.
+- Build 42/42, lint/typecheck/4 регресії/install — PASS; Chrome QA 14 маршрутів, 320/390/1280px, без console/hydration errors. [Lighthouse](../docs/phase1-performance.md): Performance 61→77 / 66→74 / 59→74 / 45→79 / 60→85; після рев’ю не повторювався.
 
 ## Фаза 2 — код завершено
 
-- Публічний Sanity fetch — published/force-cache, теги типів і referenced-даних; підписаний webhook, `live.ts` видалено.
-- SSG новин/подій, path pagination і news categories (noindex); нові params — на вимогу. Часові сторінки мають годинну страховку.
-- Статичний /media + URL-фільтри через Actions після hydration; back/forward і захист від запізнілих відповідей. Фото мають стабільний порядок та унікальні ID.
-- Build 55/55: усі public routes ○/●; lint/typecheck/4 регресії PASS. HTTP/Chrome QA, 320/390/1280px, кирилиця, redirects/404, signed webhook HIT→STALE→HIT — PASS.
-- Lighthouse mobile (3 прогони, медіани): головна 81, новина 88, служіння 88, фото 87, контакти 86; [до/після й межі](../docs/phase2-performance.md). Ціль ≥95 ще попереду.
-- Зовнішній webhook Sanity→Vercel ще налаштовує власник за [інструкцією](../docs/sanity-revalidation.md). CMS/production env не змінювались; індексація закрита.
+- Published/force-cache Sanity fetch, теги referenced-даних, підписаний webhook; SSG новин/подій, path pagination/news categories; статичний media batch + URL-фільтри через Actions; стабільний порядок фото.
+- Build 55/55, усі public routes ○/●; lint/typecheck/4 регресії, HTTP/Chrome QA, кирилиця, redirects/404 і signed webhook HIT→STALE→HIT — PASS.
+- [Lighthouse mobile](../docs/phase2-performance.md): головна 81, новина 88, служіння 88, фото 87, контакти 86. Загальна ціль ≥95 ще попереду.
+- Зовнішній webhook Sanity→Vercel налаштовує власник за [інструкцією](../docs/sanity-revalidation.md). CMS/production env не змінювались.
+
+## Фаза 3 — код завершено
+
+- Один `SITE_INDEXING=on` + Production керує robots/meta/HTTP/sitemap; реєстр схвалень видалено. До запуску crawl дозволено, noindex збережено, sitemap порожній; Preview закритий.
+- SEO-об’єкт у news/event/ministry/teamMember, короткі title/template, article OG dates, 308 pagination redirects; shared root graph і Breadcrumbs, повний NewsArticle, без VideoObject-списку, брендова іконка/manifest.
+- Для Event додано необов’язкові фактичні поля; без повної адреси Event не емітується. CMS-контент не змінювався — адреси заповнює редактор.
+- Build 57/57, lint/повний TypeGen/typecheck/5 регресій, on/off HTTP/Chrome по 16 маршрутах, 320/390/1280px — PASS; on sitemap 44 URL, off 0. Schema.org Validator новини: 0 помилок/застережень.
+- Lighthouse mobile: 78 / 84 / 88 / 86 / 90 (головна/новина/служіння/фото/контакти); межі — [звіт Фази 3](../docs/phase3-seo.md). Rich Results Test розгорнутих URL після деплою ще потрібен (Google попросив авторизацію). Індексація закрита; production env і жива форма не змінювались.
 
 ## Далі
 
-Фаза 3: єдиний перемикач індексації, SEO-поля й structured data. Перелік і критерії — master-plan §C; запуск індексації лишається окремим явним рішенням.
+Фаза 4: дизайн-система Larexa — CSS-токени/очищення стилів, серверні компоненти й оновлення UI-конвенцій. Перелік і критерії — master-plan §C; наступна фаза потребує окремого доручення.
 
-Контент, privacy, ротація раніше засвіченого Sanity-токена й конфігурація сервісів — [дії власника](master-plan.md#d-дії-власника-не-код). Запуск — лише за окремим явним «готово» згідно з [launch checklist](master-plan.md#f-launch-checklist-найостанніший-крок).
+Контент, privacy, ротація раніше засвіченого Sanity-токена й сервіси — [дії власника](master-plan.md#d-дії-власника-не-код). Запуск — лише за окремим явним «готово» згідно з [launch checklist](master-plan.md#f-launch-checklist-найостанніший-крок).
 
 Історія до нового плану: [старий tracker](archive/2026-10-27/progress-tracker.md), [старий план](archive/2026-10-27/master-plan.md), [SEO-аудит](../docs/archive/seo-codex-2026-10/audit.md), [специфікації 00–07](specs/done).
 

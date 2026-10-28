@@ -22,7 +22,6 @@ import type { SanityNews, SanityEvent } from '@/sanity/lib/types'
 import type { SENIOR_PASTOR_QUERYResult } from '@/sanity/lib/sanity.types'
 import { toMediaCard, type RawMediaItem } from '@/lib/media'
 import { urlFor } from '@/sanity/lib/image'
-import { SITE_URL } from '@/lib/site'
 import { getSiteSettings } from '@/lib/site-settings'
 import { getHomepage } from '@/lib/homepage'
 import { getLiveVideoId } from '@/lib/live-stream'
@@ -94,50 +93,6 @@ export default async function HomePage() {
     description: e.description ?? '',
   }))
 
-  const churchJsonLd = {
-    '@context': 'https://schema.org',
-    '@graph': [
-      {
-        '@type': ['Church', 'Organization'],
-        '@id': `${SITE_URL}/#church`,
-        name: settings.name,
-        legalName: settings.legalName,
-        url: SITE_URL,
-        email: settings.email,
-        telephone: settings.phone,
-        address: {
-          '@type': 'PostalAddress',
-          streetAddress: settings.address.street,
-          addressLocality: settings.address.city,
-          addressRegion: settings.address.region,
-          postalCode: settings.address.postalCode,
-          addressCountry: settings.address.country,
-        },
-        geo: {
-          '@type': 'GeoCoordinates',
-          latitude: settings.geo.lat,
-          longitude: settings.geo.lng,
-        },
-        sameAs: settings.sameAs,
-        ...(settings.openingHours.length > 0 && {
-          openingHoursSpecification: settings.openingHours.map((h) => ({
-            '@type': 'OpeningHoursSpecification',
-            dayOfWeek: h.dayOfWeek,
-            opens: h.opens,
-            closes: h.closes,
-          })),
-        }),
-      },
-      {
-        '@type': 'WebSite',
-        '@id': `${SITE_URL}/#website`,
-        url: SITE_URL,
-        name: settings.name,
-        inLanguage: 'uk',
-      },
-    ],
-  }
-
   // Service schedule line for the CTA — built from CMS data (single source of truth).
   const scheduleSummary = settings.services
     .map((s) => `${s.day} ${s.time}${s.endTime ? `–${s.endTime}` : ''} — ${s.label}`)
@@ -156,10 +111,6 @@ export default async function HomePage() {
 
   return (
     <>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdHtml(churchJsonLd) }}
-      />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdHtml(faqJsonLd) }}

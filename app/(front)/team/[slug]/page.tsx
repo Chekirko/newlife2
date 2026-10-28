@@ -6,7 +6,7 @@ import { ImagePlaceholder, PageHero, PhotoViewer, PortableTextBody } from '@/com
 import { sanityFetch } from '@/sanity/lib/fetch'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getPageMetadata } from '@/lib/metadata'
-import { getSiteSettings } from '@/lib/site-settings'
+import { CHURCH_ID } from '@/lib/structured-data'
 import { SITE_URL } from '@/lib/site'
 import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { TEAM_MEMBER_BY_SLUG_QUERY, TEAM_MEMBER_SLUGS_QUERY } from './queries'
@@ -29,8 +29,8 @@ export async function generateMetadata({
   if (!member) return { title: 'Служитель не знайдений' }
   const plainBio = typeof member.bio === 'string' ? member.bio : member.bio ? toPlainText(member.bio) : ''
   return getPageMetadata(`/team/${slug}`, {
-    documentId: member._id,
-    title: `${member.name || 'Служитель'} | Церква «Нове Життя»`,
+    seo: member.seo,
+    title: member.name || 'Служитель',
     description: plainBio.trim().slice(0, 160) || `${member.name || 'Служитель'} — служитель церкви «Нове Життя»`,
     alternates: { canonical: `/team/${slug}` },
     image: member.photo ? {
@@ -46,10 +46,9 @@ export default async function TeamMemberPage({
   params,
 }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const [member, heroes, settings] = await Promise.all([
+  const [member, heroes] = await Promise.all([
     sanityFetch<SanityTeamMember | null>(TEAM_MEMBER_BY_SLUG_QUERY, { slug }, ['teamMember']),
     getPageHeroes(),
-    getSiteSettings(),
   ])
   if (!member) notFound()
 
@@ -73,11 +72,7 @@ export default async function TeamMemberPage({
             name: member.name,
             jobTitle: roles.join(', ') || undefined,
             image: photoUrl,
-            memberOf: {
-              '@type': 'Organization',
-              '@id': `${SITE_URL}/#church`,
-              name: settings.name,
-            },
+            memberOf: { '@id': CHURCH_ID },
           }),
         }}
       />

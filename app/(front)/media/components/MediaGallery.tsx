@@ -5,8 +5,6 @@ import { useCallback, useEffect, useRef, useState, useTransition, type ReactNode
 import { clsx } from 'clsx'
 import type { MediaCardItem } from './MediaCard'
 import { loadMoreMedia, searchMedia } from '../actions'
-import { jsonLdHtml } from '@/lib/utils'
-import { getYouTubeEmbedUrl } from '@/lib/youtube'
 
 // =========================================
 // MediaGallery — media library with SERVER-side search/filter that updates only
@@ -114,27 +112,8 @@ export function MediaGallery({
   }
 
   const hasMore = cards.length < total
-  // SSR and client updates describe the same visible cards. A sermon date
-  // does not establish uploadDate; a YouTube watch URL is not contentUrl.
-  const itemListJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'ItemList',
-    itemListElement: cards.flatMap((card) => card.youtubeId ? [{
-      '@type': 'VideoObject',
-      '@id': `https://www.youtube.com/watch?v=${card.youtubeId}#video`,
-      name: card.title,
-      ...(card.description ? { description: card.description } : {}),
-      thumbnailUrl: card.thumbnailUrl,
-      embedUrl: getYouTubeEmbedUrl(card.youtubeId),
-      url: `https://www.youtube.com/watch?v=${card.youtubeId}`,
-    }] : []).map((item, index) => ({ '@type': 'ListItem', position: index + 1, item })),
-  }
-
   return (
     <>
-      {itemListJsonLd.itemListElement.length > 0 && (
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: jsonLdHtml(itemListJsonLd) }} />
-      )}
       {/* Search */}
       <div className="mx-auto mb-6 max-w-xl">
         <label htmlFor="media-search" className="sr-only">

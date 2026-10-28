@@ -1,6 +1,7 @@
 import { Icon } from '@/components/ui/Icon'
 import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
@@ -9,7 +10,7 @@ import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { PhotoViewer, PortableTextBody } from '@/components'
 import { getPageMetadata } from '@/lib/metadata'
 import { getPageHeroes } from '@/lib/page-heroes'
-import { SITE_URL } from '@/lib/site'
+import { eventStructuredData } from '@/lib/structured-data'
 import { formatEventDate, jsonLdHtml, schemaDate } from '@/lib/utils'
 import type { SanityEvent } from '@/sanity/lib/types'
 import { EVENT_BY_SLUG_QUERY, EVENT_SLUGS_QUERY } from '../queries'
@@ -36,8 +37,8 @@ export async function generateMetadata({
     (typeof event.body === 'string' ? event.body : event.body ? toPlainText(event.body) : '')
 
   return getPageMetadata(`/events/${slug}`, {
-    documentId: event._id,
-    title: `${event.title || 'Подія'} | Події | Церква «Нове Життя»`,
+    seo: event.seo,
+    title: event.title || 'Подія',
     description: plainDescription.slice(0, 160),
     alternates: { canonical: `/events/${slug}` },
     image: event.image ? {
@@ -70,24 +71,11 @@ export default async function EventDetailPage({
     : visibleBody ? toPlainText(visibleBody).trim() : undefined
   const startDate = schemaDate(event.startDate)
 
-  // Missing date/venue does not establish an event or a church address.
-  const eventJsonLd =
-    event.type === 'подія' && event.title?.trim() && startDate && event.location?.trim()
-      ? {
-          '@context': 'https://schema.org',
-          '@type': 'Event',
-          '@id': `${SITE_URL}/events/${slug}#event`,
-          url: `${SITE_URL}/events/${slug}`,
-          name: event.title,
-          startDate,
-          location: {
-            '@type': 'Place',
-            name: event.location,
-          },
-          ...(description ? { description } : {}),
-          ...(imageUrl ? { image: imageUrl } : {}),
-        }
-      : null
+  const eventJsonLd = eventStructuredData(event, `/events/${slug}`, description)
+  const endDate = schemaDate(event.endDate)
+  const validEndDate = endDate && startDate && Date.parse(endDate) >= Date.parse(startDate) ? endDate : undefined
+  const address = event.locationAddress
+  const addressText = [address?.street, address?.city, address?.region, address?.postalCode, address?.country].filter(Boolean).join(', ')
 
   const badge = event.tag || (event.type === 'оголошення' ? 'Оголошення' : 'Подія')
 
@@ -125,23 +113,11 @@ export default async function EventDetailPage({
           <h1 className="text-white font-bold text-xl sm:text-2xl lg:text-4xl mb-2 leading-tight">
             {event.title}
           </h1>
-          <nav>
-            <ol className="flex items-center justify-center gap-1.5 text-white/75 text-xs sm:text-sm">
-              <li>
-                <Link href="/" className="hover:text-white transition-colors">
-                  Головна
-                </Link>
-              </li>
-              <li className="text-white/40">/</li>
-              <li>
-                <Link href="/events" className="hover:text-white transition-colors">
-                  Події
-                </Link>
-              </li>
-              <li className="text-white/40">/</li>
-              <li className="text-white/55">{event.title}</li>
-            </ol>
-          </nav>
+          <Breadcrumbs items={[
+            { label: 'Головна', href: '/' },
+            { label: 'Події', href: '/events' },
+            { label: event.title },
+          ]} />
         </div>
       </section>
 
@@ -154,6 +130,7 @@ export default async function EventDetailPage({
               {startDate && <span className="flex items-center gap-1.5 text-sm text-gray-500">
                 <Icon className="far fa-calendar-alt" />
                 {formatEventDate(event.startDate)}
+                {validEndDate && ` — ${formatEventDate(validEndDate)}`}
               </span>}
               <span className="bg-grad-readable text-white text-xs font-semibold px-3 py-1 rounded">
                 {badge}
@@ -165,6 +142,17 @@ export default async function EventDetailPage({
                 </span>
               )}
             </div>
+
+            {(addressText || event.organizer || typeof event.isAccessibleForFree === 'boolean' ||
+              event.eventStatus === 'EventCancelled' || event.eventStatus === 'EventPostponed') && (
+              <dl className="mb-8 text-sm text-gray-700 space-y-2">
+                {event.eventStatus === 'EventCancelled' && <div><dt className="inline font-semibold">Статус: </dt><dd className="inline">Скасовано</dd></div>}
+                {event.eventStatus === 'EventPostponed' && <div><dt className="inline font-semibold">Статус: </dt><dd className="inline">Відкладено</dd></div>}
+                {addressText && <div><dt className="inline font-semibold">Адреса: </dt><dd className="inline">{addressText}</dd></div>}
+                {event.organizer && <div><dt className="inline font-semibold">Організатор: </dt><dd className="inline">{event.organizer}</dd></div>}
+                {typeof event.isAccessibleForFree === 'boolean' && <div><dt className="inline font-semibold">Участь: </dt><dd className="inline">{event.isAccessibleForFree ? 'Безкоштовна' : 'Платна'}</dd></div>}
+              </dl>
+            )}
 
             {/* Image */}
             {imageUrl && (

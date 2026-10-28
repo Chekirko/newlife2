@@ -1,4 +1,4 @@
-import { notFound, redirect } from 'next/navigation'
+import { notFound, permanentRedirect } from 'next/navigation'
 export const LISTING_PER_PAGE = 6
 
 export function listingHref(path: '/news' | '/events', page = 1, category = ''): string {
@@ -14,6 +14,6 @@ export function listingPageNumber(raw: string): number {
 
 export function parseListingPage(raw: string, path: '/news' | '/events', category = ''): number {
   const page = listingPageNumber(raw)
-  if (page === 1 || raw !== String(page)) redirect(listingHref(path, page, category))
+  if (page === 1 || raw !== String(page)) permanentRedirect(listingHref(path, page, category))
   return page
 }

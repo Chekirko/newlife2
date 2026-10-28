@@ -1,6 +1,7 @@
 import { Icon } from '@/components/ui/Icon'
 import Image from '@/components/ui/SiteImage'
 import Link from 'next/link'
+import { Breadcrumbs } from '@/components/ui/Breadcrumbs'
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { toPlainText } from '@portabletext/react'
@@ -9,6 +10,7 @@ import { toPhotoItem, urlFor } from '@/sanity/lib/image'
 import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
 import { getPageMetadata } from '@/lib/metadata'
+import { CHURCH_ID, CHURCH_LOGO } from '@/lib/structured-data'
 import { SITE_URL } from '@/lib/site'
 import { PhotoViewer, PortableTextBody, type PhotoItem } from '@/components'
 import type { SanityNews } from '@/sanity/lib/types'
@@ -28,6 +30,7 @@ const NEWS_BY_SLUG_QUERY = defineQuery(`
   *[_type == "news" && slug.current == $slug][0] {
     _id,
     _updatedAt,
+    seo,
     title,
     "slug": slug.current,
     publishedAt,
@@ -62,9 +65,10 @@ export async function generateMetadata({
     (typeof news.body === 'string' ? news.body : news.body ? toPlainText(news.body) : '')
 
   return getPageMetadata(`/news/${slug}`, {
-    documentId: news._id,
-    title: `${news.title || 'Новина'} | Новини | Церква «Нове Життя»`,
+    seo: news.seo,
+    title: news.title || 'Новина',
     description: description.slice(0, 160),
+    article: { publishedTime: news.publishedAt, modifiedTime: news._updatedAt },
     alternates: { canonical: `/news/${slug}` },
     image: news.image ? {
       url: urlFor(news.image).width(1200).height(630).fit('crop').url(),
@@ -117,6 +121,7 @@ export default async function NewsDetailPage({
     ? visibleBody.trim().slice(0, 160)
     : visibleBody ? toPlainText(visibleBody).trim().slice(0, 160) : undefined
   const publishedAt = schemaDate(news.publishedAt)
+  const modifiedAt = schemaDate(news._updatedAt)
 
   // NewsArticle JSON-LD (schema-markup skill)
   const newsArticleJsonLd = {
@@ -126,22 +131,14 @@ export default async function NewsDetailPage({
     url: articleUrl,
     headline: news.title,
     datePublished: publishedAt,
+    ...(modifiedAt && (!publishedAt || Date.parse(modifiedAt) >= Date.parse(publishedAt)) ? { dateModified: modifiedAt } : {}),
     ...(articleImage ? { image: [articleImage] } : {}),
     ...(articleDescription ? { description: articleDescription } : {}),
     ...(news.mainCategory ? { articleSection: news.mainCategory } : {}),
-    publisher: { '@type': 'Organization', '@id': `${SITE_URL}/#church`, name: settings.name, url: SITE_URL },
+    author: { '@type': 'Organization', '@id': CHURCH_ID, name: settings.name, url: SITE_URL },
+    publisher: { '@type': 'Organization', '@id': CHURCH_ID, name: settings.name, url: SITE_URL,
+      logo: { '@type': 'ImageObject', url: CHURCH_LOGO, width: 1203, height: 461 } },
     mainEntityOfPage: { '@type': 'WebPage', '@id': articleUrl },
-  }
-
-  // BreadcrumbList JSON-LD (schema-markup skill)
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: 'Новини', item: `${SITE_URL}/news` },
-      { '@type': 'ListItem', position: 3, name: news.title, item: articleUrl },
-    ],
   }
 
   return (
@@ -149,10 +146,6 @@ export default async function NewsDetailPage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdHtml(newsArticleJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdHtml(breadcrumbJsonLd) }}
       />
 
       {/* Hero */}
@@ -180,23 +173,11 @@ export default async function NewsDetailPage({
           <h1 className="text-white font-bold text-xl sm:text-2xl lg:text-4xl mb-2 leading-tight">
             {news.title}
           </h1>
-          <nav>
-            <ol className="flex items-center justify-center gap-1.5 text-white/75 text-xs sm:text-sm">
-              <li>
-                <Link href="/" className="hover:text-white transition-colors">
-                  Головна
-                </Link>
-              </li>
-              <li className="text-white/40">/</li>
-              <li>
-                <Link href="/news" className="hover:text-white transition-colors">
-                  Новини
-                </Link>
-              </li>
-              <li className="text-white/40">/</li>
-              <li className="text-white/55">{news.title}</li>
-            </ol>
-          </nav>
+          <Breadcrumbs items={[
+            { label: 'Головна', href: '/' },
+            { label: 'Новини', href: '/news' },
+            { label: news.title },
+          ]} />
         </div>
       </section>
 

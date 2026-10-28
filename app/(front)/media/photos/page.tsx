@@ -11,7 +11,7 @@ import { PhotoGallery, type PhotoItem } from './components/PhotoGallery'
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata('/media/photos', {
-    title: 'Фото | Церква «Нове Життя»',
+    title: 'Фото',
     description:
       'Фотогалерея церкви «Нове Життя» у Бориславі — світлини зі служінь, подій та життя спільноти.',
     alternates: { canonical: '/media/photos' },

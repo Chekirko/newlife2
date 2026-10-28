@@ -39,11 +39,17 @@ export const EVENTS_RECENT_QUERY = defineQuery(`
 export const EVENT_BY_SLUG_QUERY = defineQuery(`
   *[_type == "event" && slug.current == $slug][0] {
     _id,
+    seo,
     type,
     title,
     "slug": slug.current,
     startDate,
     activeUntil,
+    endDate,
+    eventStatus,
+    locationAddress,
+    organizer,
+    isAccessibleForFree,
     location,
     tag,
     description,

@@ -9,6 +9,7 @@ import { getPageHeroes } from '@/lib/page-heroes'
 import { getSiteSettings } from '@/lib/site-settings'
 import { getAboutPage } from '@/lib/about'
 import { SITE_URL } from '@/lib/site'
+import { CHURCH_ID, WEBSITE_ID } from '@/lib/structured-data'
 import { jsonLdHtml } from '@/lib/utils'
 import type { AboutValue } from '@/lib/about-data'
 
@@ -43,7 +44,7 @@ function ValueCard({ value }: { value: AboutValue }) {
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata('/about', {
-    title: 'Про нас | Церква «Нове Життя»',
+    title: 'Про нас',
     description:
       'Історія, місія, цінності та віровчення церкви «Нове Життя» у Бориславі — частини УЦХВЄ. Дізнайтеся, у що ми віримо і чого очікувати на богослужінні.',
     alternates: { canonical: '/about' },
@@ -52,10 +53,10 @@ export async function generateMetadata(): Promise<Metadata> {
 
 
 export default async function AboutPage() {
-  const [heroes, settings, about] = await Promise.all([
+  const [heroes, about, settings] = await Promise.all([
     getPageHeroes(),
-    getSiteSettings(),
     getAboutPage(),
+    getSiteSettings(),
   ])
 
   // Distribute values across 3 columns in order (handles any count); the middle
@@ -70,17 +71,8 @@ export default async function AboutPage() {
     url: `${SITE_URL}/about`,
     description:
       'Історія, місія, цінності та віровчення церкви «Нове Життя» у Бориславі.',
-    isPartOf: { '@type': 'WebSite', '@id': `${SITE_URL}/#website` },
-    about: { '@type': 'Church', '@id': `${SITE_URL}/#church`, name: settings.name },
-  }
-
-  const breadcrumbJsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Головна', item: SITE_URL },
-      { '@type': 'ListItem', position: 2, name: 'Про нас', item: `${SITE_URL}/about` },
-    ],
+    isPartOf: { '@id': WEBSITE_ID },
+    about: { '@id': CHURCH_ID },
   }
 
   return (
@@ -88,10 +80,6 @@ export default async function AboutPage() {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: jsonLdHtml(aboutJsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: jsonLdHtml(breadcrumbJsonLd) }}
       />
 
       <PageHero

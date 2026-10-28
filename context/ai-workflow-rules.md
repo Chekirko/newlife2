@@ -54,7 +54,7 @@ Spec-driven робота за [master-plan](master-plan.md); дизайн — [s
 - Sanity references завжди weak + null-guard; GROQ через defineQuery. Inputs перевіряти з фактичними props installed Sanity: `onSelectFile`, не вигаданий `onUpload`; existing assets вставляти native `onInsert`.
 - Gallery: empty/1/2/10 фото, mixed ratios, max 10, readOnly/дублікати; viewer keyboard/межі/Esc/бекдроп/focus restore та вузький viewport. CMS writes/міграції — окремий явно дозволений scope.
 - Contact: fail closed без конфігурації, mocks не доводять inbox delivery. Реальне тестове надсилання — окреме доручення.
-- SEO: нова сторінка узгоджує metadata/canonical/sitemap/JSON-LD; pre-launch обмеження лишаються до запуску. B2 замінить code approval registry у Фазі 3.
+- SEO: нова сторінка узгоджує metadata/canonical/sitemap/JSON-LD; pre-launch обмеження лишаються до запуску. B2 реалізовано у Фазі 3: єдиний indexing-перемикач і документний seo.noIndex, без code approval registry.
 - Dependency patch: `patches/` + workspace metadata + lockfile, frozen install; heartbeat regression зберігає error events/retry. Після patch перезапустити dev server.
 
 ## Encoding Safety

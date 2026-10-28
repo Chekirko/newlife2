@@ -45,6 +45,7 @@
 ## Page Patterns and Content
 
 - Головна зараз: Hero → умовний Live → події → місія/OurVision → пастор → розклад → «Що ви знайдете» → новини → свідчення → FAQ → «Актуальне слово» → CTA. Hero стане статичним у Фазі 5.1. Проповідь — CMS featured reference, fallback на найновішу; немає даних — секцію сховати.
+- Спільний серверний `Breadcrumbs` формує видиму навігацію і JSON-LD з одного масиву; nav має label, поточний пункт aria-current, текст і посилання білі без opacity-зниження. Додаткові факти події (адреса, завершення, організатор, статус, умови участі) показуються лише коли заповнені.
 - PageHero та inline news/event heroes замінюються `PageTitle` у Фазах 4–5. Background через Next Image, breadcrumbs із label/current/контрастом, без скляної картки.
 - News/events мають статичну path pagination (`/news/page/2`, `/events/page/2`); категорії — `/news/category/<назва>` з noindex та вкладеною пагінацією. Цільовий дизайн — PostCard + SidebarWidget + server Pagination. Видимий label «Читати далі» доповнювати sr-only назвою. Порядок DOM має відповідати mobile читанню.
 - Team/ministry cards — heading H3 під H2 секції; фото в цілісному named link має alt="". Detail фото має власний опис; немає фото — ImagePlaceholder. Ministry detail: 1 leader — singular, 2+ — grid; невирішені refs не рендерити. Responsibility масив: на загальній картці перший, на detail всі.
@@ -62,7 +63,7 @@
 
 Контактна форма має видимі labels, required/maxLength/autocomplete, зв’язані field errors, фокус першого проблемного поля, pending і збереження введення при помилці. Persistent success `role=status`, error `role=alert`; жодного удаваного успіху або автоматичного приховування статусу. Фаза 5.6 — useActionState і робота без JS.
 
-Studio: `GalleryInput` має multiple upload і «Select — вибрати фото зі Studio»; asset picker із пошуком/порціями/мультивибором, ліміт gallery 10. Single-image source лишається одиночним. Media plugin — спільна бібліотека. CategoryInput/MultiCategoryInput і SpeakerInput — Autocomplete із наявними значеннями та вільним вводом; TagInput для решти tag-полів.
+Studio: `GalleryInput` має multiple upload і «Select — вибрати фото зі Studio»; asset picker із пошуком/порціями/мультивибором, ліміт gallery 10. Single-image source лишається одиночним. Новини, події, служіння й служителі мають згорнутий SEO-об’єкт із необов’язковими overrides і noIndex; назва церкви додається до title автоматично. Media plugin — спільна бібліотека. CategoryInput/MultiCategoryInput і SpeakerInput — Autocomplete із наявними значеннями та вільним вводом; TagInput для решти tag-полів.
 
 ## Accessibility and Acceptance
 

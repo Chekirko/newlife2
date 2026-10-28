@@ -1,5 +1,8 @@
 import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
 import type { PortableTextBlock } from '@portabletext/types'
+import type { Seo } from './sanity.types'
+
+export type SanitySeo = Omit<Seo, '_type'>
 
 // ============================================
 // Sanity Document Types
@@ -26,6 +29,7 @@ export interface SanityGalleryImage {
 
 /** Ministry — full detail page */
 export interface SanityMinistry extends SanityMinistryCard {
+  seo?: SanitySeo | null
   imageDimensions?: { width: number; height: number } | null
   fullDescription: PortableTextBlock[] | null
   leaders: ({
@@ -48,6 +52,7 @@ export interface SanityMinistryLink {
 
 /** News item */
 export interface SanityNews {
+  seo?: SanitySeo | null
   _id: string
   _updatedAt?: string
   title: string
@@ -65,11 +70,17 @@ export interface SanityNews {
 
 /** Event / announcement item */
 export interface SanityEvent {
+  seo?: SanitySeo | null
   _id: string
   type: 'подія' | 'оголошення'
   title: string
   slug: string
   startDate: string
+  endDate?: string | null
+  eventStatus?: 'EventScheduled' | 'EventCancelled' | 'EventPostponed' | null
+  locationAddress?: { street?: string | null; city?: string | null; region?: string | null; postalCode?: string | null; country?: string | null } | null
+  organizer?: string | null
+  isAccessibleForFree?: boolean | null
   activeUntil: string | null
   location: string | null
   tag: string | null
@@ -94,6 +105,7 @@ export interface SanityTeamMemberCard {
 
 /** Team member — full detail page */
 export interface SanityTeamMember extends Omit<SanityTeamMemberCard, 'photo'> {
+  seo?: SanitySeo | null
   photo: SanityImageSource | null
   photoDimensions?: { width: number; height: number } | null
   bio: PortableTextBlock[] | null

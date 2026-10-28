@@ -27,10 +27,10 @@ export async function eventsMetadata({ page = 1 }: Props = {}): Promise<Metadata
   const canonical = listingHref('/events', page)
   const { items } = await getEventsListing(page)
   return getPageMetadata(canonical, {
-    title: 'Події | Церква «Нове Життя»',
+    title: `Події${page > 1 ? ` — сторінка ${page}` : ''}`,
     description: 'Події, заходи та оголошення церкви «Нове Життя» у Бориславі.',
     alternates: { canonical },
-    listingItems: items,
+    noIndex: items.length === 0,
   })
 }
 

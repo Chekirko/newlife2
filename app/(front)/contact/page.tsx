@@ -10,7 +10,7 @@ import { getPageHeroes } from '@/lib/page-heroes'
 
 export async function generateMetadata(): Promise<Metadata> {
   return getPageMetadata('/contact', {
-    title: 'Контакти | Церква «Нове Життя»',
+    title: 'Контакти',
     description:
       'Контактна інформація церкви «Нове Життя» в м. Борислав. Адреса, телефон, розклад богослужінь та форма зворотного зв\'язку.',
     alternates: { canonical: '/contact' },
